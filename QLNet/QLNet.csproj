@@ -35,6 +35,7 @@
   <ItemGroup>
     <Compile Include="Cashflow.cs" />
     <Compile Include="Currencies\Currency.cs" />
+    <Compile Include="Currencies\Europe.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="Instruments\Instrument.cs" />
     <Compile Include="Math\GlobalMath.cs" />
