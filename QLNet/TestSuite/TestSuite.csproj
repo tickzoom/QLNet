@@ -39,6 +39,7 @@
     <Compile Include="Calendars.cs" />
     <Compile Include="DayCounters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rounding.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QLNet\QLNet.csproj">
