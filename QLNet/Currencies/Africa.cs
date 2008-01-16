@@ -23,19 +23,17 @@ using System.Text;
 
 namespace QLNet
 {
-   public class AcyclicVisitor
+   /// <summary>
+   /// South-African rand
+   /// The ISO three-letter code is ZAR; the numeric code is 710.
+   /// It is divided into 100 cents.
+   /// </summary>
+   public class ZARCurrency : Currency
    {
-      public void Dispose()
+      public ZARCurrency()
       {
+         _data = new Data("South-African rand", "ZAR", 710,"R", "", 100, new Rounding(),"%3% %1$.2f");
       }
-   }
 
-   //! %Visitor for a specific class
-   public class Visitor<T>
-   {
-      public void Dispose()
-      {
-      }
-      public void visit(ref T NamelessParameter){}
    }
 }

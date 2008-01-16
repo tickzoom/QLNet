@@ -1,9 +1,16 @@
 /*
+ Copyright (C) 2008 Andrea Maggiulli
+  
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
- 
- QLNet is a porting of QuantLib, a free-software/open-source library
+
+ QLNet is free software: you can redistribute it and/or modify it
+ under the terms of the QLNet license.  You should have received a
+ copy of the license along with this program; if not, license is  
+ available online at <http://trac2.assembla.com/QLNet/wiki/License>.
+  
+ QLNet is a based on QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
- The license is available online at http://quantlib.org/license.shtml.
+ The QuantLib license is available online at http://quantlib.org/license.shtml.
  
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
@@ -16,8 +23,14 @@ using System.Text;
 
 namespace QLNet
 {
+   /// <summary>
+   /// Currency specification
+   /// </summary>
    public class Currency
    {
+      // Attributes
+      protected Data _data;
+
       protected struct Data
       {
          public string name;
@@ -53,8 +66,13 @@ namespace QLNet
 
       }
       
-      protected Data _data;
-
+      /// <summary>
+      /// Default constructor
+      /// Instances built via this constructor have undefined
+      /// behavior. Such instances can only act as placeholders
+      /// and must be reassigned to a valid currency before being
+      /// used.
+      /// </summary>
       public Currency()
       {
       }
@@ -134,7 +152,7 @@ namespace QLNet
       /// <returns></returns>
       public bool empty()
       {
-         return (_data.name == string.Empty); 
+         return (_data.name == null); 
       }
 
       public static bool operator ==(Currency c1, Currency c2)
@@ -145,6 +163,11 @@ namespace QLNet
       public static bool operator !=(Currency c1, Currency c2)
       {
          return !(c1.name == c2.name);
+      }
+
+      public static Money operator *(double value, Currency c)
+      {
+         return new Money(value, c);
       }
 
       public override string ToString()

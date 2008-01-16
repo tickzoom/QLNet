@@ -23,19 +23,17 @@ using System.Text;
 
 namespace QLNet
 {
-   public class AcyclicVisitor
+   /// <summary>
+   /// U.S. dollar
+   /// The ISO three-letter code is USD; the numeric code is 840.
+   /// It is divided in 100 cents.
+   /// </summary>
+   public class USDCurrency : Currency
    {
-      public void Dispose()
+      public USDCurrency()
       {
+         _data = new Data("U.S. dollar", "USD", 840,"$", "\xA2", 100,new Rounding(),"%3% %1$.2f");
       }
-   }
 
-   //! %Visitor for a specific class
-   public class Visitor<T>
-   {
-      public void Dispose()
-      {
-      }
-      public void visit(ref T NamelessParameter){}
    }
 }
