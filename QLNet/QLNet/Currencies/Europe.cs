@@ -1,3 +1,22 @@
+/*
+ Copyright (C) 2008 Andrea Maggiulli
+  
+ This file is part of QLNet Project http://trac2.assembla.com/QLNet
+
+ QLNet is free software: you can redistribute it and/or modify it
+ under the terms of the QLNet license.  You should have received a
+ copy of the license along with this program; if not, license is  
+ available online at <http://trac2.assembla.com/QLNet/wiki/License>.
+  
+ QLNet is a based on QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+ The QuantLib license is available online at http://quantlib.org/license.shtml.
+ 
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -319,5 +338,173 @@ namespace QLNet
    }
 
    // currencies obsoleted by Euro
-   // not done ( is usefull to do ? 
+
+   /// Austrian shilling
+   /// The ISO three-letter code was ATS; the numeric code was 40.
+   /// It was divided in 100 groschen.
+   /// Obsoleted by the Euro since 1999.
+   /// </summary>
+   public class ATSCurrency : Currency
+   {
+      public ATSCurrency()
+      {
+         _data = new Data("Austrian shilling", "ATS", 40,"", "", 100,new Rounding(),"%2% %1$.2f",new EURCurrency());
+      }
+
+   }
+
+   /// Belgian franc
+   /// The ISO three-letter code was BEF; the numeric code was 56.
+   /// It had no subdivisions.
+   /// Obsoleted by the Euro since 1999.
+   /// </summary>
+   public class BEFCurrency : Currency
+   {
+      public BEFCurrency()
+      {
+         _data = new Data("Belgian franc", "BEF", 56,"", "", 1,new Rounding(),"%2% %1$.0f",new EURCurrency());
+      }
+
+   }
+
+   /// Deutsche mark
+   /// The ISO three-letter code was DEM; the numeric code was 276.
+   /// It was divided into 100 pfennig.
+   /// Obsoleted by the Euro since 1999.
+   /// </summary>
+   public class DEMCurrency : Currency
+   {
+      public DEMCurrency()
+      {
+         _data = new Data("Deutsche mark", "DEM", 276,"DM", "", 100,new Rounding(),"%1$.2f %3%",new EURCurrency());
+      }
+
+   }
+
+   /// Spanish peseta
+   /// The ISO three-letter code was ESP; the numeric code was 724.
+   /// It was divided in 100 centimos.
+   /// Obsoleted by the Euro since 1999.
+   /// </summary>
+   public class ESPCurrency : Currency
+   {
+      public ESPCurrency()
+      {
+         _data = new Data("Spanish peseta", "ESP", 724,"Pta", "", 100,new Rounding(),"%1$.0f %3%",new EURCurrency());
+      }
+
+   }
+
+   /// Finnish markka
+   /// The ISO three-letter code was FIM; the numeric code was 246.
+   /// It was divided in 100 penniä.
+   /// Obsoleted by the Euro since 1999.
+   /// </summary>
+   public class FIMCurrency : Currency
+   {
+      public FIMCurrency()
+      {
+         _data = new Data("Finnish markka", "FIM", 246,"mk", "", 100,new Rounding(),"%1$.2f %3%",new EURCurrency());
+      }
+
+   }
+
+   /// French franc
+   /// The ISO three-letter code was FRF; the numeric code was 250.
+   /// It was divided in 100 centimes.
+   /// Obsoleted by the Euro since 1999.
+   /// </summary>
+   public class FRFCurrency : Currency
+   {
+      public FRFCurrency()
+      {
+         _data = new Data("French franc", "FRF", 250,"", "", 100,new Rounding(),"%1$.2f %2%",new EURCurrency());
+      }
+
+   }
+
+   /// Greek drachma
+   /// The ISO three-letter code was GRD; the numeric code was 300.
+   /// It was divided in 100 lepta.
+   /// Obsoleted by the Euro since 1999.
+   /// </summary>
+   public class GRDCurrency : Currency
+   {
+      public GRDCurrency()
+      {
+         _data = new Data("Greek drachma", "GRD", 300,"", "", 100,new Rounding(),"%1$.2f %2%",new EURCurrency());
+      }
+
+   }
+
+   /// Irish punt
+   /// The ISO three-letter code was IEP; the numeric code was 372.
+   /// It was divided in 100 pence.
+   /// Obsoleted by the Euro since 1999.
+   /// </summary>
+   public class IEPCurrency : Currency
+   {
+      public IEPCurrency()
+      {
+         _data = new Data("Irish punt", "IEP", 372,"", "", 100,new Rounding(),"%2% %1$.2f",new EURCurrency());
+      }
+
+   }
+
+   /// Italian lira
+   /// The ISO three-letter code was ITL; the numeric code was 380.
+   /// It had no subdivisions.
+   /// Obsoleted by the Euro since 1999.
+   /// </summary>
+   public class ITLCurrency : Currency
+   {
+      public ITLCurrency()
+      {
+         _data = new Data("Italian lira", "ITL", 380,"L", "", 1,new Rounding(),"%3% %1$.0f",new EURCurrency());
+      }
+
+   }
+
+   /// Luxembourg franc
+   /// The ISO three-letter code was LUF; the numeric code was 442.
+   /// It was divided in 100 centimes.
+   /// Obsoleted by the Euro since 1999.
+   /// </summary>
+   public class LUFCurrency : Currency
+   {
+      public LUFCurrency()
+      {
+         _data = new Data("Luxembourg franc", "LUF", 442,"F", "", 100,new Rounding(),"%1$.0f %3%",new EURCurrency());
+      }
+
+   }
+
+   /// Dutch guilder
+   /// The ISO three-letter code was NLG; the numeric code was 528.
+   /// It was divided in 100 cents.
+   /// Obsoleted by the Euro since 1999.
+   /// </summary>
+   public class NLGCurrency : Currency
+   {
+      public NLGCurrency()
+      {
+         _data = new Data("Dutch guilder", "NLG", 528,"f", "", 100,new Rounding(),"%3% %1$.2f",new EURCurrency());
+      }
+
+   }
+
+   /// Portuguese escudo
+   /// The ISO three-letter code was PTE; the numeric code was 620.
+   /// It was divided in 100 centavos.
+   /// Obsoleted by the Euro since 1999.
+   /// </summary>
+   public class PTECurrency : Currency
+   {
+      public PTECurrency()
+      {
+         _data = new Data("Portuguese escudo", "PTE", 620,"Esc", "", 100,new Rounding(),"%1$.0f %3%",new EURCurrency());
+      }
+
+   }
+   
 }

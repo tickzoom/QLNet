@@ -34,13 +34,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cashflow.cs" />
+    <Compile Include="Currencies\Africa.cs" />
+    <Compile Include="Currencies\America.cs" />
     <Compile Include="Currencies\Currency.cs" />
     <Compile Include="Currencies\Europe.cs" />
+    <Compile Include="Currencies\ExchangeRate.cs" />
+    <Compile Include="Currencies\ExchangeRateManager.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="Instruments\Instrument.cs" />
     <Compile Include="Math\GlobalMath.cs" />
     <Compile Include="Math\Interpolations\Extrapolator.cs" />
     <Compile Include="Math\Rounding.cs" />
+    <Compile Include="Money.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Patterns\LazyObject.cs" />
     <Compile Include="Patterns\Observable.cs" />
