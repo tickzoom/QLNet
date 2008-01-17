@@ -27,7 +27,7 @@ using System.Diagnostics;
 namespace TestSuite
 {
    [TestClass()]
-   public class DayCounters
+   public class T_DayCounters
    {
       public struct SingleCase
       {
