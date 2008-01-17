@@ -57,7 +57,7 @@ namespace TestSuite
    }
 
    [TestClass()]
-   class AmericanOption
+   class T_AmericanOption
    {
   		public static YieldTermStructure flatRate(DDate today, Quote forward, DayCounter dc)
 		{

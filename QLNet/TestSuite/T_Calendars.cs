@@ -27,7 +27,7 @@ using System.Diagnostics;
 namespace TestSuite
 {
    [TestClass()]
-   public class Calendars
+   public class T_Calendars
    {
       [TestMethod()]
       public void testModifiedCalendars() 
