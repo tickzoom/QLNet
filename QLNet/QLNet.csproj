@@ -36,6 +36,7 @@
     <Compile Include="Cashflow.cs" />
     <Compile Include="Currencies\Africa.cs" />
     <Compile Include="Currencies\America.cs" />
+    <Compile Include="Currencies\Asia.cs" />
     <Compile Include="Currencies\Currency.cs" />
     <Compile Include="Currencies\Europe.cs" />
     <Compile Include="Currencies\ExchangeRate.cs" />

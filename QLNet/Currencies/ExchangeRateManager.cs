@@ -79,13 +79,24 @@ namespace QLNet
       {
          add(rate, startDate, DDate.maxDate());
       }
-
+      /// <summary>
+      /// Add an exchange rate.
+      /// </summary>
+      /// <param name="rate"></param>
+      /// <param name="startDate"></param>
+      /// <param name="endDate"></param>
+      /// <remarks>
+      /// The given rate is valid between the given dates.
+      /// If two rates are given between the same currencies
+      /// and with overlapping date ranges, the latest one
+      /// added takes precedence during lookup.
+      /// </remarks> 
       private void add(ExchangeRate rate, DDate startDate, DDate endDate)
       {
          int k = hash(rate.source, rate.target);
          if (data_.ContainsKey(k))
          {
-            data_[k].Add(new Entry(rate, startDate, endDate));
+            data_[k].Insert(0,new Entry(rate, startDate, endDate));
          }
          else
          {
@@ -118,6 +129,22 @@ namespace QLNet
          return this.lookup(source, target, date, ExchangeRate.Type.Derived);
       }
 
+      /// <summary>
+      /// Lookup the exchange rate between two currencies at a given
+      /// date.  If the given type is Direct, only direct exchange
+      /// rates will be returned if available; if Derived, direct
+      /// rates are still preferred but derived rates are allowed.
+      /// </summary>
+      /// <remarks>
+      /// if two or more exchange-rate chains are possible
+      /// which allow to specify a requested rate, it is
+      /// unspecified which one is returned.
+      /// </remarks>
+      /// <param name="source"></param>
+      /// <param name="target"></param>
+      /// <param name="date"></param>
+      /// <param name="type"></param>
+      /// <returns></returns>
       public ExchangeRate lookup(Currency source, Currency target, DDate date, ExchangeRate.Type type)
       {
          if (date == new DDate())

@@ -80,9 +80,12 @@ namespace QLNet
       /// </summary>
       public enum Type : int 
       {
+         /// <summary>
+         /// given directly by the user
+         /// </summary>
          Direct,
          /// <summary>
-         /// derived from exchange rates between other currencies 
+         /// Derived from exchange rates between other currencies 
          /// </summary>
          Derived
       }

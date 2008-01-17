@@ -41,6 +41,7 @@
     <Compile Include="Money.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rounding.cs" />
+    <Compile Include="T_ExchangeRate.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QLNet\QLNet.csproj">
