@@ -34,6 +34,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cashflow.cs" />
+    <Compile Include="Cashflows\Coupon.cs" />
+    <Compile Include="Cashflows\SimpleCashFlow.cs" />
     <Compile Include="Currencies\Africa.cs" />
     <Compile Include="Currencies\America.cs" />
     <Compile Include="Currencies\Asia.cs" />
@@ -52,6 +54,7 @@
     <Compile Include="Patterns\Observable.cs" />
     <Compile Include="Patterns\Singleton.cs" />
     <Compile Include="Patterns\Visitor.cs" />
+    <Compile Include="PricingEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quotes\Quote.cs" />
     <Compile Include="Quotes\SimpleQuote.cs" />

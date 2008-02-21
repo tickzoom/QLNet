@@ -88,7 +88,7 @@ namespace QLNet
                _length = 1;
                break;
             default:
-               throw new Exception ("unknown frequency (" + (int)(f));
+               throw new Exception ("unknown frequency (" + (int)(f) +")");
          }
 
       }
@@ -191,7 +191,7 @@ namespace QLNet
                       }
                     break;
                   default:
-                    throw new Exception ("unknown units");
+                     throw new Exception("unknown time unit (" + (int)p.units + ")");
                 }
                 break;
 
@@ -209,7 +209,7 @@ namespace QLNet
                     }
                     break;
                   default:
-                    throw new Exception ("unknown units");
+                     throw new Exception("unknown time unit (" + (int)p.units + ")");
                 }
                 break;
 
@@ -228,7 +228,7 @@ namespace QLNet
                     }
                     break;
                   default:
-                    throw new Exception ("unknown units");
+                     throw new Exception("unknown time unit (" + (int)p.units + ")");
                 }
                 break;
 
@@ -246,12 +246,12 @@ namespace QLNet
                     }
                     break;
                   default:
-                    throw new Exception ("unknown units");
+                     throw new Exception("unknown time unit (" + (int)p.units + ")");
                 }
                 break;
 
               default:
-                throw new Exception ("unknown units");
+                 throw new Exception("unknown time unit (" + (int)p.units + ")");
             }
         }
 
@@ -307,8 +307,6 @@ namespace QLNet
         return t;
     }
 
-
-
       public static make_pair<int, int> daysMinMax(Period p) 
       {
          switch (p.units) 
@@ -322,34 +320,35 @@ namespace QLNet
             case TimeUnit.Years:
                return new make_pair<int, int>(365 * p.length, 366 * p.length);
             default:
-               throw new Exception ("Unknown units");
+               throw new Exception("unknown time unit (" + (int)p.units + ")");
          }
       }
 
       public void normalize() 
       {
-         switch (_units) 
-         {
-            case TimeUnit.Days:
-               if ((_length%7) == 0) 
-               {
-                  _length/=7;
-                  _units = TimeUnit.Weeks;
-               }
-               break;
-            case TimeUnit.Months:
-               if ((_length%12) == 0) 
-               {
-                  _length/=12;
-                  _units = TimeUnit.Years;
-               }
-               break;
-            case TimeUnit.Weeks:
-            case TimeUnit.Years:
-               break;
-            default:
-               throw new Exception ("unknown time unit (" + (int)_units);
-        }
+         if (_length != 0)
+            switch (_units) 
+            {
+               case TimeUnit.Days:
+                  if ((_length%7) == 0) 
+                  {
+                     _length/=7;
+                     _units = TimeUnit.Weeks;
+                  }
+                  break;
+               case TimeUnit.Months:
+                  if ((_length%12) == 0) 
+                  {
+                     _length/=12;
+                     _units = TimeUnit.Years;
+                  }
+                  break;
+               case TimeUnit.Weeks:
+               case TimeUnit.Years:
+                  break;
+               default:
+                  throw new Exception ("unknown time unit (" + (int)_units + ")");
+           }
       }
       public Frequency frequency() 
       {
@@ -383,7 +382,80 @@ namespace QLNet
         }
     }
 
+    double years(Period p) 
+    {
+        if (p.length==0) return 0.0;
 
+        switch (p.units) 
+        {
+           case TimeUnit.Days:
+            throw new Exception("cannot convert Days into Years");
+         case TimeUnit.Weeks:
+             throw new Exception("cannot convert Weeks into Years");
+          case TimeUnit.Months:
+              return p.length/12.0;
+           case TimeUnit.Years:
+              return p.length;
+          default:
+             throw new Exception("unknown time unit (" + (int)p.units + ")");
+        }
+    }
 
+      double months(Period p) 
+      {
+        if (p.length==0) return 0.0;
+
+        switch (p.units) 
+        {
+           case TimeUnit.Days:
+             throw new Exception("cannot convert Days into Months");
+          case TimeUnit.Weeks:
+             throw new Exception("cannot convert Weeks into Months");
+          case TimeUnit.Months:
+              return p.length;
+           case TimeUnit.Years:
+              return p.length*12.0;
+          default:
+             throw new Exception("unknown time unit (" + (int)p.units + ")");
+        }
+    }
+
+      double weeks(Period p) 
+      {
+      
+         if (p.length==0) return 0.0;
+
+         switch (p.units) 
+         {
+            case TimeUnit.Days:
+               return p.length/7.0;
+            case TimeUnit.Weeks:
+               return p.length;
+            case TimeUnit.Months:
+               throw new Exception("cannot convert Months into Weeks");
+            case TimeUnit.Years:
+               throw new Exception("cannot convert Years into Weeks");
+            default:
+               throw new Exception("unknown time unit (" + (int)p.units + ")");
+         }
+      }
+
+      double days(Period p) 
+      {
+        if (p.length==0) return 0.0;
+
+        switch (p.units) {
+           case TimeUnit.Days:
+              return p.length;
+           case TimeUnit.Weeks:
+              return p.length*7.0;
+           case TimeUnit.Months:
+             throw new Exception("cannot convert Months into Days");
+          case TimeUnit.Years:
+             throw new Exception("cannot convert Years into Days");
+          default:
+             throw new Exception("unknown time unit (" + (int)p.units + ")");
+        }
+    }
    }
 }

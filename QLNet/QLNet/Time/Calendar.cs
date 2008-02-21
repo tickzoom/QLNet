@@ -180,8 +180,8 @@ namespace QLNet
          {
             DDate d1 = d + new Period(n, unit);
 
-            if (endOfMonth && (unit == TimeUnit.Months || unit == TimeUnit.Years)
-                           && isEndOfMonth(d))
+            // we are sure the unit is Months or Years
+            if (endOfMonth && isEndOfMonth(d))
             {
                return DDate.endOfMonth(d1);
             }

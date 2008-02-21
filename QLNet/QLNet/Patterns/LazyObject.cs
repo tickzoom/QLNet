@@ -76,7 +76,7 @@ public class LazyObject : ObserverObservable
 			// send notification, just in case we lost any
 			notifyObservers();
 		}
-		protected void calculate()
+		protected virtual void calculate()
 		{
 			if (!_calculated && !_frozen)
 			{

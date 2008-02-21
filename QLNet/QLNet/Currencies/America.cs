@@ -36,4 +36,51 @@ namespace QLNet
       }
 
    }
+
+   /// <summary>
+   /// Peruvian nuevo sol
+   /// The ISO three-letter code is PEN; the numeric code is 604.
+   /// It is divided in 100 centimos.
+   /// </summary>
+   public class PENCurrency : Currency
+   {
+      public PENCurrency()
+      {
+         _data = new Data("Peruvian nuevo sol", "PEN", 604,"S/.", "", 100,new Rounding(),"%3% %1$.2f");
+      }
+
+   }
+
+   /// <summary>
+   /// Peruvian inti
+   /// The ISO three-letter code was PEI.
+   /// It was divided in 100 centimos. A numeric code is not available;
+   /// as per ISO 3166-1, we assign 998 as a user-defined code.
+   /// Obsoleted by the nuevo sol since July 1991.
+   /// </summary>
+   public class PEICurrency : Currency
+   {
+      public PEICurrency()
+      {
+         _data = new Data("Peruvian inti", "PEI", 998,"I/.", "", 100,new Rounding(),"%3% %1$.2f");
+      }
+
+   }
+
+   /// <summary>
+   /// Peruvian sol
+   /// The ISO three-letter code was PEH. A numeric code is not available;
+   /// as per ISO 3166-1, we assign 999 as a user-defined code.
+   /// It was divided in 100 centavos.
+   /// Obsoleted by the inti since February 1985
+   /// </summary>
+   public class PEHCurrency : Currency
+   {
+      public PEHCurrency()
+      {
+         _data = new Data("Peruvian sol", "PEH", 999,"S./", "", 100,new Rounding(),"%3% %1$.2f");
+      }
+
+   }
+
 }

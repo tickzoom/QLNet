@@ -155,21 +155,25 @@ namespace QLNet
             {
                result.source_ = r1.target_;
                result.target_ = r2.target_;
+               result.rate_ = r2.rate_ / r1.rate_;
             } 
             else if (r1.source_ == r2.target_) 
             {
                result.source_ = r1.target_;
                result.target_ = r2.source_;
+               result.rate_ = 1.0 / (r1.rate_ * r2.rate_);
             } 
             else if (r1.target_ == r2.source_) 
             {
                result.source_ = r1.source_;
                result.target_ = r2.target_;
+               result.rate_ = r1.rate_ * r2.rate_;
             } 
             else if (r1.target_ == r2.target_) 
             {
                result.source_ = r1.source_;
                result.target_ = r2.source_;
+               result.rate_ = r1.rate_ / r2.rate_;
             } 
             else 
             {
