@@ -114,7 +114,16 @@ namespace QLNet
       public virtual Calendar calendar() { return _calendar; }
       public virtual Nullable <int> settlementDays()  {return _settlementDays;}
       protected double timeFromReference(DDate d)  {return dayCounter().yearFraction(referenceDate(),d);}
-      protected void checkRange(DDate d,bool extrapolate) { checkRange(timeFromReference(d), extrapolate);}
+      protected void checkRange(DDate d,bool extrapolate) 
+      { 
+         //checkRange(timeFromReference(d), extrapolate);
+         if ( d < referenceDate() )
+            throw new Exception ("date (" + d + ") before reference date (" + referenceDate() + ")");
+         if ( !extrapolate && !allowsExtrapolation() && d > maxDate() )
+            throw new Exception("date (" + d + ") is past max curve date (" + maxDate() + ")");
+  
+      }
+
       protected void checkRange(double t, bool extrapolate)
       {
          if (t < 0.0)

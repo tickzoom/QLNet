@@ -67,6 +67,9 @@ namespace QLNet
          // other obsoleted currencies
          add(new ExchangeRate(new TRYCurrency(), new TRLCurrency(), 1000000.0), new DDate(1, Month.January, 2005), DDate.maxDate());
          add(new ExchangeRate(new RONCurrency(), new ROLCurrency(), 10000.0), new DDate(1, Month.July, 2005), DDate.maxDate());
+         add(new ExchangeRate(new PENCurrency(), new PEICurrency(), 1000000.0),new DDate(1,Month.July,1991), DDate.maxDate());
+         add(new ExchangeRate(new PEICurrency(), new PEHCurrency(), 1000.0),new DDate(1,Month.February,1985), DDate.maxDate());
+
       }
 
       public void add(ExchangeRate rate)
@@ -147,6 +150,10 @@ namespace QLNet
       /// <returns></returns>
       public ExchangeRate lookup(Currency source, Currency target, DDate date, ExchangeRate.Type type)
       {
+
+         if (source == target)
+            return new ExchangeRate(source, target, 1.0);
+
          if (date == new DDate())
             date = Settings.Instance.evaluationDate();
 

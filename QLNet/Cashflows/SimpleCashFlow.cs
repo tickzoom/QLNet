@@ -23,47 +23,47 @@ using System.Text;
 
 namespace QLNet
 {
-   // Base class for cash flows
-   // This class is purely virtual and acts as a base class for the
-   // actual cash flow implementations.
-   //    
-	public abstract class CashFlow : Event
-	{
-      /// <summary>
-      /// CashFlow interface
-      /// returns the amount of the cash flow
-      /// <remarks>
-      /// The amount is not discounted, i.e., it is the actual
-      /// amount paid at the cash flow date.
-      /// </remarks> 
-      /// </summary>
-      /// <returns></returns>
-      public virtual double amount()
+   /// <summary>
+   /// Predetermined cash flow
+   /// This cash flow pays a predetermined amount at a given date.
+   /// </summary>
+   public class SimpleCashFlow : CashFlow
+   {
+      private double amount_;
+      private DDate date_;
+
+      public SimpleCashFlow(double amount, DDate date)
       {
-         throw new Exception("CashFlow.amount : the method or operation is not implemented.");
+         amount_ = amount;
+         date_ = date;
       }
+
       /// <summary>
       /// Event interface
-      /// <remarks>
-      /// This is inheriited from the event class
-      /// </remarks> 
       /// </summary>
       /// <returns></returns>
-      public abstract override DDate date() ;
-      /// <summary>
-      /// Visitability
-      /// </summary>
-      /// <param name="av"></param>
-      /// 
-      public virtual void accept(ref AcyclicVisitor v)
+      public override DDate date()
       {
-         //Visitor<CashFlow> v1 = v as Visitor<CashFlow>;
-         //if (v1 != null)
-         //   v1.visit(ref this);
-         //else
-         //   Event.accept(ref v);
+         return date_;
       }
 
-	}
+      /// <summary>
+      /// CashFlow interface
+      /// </summary>
+      /// <returns></returns>
+      public override double amount()
+      {
+         return amount_;
+      }
 
+      public override void accept(ref AcyclicVisitor v)
+      {
+         //Visitor<SimpleCashFlow> v1 = v as Visitor<SimpleCashFlow>;
+         //if (v1 != 0)
+         //   v1.visit(this);
+         //else
+         //   CashFlow.accept(ref v);
+      }
+
+   }
 }
