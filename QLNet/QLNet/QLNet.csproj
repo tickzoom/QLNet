@@ -34,7 +34,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cashflow.cs" />
+    <Compile Include="Cashflows\CashFlows.cs" />
     <Compile Include="Cashflows\Coupon.cs" />
+    <Compile Include="Cashflows\Leg.cs" />
     <Compile Include="Cashflows\SimpleCashFlow.cs" />
     <Compile Include="Currencies\Africa.cs" />
     <Compile Include="Currencies\America.cs" />
@@ -43,8 +45,11 @@
     <Compile Include="Currencies\Europe.cs" />
     <Compile Include="Currencies\ExchangeRate.cs" />
     <Compile Include="Currencies\ExchangeRateManager.cs" />
+    <Compile Include="Enum.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="Instruments\Instrument.cs" />
+    <Compile Include="Instruments\Swap.cs" />
+    <Compile Include="InterestRate.cs" />
     <Compile Include="Math\GlobalMath.cs" />
     <Compile Include="Math\Interpolations\Extrapolator.cs" />
     <Compile Include="Math\Rounding.cs" />
