@@ -38,6 +38,7 @@
     <Compile Include="T_AmericanOption.cs" />
     <Compile Include="T_Calendars.cs" />
     <Compile Include="T_DayCounters.cs" />
+    <Compile Include="T_InterestRate.cs" />
     <Compile Include="T_Money.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="T_Rounding.cs" />
