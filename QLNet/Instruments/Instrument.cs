@@ -139,7 +139,7 @@ namespace QLNet
          fetchResults(engine_.getResults());
       }
 
-      public void fetchResults(PricingEngine.results r) 
+      public virtual void fetchResults(PricingEngine.results r) 
       {
          Instrument.results results = (Instrument.results) r ; //dynamic_cast<const Instrument::results*>(r);
          if (results == null) throw new Exception("no results returned from pricing engine");
