@@ -269,7 +269,7 @@ namespace QLNet
       /// <returns></returns>
       public InterestRate equivalentRate(DDate d1, DDate d2, DayCounter resultDC, Compounding comp)
       {
-         return equivalentRate(d1, d2, resultDC, comp, Annual);
+         return equivalentRate(d1, d2, resultDC, comp, Frequency.Annual);
       }
       public InterestRate equivalentRate(DDate d1, DDate d2, DayCounter resultDC, Compounding comp, Frequency freq)
       {
