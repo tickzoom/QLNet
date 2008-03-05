@@ -94,6 +94,8 @@ namespace QLNet
          _serialNumber = d + offset + yearOffset(y);
       }
 
+      public DDate(DateTime d ) : this(d.Day ,(Month)d.Month ,d.Year ) {}
+
       #endregion
 
       public Month month()
@@ -494,6 +496,14 @@ namespace QLNet
                                  "-" + maximumSerialNumber() + "], i.e. [" +
                                  minDate() + "-" + maxDate() + "]");
          }
+      }
+
+      public static DDate MIN(DDate d1, DDate d2) { return d1 < d2 ? d1 : d2; }
+      public static DDate MAX(DDate d1, DDate d2) { return d1 > d2 ? d1 : d2; }
+
+      public DateTime toDateTime()
+      {
+         return new DateTime(this.year(), (int)this.month(), this.dayOfMonth());
       }
 
       public override string ToString()

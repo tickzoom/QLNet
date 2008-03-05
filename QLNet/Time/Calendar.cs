@@ -92,7 +92,7 @@ namespace QLNet
       {
          return adjust(d, BusinessDayConvention.Following);
       }
-       DDate adjust(DDate d, BusinessDayConvention c)
+      public DDate adjust(DDate d, BusinessDayConvention c)
       {
          if (d == new DDate())
          {
