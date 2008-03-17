@@ -109,7 +109,7 @@ namespace QLNet
       private int _settlementDays;
       private DayCounter _dayCounter;
    
-      DayCounter dayCounter()  {return _dayCounter;}
+      public DayCounter dayCounter()  {return _dayCounter;}
       public virtual double maxTime()  {return timeFromReference(maxDate());}
       public virtual Calendar calendar() { return _calendar; }
       public virtual Nullable <int> settlementDays()  {return _settlementDays;}
