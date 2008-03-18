@@ -199,15 +199,16 @@ namespace QLNet
         };
       
 
-         private static Calendar.Impl settlementImpl = new UnitedKingdom.SettlementImpl();
+        private static Calendar.Impl settlementImpl = new UnitedKingdom.SettlementImpl();
         private static Calendar.Impl exchangeImpl = new UnitedKingdom.ExchangeImpl();
         private static Calendar.Impl metalsImpl = new UnitedKingdom.MetalsImpl();
       
       
         //! UK calendars
-        public enum Market { Settlement,     //!< generic settlement calendar
-                      Exchange,       //!< London stock-exchange calendar
-                      Metals          //|< London metals-exchange calendar
+        public enum Market { 
+            Settlement,     //!< generic settlement calendar
+            Exchange,       //!< London stock-exchange calendar
+            Metals          //!< London metals-exchange calendar
         };
         
         public UnitedKingdom()
