@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Alessandro Duci
+ Copyright (C) 2008 Andrea Maggiulli
 
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -45,7 +46,7 @@ namespace QLNet
         \ingroup calendars
     */
     public class Finland : Calendar {
-      private class Impl : Calendar.WesternImpl {
+      private new class Impl : Calendar.WesternImpl {
           
             public override string name() { return "Finland"; }
             public override bool isBusinessDay(DDate date) {
