@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Alessandro Duci
+ Copyright (C) 2008 Andrea Maggiulli
 
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -38,7 +39,7 @@ namespace QLNet
         \ingroup calendars
     */
     public class Turkey :  Calendar {
-      private class Impl :  Calendar.Impl {
+      private new class Impl :  Calendar.Impl {
             public override string name() { return "Turkey"; }
             public override bool isWeekend(Weekday w)
             {
