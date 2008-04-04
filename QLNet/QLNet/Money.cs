@@ -106,11 +106,11 @@ namespace QLNet
       }
       public Money rounded()
       {
-         return new Money(currency_.rounding.Round(value_), currency_);
+         return new Money(currency_.rounding.round(value_), currency_);
       }
       public override String ToString() 
       {
-        return this.rounded().value +  "-" + this.currency.code + "-"  + this.currency.Symbol ;
+        return this.rounded().value +  "-" + this.currency.code + "-"  + this.currency.symbol ;
       }
       #endregion
 
