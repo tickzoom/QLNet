@@ -33,15 +33,15 @@ namespace QLNet
 
       public struct Entry
       {
-         public Entry(ExchangeRate r, DDate s, DDate e)
+         public Entry(ExchangeRate r, Date s, Date e)
          {
             rate = r;
             startDate = s;
             endDate = e;
          }
          public ExchangeRate rate;
-         public DDate startDate;
-         public DDate endDate;
+         public Date startDate;
+         public Date endDate;
       }
 
       private ExchangeRateManager()
@@ -78,7 +78,7 @@ namespace QLNet
       }
 
 
-      public void add(ExchangeRate rate, DDate startDate)
+      public void add(ExchangeRate rate, Date startDate)
       {
          add(rate, startDate, DDate.maxDate());
       }
@@ -94,7 +94,7 @@ namespace QLNet
       /// and with overlapping date ranges, the latest one
       /// added takes precedence during lookup.
       /// </remarks> 
-      private void add(ExchangeRate rate, DDate startDate, DDate endDate)
+      private void add(ExchangeRate rate, Date startDate, Date endDate)
       {
          int k = hash(rate.source, rate.target);
          if (data_.ContainsKey(k))
@@ -127,7 +127,7 @@ namespace QLNet
          return this.lookup(source, target, new DDate(), ExchangeRate.Type.Derived);
       }
 
-      public ExchangeRate lookup(Currency source, Currency target,DDate date)
+      public ExchangeRate lookup(Currency source, Currency target,Date date)
       {
          return this.lookup(source, target, date, ExchangeRate.Type.Derived);
       }
@@ -148,7 +148,7 @@ namespace QLNet
       /// <param name="date"></param>
       /// <param name="type"></param>
       /// <returns></returns>
-      public ExchangeRate lookup(Currency source, Currency target, DDate date, ExchangeRate.Type type)
+      public ExchangeRate lookup(Currency source, Currency target, Date date, ExchangeRate.Type type)
       {
 
          if (source == target)
@@ -184,7 +184,7 @@ namespace QLNet
 
       }
       
-      private ExchangeRate directLookup(Currency source, Currency target, DDate date)
+      private ExchangeRate directLookup(Currency source, Currency target, Date date)
       {
          ExchangeRate rate = fetch(source,target,date); 
 
@@ -193,12 +193,12 @@ namespace QLNet
         else
             throw new Exception("no direct conversion available from " + source.code + " to " + target.code + " for " + date);
       }
-      private ExchangeRate smartLookup(Currency source, Currency target, DDate date)
+      private ExchangeRate smartLookup(Currency source, Currency target, Date date)
       {
          return smartLookup(source,target,date, new List<int>() );
       }      
 
-      private ExchangeRate smartLookup(Currency source, Currency target, DDate date, List<int> forbidden)
+      private ExchangeRate smartLookup(Currency source, Currency target, Date date, List<int> forbidden)
       {
         // direct exchange rates are preferred.
         ExchangeRate direct = fetch(source,target,date);
@@ -244,7 +244,7 @@ namespace QLNet
         throw new Exception("no conversion available from " + source.code + " to " + target.code + " for " + date);
     }
 
-      private ExchangeRate fetch(Currency source, Currency target, DDate date)
+      private ExchangeRate fetch(Currency source, Currency target, Date date)
       {
          if (data_.ContainsKey(hash(source, target)))
          {
