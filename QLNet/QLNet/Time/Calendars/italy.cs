@@ -22,8 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
+namespace QLNet {
     //! Italian calendars
     /*! Public holidays:
         <ul>
@@ -62,23 +61,19 @@ namespace QLNet
         \test the correctness of the returned results is tested against a
               list of known holidays.
     */
-    public class Italy : Calendar
-    {
-        //! Italian calendars
-        public enum Market
-        {
+   public class Italy : Calendar {
+       //! Italian calendars
+        public enum Market {
             Settlement,     //!< generic settlement calendar
             Exchange        //!< Milan stock-exchange calendar
         };
 
         public Italy() : this(Market.Settlement) { }
         public Italy(Market m)
-            : base()
-        {
+            : base() {
             // all calendar instances on the same market share the same
             // implementation instance
-            switch (m)
-            {
+            switch (m) {
                 case Market.Settlement:
                     calendar_ = Settlement.Singleton;
                     break;
@@ -91,14 +86,12 @@ namespace QLNet
         }
 
 
-        class Settlement : Calendar.WesternImpl
-        {
+        class Settlement : Calendar.WesternImpl {
             public static readonly Settlement Singleton = new Settlement();
             private Settlement() { }
-
+        
             public override string name() { return "Italian settlement"; }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;
@@ -134,15 +127,13 @@ namespace QLNet
                 return true;
             }
         }
-
-        class Exchange : Calendar.WesternImpl
-        {
+        
+        class Exchange : Calendar.WesternImpl {
             public static readonly Exchange Singleton = new Exchange();
             private Exchange() { }
-
+       
             public override string name() { return "Milan stock exchange"; }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;
@@ -153,7 +144,7 @@ namespace QLNet
                     // New Year's Day
                     || (d == 1 && m == Month.January)
                     // Good Friday
-                    || (dd == em - 3)
+                    || (dd == em-3)
                     // Easter Monday
                     || (dd == em)
                     // Labour Day

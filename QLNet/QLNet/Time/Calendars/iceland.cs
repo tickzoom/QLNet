@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Alessandro Duci
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
 
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -21,9 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
-
+namespace QLNet {
     //! Icelandic calendars
     /*! Holidays for the Iceland stock exchange
         (data from <http://www.icex.is/is/calendar?languageID=1>):
@@ -47,57 +46,49 @@ namespace QLNet
         \ingroup calendars
     */
     public class Iceland : Calendar {
-      private class IcexImpl : Calendar.WesternImpl {
+        public Iceland() : base(Impl.Singleton) { }
+
+        class Impl : Calendar.WesternImpl {
+            public static readonly Impl Singleton = new Impl();
+            private Impl() { }
           
             public override string name() { return "Iceland stock exchange"; }
-            public override bool isBusinessDay(DDate date) {
-                Weekday w = date.weekday();
-        int d = date.dayOfMonth(), dd = date.dayOfYear();
-        Month m = date.month();
-        int y = date.year();
-        int em = easterMonday(y);
-        if (isWeekend(w)
-            // New Year's Day (possibly moved to Monday)
-            || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.Monday))
-                && m == Month.January)
-            // Holy Thursday
-            || (dd == em-4)
-            // Good Friday
-            || (dd == em-3)
-            // Easter Monday
-            || (dd == em)
-            // First day of Summer
-            || (d >= 19 && d <= 25 && w == Weekday.Thursday && m == Month.April)
-            // Ascension Thursday
-            || (dd == em+38)
-            // Pentecost Monday
-            || (dd == em+49)
-            // Labour Day
-            || (d == 1 && m == Month.May)
-            // Independence Day
-            || (d == 17 && m == Month.June)
-            // Commerce Day
-            || (d <= 7 && w == Weekday.Monday && m == Month.August)
-            // Christmas
-            || (d == 25 && m == Month.December)
-            // Boxing Day
-            || (d == 26 && m == Month.December))
-            return false;
-        return true;
+            public override bool isBusinessDay(Date date) {
+                DayOfWeek w = date.DayOfWeek;
+                int d = date.Day, dd = date.DayOfYear;
+                Month m = (Month)date.Month;
+                int y = date.Year;
+                int em = easterMonday(y);
+
+                if (isWeekend(w)
+                    // New Year's Day (possibly moved to Monday)
+                    || ((d == 1 || ((d == 2 || d == 3) && w == DayOfWeek.Monday))
+                        && m == Month.January)
+                    // Holy Thursday
+                    || (dd == em-4)
+                    // Good Friday
+                    || (dd == em-3)
+                    // Easter Monday
+                    || (dd == em)
+                    // First day of Summer
+                    || (d >= 19 && d <= 25 && w == DayOfWeek.Thursday && m == Month.April)
+                    // Ascension Thursday
+                    || (dd == em+38)
+                    // Pentecost Monday
+                    || (dd == em+49)
+                    // Labour Day
+                    || (d == 1 && m == Month.May)
+                    // Independence Day
+                    || (d == 17 && m == Month.June)
+                    // Commerce Day
+                    || (d <= 7 && w == DayOfWeek.Monday && m == Month.August)
+                    // Christmas
+                    || (d == 25 && m == Month.December)
+                    // Boxing Day
+                    || (d == 26 && m == Month.December))
+                    return false;
+                return true;
+            }
+        }
     }
-
-        };
-                  private static Calendar.Impl impl = new Iceland.IcexImpl();
-
-          public enum Market { ICEX    //!< Iceland stock exchange
-        };
-       public Iceland() {
-       new Iceland(Market.ICEX);
-       }
-        public Iceland(Market market) {
-        // all calendar instances share the same implementation instance
-        _impl = impl;
-    }
-    };
-
 }

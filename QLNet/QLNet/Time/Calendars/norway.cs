@@ -23,8 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
+namespace QLNet {
     //! Norwegian calendar
     /*! Holidays:
         <ul>
@@ -44,18 +43,15 @@ namespace QLNet
 
         \ingroup calendars
     */
-    public class Norway : Calendar
-    {
+    public class Norway : Calendar {
         public Norway() : base(Impl.Singleton) { }
 
-        class Impl : Calendar.WesternImpl
-        {
+        class Impl : Calendar.WesternImpl {
             public static readonly Impl Singleton = new Impl();
             private Impl() { }
-
+          
             public override string name() { return "Norway"; }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;
@@ -64,17 +60,17 @@ namespace QLNet
 
                 if (isWeekend(w)
                     // Holy Thursday
-                    || (dd == em - 4)
+                    || (dd == em-4)
                     // Good Friday
-                    || (dd == em - 3)
+                    || (dd == em-3)
                     // Easter Monday
                     || (dd == em)
                     // Ascension Thursday
-                    || (dd == em + 38)
+                    || (dd == em+38)
                     // Whit Monday
-                    || (dd == em + 49)
+                    || (dd == em+49)
                     // New Year's Day
-                    || (d == 1 && m == Month.January)
+                    || (d == 1  && m == Month.January)
                     // May Day
                     || (d == 1 && m == Month.May)
                     // National Independence Day

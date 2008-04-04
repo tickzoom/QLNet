@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Alessandro Duci
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
 
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -21,9 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
-
+namespace QLNet {
     //! Chinese calendar
     /*! Holidays:
         <ul>
@@ -45,59 +44,43 @@ namespace QLNet
         \ingroup calendars
     */
     public class China : Calendar {
-      private class SseImpl : Calendar.Impl {
+        public China() : base(Impl.Singleton) { }
+
+        class Impl : Calendar {
+            public static readonly Impl Singleton = new Impl();
+            private Impl() { }
 
             public override string name() { return "Shanghai stock exchange"; }
-            public override bool isWeekend(Weekday w){
-                return w == Weekday.Saturday || w == Weekday.Sunday;
-        }
-            public override bool isBusinessDay(DDate date) {
-                   Weekday w = date.weekday();
-        int d = date.dayOfMonth();
-        Month m = date.month();
-        int y = date.year();
+            public override bool isWeekend(DayOfWeek w) {
+                return w == DayOfWeek.Saturday || w == DayOfWeek.Sunday;
+            }
+            public override bool isBusinessDay(Date date) {
+                DayOfWeek w = date.DayOfWeek;
+                int d = date.Day;
+                Month m = (Month)date.Month;
+                int y = date.Year;
 
-        if (isWeekend(w)
-            // New Year's Day
-            || (d == 1 && m == Month.January)
-            || (d == 3 && m ==Month.January && y == 2005)
-            || ((d == 2 || d == 3) && m == Month.January && y == 2006)
-            || (d <= 3 && m == Month.January && y == 2007)
-            // Labor Day
-            || (d >= 1 && d <= 7 && m == Month.May)
-            // National Day
-            || (d >= 1 && d <= 7 && m == Month.October)
-            // Chinese New Year
-            || (d >= 19 && d <= 28 && m == Month.January && y == 2004)
-            || (d >=  7 && d <= 15 && m == Month.February && y == 2005)
-            || (((d >= 26 && m == Month.January) || (d <= 3 && m == Month.February))
-                && y == 2006)
-            || (d >= 17 && d <= 25 && m == Month.February && y == 2007)
-            )
-            return false;
-        return true;
-    }
-        };
-    private static Calendar.Impl sseImpl= new China.SseImpl();
-      public enum Market { SSE    //!< Shanghai stock exchange
-        };
-      public China(){
-        new China(Market.SSE);
-      }
-            
-            
-      public China(Market m) {
-        // all calendar instances share the same implementation instance
-        
-        switch (m) {
-            case Market.SSE:
-            _impl = sseImpl;
-            break;
-          default:
-            throw new Exception("unknown market");
+                if (isWeekend(w)
+                    // New Year's Day
+                    || (d == 1 && m == Month.January)
+                    || (d == 3 && m ==Month.January && y == 2005)
+                    || ((d == 2 || d == 3) && m == Month.January && y == 2006)
+                    || (d <= 3 && m == Month.January && y == 2007)
+                    // Labor Day
+                    || (d >= 1 && d <= 7 && m == Month.May)
+                    // National Day
+                    || (d >= 1 && d <= 7 && m == Month.October)
+                    // Chinese New Year
+                    || (d >= 19 && d <= 28 && m == Month.January && y == 2004)
+                    || (d >=  7 && d <= 15 && m == Month.February && y == 2005)
+                    || (((d >= 26 && m == Month.January) || (d <= 3 && m == Month.February))
+                        && y == 2006)
+                    || (d >= 17 && d <= 25 && m == Month.February && y == 2007)
+                    )
+                    return false;
+                return true;
+            }
         }
     }
-    };
-
 }
 

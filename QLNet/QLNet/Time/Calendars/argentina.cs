@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Alessandro Duci
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
 
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -21,9 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
-
+namespace QLNet {
     //! Argentinian calendars
     /*! Holidays for the Buenos Aires stock exchange
         (data from <http://www.merval.sba.com.ar/>):
@@ -49,60 +48,49 @@ namespace QLNet
         \ingroup calendars
     */
     public class Argentina : Calendar {
-      private class MervalImpl : Calendar.WesternImpl {
+        public Argentina() : base(Impl.Singleton) { }
+
+        class Impl : Calendar.WesternImpl {
+            public static readonly Impl Singleton = new Impl();
+            private Impl() { }
+         
             public override string name() { return "Buenos Aires stock exchange"; }
-            public override bool isBusinessDay(DDate date) {
-                Weekday w = date.weekday();
-        int d = date.dayOfMonth(), dd = date.dayOfYear();
-        Month m = date.month();
-        int y = date.year();
-        int em = easterMonday(y);
-        if (isWeekend(w)
-            // New Year's Day
-            || (d == 1 && m == Month.January)
-            // Holy Thursday
-            || (dd == em-4)
-            // Good Friday
-            || (dd == em-3)
-            // Labour Day
-            || (d == 1 && m == Month.May)
-            // May Revolution
-            || (d == 25 && m == Month.May)
-            // Death of General Manuel Belgrano
-            || (d >= 15 && d <= 21 && w == Weekday.Monday && m == Month.June)
-            // Independence Day
-            || (d == 9 && m == Month.July)
-            // Death of General José de San Martín
-            || (d >= 15 && d <= 21 && w == Weekday.Monday && m == Month.August)
-            // Columbus Day
-            || ((d == 10 || d == 11 || d == 12 || d == 15 || d == 16)
-                && w == Weekday.Monday && m == Month.October)
-            // Immaculate Conception
-            || (d == 8 && m == Month.December)
-            // Christmas Eve
-            || (d == 24 && m == Month.December)
-            // New Year's Eve
-            || ((d == 31 || (d == 30 && w == Weekday.Friday)) && m == Month.December))
-            return false;
-        return true;
-    }
+            public override bool isBusinessDay(Date date) {
+                DayOfWeek w = date.DayOfWeek;
+                int d = date.Day, dd = date.DayOfYear;
+                Month m = (Month)date.Month;
+                int y = date.Year;
+                int em = easterMonday(y);
+
+                if (isWeekend(w)
+                    // New Year's Day
+                    || (d == 1 && m == Month.January)
+                    // Holy Thursday
+                    || (dd == em-4)
+                    // Good Friday
+                    || (dd == em-3)
+                    // Labour Day
+                    || (d == 1 && m == Month.May)
+                    // May Revolution
+                    || (d == 25 && m == Month.May)
+                    // Death of General Manuel Belgrano
+                    || (d >= 15 && d <= 21 && w == DayOfWeek.Monday && m == Month.June)
+                    // Independence Day
+                    || (d == 9 && m == Month.July)
+                    // Death of General José de San Martín
+                    || (d >= 15 && d <= 21 && w == DayOfWeek.Monday && m == Month.August)
+                    // Columbus Day
+                    || ((d == 10 || d == 11 || d == 12 || d == 15 || d == 16)
+                        && w == DayOfWeek.Monday && m == Month.October)
+                    // Immaculate Conception
+                    || (d == 8 && m == Month.December)
+                    // Christmas Eve
+                    || (d == 24 && m == Month.December)
+                    // New Year's Eve
+                    || ((d == 31 || (d == 30 && w == DayOfWeek.Friday)) && m == Month.December))
+                    return false;
+                return true;
+            }
         };
-      public enum Market { 
-            Merval   //!< Buenos Aires stock exchange calendar
-        };
-    
-    private static Calendar.Impl  impl = new Argentina.MervalImpl();
-
-
-    Argentina()
-    {
-        new Argentina(Market.Merval);
-    }
-
-    Argentina(Market m) {
-        // all calendar instances share the same implementation instance
-        _impl = impl;
-    }
-
    };
 }

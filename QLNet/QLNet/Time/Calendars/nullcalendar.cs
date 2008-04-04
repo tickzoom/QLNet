@@ -19,22 +19,19 @@
 using System;
 using QLNet;
 
-namespace QLNet
-{
-    //! %Calendar for reproducing theoretical calculations.
-    /*! This calendar has no holidays. It ensures that dates at whole-month distances have the same day of month.    */
-    public class NullCalendar : Calendar
-    {
+namespace QLNet {
+	//! %Calendar for reproducing theoretical calculations.
+	/*! This calendar has no holidays. It ensures that dates at whole-month distances have the same day of month.    */
+	public class NullCalendar : Calendar {
         public NullCalendar() : base(Impl.Singleton) { }
 
-        class Impl : Calendar
-        {
+        class Impl : Calendar {
             public static readonly Impl Singleton = new Impl();
             private Impl() { }
-
+            
             public override string name() { return "Null calendar"; }
             public override bool isWeekend(DayOfWeek w) { return false; }
             public override bool isBusinessDay(Date d) { return true; }
         }
-    }
+	}
 }

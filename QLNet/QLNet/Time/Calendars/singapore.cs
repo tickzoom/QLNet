@@ -22,8 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
+namespace QLNet {
     //! %Singapore calendars
     /*! Holidays for the Singapore exchange
         (data from <http://www.ses.com.sg>):
@@ -50,18 +49,15 @@ namespace QLNet
 
         \ingroup calendars
     */
-    public class Singapore : Calendar
-    {
+    public class Singapore : Calendar {
         public Singapore() : base(Impl.Singleton) { }
 
-        class Impl : Calendar.WesternImpl
-        {
+        class Impl : Calendar.WesternImpl {
             public static readonly Impl Singleton = new Impl();
             private Impl() { }
-
+          
             public override string name() { return "Singapore exchange"; }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;
@@ -72,7 +68,7 @@ namespace QLNet
                     // New Year's Day
                     || (d == 1 && m == Month.January)
                     // Good Friday
-                    || (dd == em - 3)
+                    || (dd == em-3)
                     // Labor Day
                     || (d == 1 && m == Month.May)
                     // National Day

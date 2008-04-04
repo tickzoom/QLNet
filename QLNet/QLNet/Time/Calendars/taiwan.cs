@@ -22,8 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
+namespace QLNet {
     //! Taiwanese calendars
     /*! Holidays for the Taiwan stock exchange
         (data from <http://www.tse.com.tw/en/trading/trading_days.php>):
@@ -47,22 +46,18 @@ namespace QLNet
 
         \ingroup calendars
     */
-    public class Taiwan : Calendar
-    {
+    public class Taiwan :  Calendar {
         public Taiwan() : base(Impl.Singleton) { }
 
-        class Impl : Calendar
-        {
+        class Impl : Calendar {
             public static readonly Impl Singleton = new Impl();
             private Impl() { }
 
             public override string name() { return "Taiwan stock exchange"; }
-            public override bool isWeekend(DayOfWeek w)
-            {
+            public override bool isWeekend(DayOfWeek w) {
                 return w == DayOfWeek.Saturday || w == DayOfWeek.Sunday;
             }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;
@@ -80,8 +75,7 @@ namespace QLNet
                     )
                     return false;
 
-                if (y == 2002)
-                {
+                if (y == 2002) {
                     // Dragon Boat Festival and Moon Festival fall on Saturday
                     if (// Chinese Lunar New Year
                         (d >= 9 && d <= 17 && m == Month.February)
@@ -90,8 +84,7 @@ namespace QLNet
                         )
                         return false;
                 }
-                if (y == 2003)
-                {
+                if (y == 2003) {
                     // Tomb Sweeping Day falls on Saturday
                     if (// Chinese Lunar New Year
                         ((d >= 31 && m == Month.January) || (d <= 5 && m == Month.February))
@@ -102,8 +95,7 @@ namespace QLNet
                         )
                         return false;
                 }
-                if (y == 2004)
-                {
+                if (y == 2004) {
                     // Tomb Sweeping Day falls on Sunday
                     if (// Chinese Lunar New Year
                         (d >= 21 && d <= 26 && m == Month.January)
@@ -114,8 +106,7 @@ namespace QLNet
                         )
                         return false;
                 }
-                if (y == 2005)
-                {
+                if (y == 2005) {
                     // Dragon Boat and Moon Festival fall on Saturday or Sunday
                     if (// Chinese Lunar New Year
                         (d >= 6 && d <= 13 && m == Month.February)
@@ -126,8 +117,7 @@ namespace QLNet
                         )
                         return false;
                 }
-                if (y == 2006)
-                {
+                if (y == 2006) {
                     // Dragon Boat and Moon Festival fall on Saturday or Sunday
                     if (// Chinese Lunar New Year
                         ((d >= 28 && m == Month.January) || (d <= 5 && m == Month.February))
@@ -140,8 +130,7 @@ namespace QLNet
                         )
                         return false;
                 }
-                if (y == 2007)
-                {
+                if (y == 2007) {
                     if (// Chinese Lunar New Year
                         (d >= 17 && d <= 25 && m == Month.February)
                         // Tomb Sweeping Day

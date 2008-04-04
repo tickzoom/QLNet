@@ -22,8 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
+namespace QLNet {
     //! German calendars
     /*! Public holidays:
         <ul>
@@ -93,11 +92,9 @@ namespace QLNet
         \test the correctness of the returned results is tested
               against a list of known holidays.
     */
-    public class Germany : Calendar
-    {
+    public class Germany : Calendar {
         //! German calendars
-        public enum Market
-        {
+        public enum Market {
             Settlement,             //!< generic settlement calendar
             FrankfurtStockExchange, //!< Frankfurt stock-exchange
             Xetra,                  //!< Xetra
@@ -106,12 +103,10 @@ namespace QLNet
 
         public Germany() : this(Market.FrankfurtStockExchange) { }
         public Germany(Market m)
-            : base()
-        {
+            : base() {
             // all calendar instances on the same market share the same
             // implementation instance
-            switch (m)
-            {
+            switch (m) {
                 case Market.Settlement:
                     calendar_ = Settlement.Singleton;
                     break;
@@ -129,14 +124,12 @@ namespace QLNet
             }
         }
 
-        class Settlement : Calendar.WesternImpl
-        {
+        class Settlement : Calendar.WesternImpl {
             public static readonly Settlement Singleton = new Settlement();
             private Settlement() { }
-
+          
             public override string name() { return "German settlement"; }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;
@@ -147,15 +140,15 @@ namespace QLNet
                     // New Year's Day
                     || (d == 1 && m == Month.January)
                     // Good Friday
-                    || (dd == em - 3)
+                    || (dd == em-3)
                     // Easter Monday
                     || (dd == em)
                     // Ascension Thursday
-                    || (dd == em + 38)
+                    || (dd == em+38)
                     // Whit Monday
-                    || (dd == em + 49)
+                    || (dd == em+49)
                     // Corpus Christi
-                    || (dd == em + 59)
+                    || (dd == em+59)
                     // Labour Day
                     || (d == 1 && m == Month.May)
                     // National Day
@@ -172,14 +165,12 @@ namespace QLNet
                 return true;
             }
         }
-        class FrankfurtStockExchange : Calendar.WesternImpl
-        {
+        class FrankfurtStockExchange : Calendar.WesternImpl {
             public static readonly FrankfurtStockExchange Singleton = new FrankfurtStockExchange();
             private FrankfurtStockExchange() { }
 
             public override string name() { return "Frankfurt stock exchange"; }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;
@@ -190,7 +181,7 @@ namespace QLNet
                     // New Year's Day
                     || (d == 1 && m == Month.January)
                     // Good Friday
-                    || (dd == em - 3)
+                    || (dd == em-3)
                     // Easter Monday
                     || (dd == em)
                     // Labour Day
@@ -207,14 +198,12 @@ namespace QLNet
                 return true;
             }
         }
-        class Xetra : Calendar.WesternImpl
-        {
+        class Xetra : Calendar.WesternImpl {
             public static readonly Xetra Singleton = new Xetra();
             private Xetra() { }
-
+          
             public override string name() { return "Xetra"; }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;
@@ -225,7 +214,7 @@ namespace QLNet
                     // New Year's Day
                     || (d == 1 && m == Month.January)
                     // Good Friday
-                    || (dd == em - 3)
+                    || (dd == em-3)
                     // Easter Monday
                     || (dd == em)
                     // Labour Day
@@ -242,14 +231,12 @@ namespace QLNet
                 return true;
             }
         }
-        class Eurex : Calendar.WesternImpl
-        {
+        class Eurex : Calendar.WesternImpl {
             public static readonly Eurex Singleton = new Eurex();
             private Eurex() { }
-
+          
             public override string name() { return "Eurex"; }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;
@@ -260,7 +247,7 @@ namespace QLNet
                     // New Year's Day
                     || (d == 1 && m == Month.January)
                     // Good Friday
-                    || (dd == em - 3)
+                    || (dd == em-3)
                     // Easter Monday
                     || (dd == em)
                     // Labour Day

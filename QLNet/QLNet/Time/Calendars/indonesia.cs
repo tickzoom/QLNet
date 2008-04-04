@@ -22,8 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
+namespace QLNet {
     //! %Indonesian calendars
     /*! Holidays for the Jakarta stock exchange
         (data from <http://www.jsx.co.id/>):
@@ -54,22 +53,18 @@ namespace QLNet
         </ul>
         \ingroup calendars
     */
-    public class Indonesia : Calendar
-    {
-        public enum Market
-        {
+    public class Indonesia : Calendar {
+        public enum Market {
             BEJ,  //!< Jakarta stock exchange
             JSX   //!< Jakarta stock exchange
         };
 
         public Indonesia() : this(Market.BEJ) { }
         public Indonesia(Market m)
-            : base()
-        {
+            : base() {
             // all calendar instances on the same market share the same
             // implementation instance
-            switch (m)
-            {
+            switch (m) {
                 case Market.BEJ:
                 case Market.JSX:
                     calendar_ = BEJ.Singleton;
@@ -79,14 +74,12 @@ namespace QLNet
             }
         }
 
-        class BEJ : Calendar.WesternImpl
-        {
+        class BEJ : Calendar.WesternImpl {
             public static readonly BEJ Singleton = new BEJ();
             private BEJ() { }
-
+        
             public override string name() { return "Jakarta stock exchange"; }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;
@@ -97,17 +90,16 @@ namespace QLNet
                     // New Year's Day
                     || (d == 1 && m == Month.January)
                     // Good Friday
-                    || (dd == em - 3)
+                    || (dd == em-3)
                     // Ascension Thursday
-                    || (dd == em + 38)
+                    || (dd == em+38)
                     // Independence Day
                     || (d == 17 && m == Month.August)
                     // Christmas
                     || (d == 25 && m == Month.December)
                     )
                     return false;
-                if (y == 2005)
-                {
+                if (y == 2005) {
                     if (// Idul Adha
                         (d == 21 && m == Month.January)
                         // Imlek
@@ -130,8 +122,7 @@ namespace QLNet
                         )
                         return false;
                 }
-                if (y == 2006)
-                {
+                if (y == 2006) {
                     if (// Idul Adha
                         (d == 10 && m == Month.January)
                         // Moslem's New Year Day
@@ -149,8 +140,7 @@ namespace QLNet
                         )
                         return false;
                 }
-                if (y == 2007)
-                {
+                if (y == 2007) {
                     if (// Nyepi
                         (d == 19 && m == Month.March)
                         // Waisak

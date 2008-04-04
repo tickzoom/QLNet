@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Alessandro Duci
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
 
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -21,9 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
-
+namespace QLNet {
     //! Canadian calendar
     /*! Banking holidays:
         <ul>
@@ -64,117 +63,118 @@ namespace QLNet
 
         \ingroup calendars
     */
-    public class Canada :  Calendar {
-      private class SettlementImpl : Calendar.WesternImpl {
+    public class Canada : Calendar {
+        public enum Market {
+            Settlement,       //!< generic settlement calendar
+            TSX               //!< Toronto stock exchange calendar
+        };
+
+        public Canada() : this(Market.Settlement) { }
+        public Canada(Market m)
+            : base() {
+            // all calendar instances on the same market share the same
+            // implementation instance
+            switch (m) {
+                case Market.Settlement:
+                    calendar_ = Settlement.Singleton;
+                    break;
+                case Market.TSX:
+                    calendar_ = TSX.Singleton;
+                    break;
+                default:
+                    throw new ArgumentException("Unknown market: " + m); ;
+            }
+        }
+
+        class Settlement : Calendar.WesternImpl {
+            public static readonly Settlement Singleton = new Settlement();
+            private Settlement() { }
+
             public override string name() { return "Canada"; }
-            public override bool isBusinessDay(DDate date) {
-                   Weekday w = date.weekday();
-        int d = date.dayOfMonth(), dd = date.dayOfYear();
-        Month m = date.month();
-        int y = date.year();
-        int em = easterMonday(y);
-        if (isWeekend(w)
-            // New Year's Day (possibly moved to Monday)
-            || ((d == 1 || (d == 2 && w == Weekday.Monday)) && m == Month.January)
-            // Family Day (third Monday in February, since 2008)
-            || ((d >= 15 && d <= 21) && w == Weekday.Monday && m == Month.February
-                && y >= 2008)
-            // Good Friday
-            || (dd == em-3)
-            // Easter Monday
-            || (dd == em)
-            // The Monday on or preceding 24 May (Victoria Day)
-            || (d > 17 && d <= 24 && w == Weekday.Monday && m == Month.May)
-            // July 1st, possibly moved to Monday (Canada Day)
-            || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.Monday)) && m == Month.July)
-            // first Monday of August (Provincial Holiday)
-            || (d <= 7 && w == Weekday.Monday && m == Month.August)
-            // first Monday of September (Labor Day)
-            || (d <= 7 && w == Weekday.Monday && m == Month.September)
-            // second Monday of October (Thanksgiving Day)
-            || (d > 7 && d <= 14 && w == Weekday.Monday && m == Month.October)
-            // November 11th (possibly moved to Monday)
-            || ((d == 11 || ((d == 12 || d == 13) && w == Weekday.Monday))
-                && m == Month.November)
-            // Christmas (possibly moved to Monday or Tuesday)
-            || ((d == 25 || (d == 27 && (w == Weekday.Monday || w == Weekday.Tuesday)))
-                && m == Month.December)
-            // Boxing Day (possibly moved to Monday or Tuesday)
-            || ((d == 26 || (d == 28 && (w == Weekday.Monday || w == Weekday.Tuesday)))
-                && m == Month.December)
-            )
-            return false;
-        return true;
-    }
-        };
-        private class TsxImpl :  Calendar.WesternImpl {
-         
+            public override bool isBusinessDay(Date date) {
+                DayOfWeek w = date.DayOfWeek;
+                int d = date.Day, dd = date.DayOfYear;
+                Month m = (Month)date.Month;
+                int y = date.Year;
+                int em = easterMonday(y);
+
+                if (isWeekend(w)
+                    // New Year's Day (possibly moved to Monday)
+                    || ((d == 1 || (d == 2 && w == DayOfWeek.Monday)) && m == Month.January)
+                    // Family Day (third Monday in February, since 2008)
+                    || ((d >= 15 && d <= 21) && w == DayOfWeek.Monday && m == Month.February
+                        && y >= 2008)
+                    // Good Friday
+                    || (dd == em - 3)
+                    // Easter Monday
+                    || (dd == em)
+                    // The Monday on or preceding 24 May (Victoria Day)
+                    || (d > 17 && d <= 24 && w == DayOfWeek.Monday && m == Month.May)
+                    // July 1st, possibly moved to Monday (Canada Day)
+                    || ((d == 1 || ((d == 2 || d == 3) && w == DayOfWeek.Monday)) && m == Month.July)
+                    // first Monday of August (Provincial Holiday)
+                    || (d <= 7 && w == DayOfWeek.Monday && m == Month.August)
+                    // first Monday of September (Labor Day)
+                    || (d <= 7 && w == DayOfWeek.Monday && m == Month.September)
+                    // second Monday of October (Thanksgiving Day)
+                    || (d > 7 && d <= 14 && w == DayOfWeek.Monday && m == Month.October)
+                    // November 11th (possibly moved to Monday)
+                    || ((d == 11 || ((d == 12 || d == 13) && w == DayOfWeek.Monday))
+                        && m == Month.November)
+                    // Christmas (possibly moved to Monday or Tuesday)
+                    || ((d == 25 || (d == 27 && (w == DayOfWeek.Monday || w == DayOfWeek.Tuesday)))
+                        && m == Month.December)
+                    // Boxing Day (possibly moved to Monday or Tuesday)
+                    || ((d == 26 || (d == 28 && (w == DayOfWeek.Monday || w == DayOfWeek.Tuesday)))
+                        && m == Month.December)
+                    )
+                    return false;
+                return true;
+            }
+        }
+
+        class TSX : Calendar.WesternImpl {
+            public static readonly TSX Singleton = new TSX();
+            private TSX() { }
+
             public override string name() { return "TSX"; }
-              public override bool isBusinessDay(DDate date) {
-               Weekday w = date.weekday();
-        int d = date.dayOfMonth(), dd = date.dayOfYear();
-        Month m = date.month();
-        int y = date.year();
-        int em = easterMonday(y);
-        if (isWeekend(w)
-            // New Year's Day (possibly moved to Monday)
-            || ((d == 1 || (d == 2 && w == Weekday.Monday)) && m == Month.January)
-            // Family Day (third Monday in February, since 2008)
-            || ((d >= 15 && d <= 21) && w == Weekday.Monday && m == Month.February
-                && y >= 2008)
-            // Good Friday
-            || (dd == em-3)
-            // Easter Monday
-            || (dd == em)
-            // The Monday on or preceding 24 May (Victoria Day)
-            || (d > 17 && d <= 24 && w == Weekday.Monday && m == Month.May)
-            // July 1st, possibly moved to Monday (Canada Day)
-            || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.Monday)) && m == Month.July)
-            // first Monday of August (Provincial Holiday)
-            || (d <= 7 && w == Weekday.Monday && m == Month.August)
-            // first Monday of September (Labor Day)
-            || (d <= 7 && w == Weekday.Monday && m == Month.September)
-            // second Monday of October (Thanksgiving Day)
-            || (d > 7 && d <= 14 && w == Weekday.Monday && m == Month.October)
-            // Christmas (possibly moved to Monday or Tuesday)
-            || ((d == 25 || (d == 27 && (w == Weekday.Monday || w == Weekday.Tuesday)))
-                && m == Month.December)
-            // Boxing Day (possibly moved to Monday or Tuesday)
-            || ((d == 26 || (d == 28 && (w == Weekday.Monday || w == Weekday.Tuesday)))
-                && m == Month.December)
-            )
-            return false;
-        return true;
-    }
+            public override bool isBusinessDay(Date date) {
+                DayOfWeek w = date.DayOfWeek;
+                int d = date.Day, dd = date.DayOfYear;
+                Month m = (Month)date.Month;
+                int y = date.Year;
+                int em = easterMonday(y);
 
-          
-        };
-         
-        private static Calendar.Impl settlementImpl = new Canada.SettlementImpl();
-        private static Calendar.Impl tsxImpl = new Canada.TsxImpl();
-
-      public enum Market { Settlement,       //!< generic settlement calendar
-                      TSX               //!< Toronto stock exchange calendar
-        };
-        Canada(){
-              new Canada(Market.Settlement);
-        }
-        public Canada(Market market) {
-        // all calendar instances share the same implementation instance
-        
-        switch (market) {
-            case Market.Settlement:
-            _impl = settlementImpl;
-            break;
-        case Market.TSX:
-            _impl = tsxImpl;
-            break;
-          default:
-            throw new Exception("unknown market");
+                if (isWeekend(w)
+                    // New Year's Day (possibly moved to Monday)
+                || ((d == 1 || (d == 2 && w == DayOfWeek.Monday)) && m == Month.January)
+                    // Family Day (third Monday in February, since 2008)
+                || ((d >= 15 && d <= 21) && w == DayOfWeek.Monday && m == Month.February
+                    && y >= 2008)
+                    // Good Friday
+                || (dd == em - 3)
+                    // Easter Monday
+                || (dd == em)
+                    // The Monday on or preceding 24 May (Victoria Day)
+                || (d > 17 && d <= 24 && w == DayOfWeek.Monday && m == Month.May)
+                    // July 1st, possibly moved to Monday (Canada Day)
+                || ((d == 1 || ((d == 2 || d == 3) && w == DayOfWeek.Monday)) && m == Month.July)
+                    // first Monday of August (Provincial Holiday)
+                || (d <= 7 && w == DayOfWeek.Monday && m == Month.August)
+                    // first Monday of September (Labor Day)
+                || (d <= 7 && w == DayOfWeek.Monday && m == Month.September)
+                    // second Monday of October (Thanksgiving Day)
+                || (d > 7 && d <= 14 && w == DayOfWeek.Monday && m == Month.October)
+                    // Christmas (possibly moved to Monday or Tuesday)
+                || ((d == 25 || (d == 27 && (w == DayOfWeek.Monday || w == DayOfWeek.Tuesday)))
+                    && m == Month.December)
+                    // Boxing Day (possibly moved to Monday or Tuesday)
+                || ((d == 26 || (d == 28 && (w == DayOfWeek.Monday || w == DayOfWeek.Tuesday)))
+                    && m == Month.December)
+                )
+                    return false;
+                return true;
+            }
         }
     }
-
-        
-        };
-
 }
