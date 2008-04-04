@@ -51,7 +51,6 @@
     <Compile Include="T_Rounding.cs" />
     <Compile Include="T_Solvers.cs" />
     <Compile Include="T_Swap.cs" />
-    <Compile Include="T_TermStructure.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
