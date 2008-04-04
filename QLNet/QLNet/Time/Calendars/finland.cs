@@ -49,7 +49,7 @@ namespace QLNet
       private new class Impl : Calendar.WesternImpl {
           
             public override string name() { return "Finland"; }
-            public override bool isBusinessDay(DDate date) {
+            public override bool isBusinessDay(Date date) {
                 Weekday w = date.weekday();
                 int d = date.dayOfMonth(), dd = date.dayOfYear();
                 Month m = date.month();
