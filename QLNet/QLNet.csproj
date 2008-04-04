@@ -144,6 +144,7 @@
     <Compile Include="Time\Calendars\indonesia.cs" />
     <Compile Include="Time\Calendars\italy.cs" />
     <Compile Include="Time\Calendars\japan.cs" />
+    <Compile Include="Time\Calendars\JointCalendar.cs" />
     <Compile Include="Time\Calendars\mexico.cs" />
     <Compile Include="Time\Calendars\newzealand.cs" />
     <Compile Include="Time\Calendars\norway.cs" />
