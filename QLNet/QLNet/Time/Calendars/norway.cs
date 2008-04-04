@@ -1,6 +1,7 @@
 /*
  Copyright (C) 2008 Alessandro Duci
  Copyright (C) 2008 Andrea Maggiulli
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
 
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -24,7 +25,6 @@ using System.Text;
 
 namespace QLNet
 {
-
     //! Norwegian calendar
     /*! Holidays:
         <ul>
@@ -44,49 +44,49 @@ namespace QLNet
 
         \ingroup calendars
     */
-    public class Norway : Calendar {
-      private new class Impl : Calendar.WesternImpl {
-          
+    public class Norway : Calendar
+    {
+        public Norway() : base(Impl.Singleton) { }
+
+        class Impl : Calendar.WesternImpl
+        {
+            public static readonly Impl Singleton = new Impl();
+            private Impl() { }
+
             public override string name() { return "Norway"; }
-            public override bool isBusinessDay(DDate date) {
-                 Weekday w = date.weekday();
-        int d = date.dayOfMonth(), dd = date.dayOfYear();
-        Month m = date.month();
-        int y = date.year();
-        int em = easterMonday(y);
-        if (isWeekend(w)
-            // Holy Thursday
-            || (dd == em-4)
-            // Good Friday
-            || (dd == em-3)
-            // Easter Monday
-            || (dd == em)
-            // Ascension Thursday
-            || (dd == em+38)
-            // Whit Monday
-            || (dd == em+49)
-            // New Year's Day
-            || (d == 1  && m == Month.January)
-            // May Day
-            || (d == 1 && m == Month.May)
-            // National Independence Day
-            || (d == 17 && m == Month.May)
-            // Christmas
-            || (d == 25 && m == Month.December)
-            // Boxing Day
-            || (d == 26 && m == Month.December))
-            return false;
-        return true;
-    }
+            public override bool isBusinessDay(Date date)
+            {
+                DayOfWeek w = date.DayOfWeek;
+                int d = date.Day, dd = date.DayOfYear;
+                Month m = (Month)date.Month;
+                int y = date.Year;
+                int em = easterMonday(y);
 
-        };
-          private static Calendar.Impl impl = new Norway.Impl();
-      public Norway(){
-              // all calendar instances share the same implementation instance
-        
-        _impl = impl;
+                if (isWeekend(w)
+                    // Holy Thursday
+                    || (dd == em - 4)
+                    // Good Friday
+                    || (dd == em - 3)
+                    // Easter Monday
+                    || (dd == em)
+                    // Ascension Thursday
+                    || (dd == em + 38)
+                    // Whit Monday
+                    || (dd == em + 49)
+                    // New Year's Day
+                    || (d == 1 && m == Month.January)
+                    // May Day
+                    || (d == 1 && m == Month.May)
+                    // National Independence Day
+                    || (d == 17 && m == Month.May)
+                    // Christmas
+                    || (d == 25 && m == Month.December)
+                    // Boxing Day
+                    || (d == 26 && m == Month.December))
+                    return false;
+                return true;
+            }
+        }
     }
-    };
-
 }
 

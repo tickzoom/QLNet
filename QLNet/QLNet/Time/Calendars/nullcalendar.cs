@@ -1,7 +1,6 @@
 /*
- Copyright (C) 2008 Alessandro Duci
- Copyright (C) 2008 Andrea Maggiulli
-
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+  
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -17,31 +16,25 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-
 using System;
-using System.Collections.Generic;
-using System.Text;
+using QLNet;
 
 namespace QLNet
 {
-
     //! %Calendar for reproducing theoretical calculations.
-    /*! This calendar has no holidays. It ensures that dates at
-        whole-month distances have the same day of month.
+    /*! This calendar has no holidays. It ensures that dates at whole-month distances have the same day of month.    */
+    public class NullCalendar : Calendar
+    {
+        public NullCalendar() : base(Impl.Singleton) { }
 
-        \ingroup calendars
-    */
-    public class NullCalendar : Calendar {
-        private new class Impl : Calendar.Impl {
-          
-            public override string name() { return "Null"; }
-            public override bool isWeekend(Weekday w) { return false; }
-            public override bool isBusinessDay(DDate date) { return true; }
-        };
-       private static Calendar.Impl impl = new NullCalendar.Impl();
-       public NullCalendar() {
-            _impl = impl;
-      }
-    };
+        class Impl : Calendar
+        {
+            public static readonly Impl Singleton = new Impl();
+            private Impl() { }
 
+            public override string name() { return "Null calendar"; }
+            public override bool isWeekend(DayOfWeek w) { return false; }
+            public override bool isBusinessDay(Date d) { return true; }
+        }
+    }
 }

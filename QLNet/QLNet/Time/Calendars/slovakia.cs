@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Alessandro Duci
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
 
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -23,7 +24,6 @@ using System.Text;
 
 namespace QLNet
 {
-
     //! Slovak calendars
     /*! Holidays for the Bratislava stock exchange
         (data from <http://www.bsse.sk/>):
@@ -49,64 +49,60 @@ namespace QLNet
 
         \ingroup calendars
     */
-    public class Slovakia :  Calendar {
-      private class BsseImpl :  Calendar.WesternImpl {
+    public class Slovakia : Calendar
+    {
+        public Slovakia() : base(Impl.Singleton) { }
+
+        class Impl : Calendar.WesternImpl
+        {
+            public static readonly Impl Singleton = new Impl();
+            private Impl() { }
+
             public override string name() { return "Bratislava stock exchange"; }
-            public override bool isBusinessDay(DDate date) {
-                 Weekday w = date.weekday();
-        int d = date.dayOfMonth(), dd = date.dayOfYear();
-        Month m = date.month();
-        int y = date.year();
-        int em = easterMonday(y);
-        if (isWeekend(w)
-            // New Year's Day
-            || (d == 1 && m == Month.January)
-            // Epiphany
-            || (d == 6 && m == Month.January)
-            // Good Friday
-            || (dd == em-3)
-            // Easter Monday
-            || (dd == em)
-            // May Day
-            || (d == 1 && m == Month.May)
-            // Liberation of the Republic
-            || (d == 8 && m == Month.May)
-            // SS. Cyril and Methodius
-            || (d == 5 && m == Month.July)
-            // Slovak National Uprising
-            || (d == 29 && m == Month.August)
-            // Constitution of the Slovak Republic
-            || (d == 1 && m == Month.September)
-            // Our Lady of the Seven Sorrows
-            || (d == 15 && m == Month.September)
-            // All Saints Day
-            || (d == 1 && m == Month.November)
-            // Freedom and Democracy of the Slovak Republic
-            || (d == 17 && m == Month.November)
-            // Christmas Eve
-            || (d == 24 && m == Month.December)
-            // Christmas
-            || (d == 25 && m == Month.December)
-            // St. Stephen
-            || (d == 26 && m == Month.December)
-            // unidentified closing days for stock exchange
-            || (d >= 24 && d <= 31 && m == Month.December && y == 2004)
-            || (d >= 24 && d <= 31 && m == Month.December && y == 2005))
-            return false;
-        return true;
+            public override bool isBusinessDay(Date date)
+            {
+                DayOfWeek w = date.DayOfWeek;
+                int d = date.Day, dd = date.DayOfYear;
+                Month m = (Month)date.Month;
+                int y = date.Year;
+                int em = easterMonday(y);
+                if (isWeekend(w)
+                    // New Year's Day
+                    || (d == 1 && m == Month.January)
+                    // Epiphany
+                    || (d == 6 && m == Month.January)
+                    // Good Friday
+                    || (dd == em - 3)
+                    // Easter Monday
+                    || (dd == em)
+                    // May Day
+                    || (d == 1 && m == Month.May)
+                    // Liberation of the Republic
+                    || (d == 8 && m == Month.May)
+                    // SS. Cyril and Methodius
+                    || (d == 5 && m == Month.July)
+                    // Slovak National Uprising
+                    || (d == 29 && m == Month.August)
+                    // Constitution of the Slovak Republic
+                    || (d == 1 && m == Month.September)
+                    // Our Lady of the Seven Sorrows
+                    || (d == 15 && m == Month.September)
+                    // All Saints Day
+                    || (d == 1 && m == Month.November)
+                    // Freedom and Democracy of the Slovak Republic
+                    || (d == 17 && m == Month.November)
+                    // Christmas Eve
+                    || (d == 24 && m == Month.December)
+                    // Christmas
+                    || (d == 25 && m == Month.December)
+                    // St. Stephen
+                    || (d == 26 && m == Month.December)
+                    // unidentified closing days for stock exchange
+                    || (d >= 24 && d <= 31 && m == Month.December && y == 2004)
+                    || (d >= 24 && d <= 31 && m == Month.December && y == 2005))
+                    return false;
+                return true;
+            }
+        }
     }
-        };
-        private static Calendar.Impl impl = new Slovakia.BsseImpl();
-      public enum Market { BSSE    //!< Bratislava stock exchange
-        };
-        public Slovakia(){
-            new Slovakia(Market.BSSE);
-        }
-
-        public Slovakia(Market market) {
-        // all calendar instances share the same implementation instance
-            _impl = impl;
-        }
-    };
-
 }

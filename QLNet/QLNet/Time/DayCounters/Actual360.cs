@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Andrea Maggiulli
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -16,25 +16,28 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace QLNet
 {
-   public class Actual360 : DayCounter 
-   {
-      private new class Impl : DayCounter.Impl 
-      {
-          public override string name() { return "Actual/360"; }
-          public override double yearFraction(DDate d1,DDate d2,DDate Start,DDate End)
-          {
-             return dayCount(d1,d2)/360.0;
-          }
-      };
+    //! Actual/360 day count convention
+    /*! Actual/360 day count convention, also known as "Act/360", or "A/360". */
+    public class Actual360 : DayCounter
+    {
+        public Actual360() : base(Impl.Singleton) { }
 
-      public Actual360()
-         : base(new Actual360.Impl()) {}
-   }
+        class Impl : DayCounter
+        {
+            public static readonly Impl Singleton = new Impl();
+            private Impl() { }
+
+            public override string name() { return "Actual/360"; }
+            public override int dayCount(Date d1, Date d2) { return (d2 - d1); }
+            public override double yearFraction(Date d1, Date d2, Date refPeriodStart, Date refPeriodEnd)
+            {
+                return dayCount(d1, d2) / 360.0;
+            }
+
+        }
+    }
 }

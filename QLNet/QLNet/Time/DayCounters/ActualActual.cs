@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Andrea Maggiulli
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -16,232 +16,211 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace QLNet
 {
-   /// <summary>
-   /// Actual/Actual day count
-   /// The day count can be calculated according to:
-   /// - The ISDA convention, also known as "Actual/Actual (Historical)",
-   ///   "Actual/Actual", "Act/Act", and according to ISDA also "Actual/365",
-   ///   "Act/365", and "A/365";
-   /// - The ISMA and US Treasury convention, also known as "Actual/Actual (Bond)"
-   /// - The AFB convention, also known as "Actual/Actual (Euro)".
-   /// </summary>
-   public class ActualActual : DayCounter
-   {
-      public enum Convention 
-      { ISMA, 
-        Bond,
-        ISDA, 
-        Historical,
-        Actual365,
-        AFB,
-        Euro 
-      };
+    //! Actual/Actual day count
+    /*! The day count can be calculated according to:
+	        - the ISDA convention, also known as "Actual/Actual (Historical)", "Actual/Actual", "Act/Act", and according to ISDA also "Actual/365", "Act/365", and "A/365";
+	        - the ISMA and US Treasury convention, also known as "Actual/Actual (Bond)";
+	        - the AFB convention, also known as "Actual/Actual (Euro)".
+	For more details, refer to http://www.isda.org/publications/pdf/Day-Count-Fracation1999.pdf  */
+    public class ActualActual : DayCounter
+    {
+        public enum Convention { ISMA, Bond, ISDA, Historical, Actual365, AFB, Euro };
 
-      private class ISMA_Impl : DayCounter.Impl
-      {
-         public override string name() { return "Actual/Actual (ISMA)"; }
-         public override double yearFraction(DDate d1, DDate d2, DDate d3, DDate d4)
-         {
-            if (d1 == d2)
-               return 0.0;
+        public ActualActual() : base(ISDA_Impl.Singleton) { }
+        public ActualActual(Convention c) : base(conventions(c)) { }
 
-            if (d1 > d2)
-               return -yearFraction(d2,d1,d3,d4);
-
-            // when the reference period is not specified, try taking
-            // it equal to (d1,d2)
-            DDate refPeriodStart = (d3 != new DDate() ? d3 : d1);
-            DDate refPeriodEnd = (d4 != new DDate() ? d4 : d2);
-
-            if (refPeriodEnd <=  refPeriodStart || refPeriodEnd <= d1 )
-               throw new Exception ( "invalid reference period: " +
-                                     "date 1: " + d1 +
-                                     ", date 2: " + d2 +
-                                     ", reference period start: " + refPeriodStart +
-                                     ", reference period end: " + refPeriodEnd);
-
-            // estimate roughly the length in months of a period
-            int months = (int)(0.5+12*(double)(refPeriodEnd-refPeriodStart)/365);
-
-            // for short periods...
-            if (months == 0) 
+        private static DayCounter conventions(Convention c)
+        {
+            switch (c)
             {
-               // ...take the reference period as 1 year from d1
-               refPeriodStart = d1;
-               refPeriodEnd = d1 + TimeUnit.Years;
-               months = 12;
+                case Convention.ISMA:
+                case Convention.Bond:
+                    return ISMA_Impl.Singleton;
+                case Convention.ISDA:
+                case Convention.Historical:
+                case Convention.Actual365:
+                    return ISDA_Impl.Singleton;
+                case Convention.AFB:
+                case Convention.Euro:
+                    return AFB_Impl.Singleton;
+                default:
+                    throw new ArgumentException("Unknown day count convention: " + c);
             }
+        }
 
-            double period = (double)months/12.0;
+        private class ISMA_Impl : DayCounter
+        {
+            public static readonly ISMA_Impl Singleton = new ISMA_Impl();
+            private ISMA_Impl() { }
 
-            if (d2 <= refPeriodEnd) 
+            public override string name() { return "Actual/Actual (ISMA)"; }
+
+            public override int dayCount(Date d1, Date d2) { return (d2 - d1); }
+
+            public override double yearFraction(Date d1, Date d2, Date d3, Date d4)
             {
-               // here refPeriodEnd is a future (notional?) payment date
-               if (d1 >= refPeriodStart) 
-               {
-                  // here refPeriodStart is the last (maybe notional)
-                  // payment date.
-                  // refPeriodStart <= d1 <= d2 <= refPeriodEnd
-                  // [maybe the equality should be enforced, since
-                  // refPeriodStart < d1 <= d2 < refPeriodEnd
-                  // could give wrong results] ???
-                  return period* (dayCount(d1,d2)) / dayCount(refPeriodStart,refPeriodEnd);
-               } 
-               else 
-               {
-                  // here refPeriodStart is the next (maybe notional)
-                  // payment date and refPeriodEnd is the second next
-                  // (maybe notional) payment date.
-                  // d1 < refPeriodStart < refPeriodEnd
-                  // AND d2 <= refPeriodEnd
-                  // this case is long first coupon
+                if (d1 == d2) return 0;
+                if (d1 > d2) return -yearFraction(d2, d1, d3, d4);
 
-                  // the last notional payment date
-                  DDate previousRef = refPeriodStart - new Period(months,TimeUnit.Months);
-                  if (d2 > refPeriodStart)
-                    return yearFraction(d1, refPeriodStart, previousRef,refPeriodStart) +
-                           yearFraction(refPeriodStart, d2, refPeriodStart,refPeriodEnd);
-                  else
-                    return yearFraction(d1,d2,previousRef,refPeriodStart);
-               }
-            } 
-            else 
-            {
-               // here refPeriodEnd is the last (notional?) payment date
-               // d1 < refPeriodEnd < d2 AND refPeriodStart < refPeriodEnd
-               if (refPeriodStart>d1) 
-                  throw new Exception ("invalid dates: d1 < refPeriodStart < refPeriodEnd < d2");
-               // now it is: refPeriodStart <= d1 < refPeriodEnd < d2
-               // the part from d1 to refPeriodEnd
-               double sum = yearFraction(d1, refPeriodEnd,refPeriodStart, refPeriodEnd);
+                // when the reference period is not specified, try taking it equal to (d1,d2)
+                Date refPeriodStart = (d3 != null ? d3 : d1);
+                Date refPeriodEnd = (d4 != null ? d4 : d2);
 
-               // the part from refPeriodEnd to d2
-               // count how many regular periods are in [refPeriodEnd, d2],
-               // then add the remaining time
-               int i=0;
-               DDate newRefStart, newRefEnd;
-               do 
-               {
-                  newRefStart = refPeriodEnd + new Period ( (months * i) ,TimeUnit.Months);
-                  newRefEnd = refPeriodEnd + new Period( (months * (i + 1)) , TimeUnit.Months);
-                  if (d2 < newRefEnd) 
-                  {
-                     break;
-                  } 
-                  else 
-                  {
-                     sum += period;
-                     i++;
-                  } 
-               } 
-               while (true);
-               sum += yearFraction(newRefStart,d2,newRefStart,newRefEnd);
-               return sum;
+                if (!(refPeriodEnd > refPeriodStart && refPeriodEnd > d1))
+                    throw new ArgumentException("Invalid reference period: date 1: " + d1 + ", date 2: " + d2 +
+                          ", reference period start: " + refPeriodStart + ", reference period end: " + refPeriodEnd);
+
+                // estimate roughly the length in months of a period
+                int months = (int)(0.5 + 12 * (refPeriodEnd - refPeriodStart) / 365.0);
+
+                // for short periods...
+                if (months == 0)
+                {
+                    // ...take the reference period as 1 year from d1
+                    refPeriodStart = d1;
+                    refPeriodEnd = d1 + TimeUnit.Years;
+                    months = 12;
+                }
+
+                double period = months / 12.0;
+
+                if (d2 <= refPeriodEnd)
+                {
+                    // here refPeriodEnd is a future (notional?) payment date
+                    if (d1 >= refPeriodStart)
+                    {
+                        // here refPeriodStart is the last (maybe notional) payment date.
+                        // refPeriodStart <= d1 <= d2 <= refPeriodEnd
+                        // [maybe the equality should be enforced, since	refPeriodStart < d1 <= d2 < refPeriodEnd	could give wrong results] ???
+                        return period * dayCount(d1, d2) / dayCount(refPeriodStart, refPeriodEnd);
+                    }
+                    else
+                    {
+                        // here refPeriodStart is the next (maybe notional) payment date and refPeriodEnd is the second next (maybe notional) payment date.
+                        // d1 < refPeriodStart < refPeriodEnd
+                        // AND d2 <= refPeriodEnd
+                        // this case is long first coupon
+
+                        // the last notional payment date
+                        Date previousRef = refPeriodStart - new Period(months, TimeUnit.Months);
+                        if (d2 > refPeriodStart)
+                            return yearFraction(d1, refPeriodStart, previousRef, refPeriodStart) +
+                                   yearFraction(refPeriodStart, d2, refPeriodStart, refPeriodEnd);
+                        else
+                            return yearFraction(d1, d2, previousRef, refPeriodStart);
+                    }
+                }
+                else
+                {
+                    // here refPeriodEnd is the last (notional?) payment date
+                    // d1 < refPeriodEnd < d2 AND refPeriodStart < refPeriodEnd
+                    if (!(refPeriodStart <= d1)) throw new ArgumentException("invalid dates: d1 < refPeriodStart < refPeriodEnd < d2");
+
+                    // now it is: refPeriodStart <= d1 < refPeriodEnd < d2
+
+                    // the part from d1 to refPeriodEnd
+                    double sum = yearFraction(d1, refPeriodEnd, refPeriodStart, refPeriodEnd);
+
+                    // the part from refPeriodEnd to d2
+                    // count how many regular periods are in [refPeriodEnd, d2], then add the remaining time
+                    int i = 0;
+                    Date newRefStart, newRefEnd;
+                    do
+                    {
+                        newRefStart = refPeriodEnd + new Period(months * i, TimeUnit.Months);
+                        newRefEnd = refPeriodEnd + new Period(months * (i + 1), TimeUnit.Months);
+                        if (d2 < newRefEnd)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            sum += period;
+                            i++;
+                        }
+                    } while (true);
+                    sum += yearFraction(newRefStart, d2, newRefStart, newRefEnd);
+                    return sum;
+                }
             }
-         }
-      };
-      private class ISDA_Impl : DayCounter.Impl
-      {
-         public override string name() { return "Actual/Actual (ISDA)"; }
-         public override double yearFraction(DDate d1, DDate d2, DDate Start, DDate End)
-         {
-           if (d1 == d2)
-               return 0;
+        };
 
-           if (d1 > d2)
-               return -yearFraction(d2,d1,new DDate(),new DDate());
+        private class ISDA_Impl : DayCounter
+        {
+            public static readonly ISDA_Impl Singleton = new ISDA_Impl();
+            private ISDA_Impl() { }
 
-           int y1 = d1.year(), y2 = d2.year();
-           double dib1 = (DDate.isLeap(y1) ? 366.0 : 365.0),
-                dib2 = (DDate.isLeap(y2) ? 366.0 : 365.0);
+            public override string name() { return "Actual/Actual (ISDA)"; }
 
-           double sum = y2 - y1 - 1;
-           // FLOATING_POINT_EXCEPTION
-           sum += dayCount(d1, new DDate(1,Month.January,y1+1))/dib1;
-           sum += dayCount(new DDate(1,Month.January,y2),d2)/dib2;
-           return sum;
-         }
-      };
-      private class AFB_Impl : DayCounter.Impl
-      {
-         public override string name() { return "Actual/Actual (AFB)"; }
-         public override double yearFraction(DDate d1, DDate d2, DDate Start, DDate End)
-         {
-            if (d1 == d2)
-               return 0.0;
+            public override int dayCount(Date d1, Date d2) { return (d2 - d1); }
 
-            if (d1 > d2)
-               return -yearFraction(d2,d1,new DDate(),new DDate());
-
-            DDate newD2=d2, temp=d2;
-            double sum = 0.0;
-            while (temp > d1) 
+            public override double yearFraction(Date d1, Date d2, Date refPeriodStart, Date refPeriodEnd)
             {
-               temp = newD2 - TimeUnit.Years;
-               if (temp.dayOfMonth()==28 && (int)temp.month() == 2
-                   && DDate.isLeap(temp.year())) 
-               {
-                  temp += 1;
-               }
-               if (temp>=d1) 
-               {
-                  sum += 1.0;
-                  newD2 = temp;
-               }
+                if (d1 == d2) return 0;
+                if (d1 > d2) return -yearFraction(d2, d1, null, null);
+
+                int y1 = d1.Year, y2 = d2.Year;
+                double dib1 = (Date.IsLeapYear(y1) ? 366 : 365),
+                       dib2 = (Date.IsLeapYear(y2) ? 366 : 365);
+
+                double sum = y2 - y1 - 1;
+                sum += dayCount(d1, new Date(y1 + 1, (int)Month.January, 1)) / dib1;
+                sum += dayCount(new Date(y2, (int)Month.January, 1), d2) / dib2;
+                return sum;
             }
+        };
 
-            double den = 365.0;
+        private class AFB_Impl : DayCounter
+        {
+            public static readonly AFB_Impl Singleton = new AFB_Impl();
+            private AFB_Impl() { }
 
-            if (DDate.isLeap(newD2.year())) 
+            public override string name() { return "Actual/Actual (AFB)"; }
+
+            public override int dayCount(Date d1, Date d2) { return (d2 - d1); }
+
+            public override double yearFraction(Date d1, Date d2, Date refPeriodStart, Date refPeriodEnd)
             {
-               temp = new DDate(29, Month.February, newD2.year());
-               if (newD2>temp && d1<=temp)
-                  den += 1.0;
-            } 
-            else if (DDate.isLeap(d1.year())) 
-            {
-               temp = new DDate(29, Month.February, d1.year());
-               if (newD2>temp && d1<=temp)
-                  den += 1.0;
+                if (d1 == d2) return 0;
+                if (d1 > d2) return -yearFraction(d2, d1, null, null);
+
+                Date newD2 = d2, temp = d2;
+                double sum = 0;
+                while (temp > d1)
+                {
+                    temp = newD2 - TimeUnit.Years;
+                    if (temp.Day == 28 && temp.Month == 2 && Date.IsLeapYear(temp.Year))
+                        temp += 1;
+                    if (temp >= d1)
+                    {
+                        sum += 1;
+                        newD2 = temp;
+                    }
+                }
+
+                double den = 365;
+
+                if (Date.IsLeapYear(newD2.Year))
+                {
+                    temp = new Date(newD2.Year, (int)Month.February, 29);
+                    if (newD2 > temp && d1 <= temp)
+                        den += 1;
+                }
+                else if (Date.IsLeapYear(d1.Year))
+                {
+                    temp = new Date(d1.Year, (int)Month.February, 29);
+                    if (newD2 > temp && d1 <= temp)
+                        den += 1;
+                }
+
+                return sum + dayCount(d1, newD2) / den;
             }
+        };
 
-            return sum+dayCount(d1, newD2)/den;         }
-      };
-
-      private static DayCounter.Impl implementation(Convention c)
-      {
-         switch (c)
-         {
-            case Convention.ISMA:
-            case Convention.Bond:
-               return new ISMA_Impl();
-            case Convention.ISDA:
-            case Convention.Historical:
-            case Convention.Actual365:
-               return new ISDA_Impl();
-            case Convention.AFB:
-            case Convention.Euro:
-               return new AFB_Impl();
-            default:
-               throw new Exception("unknown act/act convention");
-         }
-
-      }
-
-      public ActualActual()
-         : this(ActualActual.Convention.ISDA) {}
-
-
-      public ActualActual(Convention c)
-         : base(implementation(c)) {}
-
-
-   }
+    }
 }

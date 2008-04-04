@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F6E762BD-DCDF-4CA0-ABAD-CB21C7D03BEC}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -14,6 +14,7 @@
     <OldToolsVersion>2.0</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,13 +35,21 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cashflow.cs" />
     <Compile Include="Cashflows\CashFlows.cs" />
+    <Compile Include="Cashflows\Cashflowvectors.cs" />
     <Compile Include="Cashflows\Coupon.cs" />
+    <Compile Include="Cashflows\CouponPricer.cs" />
+    <Compile Include="Cashflows\FixedRateCoupon.cs" />
+    <Compile Include="Cashflows\FloatingRateCoupon.cs" />
+    <Compile Include="Cashflows\Iborcoupon.cs" />
     <Compile Include="Cashflows\Leg.cs" />
     <Compile Include="Cashflows\SimpleCashFlow.cs" />
     <Compile Include="Currencies\Africa.cs" />
@@ -51,26 +60,72 @@
     <Compile Include="Currencies\ExchangeRate.cs" />
     <Compile Include="Currencies\ExchangeRateManager.cs" />
     <Compile Include="Enum.cs" />
+    <Compile Include="Error.cs" />
     <Compile Include="Event.cs" />
+    <Compile Include="Handle.cs" />
+    <Compile Include="Index.cs" />
+    <Compile Include="Indexes\IBORIndex.cs" />
+    <Compile Include="Indexes\Ibor\Euribor.cs" />
+    <Compile Include="Indexes\Ibor\Libor.cs" />
+    <Compile Include="Indexes\Ibor\Usdlibor.cs" />
+    <Compile Include="Indexes\Indexmanager.cs" />
+    <Compile Include="Indexes\InterestRateIndex.cs" />
+    <Compile Include="Indexes\Swapindex.cs" />
+    <Compile Include="Instruments\Bond.cs" />
+    <Compile Include="Instruments\Bonds\Fixedratebond.cs" />
+    <Compile Include="Instruments\Bonds\FloatingRateBond.cs" />
+    <Compile Include="Instruments\Bonds\Zerocouponbond.cs" />
     <Compile Include="Instruments\Instrument.cs" />
+    <Compile Include="Instruments\Makevanillaswap.cs" />
+    <Compile Include="Instruments\Stock.cs" />
     <Compile Include="Instruments\Swap.cs" />
+    <Compile Include="Instruments\VanillaSwap.cs" />
     <Compile Include="InterestRate.cs" />
     <Compile Include="Math\GlobalMath.cs" />
+    <Compile Include="Math\Comparison.cs" />
     <Compile Include="Math\Interpolations\Extrapolator.cs" />
+    <Compile Include="Math\Interpolation.cs" />
+    <Compile Include="Math\Interpolations\Linearinterpolation.cs" />
+    <Compile Include="Math\Interpolations\Loginterpolation.cs" />
+    <Compile Include="Math\Solver1d.cs" />
     <Compile Include="Math\Rounding.cs" />
+    <Compile Include="Math\Solvers1d\Brent.cs" />
+    <Compile Include="Math\Solvers1d\Newton.cs" />
+    <Compile Include="Math\Solvers1d\Newtonsafe.cs" />
     <Compile Include="Money.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Patterns\LazyObject.cs" />
     <Compile Include="Patterns\Observable.cs" />
+    <Compile Include="Patterns\Observer.cs" />
     <Compile Include="Patterns\Singleton.cs" />
     <Compile Include="Patterns\Visitor.cs" />
     <Compile Include="PricingEngine.cs" />
+    <Compile Include="Pricingengines\Bond\Discountingbondengine.cs" />
+    <Compile Include="Pricingengines\Swap\Discountingswapengine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quotes\Quote.cs" />
     <Compile Include="Quotes\SimpleQuote.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Termstructures\Bootstraperror.cs" />
+    <Compile Include="Termstructures\Bootstraphelper.cs" />
+    <Compile Include="Termstructures\Iterativebootstrap.cs" />
     <Compile Include="Termstructures\TermStructure.cs" />
+    <Compile Include="Termstructures\VolatilityTermStructure.cs" />
+    <Compile Include="Termstructures\Volatility\FlatSmileSection.cs" />
+    <Compile Include="Termstructures\Volatility\Optionlet\ConstantOptionletVolatility.cs" />
+    <Compile Include="Termstructures\Volatility\Optionlet\OptionletVolatilityStructure.cs" />
+    <Compile Include="Termstructures\Volatility\Sabr.cs" />
+    <Compile Include="Termstructures\Volatility\SmileSection.cs" />
     <Compile Include="Termstructures\YieldTermStructure.cs" />
+    <Compile Include="Termstructures\Yield\Bondhelpers.cs" />
+    <Compile Include="Termstructures\Yield\Bootstraptraits.cs" />
+    <Compile Include="Termstructures\Yield\Discountcurve.cs" />
+    <Compile Include="Termstructures\Yield\Flatforward.cs" />
+    <Compile Include="Termstructures\Yield\InterpolatedYieldCurve.cs" />
+    <Compile Include="Termstructures\Yield\Ratehelpers.cs" />
+    <Compile Include="Termstructures\Yield\Zerocurve.cs" />
+    <Compile Include="Termstructures\Yield\ZeroSpreadedTermStructure.cs" />
+    <Compile Include="Termstructures\Yield\Zeroyieldstructure.cs" />
     <Compile Include="Time\Businessdayconvention.cs" />
     <Compile Include="Time\Calendar.cs" />
     <Compile Include="Time\Calendars\argentina.cs" />
@@ -115,10 +170,15 @@
     <Compile Include="Time\DayCounters\OneDayCounter.cs" />
     <Compile Include="Time\DayCounters\SimpleDayCounter.cs" />
     <Compile Include="Time\DayCounters\Thirty360.cs" />
+    <Compile Include="Time\Error.cs" />
     <Compile Include="Time\Frequency.cs" />
+    <Compile Include="Time\Imm.cs" />
     <Compile Include="Time\Period.cs" />
+    <Compile Include="Time\Schedule.cs" />
     <Compile Include="Time\TimeUnit.cs" />
     <Compile Include="Time\Weekday.cs" />
+    <Compile Include="Types.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="Util\make_pair.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

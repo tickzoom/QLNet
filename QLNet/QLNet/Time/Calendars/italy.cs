@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Alessandro Duci
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
 
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -23,7 +24,6 @@ using System.Text;
 
 namespace QLNet
 {
-
     //! Italian calendars
     /*! Public holidays:
         <ul>
@@ -62,16 +62,49 @@ namespace QLNet
         \test the correctness of the returned results is tested against a
               list of known holidays.
     */
-   public class Italy : Calendar {
-      private class SettlementImpl : Calendar.WesternImpl {
-        
+    public class Italy : Calendar
+    {
+        //! Italian calendars
+        public enum Market
+        {
+            Settlement,     //!< generic settlement calendar
+            Exchange        //!< Milan stock-exchange calendar
+        };
+
+        public Italy() : this(Market.Settlement) { }
+        public Italy(Market m)
+            : base()
+        {
+            // all calendar instances on the same market share the same
+            // implementation instance
+            switch (m)
+            {
+                case Market.Settlement:
+                    calendar_ = Settlement.Singleton;
+                    break;
+                case Market.Exchange:
+                    calendar_ = Exchange.Singleton;
+                    break;
+                default:
+                    throw new ArgumentException("Unknown market: " + m); ;
+            }
+        }
+
+
+        class Settlement : Calendar.WesternImpl
+        {
+            public static readonly Settlement Singleton = new Settlement();
+            private Settlement() { }
+
             public override string name() { return "Italian settlement"; }
-            public override bool isBusinessDay(DDate date) {
-                Weekday w = date.weekday();
-                int d = date.dayOfMonth(), dd = date.dayOfYear();
-                Month m = date.month();
-                int y = date.year();
+            public override bool isBusinessDay(Date date)
+            {
+                DayOfWeek w = date.DayOfWeek;
+                int d = date.Day, dd = date.DayOfYear;
+                Month m = (Month)date.Month;
+                int y = date.Year;
                 int em = easterMonday(y);
+
                 if (isWeekend(w)
                     // New Year's Day
                     || (d == 1 && m == Month.January)
@@ -100,65 +133,45 @@ namespace QLNet
                     return false;
                 return true;
             }
+        }
 
+        class Exchange : Calendar.WesternImpl
+        {
+            public static readonly Exchange Singleton = new Exchange();
+            private Exchange() { }
 
-        };
-        private class ExchangeImpl : Calendar.WesternImpl {
-       
             public override string name() { return "Milan stock exchange"; }
-            public override bool isBusinessDay(DDate date) {
-                  Weekday w = date.weekday();
-        int d = date.dayOfMonth(), dd = date.dayOfYear();
-        Month m = date.month();
-        int y = date.year();
-        int em = easterMonday(y);
-        if (isWeekend(w)
-            // New Year's Day
-            || (d == 1 && m == Month.January)
-            // Good Friday
-            || (dd == em-3)
-            // Easter Monday
-            || (dd == em)
-            // Labour Day
-            || (d == 1 && m == Month.May)
-            // Assumption
-            || (d == 15 && m == Month.August)
-            // Christmas' Eve
-            || (d == 24 && m == Month.December)
-            // Christmas
-            || (d == 25 && m == Month.December)
-            // St. Stephen
-            || (d == 26 && m == Month.December)
-            // New Year's Eve
-            || (d == 31 && m == Month.December))
-            return false;
-        return true;
-    }
+            public override bool isBusinessDay(Date date)
+            {
+                DayOfWeek w = date.DayOfWeek;
+                int d = date.Day, dd = date.DayOfYear;
+                Month m = (Month)date.Month;
+                int y = date.Year;
+                int em = easterMonday(y);
+
+                if (isWeekend(w)
+                    // New Year's Day
+                    || (d == 1 && m == Month.January)
+                    // Good Friday
+                    || (dd == em - 3)
+                    // Easter Monday
+                    || (dd == em)
+                    // Labour Day
+                    || (d == 1 && m == Month.May)
+                    // Assumption
+                    || (d == 15 && m == Month.August)
+                    // Christmas' Eve
+                    || (d == 24 && m == Month.December)
+                    // Christmas
+                    || (d == 25 && m == Month.December)
+                    // St. Stephen
+                    || (d == 26 && m == Month.December)
+                    // New Year's Eve
+                    || (d == 31 && m == Month.December))
+                    return false;
+                return true;
+            }
         };
-         private static Calendar.Impl settlementImpl=new Italy.SettlementImpl();
-        private static Calendar.Impl exchangeImpl=new Italy.ExchangeImpl();
-        //! Italian calendars
-         public enum Market { Settlement,     //!< generic settlement calendar
-                      Exchange        //!< Milan stock-exchange calendar
-        };
-        public Italy(){
-         new Italy(Market.Settlement);
-        }
-            public  Italy(Market market) {
-        // all calendar instances on the same market share the same
-        // implementation instance
-    
-        switch (market) {
-          case Market.Settlement:
-            _impl = settlementImpl;
-            break;
-        case Market.Exchange:
-            _impl = exchangeImpl;
-            break;
-          default:
-            throw new Exception("unknown market");
-        }
-    }
     };
 
 }
