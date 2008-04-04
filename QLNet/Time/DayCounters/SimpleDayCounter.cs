@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Andrea Maggiulli
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -16,48 +16,42 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace QLNet
 {
-   public class SimpleDayCounter : DayCounter
-   {
-      private new class Impl : DayCounter.Impl
-      {
-         public override string name() { return "Simple"; }
-         public override int dayCount(DDate d1, DDate d2)
-         {
-            return fallback.dayCount(d1, d2);
-         }
-         public override double yearFraction(DDate d1, DDate d2, DDate Start, DDate End)
-         {
-            int dm1 = d1.dayOfMonth(),
-                dm2 = d2.dayOfMonth();
+    //! Simple day counter for reproducing theoretical calculations.
+    /*! This day counter tries to ensure that whole-month distances are returned as a simple fraction, i.e., 1 year = 1.0, 6 months = 0.5, 3 months = 0.25 and so forth.
+	   this day counter should be used together with NullCalendar, which ensures that dates at whole-month distances share the same day of month. It is <b>not</b> guaranteed to work with any other calendar. */
+    public class SimpleDayCounter : DayCounter
+    {
+        public SimpleDayCounter() : base(Impl.Singleton) { }
 
-            if (dm1 == dm2 ||
-               // e.g., Aug 30 -> Feb 28 ?
-               (dm1 > dm2 && DDate.isEndOfMonth(d2)) ||
-               // e.g., Feb 28 -> Aug 30 ?
-               (dm1 < dm2 && DDate.isEndOfMonth(d1))) 
+        class Impl : DayCounter
+        {
+            public static readonly Impl Singleton = new Impl();
+            private Impl() { }
+
+            public override string name() { return "Simple"; }
+            public override int dayCount(Date d1, Date d2) { return Thirty360.US_Impl.Singleton.dayCount(d1, d2); }
+            public override double yearFraction(Date d1, Date d2, Date d3, Date d4)
             {
+                int dm1 = d1.Day,
+                    dm2 = d2.Day;
 
-               return (d2.year()-d1.year()) +
-                      ((int)(d2.month())-(int)(d1.month()))/12.0;
+                if (dm1 == dm2 ||
+                    // e.g., Aug 30 -> Feb 28 ?
+                    (dm1 > dm2 && Date.isEndOfMonth(d2)) ||
+                    // e.g., Feb 28 -> Aug 30 ?
+                    (dm1 < dm2 && Date.isEndOfMonth(d1)))
+                {
 
-            } 
-            else 
-            {
-               return fallback.yearFraction(d1,d2,Start,End);
+                    return (d2.Year - d1.Year) + (d2.Month - d1.Month) / 12.0;
+                }
+                else
+                    return Thirty360.US_Impl.Singleton.yearFraction(d1, d2, d3, d4);
             }
-         }
-      };
-
-      private static DayCounter fallback = new Thirty360(); 
-
-      public SimpleDayCounter()
-         : base(new SimpleDayCounter.Impl()) { }
-   }
+        }
+    }
 }

@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Andrea Maggiulli
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -16,21 +16,35 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-
 using System;
 using System.Collections.Generic;
 using System.Text;
+using QLNet;
 
 namespace QLNet
 {
-   public abstract class Quote : Observable
-   {
-		~ Quote()
-		{
-		}
-		//! returns the current value
-		public abstract double  value() ;
-		//! returns true if the Quote holds a valid value
-		public abstract bool isValid() ;
-	}
+    //! purely virtual base class for market observables
+    public class Quote : IObservable
+    {
+        // recheck this abstract implementations of methods which otherwise should throw "notimplemented"
+        // such default implementation is needed for Handles
+
+        //! returns the current value, 0 by default
+        public virtual double value() { return 0; }
+        //! returns true if the Quote holds a valid value, true by default
+        public virtual bool isValid() { return true; }
+
+        // observable interface
+        public event Callback notifyObserversEvent;
+        public void registerWith(Callback handler) { notifyObserversEvent += handler; }
+        public void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
+        protected void notifyObservers()
+        {
+            Callback handler = notifyObserversEvent;
+            if (handler != null)
+            {
+                handler();
+            }
+        }
+    }
 }

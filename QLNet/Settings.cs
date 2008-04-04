@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Andrea Maggiulli
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -16,41 +16,45 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-
 using System;
 using System.Collections.Generic;
 using System.Text;
+using QLNet;
 
 namespace QLNet
 {
-   public class Settings : Singleton<Settings>
-   {
-      private DateProxy _evaluationDate = new DateProxy();
-      private bool _enforcesTodaysHistoricFixings;
+    // we need only one instance of the class
+    // we can not derive it from IObservable because the class is static
+    public static class Settings
+    {
+        private static Date evaluationDate_ = Date.Today;
+        private static bool enforcesTodaysHistoricFixings_ = false;
 
-      public class DateProxy : ObservableValue<DDate>
-		{
-			public DateProxy() : base(new DDate())
-			{
-			}
-			public static implicit operator DDate(DateProxy ImpliedObject)
-			{
+        public static Date evaluationDate() { return evaluationDate_; }
+        public static void setEvaluationDate(Date d)
+        {
+            evaluationDate_ = d;
+            notifyObservers();
+        }
 
-            if (ImpliedObject.value() == new DDate())
-               return DDate.todaysDate();
-            else
-               return ImpliedObject.value();
-			}
-		}
-      private Settings() 
-      {
-	      _enforcesTodaysHistoricFixings = false;
-      }
+        public static bool enforcesTodaysHistoricFixings
+        {
+            get { return enforcesTodaysHistoricFixings_; }
+            set { enforcesTodaysHistoricFixings_ = value; }
+        }
 
-      public DateProxy evaluationDate() 
-      {
-        return _evaluationDate;
-      }
-
-   }
+        ////////////////////////////////////////////////////
+        // Observable interface
+        private static event Callback notifyObserversEvent;
+        public static void registerWith(Callback handler) { notifyObserversEvent += handler; }
+        public static void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
+        private static void notifyObservers()
+        {
+            Callback handler = notifyObserversEvent;
+            if (handler != null)
+            {
+                handler();
+            }
+        }
+    }
 }

@@ -1,6 +1,7 @@
 /*
  Copyright (C) 2008 Alessandro Duci
  Copyright (C) 2008 Andrea Maggiulli
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
 
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -24,7 +25,6 @@ using System.Text;
 
 namespace QLNet
 {
-
     //! New Zealand calendar
     /*! Holidays:
         <ul>
@@ -50,54 +50,53 @@ namespace QLNet
 
         \ingroup calendars
     */
-    public class NewZealand : Calendar {
-      private new class Impl : Calendar.WesternImpl {
-          
+    public class NewZealand : Calendar
+    {
+        public NewZealand() : base(Impl.Singleton) { }
+
+        class Impl : Calendar.WesternImpl
+        {
+            public static readonly Impl Singleton = new Impl();
+            private Impl() { }
+
             public override string name() { return "New Zealand"; }
-            public override bool isBusinessDay(DDate date) {
-                        Weekday w = date.weekday();
-        int d = date.dayOfMonth(), dd = date.dayOfYear();
-        Month m = date.month();
-        int y = date.year();
-        int em = easterMonday(y);
-        if (isWeekend(w)
-            // New Year's Day (possibly moved to Monday or Tuesday)
-            || ((d == 1 || (d == 3 && (w == Weekday.Monday || w == Weekday.Tuesday))) &&
-                m == Month.January)
-            // Day after New Year's Day (possibly moved to Mon or Tuesday)
-            || ((d == 2 || (d == 4 && (w == Weekday.Monday || w == Weekday.Tuesday))) &&
-                m == Month.January)
-            // Anniversary Day, Monday nearest January 22nd
-            || ((d >= 19 && d <= 25) && w == Weekday.Monday && m == Month.January)
-            // Waitangi Day. February 6th
-            || (d == 6 && m == Month.February)
-            // Good Friday
-            || (dd == em-3)
-            // Easter Monday
-            || (dd == em)
-            // ANZAC Day. April 25th
-            || (d == 25 && m == Month.April)
-            // Queen's Birthday, first Monday in June
-            || (d <= 7 && w == Weekday.Monday && m == Month.June)
-            // Labour Day, fourth Monday in October
-            || ((d >= 22 && d <= 28) && w == Weekday.Monday && m == Month.October)
-            // Christmas, December 25th (possibly Monday or Tuesday)
-            || ((d == 25 || (d == 27 && (w == Weekday.Monday || w == Weekday.Tuesday)))
-                && m == Month.December)
-            // Boxing Day, December 26th (possibly Monday or Tuesday)
-            || ((d == 26 || (d == 28 && (w == Weekday.Monday || w == Weekday.Tuesday)))
-                && m == Month.December))
-            return false;
-        return true;
+            public override bool isBusinessDay(Date date)
+            {
+                DayOfWeek w = date.DayOfWeek;
+                int d = date.Day, dd = date.DayOfYear;
+                Month m = (Month)date.Month;
+                int y = date.Year;
+                int em = easterMonday(y);
+                if (isWeekend(w)
+                    // New Year's Day (possibly moved to Monday or Tuesday)
+                    || ((d == 1 || (d == 3 && (w == DayOfWeek.Monday || w == DayOfWeek.Tuesday))) &&
+                        m == Month.January)
+                    // Day after New Year's Day (possibly moved to Mon or Tuesday)
+                    || ((d == 2 || (d == 4 && (w == DayOfWeek.Monday || w == DayOfWeek.Tuesday))) &&
+                        m == Month.January)
+                    // Anniversary Day, Monday nearest January 22nd
+                    || ((d >= 19 && d <= 25) && w == DayOfWeek.Monday && m == Month.January)
+                    // Waitangi Day. February 6th
+                    || (d == 6 && m == Month.February)
+                    // Good Friday
+                    || (dd == em - 3)
+                    // Easter Monday
+                    || (dd == em)
+                    // ANZAC Day. April 25th
+                    || (d == 25 && m == Month.April)
+                    // Queen's Birthday, first Monday in June
+                    || (d <= 7 && w == DayOfWeek.Monday && m == Month.June)
+                    // Labour Day, fourth Monday in October
+                    || ((d >= 22 && d <= 28) && w == DayOfWeek.Monday && m == Month.October)
+                    // Christmas, December 25th (possibly Monday or Tuesday)
+                    || ((d == 25 || (d == 27 && (w == DayOfWeek.Monday || w == DayOfWeek.Tuesday)))
+                        && m == Month.December)
+                    // Boxing Day, December 26th (possibly Monday or Tuesday)
+                    || ((d == 26 || (d == 28 && (w == DayOfWeek.Monday || w == DayOfWeek.Tuesday)))
+                        && m == Month.December))
+                    return false;
+                return true;
+            }
+        }
     }
-
-        };
-            private static Calendar.Impl impl = new NewZealand.Impl();
-      public NewZealand(){
-           // all calendar instances share the same implementation instance
-                  _impl = impl;
-    }
-
-    };
-
 }

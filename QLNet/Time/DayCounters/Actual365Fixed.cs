@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Andrea Maggiulli
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -16,26 +16,31 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace QLNet
 {
-   public class Actual365Fixed : DayCounter
-   {
-      private new class Impl : DayCounter.Impl
-      {
-          public override string name() { return "Actual/365 (Fixed)"; }
-          public override double yearFraction(DDate d1,DDate d2,DDate Start,DDate End)
-          {
-             return dayCount(d1,d2)/365.0;
-          }
-      };
+    /* "Actual/365 (Fixed)" day count convention, also know as "Act/365 (Fixed)", "A/365 (Fixed)", or "A/365F".
+	   According to ISDA, "Actual/365" (without "Fixed") is an alias for "Actual/Actual (ISDA)" (see ActualActual.)
+     * If Actual/365 is not explicitly specified as fixed in an instrument specification, 
+     * you might want to double-check its meaning.   */
+    public class Actual365Fixed : DayCounter
+    {
+        public Actual365Fixed() : base(Impl.Singleton) { }
 
-      public Actual365Fixed() 
-         : base ( new Actual365Fixed.Impl()) {}
+        class Impl : DayCounter
+        {
+            public static readonly Impl Singleton = new Impl();
+            private Impl() { }
 
-   }
+            public override string name() { return "Actual/365 (Fixed)"; }
+            public override int dayCount(Date d1, Date d2) { return (d2 - d1); }
+            public override double yearFraction(Date d1, Date d2, Date refPeriodStart, Date refPeriodEnd)
+            {
+                return dayCount(d1, d2) / 365.0;
+            }
+
+        }
+    }
 }

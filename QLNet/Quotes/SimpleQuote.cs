@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Andrea Maggiulli
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -16,60 +16,45 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-
 using System;
 using System.Collections.Generic;
 using System.Text;
+using QLNet;
 
 namespace QLNet
 {
-   public class SimpleQuote : Quote
-   {
-      private Nullable<double> value_;
+    // simple quote class
+    //! market element returning a stored value
+    public class SimpleQuote : Quote
+    {
+        private double? value_;
 
-      public SimpleQuote()
-         : this(new Nullable<double>())
-      {
-      }
+        public SimpleQuote() { }
+        public SimpleQuote(double? value) { value_ = value; }
 
-      public SimpleQuote(Nullable<double> value)
-      {
-         value_ = value;
-      }
+        //! Quote interface
+        public override double value()
+        {
+            if (!isValid()) throw new ArgumentException("invalid SimpleQuote");
+            return value_.GetValueOrDefault();
+        }
+        public override bool isValid() { return value_ != null; }
 
-      public override double value()
-      {
-         if (!isValid())
-            throw new Exception("invalid SimpleQuote");
-         return (double)value_;
-      }
-      
-      public override bool isValid()
-      {
-         return value_ != new Nullable<double>();
-      }
+        //! returns the difference between the new value and the old value
+        public double setValue(double? value)
+        {
+            double? diff = value - value_;
+            if (diff != 0)
+            {
+                value_ = value;
+                notifyObservers();
+            }
+            return diff.GetValueOrDefault();
+        }
 
-      //@}
-      //! \name Modifiers
-      //@{
-      //! returns the difference between the new value and the old value
-      public double setValue()
-      {
-         return setValue(new Nullable<double>());
-      }
-      public double setValue(Nullable<double> value)
-      {
-         double diff = (double)(value - value_);
-         if (diff != 0.0)
-         {
-            value_ = value;
-            notifyObservers();
-         }
-         return diff;
-      }
-      public void reset()
-      {
-         setValue(new Nullable<double>());
-      }
-   }
+        public void reset()
+        {
+            setValue(null);
+        }
+    }
 }

@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Andrea Maggiulli
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -16,124 +16,63 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace QLNet
 {
-   public class DayCounter
-   {
-      //! abstract base class for day counter implementations
-      protected class Impl 
-      {
-         ~Impl() {}
-         public virtual string name() { throw new System.NotImplementedException(); }
-         //! to be overloaded by more complex day counters
-         public virtual int dayCount(DDate d1,DDate d2) 
-         {
-            return (d2-d1);
-         }
-         public virtual double yearFraction(DDate d1, DDate d2, DDate refPeriodStart, DDate refPeriodEnd) 
-         { throw new System.NotImplementedException(); }
-      };
-      protected Impl _impl;
+    // This class provides methods for determining the length of a time period according to given market convention,
+    // both as a number of days and as a year fraction.
+    public class DayCounter
+    {
+        // this is a placeholder for actual day counters for Singleton pattern use
+        protected DayCounter dayCounter_;
+        public DayCounter dayCounter
+        {
+            get { return dayCounter_; }
+            set { dayCounter_ = value; }
+        }
 
-      /// <summary>
-      /// This constructor can be invoked by derived classes which
-      /// define a given implementation.
-      /// </summary>
-      /// <param name="impl"></param>
-      protected DayCounter(Impl impl) 
-      {
-         _impl = impl ;
-      }
+        // constructors
+        /*! The default constructor returns a day counter with a null implementation, which is therefore unusable except as a
+            placeholder. */
+        public DayCounter() { }
+        public DayCounter(DayCounter d) { dayCounter_ = d; }
 
-      /// <summary>
-      /// The default constructor returns a day counter with a null
-      /// implementation, which is therefore unusable except as a
-      /// placeholder.
-      /// </summary>
-      public DayCounter() { }
+        // comparison based on name
+        // Returns <tt>true</tt> iff the two day counters belong to the same derived class.
+        public static bool operator ==(DayCounter d1, DayCounter d2)
+        {
+            return ((Object)d1 == null || (Object)d2 == null) ?
+                   ((Object)d1 == null && (Object)d2 == null) :
+                   (d1.empty() && d2.empty()) || (!d1.empty() && !d2.empty() && d1.name() == d2.name());
+        }
+        public static bool operator !=(DayCounter d1, DayCounter d2) { return !(d1 == d2); }
 
-      /// <summary>
-      /// DayCounter interface
-      /// </summary>
-      /// <returns>
-      /// Returns whether or not the day counter is initialized
-      /// </returns>
-      public bool empty() 
-      {
-         return _impl == null;
-      }
-      /// <summary>
-      /// Returns the name of the day counter.
-      /// This method is used for output and comparison between
-      /// day counters. It is <b>not</b> meant to be used for writing
-      /// switch-on-type code.
-      /// </summary>
-      /// <returns></returns>
-      public string name() 
-      {
-        if ( _impl == null ) 
-          throw new Exception ("no implementation provided");
-        return _impl.name();
-      }
-      /// <summary>
-      /// Returns the number of days between two dates.
-      /// </summary>
-      /// <param name="d1">StartDate</param>
-      /// <param name="d2">EndDate</param>
-      /// <returns></returns>
-      public int dayCount(DDate d1,DDate d2) 
-      {
-         if (_impl == null)
-            throw new Exception("no implementation provided");
-        return _impl.dayCount(d1,d2);
-      }
-      public double yearFraction(DDate d1, DDate d2)
-      {
-         return yearFraction(d1, d2, new DDate(), new DDate());
-      }
 
-      /// <summary>
-      /// Returns the period between two dates as a fraction of year.
-      /// </summary>
-      /// <param name="d1"></param>
-      /// <param name="d2"></param>
-      /// <param name="refPeriodStart"></param>
-      /// <param name="refPeriodEnd"></param>
-      /// <returns></returns>
-      public double yearFraction(DDate d1,DDate d2,DDate refPeriodStart,DDate refPeriodEnd)
-      {
-         if (_impl == null)
-            throw new Exception("no implementation provided");
-         return _impl.yearFraction(d1, d2, refPeriodStart, refPeriodEnd);
-      }
-      /// <summary>
-      /// Returns <tt>true</tt> iff the two day counters belong to the same
-      /// derived class.
-      /// </summary>
-      /// <param name="d1"></param>
-      /// <param name="d2"></param>
-      /// <returns></returns>
-      public static bool operator==(DayCounter d1, DayCounter d2) 
-      {
-        return (d1.empty() && d2.empty())
-            || (!d1.empty() && !d2.empty() && d1.name() == d2.name());
-      }
-      /// <summary>
-      /// Returns <tt>true</tt> iff the two day counters not belong to the same
-      /// derived class.
-      /// </summary>
-      /// <param name="d1"></param>
-      /// <param name="d2"></param>
-      /// <returns></returns>
-      public static bool operator!=(DayCounter d1, DayCounter d2) 
-      {
-        return !(d1 == d2);
-      }
+        public bool empty() { return dayCounter_ == null; }
 
-   }
+        public virtual string name()
+        {
+            if (empty()) return "No implementation provided";
+            else return dayCounter_.name();
+        }
+
+        public virtual int dayCount(Date d1, Date d2)
+        {
+            if (empty()) throw Error.MissingImplementation();
+            return dayCounter_.dayCount(d1, d2);
+        }
+
+        public double yearFraction(Date d1, Date d2) { return yearFraction(d1, d2, d1, d2); }
+        public virtual double yearFraction(Date d1, Date d2, Date refPeriodStart, Date refPeriodEnd)
+        {
+            if (empty()) throw Error.MissingImplementation();
+            return dayCounter_.yearFraction(d1, d2, refPeriodStart, refPeriodEnd);
+        }
+
+        public override bool Equals(object o) { return this == (DayCounter)o; }
+        public override int GetHashCode() { return 0; }
+        public override string ToString() { return this.name(); }
+    }
 }

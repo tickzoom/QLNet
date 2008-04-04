@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Andrea Maggiulli
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -16,30 +16,32 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace QLNet
 {
-   public class OneDayCounter : DayCounter
-   {
-      private new class Impl : DayCounter.Impl
-      {
-         public override string name() { return "1/1"; }
-         public override int dayCount(DDate d1,DDate d2) 
-         {
+    //! 1/1 day count convention
+    public class OneDayCounter : DayCounter
+    {
+        public OneDayCounter() : base(Impl.Singleton) { }
+
+        class Impl : DayCounter
+        {
+            public static readonly Impl Singleton = new Impl();
+            private Impl() { }
+
+            public override string name() { return "1/1"; }
+            public override int dayCount(Date d1, Date d2)
+            {
                 // the sign is all we need
                 return (d2 >= d1 ? 1 : -1);
-         }
-         public override double yearFraction(DDate d1, DDate d2, DDate Start, DDate End)
-         {
-            return (double)dayCount(d1, d2);
-         }
-      };
+            }
 
-      public OneDayCounter() 
-         : base(new OneDayCounter.Impl()) {}
-   }
+            public override double yearFraction(Date d1, Date d2, Date refPeriodStart, Date refPeriodEnd)
+            {
+                return dayCount(d1, d2);
+            }
+        }
+    }
 }

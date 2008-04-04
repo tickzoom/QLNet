@@ -16,24 +16,17 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace QLNet
 {
-   /// <summary>
-   /// Japanese yen
-   /// The ISO three-letter code is JPY; the numeric code is 392.
-   /// It is divided into 100 sen.
-   /// </summary>
-   public class JPYCurrency : Currency
-   {
-      public JPYCurrency()
-      {
-         _data = new Data("Japanese yen", "JPY", 392,"\xA5", "", 100,new Rounding(),"%3% %1$.0f");
-      }
-
-   }
+    /// <summary>
+    /// Japanese yen
+    /// The ISO three-letter code is JPY; the numeric code is 392.
+    /// It is divided into 100 sen.
+    /// </summary>
+    public class JPYCurrency : Currency
+    {
+        public JPYCurrency() : base("Japanese yen", "JPY", 392, "\xA5", "", 100, new Rounding(), "%3% %1$.0f") { }
+    }
 }

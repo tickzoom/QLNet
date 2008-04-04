@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Alessandro Duci
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
 
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -23,7 +24,6 @@ using System.Text;
 
 namespace QLNet
 {
-
     //! Saudi Arabian calendar
     /*! Holidays for the Tadawul financial market
         (data from <http://www.tadawul.com.sa>):
@@ -42,54 +42,41 @@ namespace QLNet
 
         \ingroup calendars
     */
-    public class SaudiArabia : Calendar {
-      private class TadawulImpl : Calendar.Impl {
-          
+    public class SaudiArabia : Calendar
+    {
+        public SaudiArabia() : base(Impl.Singleton) { }
+
+        class Impl : Calendar
+        {
+            public static readonly Impl Singleton = new Impl();
+            private Impl() { }
+
             public override string name() { return "Tadawul"; }
-           public override bool isWeekend(Weekday w){
-               return w == Weekday.Thursday || w == Weekday.Friday;
-    }
+            public override bool isWeekend(DayOfWeek w)
+            {
+                return w == DayOfWeek.Thursday || w == DayOfWeek.Friday;
+            }
 
-            public override bool isBusinessDay(DDate date) {
-                     Weekday w = date.weekday();
-        int d = date.dayOfMonth();
-        Month m = date.month();
-        int y = date.year();
+            public override bool isBusinessDay(Date date)
+            {
+                DayOfWeek w = date.DayOfWeek;
+                int d = date.Day, dd = date.DayOfYear;
+                Month m = (Month)date.Month;
+                int y = date.Year;
 
-        if (isWeekend(w)
-            // National Day
-            || (d == 23 && m == Month.September)
-            // Eid Al-Adha
-            || (d >= 1 && d <= 6 && m == Month.February && y==2004)
-            || (d >= 21 && d <= 25 && m == Month.January && y==2005)
-            // Eid Al-Fitr
-            || (d >= 25 && d <= 29 && m == Month.November && y==2004)
-            || (d >= 14 && d <= 18 && m == Month.November && y==2005)
-            )
-            return false;
-        return true;
-    }
-
-        };  
-          
-      private static Calendar.Impl tadawulImpl = new SaudiArabia.TadawulImpl();
-      public enum Market { Tadawul    //!< Tadawul financial market
-        };
-       public SaudiArabia(){
-            new SaudiArabia(Market.Tadawul);
-       }
-
-       public SaudiArabia(Market market) {
-        // all calendar instances share the same implementation instance
-      
-        switch (market) {
-          case Market.Tadawul:
-            _impl = tadawulImpl;
-            break;
-          default:
-            throw new Exception("unknown market");
+                if (isWeekend(w)
+                    // National Day
+                    || (d == 23 && m == Month.September)
+                    // Eid Al-Adha
+                    || (d >= 1 && d <= 6 && m == Month.February && y == 2004)
+                    || (d >= 21 && d <= 25 && m == Month.January && y == 2005)
+                    // Eid Al-Fitr
+                    || (d >= 25 && d <= 29 && m == Month.November && y == 2004)
+                    || (d >= 14 && d <= 18 && m == Month.November && y == 2005)
+                    )
+                    return false;
+                return true;
+            }
         }
     }
-    };
-
 }
