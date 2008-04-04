@@ -20,8 +20,7 @@ using System;
 using QLNet;
 using System.Runtime.InteropServices;
 
-namespace QLNet
-{
+namespace QLNet {
     //! %TARGET calendar
     /*! Holidays (see http://www.ecb.int):
         <ul>
@@ -36,18 +35,15 @@ namespace QLNet
         <li>December 31st (1998, 1999, and 2001)</li>
         </ul>
     */
-    public class TARGET : Calendar
-    {
-        public TARGET() : base(Impl.Singleton) { }
+    public class TARGET : Calendar {
+        public TARGET() : base(Impl.Singleton) {}
 
-        class Impl : Calendar.WesternImpl
-        {
-            internal static readonly Impl Singleton = new Impl();
-            private Impl() { }
+        class Impl : Calendar.WesternImpl {
+	        internal static readonly Impl Singleton = new Impl();
+            private Impl() {}
 
             public override string name() { return "TARGET calendar"; }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;

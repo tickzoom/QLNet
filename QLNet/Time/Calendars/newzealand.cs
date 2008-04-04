@@ -23,8 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
+namespace QLNet {
     //! New Zealand calendar
     /*! Holidays:
         <ul>
@@ -50,18 +49,15 @@ namespace QLNet
 
         \ingroup calendars
     */
-    public class NewZealand : Calendar
-    {
+    public class NewZealand : Calendar {
         public NewZealand() : base(Impl.Singleton) { }
 
-        class Impl : Calendar.WesternImpl
-        {
+        class Impl : Calendar.WesternImpl {
             public static readonly Impl Singleton = new Impl();
             private Impl() { }
-
+          
             public override string name() { return "New Zealand"; }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;
@@ -79,7 +75,7 @@ namespace QLNet
                     // Waitangi Day. February 6th
                     || (d == 6 && m == Month.February)
                     // Good Friday
-                    || (dd == em - 3)
+                    || (dd == em-3)
                     // Easter Monday
                     || (dd == em)
                     // ANZAC Day. April 25th

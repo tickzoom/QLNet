@@ -23,8 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
+namespace QLNet {
     //! Japanese calendar
     /*! Holidays:
         <ul>
@@ -55,22 +54,18 @@ namespace QLNet
 
         \ingroup calendars
     */
-    public class Japan : Calendar
-    {
+    public class Japan : Calendar {
         public Japan() : base(Impl.Singleton) { }
 
-        class Impl : Calendar
-        {
+        class Impl : Calendar {
             public static readonly Impl Singleton = new Impl();
             private Impl() { }
-
+        
             public override string name() { return "Japan"; }
-            public override bool isWeekend(DayOfWeek w)
-            {
+            public override bool isWeekend(DayOfWeek w) {
                 return w == DayOfWeek.Saturday || w == DayOfWeek.Sunday;
             }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;
@@ -81,17 +76,17 @@ namespace QLNet
                 double exact_autumnal_equinox_time = 23.09;
                 double diff_per_year = 0.242194;
                 double moving_amount = (y - 2000) * diff_per_year;
-                int number_of_leap_years = (y - 2000) / 4 + (y - 2000) / 100 - (y - 2000) / 400;
-                int ve = (int)(exact_vernal_equinox_time + moving_amount - number_of_leap_years);// vernal equinox day
-                int ae = (int)(exact_autumnal_equinox_time + moving_amount - number_of_leap_years); // autumnal equinox day
+                int number_of_leap_years = (y-2000)/4+(y-2000)/100-(y-2000)/400;
+                int ve = (int)( exact_vernal_equinox_time + moving_amount - number_of_leap_years);// vernal equinox day
+                int ae = (int)( exact_autumnal_equinox_time + moving_amount - number_of_leap_years ); // autumnal equinox day
                 // checks
                 if (isWeekend(w)
                     // New Year's Day
-                    || (d == 1 && m == Month.January)
+                    || (d == 1  && m == Month.January)
                     // Bank Holiday
-                    || (d == 2 && m == Month.January)
+                    || (d == 2  && m == Month.January)
                     // Bank Holiday
-                    || (d == 3 && m == Month.January)
+                    || (d == 3  && m == Month.January)
                     // Coming of Age Day (2nd Monday in January),
                     // was January 15th until 2000
                     || (w == DayOfWeek.Monday && (d >= 8 && d <= 14) && m == Month.January
@@ -105,9 +100,9 @@ namespace QLNet
                     // Greenery Day
                     || ((d == 29 || (d == 30 && w == DayOfWeek.Monday)) && m == Month.April)
                     // Constitution Memorial Day
-                    || (d == 3 && m == Month.May)
+                    || (d == 3  && m == Month.May)
                     // Holiday for a Nation
-                    || (d == 4 && m == Month.May)
+                    || (d == 4  && m == Month.May)
                     // Children's Day
                     || ((d == 5 || (d == 6 && w == DayOfWeek.Monday)) && m == Month.May)
                     // Marine Day (3rd Monday in July),

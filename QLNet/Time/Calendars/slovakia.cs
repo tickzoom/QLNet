@@ -22,8 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
+namespace QLNet {
     //! Slovak calendars
     /*! Holidays for the Bratislava stock exchange
         (data from <http://www.bsse.sk/>):
@@ -49,18 +48,15 @@ namespace QLNet
 
         \ingroup calendars
     */
-    public class Slovakia : Calendar
-    {
+    public class Slovakia :  Calendar {
         public Slovakia() : base(Impl.Singleton) { }
 
-        class Impl : Calendar.WesternImpl
-        {
+        class Impl : Calendar.WesternImpl {
             public static readonly Impl Singleton = new Impl();
             private Impl() { }
 
             public override string name() { return "Bratislava stock exchange"; }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;
@@ -72,7 +68,7 @@ namespace QLNet
                     // Epiphany
                     || (d == 6 && m == Month.January)
                     // Good Friday
-                    || (dd == em - 3)
+                    || (dd == em-3)
                     // Easter Monday
                     || (dd == em)
                     // May Day

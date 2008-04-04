@@ -22,8 +22,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace QLNet
-{
+namespace QLNet {
 
     //! Swiss calendar
     /*! Holidays:
@@ -44,18 +43,15 @@ namespace QLNet
 
         \ingroup calendars
     */
-    public class Switzerland : Calendar
-    {
+    public class Switzerland : Calendar {
         public Switzerland() : base(Impl.Singleton) { }
 
-        class Impl : Calendar.WesternImpl
-        {
+        class Impl : Calendar.WesternImpl {
             public static readonly Impl Singleton = new Impl();
             private Impl() { }
-
+         
             public override string name() { return "Switzerland"; }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;
@@ -64,21 +60,21 @@ namespace QLNet
 
                 if (isWeekend(w)
                     // New Year's Day
-                    || (d == 1 && m == Month.January)
+                    || (d == 1  && m == Month.January)
                     // Berchtoldstag
-                    || (d == 2 && m == Month.January)
+                    || (d == 2  && m == Month.January)
                     // Good Friday
-                    || (dd == em - 3)
+                    || (dd == em-3)
                     // Easter Monday
                     || (dd == em)
                     // Ascension Day
-                    || (dd == em + 38)
+                    || (dd == em+38)
                     // Whit Monday
-                    || (dd == em + 49)
+                    || (dd == em+49)
                     // Labour Day
-                    || (d == 1 && m == Month.May)
+                    || (d == 1  && m == Month.May)
                     // National Day
-                    || (d == 1 && m == Month.August)
+                    || (d == 1  && m == Month.August)
                     // Christmas
                     || (d == 25 && m == Month.December)
                     // St. Stephen's Day
@@ -87,7 +83,7 @@ namespace QLNet
                 return true;
             }
         };
-    };
+      };
 }
 
 

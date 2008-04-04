@@ -1,6 +1,7 @@
 /*
  Copyright (C) 2008 Alessandro Duci
  Copyright (C) 2008 Andrea Maggiulli
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
 
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -22,9 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
-
+namespace QLNet {
     //! Finnish calendar
     /*! Holidays:
         <ul>
@@ -46,15 +45,20 @@ namespace QLNet
         \ingroup calendars
     */
     public class Finland : Calendar {
-      private new class Impl : Calendar.WesternImpl {
+        public Finland() : base(Impl.Singleton) { }
+
+        class Impl : Calendar.WesternImpl {
+            public static readonly Impl Singleton = new Impl();
+            private Impl() { }
           
             public override string name() { return "Finland"; }
             public override bool isBusinessDay(Date date) {
-                Weekday w = date.weekday();
-                int d = date.dayOfMonth(), dd = date.dayOfYear();
-                Month m = date.month();
-                int y = date.year();
+                DayOfWeek w = date.DayOfWeek;
+                int d = date.Day, dd = date.DayOfYear;
+                Month m = (Month)date.Month;
+                int y = date.Year;
                 int em = easterMonday(y);
+
                 if (isWeekend(w)
                     // New Year's Day
                     || (d == 1 && m == Month.January)
@@ -69,7 +73,7 @@ namespace QLNet
                     // Labour Day
                     || (d == 1 && m == Month.May)
                     // Midsummer Eve (Friday between June 18-24)
-                    || (w == Weekday.Friday && (d >= 18 && d <= 24) && m == Month.June)
+                    || (w == DayOfWeek.Friday && (d >= 18 && d <= 24) && m == Month.June)
                     // Independence Day
                     || (d == 6 && m == Month.December)
                     // Christmas Eve
@@ -81,14 +85,7 @@ namespace QLNet
                     return false;
                 return true;
             }
-        };
-          private static Calendar.Impl impl = new Finland.Impl();
-      public Finland(){
-        // all calendar instances share the same implementation instance
-        
-        _impl = impl;
+        }
     }
-    };
-
 }
 

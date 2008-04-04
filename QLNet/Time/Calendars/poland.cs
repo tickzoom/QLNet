@@ -23,8 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
+namespace QLNet {
     //! Polish calendar
     /*! Holidays:
         <ul>
@@ -44,18 +43,15 @@ namespace QLNet
 
         \ingroup calendars
     */
-    public class Poland : Calendar
-    {
+    public class Poland : Calendar {
         public Poland() : base(Impl.Singleton) { }
 
-        class Impl : Calendar.WesternImpl
-        {
+        class Impl : Calendar.WesternImpl {
             public static readonly Impl Singleton = new Impl();
             private Impl() { }
-
+          
             public override string name() { return "Poland"; }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;
@@ -66,19 +62,19 @@ namespace QLNet
                     // Easter Monday
                     || (dd == em)
                     // Corpus Christi
-                    || (dd == em + 59)
+                    || (dd == em+59)
                     // New Year's Day
-                    || (d == 1 && m == Month.January)
+                    || (d == 1  && m == Month.January)
                     // May Day
-                    || (d == 1 && m == Month.May)
+                    || (d == 1  && m == Month.May)
                     // Constitution Day
-                    || (d == 3 && m == Month.May)
+                    || (d == 3  && m == Month.May)
                     // Assumption of the Blessed Virgin Mary
-                    || (d == 15 && m == Month.August)
+                    || (d == 15  && m == Month.August)
                     // All Saints Day
-                    || (d == 1 && m == Month.November)
+                    || (d == 1  && m == Month.November)
                     // Independence Day
-                    || (d == 11 && m == Month.November)
+                    || (d ==11  && m == Month.November)
                     // Christmas
                     || (d == 25 && m == Month.December)
                     // 2nd Day of Christmas

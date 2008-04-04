@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Alessandro Duci
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
 
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -21,9 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
-
+namespace QLNet {
     //! Hong Kong calendars
     /*! Holidays:
         <ul>
@@ -56,133 +55,118 @@ namespace QLNet
         \ingroup calendars
     */
     public class HongKong : Calendar {
-      private class HkexImpl : Calendar.WesternImpl {
-          
-            public override string name() { return "Hong Kong stock exchange"; }
-            public override bool isBusinessDay(DDate date) {
-                Weekday w = date.weekday();
-        int d = date.dayOfMonth(), dd = date.dayOfYear();
-        Month m = date.month();
-        int y = date.year();
-        int em = easterMonday(y);
+        public HongKong() : base(Impl.Singleton) { }
 
-        if (isWeekend(w)
-            // New Year's Day
-            || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.Monday))
-                && m == Month.January)
-            // Ching Ming Festival
-            || (d == 5 && m == Month.April)
-            // Good Friday
-            || (dd == em-3)
-            // Easter Monday
-            || (dd == em)
-            // Labor Day
-            || (d == 1 && m == Month.May)
-            // SAR Establishment Day
-            || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.Monday)) && m == Month.July)
-            // National Day
-            || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.Monday))
-                && m == Month.October)
-            // Christmas Day
-            || (d == 25 && m == Month.December)
-            // Boxing Day
-            || ((d == 26 || ((d == 27 || d == 28) && w == Weekday.Monday))
-                && m == Month.December))
-            return false;
-
-        if (y == 2004) {
-            if (// Lunar New Year
-                ((d==22 || d==23 || d==24) && m == Month.January)
-                // Buddha's birthday
-                || (d == 26 && m == Month.May)
-                // Tuen NG festival
-                || (d == 22 && m == Month.June)
-                // Mid-autumn festival
-                || (d == 29 && m == Month.September)
-                // Chung Yeung
-                || (d == 29 && m == Month.September))
-                return false;
-        }
-
-        if (y == 2005) {
-            if (// Lunar New Year
-                ((d==9 || d==10 || d==11) && m == Month.February)
-                // Buddha's birthday
-                || (d == 16 && m == Month.May)
-                // Tuen NG festival
-                || (d == 11 && m == Month.June)
-                // Mid-autumn festival
-                || (d == 19 && m == Month.September)
-                // Chung Yeung festival
-                || (d == 11 && m == Month.October))
-            return false;
-        }
-
-        if (y == 2006) {
-            if (// Lunar New Year
-                ((d >= 28 && d <= 31) && m == Month.January)
-                // Buddha's birthday
-                || (d == 5 && m == Month.May)
-                // Tuen NG festival
-                || (d == 31 && m == Month.May)
-                // Mid-autumn festival
-                || (d == 7 && m == Month.October)
-                // Chung Yeung festival
-                || (d == 30 && m == Month.October))
-            return false;
-        }
-
-        if (y == 2007) {
-            if (// Lunar New Year
-                ((d >= 17 && d <= 20) && m == Month.February)
-                // Buddha's birthday
-                || (d == 24 && m == Month.May)
-                // Tuen NG festival
-                || (d == 19 && m == Month.June)
-                // Mid-autumn festival
-                || (d == 26 && m == Month.September)
-                // Chung Yeung festival
-                || (d == 19 && m == Month.October))
-            return false;
-        }
-
-        if (y == 2008) {
-            if (// Lunar New Year
-                ((d >= 7 && d <= 9) && m == Month.February)
-                // Ching Ming Festival
-                || (d == 4 && m == Month.April)
-                // Buddha's birthday
-                || (d == 12 && m == Month.May)
-                // Tuen NG festival
-                || (d == 9 && m == Month.June)
-                // Mid-autumn festival
-                || (d == 15 && m == Month.September)
-                // Chung Yeung festival
-                || (d == 7 && m == Month.October))
-            return false;
-        }
-
-        return true;
-    }
-        };
-            private static Calendar.Impl impl = new HongKong.HkexImpl();
-      public enum Market { HKEx    //!< Hong Kong stock exchange
-        };
-       public HongKong(){
-       new HongKong(Market.HKEx);
-       }
-       public HongKong(Market m) {
-        // all calendar instances share the same implementation instance
+        class Impl : Calendar.WesternImpl {
+            public static readonly Impl Singleton = new Impl();
+            private Impl() { }
         
-        switch (m) {
-            case Market.HKEx:
-            _impl = impl;
-            break;
-          default:
-            throw new Exception("unknown market");
+            public override string name() { return "Hong Kong stock exchange"; }
+            public override bool isBusinessDay(Date date) {
+                DayOfWeek w = date.DayOfWeek;
+                int d = date.Day, dd = date.DayOfYear;
+                Month m = (Month)date.Month;
+                int y = date.Year;
+                int em = easterMonday(y);
+
+                if (isWeekend(w)
+                    // New Year's Day
+                    || ((d == 1 || ((d == 2 || d == 3) && w == DayOfWeek.Monday))
+                        && m == Month.January)
+                    // Ching Ming Festival
+                    || (d == 5 && m == Month.April)
+                    // Good Friday
+                    || (dd == em-3)
+                    // Easter Monday
+                    || (dd == em)
+                    // Labor Day
+                    || (d == 1 && m == Month.May)
+                    // SAR Establishment Day
+                    || ((d == 1 || ((d == 2 || d == 3) && w == DayOfWeek.Monday)) && m == Month.July)
+                    // National Day
+                    || ((d == 1 || ((d == 2 || d == 3) && w == DayOfWeek.Monday))
+                        && m == Month.October)
+                    // Christmas Day
+                    || (d == 25 && m == Month.December)
+                    // Boxing Day
+                    || ((d == 26 || ((d == 27 || d == 28) && w == DayOfWeek.Monday))
+                        && m == Month.December))
+                    return false;
+
+                if (y == 2004) {
+                    if (// Lunar New Year
+                        ((d==22 || d==23 || d==24) && m == Month.January)
+                        // Buddha's birthday
+                        || (d == 26 && m == Month.May)
+                        // Tuen NG festival
+                        || (d == 22 && m == Month.June)
+                        // Mid-autumn festival
+                        || (d == 29 && m == Month.September)
+                        // Chung Yeung
+                        || (d == 29 && m == Month.September))
+                        return false;
+                }
+
+                if (y == 2005) {
+                    if (// Lunar New Year
+                        ((d==9 || d==10 || d==11) && m == Month.February)
+                        // Buddha's birthday
+                        || (d == 16 && m == Month.May)
+                        // Tuen NG festival
+                        || (d == 11 && m == Month.June)
+                        // Mid-autumn festival
+                        || (d == 19 && m == Month.September)
+                        // Chung Yeung festival
+                        || (d == 11 && m == Month.October))
+                    return false;
+                }
+
+                if (y == 2006) {
+                    if (// Lunar New Year
+                        ((d >= 28 && d <= 31) && m == Month.January)
+                        // Buddha's birthday
+                        || (d == 5 && m == Month.May)
+                        // Tuen NG festival
+                        || (d == 31 && m == Month.May)
+                        // Mid-autumn festival
+                        || (d == 7 && m == Month.October)
+                        // Chung Yeung festival
+                        || (d == 30 && m == Month.October))
+                    return false;
+                }
+
+                if (y == 2007) {
+                    if (// Lunar New Year
+                        ((d >= 17 && d <= 20) && m == Month.February)
+                        // Buddha's birthday
+                        || (d == 24 && m == Month.May)
+                        // Tuen NG festival
+                        || (d == 19 && m == Month.June)
+                        // Mid-autumn festival
+                        || (d == 26 && m == Month.September)
+                        // Chung Yeung festival
+                        || (d == 19 && m == Month.October))
+                    return false;
+                }
+
+                if (y == 2008) {
+                    if (// Lunar New Year
+                        ((d >= 7 && d <= 9) && m == Month.February)
+                        // Ching Ming Festival
+                        || (d == 4 && m == Month.April)
+                        // Buddha's birthday
+                        || (d == 12 && m == Month.May)
+                        // Tuen NG festival
+                        || (d == 9 && m == Month.June)
+                        // Mid-autumn festival
+                        || (d == 15 && m == Month.September)
+                        // Chung Yeung festival
+                        || (d == 7 && m == Month.October))
+                    return false;
+                }
+
+                return true;
+            }
         }
     }
-
-    };
-
 }

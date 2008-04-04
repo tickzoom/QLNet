@@ -49,18 +49,15 @@ namespace QLNet
 
         \ingroup calendars
     */
-    public class SouthAfrica : Calendar
-    {
+    public class SouthAfrica :  Calendar {
         public SouthAfrica() : base(Impl.Singleton) { }
 
-        class Impl : Calendar.WesternImpl
-        {
+        class Impl : Calendar.WesternImpl {
             public static readonly Impl Singleton = new Impl();
             private Impl() { }
 
             public override string name() { return "South Africa"; }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;
@@ -71,7 +68,7 @@ namespace QLNet
                     // New Year's Day (possibly moved to Monday)
                     || ((d == 1 || (d == 2 && w == DayOfWeek.Monday)) && m == Month.January)
                     // Good Friday
-                    || (dd == em - 3)
+                    || (dd == em-3)
                     // Family Day
                     || (dd == em)
                     // Human Rights Day, March 21st (possibly moved to Monday)

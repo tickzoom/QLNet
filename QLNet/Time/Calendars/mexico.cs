@@ -22,8 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
+namespace QLNet {
     //! %Mexican calendars
     /*! Holidays for the Mexican stock exchange
         (data from <http://www.bmv.com.mx/>):
@@ -43,18 +42,15 @@ namespace QLNet
 
         \ingroup calendars
     */
-    public class Mexico : Calendar
-    {
+    public class Mexico : Calendar {
         public Mexico() : base(Impl.Singleton) { }
 
-        class Impl : Calendar.WesternImpl
-        {
+        class Impl : Calendar.WesternImpl {
             public static readonly Impl Singleton = new Impl();
             private Impl() { }
-
+        
             public override string name() { return "Mexican stock exchange"; }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;
@@ -68,9 +64,9 @@ namespace QLNet
                     // Birthday of Benito Juarez
                     || (d == 21 && m == Month.March)
                     // Holy Thursday
-                    || (dd == em - 4)
+                    || (dd == em-4)
                     // Good Friday
-                    || (dd == em - 3)
+                    || (dd == em-3)
                     // Labour Day
                     || (d == 1 && m == Month.May)
                     // National Day

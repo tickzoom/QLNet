@@ -22,8 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
+namespace QLNet {
     //! South Korean calendars
     /*! Holidays for the Korea exchange
         (data from <http://www.krx.co.kr>):
@@ -53,22 +52,18 @@ namespace QLNet
 
         \ingroup calendars
     */
-    public class SouthKorea : Calendar
-    {
+    public class SouthKorea : Calendar {
         public SouthKorea() : base(Impl.Singleton) { }
 
-        class Impl : Calendar
-        {
+        class Impl : Calendar {
             public static readonly Impl Singleton = new Impl();
             private Impl() { }
-
+          
             public override string name() { return "Korea exchange"; }
-            public override bool isWeekend(DayOfWeek w)
-            {
+            public override bool isWeekend(DayOfWeek w) {
                 return w == DayOfWeek.Saturday || w == DayOfWeek.Sunday;
             }
-            public override bool isBusinessDay(Date date)
-            {
+            public override bool isBusinessDay(Date date) {
                 DayOfWeek w = date.DayOfWeek;
                 int d = date.Day, dd = date.DayOfYear;
                 Month m = (Month)date.Month;
@@ -97,23 +92,23 @@ namespace QLNet
                     || (d == 25 && m == Month.December)
 
                     // Lunar New Year 2004
-                    || ((d == 21 || d == 22 || d == 23 || d == 24 || d == 26)
-                        && m == Month.January && y == 2004)
-                    || ((d == 8 || d == 9 || d == 10) && m == Month.February && y == 2005)
-                    || ((d == 29 || d == 30 || d == 31) && m == Month.January && y == 2006)
-                    || (d == 19 && m == Month.February && y == 2007)
+                    || ((d == 21 || d==22 || d==23 || d==24 || d==26 )
+                        && m == Month.January && y==2004)
+                    || ((d == 8 || d==9 || d==10) && m == Month.February && y==2005)
+                    || ((d==29 || d==30 || d==31 ) && m == Month.January && y==2006)
+                    || (d==19 && m == Month.February && y==2007)
                     // Election Day 2004
-                    || (d == 15 && m == Month.April && y == 2004)
+                    || (d == 15 && m == Month.April && y==2004)
                     // Buddha's birthday
-                    || (d == 26 && m == Month.May && y == 2004)
-                    || (d == 15 && m == Month.May && y == 2005)
-                    || (d == 5 && m == Month.May && y == 2006)
-                    || (d == 24 && m == Month.May && y == 2007)
+                    || (d == 26 && m == Month.May && y==2004)
+                    || (d == 15 && m == Month.May && y==2005)
+                    || (d == 5 && m == Month.May && y==2006)
+                    || (d == 24 && m == Month.May && y==2007)
                     // Harvest Moon Day
-                    || ((d == 27 || d == 28 || d == 29) && m == Month.September && y == 2004)
-                    || ((d == 17 || d == 18 || d == 19) && m == Month.September && y == 2005)
-                    || ((d == 5 || d == 6 || d == 7) && m == Month.October && y == 2006)
-                    || ((d == 24 || d == 25 || d == 26) && m == Month.September && y == 2007)
+                    || ((d == 27 || d == 28 || d == 29) && m == Month.September && y==2004)
+                    || ((d == 17 || d == 18 || d == 19) && m == Month.September && y==2005)
+                    || ((d == 5 || d == 6 || d == 7) && m == Month.October && y==2006)
+                    || ((d == 24 || d == 25 || d == 26) && m == Month.September && y==2007)
                     )
                     return false;
                 return true;
@@ -124,4 +119,4 @@ namespace QLNet
 
 
 
-
+  
