@@ -34,8 +34,8 @@ namespace TestSuite
       {
          Calendar c1 = new TARGET();
          Calendar c2 = new UnitedStates(UnitedStates.Market.NYSE);
-         DDate d1 = new DDate(1,Month.May,2004);      // holiday for both calendars
-         DDate d2 = new DDate(26,Month.April,2004);   // business day
+         Date d1 = new Date(1,Month.May,2004);      // holiday for both calendars
+         Date d2 = new Date(26,Month.April,2004);   // business day
 
          Assert.IsTrue (c1.isHoliday(d1),"wrong assumption---correct the test");
          Assert.IsTrue (c1.isBusinessDay(d2), "wrong assumption---correct the test");
@@ -72,33 +72,33 @@ namespace TestSuite
       public void testUSSettlement() 
       {
          Debug.Print ("Testing US settlement holiday list...");
-         List<DDate>  expectedHol = new List<DDate> ();
+         List<Date>  expectedHol = new List<Date> ();
 
-         expectedHol.Add(new DDate(1, Month.January, 2004));
-         expectedHol.Add(new DDate(19, Month.January, 2004));
-         expectedHol.Add(new DDate(16, Month.February, 2004));
-         expectedHol.Add(new DDate(31, Month.May, 2004));
-         expectedHol.Add(new DDate(5, Month.July, 2004));
-         expectedHol.Add(new DDate(6, Month.September, 2004));
-         expectedHol.Add(new DDate(11, Month.October, 2004));
-         expectedHol.Add(new DDate(11, Month.November, 2004));
-         expectedHol.Add(new DDate(25, Month.November, 2004));
-         expectedHol.Add(new DDate(24, Month.December, 2004));
+         expectedHol.Add(new Date(1, Month.January, 2004));
+         expectedHol.Add(new Date(19, Month.January, 2004));
+         expectedHol.Add(new Date(16, Month.February, 2004));
+         expectedHol.Add(new Date(31, Month.May, 2004));
+         expectedHol.Add(new Date(5, Month.July, 2004));
+         expectedHol.Add(new Date(6, Month.September, 2004));
+         expectedHol.Add(new Date(11, Month.October, 2004));
+         expectedHol.Add(new Date(11, Month.November, 2004));
+         expectedHol.Add(new Date(25, Month.November, 2004));
+         expectedHol.Add(new Date(24, Month.December, 2004));
 
-         expectedHol.Add(new DDate(31, Month.December, 2004));
-         expectedHol.Add(new DDate(17, Month.January, 2005));
-         expectedHol.Add(new DDate(21, Month.February, 2005));
-         expectedHol.Add(new DDate(30, Month.May, 2005));
-         expectedHol.Add(new DDate(4, Month.July, 2005));
-         expectedHol.Add(new DDate(5, Month.September, 2005));
-         expectedHol.Add(new DDate(10, Month.October, 2005));
-         expectedHol.Add(new DDate(11, Month.November, 2005));
-         expectedHol.Add(new DDate(24, Month.November, 2005));
-         expectedHol.Add(new DDate(26, Month.December, 2005));
+         expectedHol.Add(new Date(31, Month.December, 2004));
+         expectedHol.Add(new Date(17, Month.January, 2005));
+         expectedHol.Add(new Date(21, Month.February, 2005));
+         expectedHol.Add(new Date(30, Month.May, 2005));
+         expectedHol.Add(new Date(4, Month.July, 2005));
+         expectedHol.Add(new Date(5, Month.September, 2005));
+         expectedHol.Add(new Date(10, Month.October, 2005));
+         expectedHol.Add(new Date(11, Month.November, 2005));
+         expectedHol.Add(new Date(24, Month.November, 2005));
+         expectedHol.Add(new Date(26, Month.December, 2005));
 
          Calendar c = new UnitedStates(UnitedStates.Market.Settlement);
-         List<DDate> hol = Calendar.holidayList(c, new DDate(1, Month.January, 2004),
-                                                  new DDate(31, Month.December, 2005));
+         List<Date> hol = Calendar.holidayList(c, new Date(1, Month.January, 2004),
+                                                  new Date(31, Month.December, 2005));
 
          for (int i=0; i< Math.Min(hol.Count, expectedHol.Count); i++) 
          {
@@ -116,21 +116,21 @@ namespace TestSuite
       public void testUSGovernmentBondMarket() 
       {
 
-         List<DDate> expectedHol = new List<DDate> ();
-         expectedHol.Add(new DDate(1,Month.January,2004));
-         expectedHol.Add(new DDate(19,Month.January,2004));
-         expectedHol.Add(new DDate(16,Month.February,2004));
-         expectedHol.Add(new DDate(9,Month.April,2004));
-         expectedHol.Add(new DDate(31,Month.May,2004));
-         expectedHol.Add(new DDate(5,Month.July,2004));
-         expectedHol.Add(new DDate(6,Month.September,2004));
-         expectedHol.Add(new DDate(11,Month.October,2004));
-         expectedHol.Add(new DDate(11,Month.November,2004));
-         expectedHol.Add(new DDate(25,Month.November,2004));
-         expectedHol.Add(new DDate(24,Month.December,2004));
+         List<Date> expectedHol = new List<Date> ();
+         expectedHol.Add(new Date(1,Month.January,2004));
+         expectedHol.Add(new Date(19,Month.January,2004));
+         expectedHol.Add(new Date(16,Month.February,2004));
+         expectedHol.Add(new Date(9,Month.April,2004));
+         expectedHol.Add(new Date(31,Month.May,2004));
+         expectedHol.Add(new Date(5,Month.July,2004));
+         expectedHol.Add(new Date(6,Month.September,2004));
+         expectedHol.Add(new Date(11,Month.October,2004));
+         expectedHol.Add(new Date(11,Month.November,2004));
+         expectedHol.Add(new Date(25,Month.November,2004));
+         expectedHol.Add(new Date(24,Month.December,2004));
 
          Calendar c = new UnitedStates(UnitedStates.Market.GovernmentBond);
-         List<DDate> hol = Calendar.holidayList(c, new DDate(1,Month.January,2004),new DDate(31,Month.December,2004));
+         List<Date> hol = Calendar.holidayList(c, new Date(1,Month.January,2004),new Date(31,Month.December,2004));
 
          for (int i=0; i<Math.Min(hol.Count, expectedHol.Count); i++) 
          {
@@ -147,39 +147,39 @@ namespace TestSuite
       public void testUSNewYorkStockExchange() 
       {
 
-         List<DDate> expectedHol = new List<DDate> ();
-         expectedHol.Add(new DDate(1, Month.January, 2004));
-         expectedHol.Add(new DDate(19, Month.January, 2004));
-         expectedHol.Add(new DDate(16, Month.February, 2004));
-         expectedHol.Add(new DDate(9, Month.April, 2004));
-         expectedHol.Add(new DDate(31, Month.May, 2004));
-         expectedHol.Add(new DDate(11, Month.June, 2004));
-         expectedHol.Add(new DDate(5, Month.July, 2004));
-         expectedHol.Add(new DDate(6, Month.September, 2004));
-         expectedHol.Add(new DDate(25, Month.November, 2004));
-         expectedHol.Add(new DDate(24, Month.December, 2004));
+         List<Date> expectedHol = new List<Date> ();
+         expectedHol.Add(new Date(1, Month.January, 2004));
+         expectedHol.Add(new Date(19, Month.January, 2004));
+         expectedHol.Add(new Date(16, Month.February, 2004));
+         expectedHol.Add(new Date(9, Month.April, 2004));
+         expectedHol.Add(new Date(31, Month.May, 2004));
+         expectedHol.Add(new Date(11, Month.June, 2004));
+         expectedHol.Add(new Date(5, Month.July, 2004));
+         expectedHol.Add(new Date(6, Month.September, 2004));
+         expectedHol.Add(new Date(25, Month.November, 2004));
+         expectedHol.Add(new Date(24, Month.December, 2004));
 
-         expectedHol.Add(new DDate(17, Month.January, 2005));
-         expectedHol.Add(new DDate(21, Month.February, 2005));
-         expectedHol.Add(new DDate(25, Month.March, 2005));
-         expectedHol.Add(new DDate(30, Month.May, 2005));
-         expectedHol.Add(new DDate(4, Month.July, 2005));
-         expectedHol.Add(new DDate(5, Month.September, 2005));
-         expectedHol.Add(new DDate(24, Month.November, 2005));
-         expectedHol.Add(new DDate(26, Month.December, 2005));
+         expectedHol.Add(new Date(17, Month.January, 2005));
+         expectedHol.Add(new Date(21, Month.February, 2005));
+         expectedHol.Add(new Date(25, Month.March, 2005));
+         expectedHol.Add(new Date(30, Month.May, 2005));
+         expectedHol.Add(new Date(4, Month.July, 2005));
+         expectedHol.Add(new Date(5, Month.September, 2005));
+         expectedHol.Add(new Date(24, Month.November, 2005));
+         expectedHol.Add(new Date(26, Month.December, 2005));
 
-         expectedHol.Add(new DDate(2, Month.January, 2006));
-         expectedHol.Add(new DDate(16, Month.January, 2006));
-         expectedHol.Add(new DDate(20, Month.February, 2006));
-         expectedHol.Add(new DDate(14, Month.April, 2006));
-         expectedHol.Add(new DDate(29, Month.May, 2006));
-         expectedHol.Add(new DDate(4, Month.July, 2006));
-         expectedHol.Add(new DDate(4, Month.September, 2006));
-         expectedHol.Add(new DDate(23, Month.November, 2006));
-         expectedHol.Add(new DDate(25, Month.December, 2006));
+         expectedHol.Add(new Date(2, Month.January, 2006));
+         expectedHol.Add(new Date(16, Month.January, 2006));
+         expectedHol.Add(new Date(20, Month.February, 2006));
+         expectedHol.Add(new Date(14, Month.April, 2006));
+         expectedHol.Add(new Date(29, Month.May, 2006));
+         expectedHol.Add(new Date(4, Month.July, 2006));
+         expectedHol.Add(new Date(4, Month.September, 2006));
+         expectedHol.Add(new Date(23, Month.November, 2006));
+         expectedHol.Add(new Date(25, Month.December, 2006));
 
          Calendar c = new UnitedStates(UnitedStates.Market.NYSE);
-         List<DDate> hol = Calendar.holidayList(c, new DDate(1,Month.January,2004),new DDate(31,Month.December,2006));
+         List<Date> hol = Calendar.holidayList(c, new Date(1,Month.January,2004),new Date(31,Month.December,2006));
 
          int i;
          for (i = 0; i < Math.Min(hol.Count, expectedHol.Count); i++) 
@@ -192,38 +192,38 @@ namespace TestSuite
                         " expected holidays, while there are " + hol.Count +
                         " calculated holidays");
 
-         List<DDate> histClose = new List<DDate>();
-         histClose.Add(new DDate(11, Month.June, 2004));     // Reagan's funeral
-         histClose.Add(new DDate(14, Month.September, 2001));// September 11, 2001
-         histClose.Add(new DDate(13, Month.September, 2001));// September 11, 2001
-         histClose.Add(new DDate(12, Month.September, 2001));// September 11, 2001
-         histClose.Add(new DDate(11, Month.September, 2001));// September 11, 2001
-         histClose.Add(new DDate(14, Month.July, 1977));     // 1977 Blackout
-         histClose.Add(new DDate(25, Month.January, 1973));  // Johnson's funeral.
-         histClose.Add(new DDate(28, Month.December, 1972)); // Truman's funeral
-         histClose.Add(new DDate(21, Month.July, 1969));     // Lunar exploration nat. day
-         histClose.Add(new DDate(31, Month.March, 1969));    // Eisenhower's funeral
-         histClose.Add(new DDate(10, Month.February, 1969)); // heavy snow
-         histClose.Add(new DDate(5, Month.July, 1968));      // Day after Independence Day
+         List<Date> histClose = new List<Date>();
+         histClose.Add(new Date(11, Month.June, 2004));     // Reagan's funeral
+         histClose.Add(new Date(14, Month.September, 2001));// September 11, 2001
+         histClose.Add(new Date(13, Month.September, 2001));// September 11, 2001
+         histClose.Add(new Date(12, Month.September, 2001));// September 11, 2001
+         histClose.Add(new Date(11, Month.September, 2001));// September 11, 2001
+         histClose.Add(new Date(14, Month.July, 1977));     // 1977 Blackout
+         histClose.Add(new Date(25, Month.January, 1973));  // Johnson's funeral.
+         histClose.Add(new Date(28, Month.December, 1972)); // Truman's funeral
+         histClose.Add(new Date(21, Month.July, 1969));     // Lunar exploration nat. day
+         histClose.Add(new Date(31, Month.March, 1969));    // Eisenhower's funeral
+         histClose.Add(new Date(10, Month.February, 1969)); // heavy snow
+         histClose.Add(new Date(5, Month.July, 1968));      // Day after Independence Day
          // June 12-Dec. 31, 1968
          // Four day week (closed on Wednesdays) - Paperwork Crisis
-         histClose.Add(new DDate(12, Month.Jun, 1968));
-         histClose.Add(new DDate(19, Month.Jun, 1968));
-         histClose.Add(new DDate(26, Month.Jun, 1968));
-         histClose.Add(new DDate(3, Month.Jul, 1968));
-         histClose.Add(new DDate(10, Month.Jul, 1968));
-         histClose.Add(new DDate(17, Month.Jul, 1968));
-         histClose.Add(new DDate(20, Month.Nov, 1968));
-         histClose.Add(new DDate(27, Month.Nov, 1968));
-         histClose.Add(new DDate(4, Month.Dec, 1968));
-         histClose.Add(new DDate(11, Month.Dec, 1968));
-         histClose.Add(new DDate(18, Month.Dec, 1968));
+         histClose.Add(new Date(12, Month.Jun, 1968));
+         histClose.Add(new Date(19, Month.Jun, 1968));
+         histClose.Add(new Date(26, Month.Jun, 1968));
+         histClose.Add(new Date(3, Month.Jul, 1968));
+         histClose.Add(new Date(10, Month.Jul, 1968));
+         histClose.Add(new Date(17, Month.Jul, 1968));
+         histClose.Add(new Date(20, Month.Nov, 1968));
+         histClose.Add(new Date(27, Month.Nov, 1968));
+         histClose.Add(new Date(4, Month.Dec, 1968));
+         histClose.Add(new Date(11, Month.Dec, 1968));
+         histClose.Add(new Date(18, Month.Dec, 1968));
          // Presidential election days
-         histClose.Add(new DDate(4, Month.Nov, 1980));
-         histClose.Add(new DDate(2, Month.Nov, 1976));
-         histClose.Add(new DDate(7, Month.Nov, 1972));
-         histClose.Add(new DDate(5, Month.Nov, 1968));
-         histClose.Add(new DDate(3, Month.Nov, 1964));
+         histClose.Add(new Date(4, Month.Nov, 1980));
+         histClose.Add(new Date(2, Month.Nov, 1976));
+         histClose.Add(new Date(7, Month.Nov, 1972));
+         histClose.Add(new Date(5, Month.Nov, 1968));
+         histClose.Add(new Date(3, Month.Nov, 1964));
     
          for (i=0; i<histClose.Count; i++) 
          {

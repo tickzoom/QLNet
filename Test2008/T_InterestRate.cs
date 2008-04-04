@@ -101,8 +101,8 @@ namespace TestSuite
          Rounding roundingPrecision;
          double r3;
          double r2;
-         DDate d1 = DDate.todaysDate();
-         DDate d2;
+         Date d1 = Date.Today;
+         Date d2;
          InterestRate ir;
          InterestRate ir2;
          InterestRate ir3;

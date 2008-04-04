@@ -34,6 +34,9 @@ namespace QLNet
     public class Calendar
     {
         protected Calendar calendar_;
+        public List<Date> addedHolidays = new List<Date>(), 
+                           removedHolidays = new List<Date>();
+
         public Calendar calendar
         {
             get { return calendar_; }
@@ -178,6 +181,49 @@ namespace QLNet
                     wd = -wd;
             }
             return wd;
+        }
+
+        public void addHoliday(Date d)
+        {
+            // if d was a genuine holiday previously removed, revert the change
+            removedHolidays.Remove(d);
+            // if it's already a holiday, leave the calendar alone.
+            // Otherwise, add it.
+            if (isBusinessDay(d))
+                addedHolidays.Add(d);
+        }
+        public void removeHoliday(Date d)
+        {
+            // if d was an artificially-added holiday, revert the change
+            addedHolidays.Remove(d);
+            // if it's already a business day, leave the calendar alone.
+            // Otherwise, add it.
+            if (!isBusinessDay(d))
+                removedHolidays.Add(d);
+        }
+
+        public static List<Date> holidayList(Calendar calendar, Date from, Date to)
+        {
+            return holidayList(calendar, from, to, false);
+        }
+
+        public static List<Date> holidayList(Calendar calendar, Date from, Date to, bool includeWeekEnds)
+        {
+
+            if (to <= from)
+            {
+                throw new Exception("'from' date (" + from + ") must be earlier than 'to' date (" + to + ")");
+            }
+
+            List<Date> result = new List<Date>();
+
+            for (Date d = from; d <= to; ++d)
+            {
+                if (calendar.isHoliday(d)
+                    && (includeWeekEnds || !calendar.isWeekend(d.DayOfWeek)))
+                    result.Add(d);
+            }
+            return result;
         }
 
         public class WesternImpl : Calendar
