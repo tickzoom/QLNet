@@ -106,7 +106,7 @@ namespace QLNet
       }
       public Money rounded()
       {
-         return new Money(currency_.rounding.round(value_), currency_);
+         return new Money(currency_.rounding.Round(value_), currency_);
       }
       public override String ToString() 
       {

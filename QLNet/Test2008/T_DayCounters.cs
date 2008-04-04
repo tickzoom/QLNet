@@ -31,7 +31,7 @@ namespace TestSuite
    {
       public struct SingleCase
       {
-         public SingleCase(ActualActual.Convention convention, DDate start, DDate end, DDate refStart, DDate refEnd, double result)
+         public SingleCase(ActualActual.Convention convention, Date start, Date end, Date refStart, Date refEnd, double result)
          {
             _convention = convention;
             _start = start;
@@ -40,20 +40,20 @@ namespace TestSuite
             _refEnd = refEnd;
             _result = result;
          }
-         public SingleCase(ActualActual.Convention convention, DDate start, DDate end, double result)
+         public SingleCase(ActualActual.Convention convention, Date start, Date end, double result)
          {
             _convention = convention;
             _start = start;
             _end = end;
-            _refStart = new DDate();
-            _refEnd = new DDate();
+            _refStart = new Date();
+            _refEnd = new Date();
             _result = result;
          }
          public ActualActual.Convention _convention;
-         public DDate _start;
-         public DDate _end;
-         public DDate _refStart;
-         public DDate _refEnd;
+         public Date _start;
+         public Date _end;
+         public Date _refStart;
+         public Date _refEnd;
          public double _result;
       }
       [TestMethod()]
@@ -63,81 +63,81 @@ namespace TestSuite
          {
             // first example
             new SingleCase(ActualActual.Convention.ISDA,
-                           new DDate(1,Month.November,2003), new DDate(1,Month.May,2004),
+                           new Date(1,Month.November,2003), new Date(1,Month.May,2004),
                            0.497724380567),
             new SingleCase(ActualActual.Convention.ISMA,
-                           new DDate(1,Month.November,2003), new DDate(1,Month.May,2004),
-                           new DDate(1,Month.November,2003), new DDate(1,Month.May,2004),
+                           new Date(1,Month.November,2003), new Date(1,Month.May,2004),
+                           new Date(1,Month.November,2003), new Date(1,Month.May,2004),
                            0.500000000000),
             new SingleCase(ActualActual.Convention.AFB,
-                           new DDate(1,Month.November,2003), new DDate(1,Month.May,2004),
+                           new Date(1,Month.November,2003), new Date(1,Month.May,2004),
                            0.497267759563),
             // short first calculation period (first period)
             new SingleCase(ActualActual.Convention.ISDA,
-                           new DDate(1,Month.February,1999), new DDate(1,Month.July,1999),
+                           new Date(1,Month.February,1999), new Date(1,Month.July,1999),
                            0.410958904110),
             new SingleCase(ActualActual.Convention.ISMA,
-                   new DDate(1,Month.February,1999), new DDate(1,Month.July,1999),
-                   new DDate(1,Month.July,1998), new DDate(1,Month.July,1999),
+                   new Date(1,Month.February,1999), new Date(1,Month.July,1999),
+                   new Date(1,Month.July,1998), new Date(1,Month.July,1999),
                    0.410958904110),
             new SingleCase(ActualActual.Convention.AFB,
-                   new DDate(1,Month.February,1999), new DDate(1,Month.July,1999),
+                   new Date(1,Month.February,1999), new Date(1,Month.July,1999),
                    0.410958904110),
             // short first calculation period (second period)
             new SingleCase(ActualActual.Convention.ISDA,
-                   new DDate(1,Month.July,1999), new DDate(1,Month.July,2000),
+                   new Date(1,Month.July,1999), new Date(1,Month.July,2000),
                    1.001377348600),
             new SingleCase(ActualActual.Convention.ISMA,
-                   new DDate(1,Month.July,1999), new DDate(1,Month.July,2000),
-                   new DDate(1,Month.July,1999), new DDate(1,Month.July,2000),
+                   new Date(1,Month.July,1999), new Date(1,Month.July,2000),
+                   new Date(1,Month.July,1999), new Date(1,Month.July,2000),
                    1.000000000000),
             new SingleCase(ActualActual.Convention.AFB,
-                   new DDate(1,Month.July,1999), new DDate(1,Month.July,2000),
+                   new Date(1,Month.July,1999), new Date(1,Month.July,2000),
                    1.000000000000),
             // long first calculation period (first period)
             new SingleCase(ActualActual.Convention.ISDA,
-                   new DDate(15,Month.August,2002), new DDate(15,Month.July,2003),
+                   new Date(15,Month.August,2002), new Date(15,Month.July,2003),
                    0.915068493151),
             new SingleCase(ActualActual.Convention.ISMA,
-                   new DDate(15,Month.August,2002), new DDate(15,Month.July,2003),
-                   new DDate(15,Month.January,2003), new DDate(15,Month.July,2003),
+                   new Date(15,Month.August,2002), new Date(15,Month.July,2003),
+                   new Date(15,Month.January,2003), new Date(15,Month.July,2003),
                    0.915760869565),
             new SingleCase(ActualActual.Convention.AFB,
-                   new DDate(15,Month.August,2002), new DDate(15,Month.July,2003),
+                   new Date(15,Month.August,2002), new Date(15,Month.July,2003),
                    0.915068493151),
             // long first calculation period (second period)
             /* Warning: the ISDA case is in disagreement with mktc1198.pdf */
             new SingleCase(ActualActual.Convention.ISDA,
-                   new DDate(15,Month.July,2003), new DDate(15,Month.January,2004),
+                   new Date(15,Month.July,2003), new Date(15,Month.January,2004),
                    0.504004790778),
             new SingleCase(ActualActual.Convention.ISMA,
-                   new DDate(15,Month.July,2003), new DDate(15,Month.January,2004),
-                   new DDate(15,Month.July,2003), new DDate(15,Month.January,2004),
+                   new Date(15,Month.July,2003), new Date(15,Month.January,2004),
+                   new Date(15,Month.July,2003), new Date(15,Month.January,2004),
                    0.500000000000),
             new SingleCase(ActualActual.Convention.AFB,
-                   new DDate(15,Month.July,2003), new DDate(15,Month.January,2004),
+                   new Date(15,Month.July,2003), new Date(15,Month.January,2004),
                    0.504109589041),
             // short final calculation period (penultimate period)
             new SingleCase(ActualActual.Convention.ISDA,
-                   new DDate(30,Month.July,1999), new DDate(30,Month.January,2000),
+                   new Date(30,Month.July,1999), new Date(30,Month.January,2000),
                    0.503892506924),
             new SingleCase(ActualActual.Convention.ISMA,
-                   new DDate(30,Month.July,1999), new DDate(30,Month.January,2000),
-                   new DDate(30,Month.July,1999), new DDate(30,Month.January,2000),
+                   new Date(30,Month.July,1999), new Date(30,Month.January,2000),
+                   new Date(30,Month.July,1999), new Date(30,Month.January,2000),
                    0.500000000000),
             new SingleCase(ActualActual.Convention.AFB,
-                   new DDate(30,Month.July,1999), new DDate(30,Month.January,2000),
+                   new Date(30,Month.July,1999), new Date(30,Month.January,2000),
                    0.504109589041),
             // short final calculation period (final period)
             new SingleCase(ActualActual.Convention.ISDA,
-                   new DDate(30,Month.January,2000), new DDate(30,Month.June,2000),
+                   new Date(30,Month.January,2000), new Date(30,Month.June,2000),
                    0.415300546448),
             new SingleCase(ActualActual.Convention.ISMA,
-                   new DDate(30,Month.January,2000), new DDate(30,Month.June,2000),
-                   new DDate(30,Month.January,2000), new DDate(30,Month.July,2000),
+                   new Date(30,Month.January,2000), new Date(30,Month.June,2000),
+                   new Date(30,Month.January,2000), new Date(30,Month.July,2000),
                    0.417582417582),
             new SingleCase(ActualActual.Convention.AFB,
-                   new DDate(30,Month.January,2000), new DDate(30,Month.June,2000),
+                   new Date(30,Month.January,2000), new Date(30,Month.June,2000),
                    0.41530054644)
              };
 
@@ -145,10 +145,10 @@ namespace TestSuite
          for (int i = 0; i < n; i++)
          {
             ActualActual dayCounter = new ActualActual(testCases[i]._convention);
-            DDate d1 = testCases[i]._start;
-            DDate d2 = testCases[i]._end;
-            DDate rd1 = testCases[i]._refStart;
-            DDate rd2 = testCases[i]._refEnd;
+            Date d1 = testCases[i]._start;
+            Date d2 = testCases[i]._end;
+            Date rd1 = testCases[i]._refStart;
+            Date rd2 = testCases[i]._refEnd;
             double calculated = dayCounter.yearFraction(d1, d2, rd1, rd2);
 
             if (Math.Abs(calculated - testCases[i]._result) > 1.0e-10)
@@ -167,14 +167,14 @@ namespace TestSuite
          int n = p.Length;
 
          // 4 years should be enough
-         DDate first= new DDate(1,Month.January,2002), last = new DDate(31,Month.December,2005);
+         Date first= new Date(1,Month.January,2002), last = new Date(31,Month.December,2005);
          DayCounter dayCounter = new SimpleDayCounter();
 
-          for (DDate start = first; start <= last; start++) 
+          for (Date start = first; start <= last; start++) 
           {
               for (int i=0; i<n; i++) 
               {
-                  DDate end = start + p[i];
+                  Date end = start + p[i];
                   double calculated = dayCounter.yearFraction(start,end,null ,null );
                   if (Math.Abs(calculated-expected[i]) > 1.0e-12) 
                   {
@@ -194,14 +194,14 @@ namespace TestSuite
           int n = p.Length;
 
           // 1 years should be enough
-          DDate first = new DDate(1,Month.January,2004), last= new DDate (31,Month.December,2004);
+          Date first = new Date(1,Month.January,2004), last= new Date (31,Month.December,2004);
           DayCounter dayCounter = new OneDayCounter();
 
-          for (DDate start = first; start <= last; start++) 
+          for (Date start = first; start <= last; start++) 
           {
               for (int i=0; i<n; i++) 
               {
-                  DDate end = start + p[i];
+                  Date end = start + p[i];
                   double calculated = dayCounter.yearFraction(start,end,null,null);
                   if (Math.Abs(calculated-expected[i]) > 1.0e-12) 
                   {

@@ -59,13 +59,13 @@ namespace TestSuite
    [TestClass()]
    class T_AmericanOption
    {
-  		public static YieldTermStructure flatRate(DDate today, Quote forward, DayCounter dc)
+  		public static YieldTermStructure flatRate(Date today, Quote forward, DayCounter dc)
 		{
 			//return new YieldTermStructure(new FlatForward(today, new Handle<Quote>(forward), dc));
          return null;
       }
 
-		public static YieldTermStructure flatRate(DDate today, double forward, DayCounter dc)
+		public static YieldTermStructure flatRate(Date today, double forward, DayCounter dc)
 		{
 			//return flatRate(today, boost.shared_ptr<Quote>(new SimpleQuote(forward)), dc);
          return null;
@@ -112,7 +112,7 @@ namespace TestSuite
             new AmericanOptionData(Option.Type.Put,  100.00, 100.00, 0.10, 0.10, 0.50, 0.35,  9.5104) ,
             new AmericanOptionData(Option.Type.Put,  100.00, 110.00, 0.10, 0.10, 0.50, 0.35,  5.8823)};
 
-          DDate today = DDate.todaysDate();
+          Date today = Date.Today;
           DayCounter dc = new Actual360();
           SimpleQuote spot = new SimpleQuote(0.0);
           SimpleQuote qRate = new SimpleQuote(0.0);
