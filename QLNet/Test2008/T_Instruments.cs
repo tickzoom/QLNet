@@ -44,8 +44,8 @@ namespace TestSuite {
                 Assert.Fail("Observer was not notified of instrument change");
         }
 
-        //public void suite() {
-        //    testObservable();
-        //}
+        public void suite() {
+            testObservable();
+        }
     }
 }

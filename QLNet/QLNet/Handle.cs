@@ -36,6 +36,7 @@ namespace QLNet {
         //! dereferencing
         public T currentLink() { return link; }
         // this one is instead of c++ -> and () operators overload
+        public static implicit operator T(Handle<T> ImpliedObject) { return ImpliedObject.link; }
         public T link {     
             get {
                 if (empty())
