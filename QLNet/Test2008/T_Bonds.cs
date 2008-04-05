@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QLNet;
 
 namespace TestSuite {
+    [TestClass()]
     public class BondsTest {
         class CommonVars {
             // common data
@@ -25,9 +27,10 @@ namespace TestSuite {
             }
         }
 
-        void testYield() {
+        [TestMethod()]
+        public void testYield() {
 
-            Console.WriteLine("Testing consistency of bond price/yield calculation...");
+            //"Testing consistency of bond price/yield calculation...");
 
             CommonVars vars = new CommonVars();
 
@@ -75,7 +78,7 @@ namespace TestSuite {
                           // the difference might not matter
                           double price2 = bond.cleanPrice(calculated, bondDayCount, compounding[n], frequencies[l]);
                           if (Math.Abs(price-price2)/price > tolerance) {
-                              Console.WriteLine("yield recalculation failed:\n"
+                              Assert.Fail("yield recalculation failed:\n"
                                   + "    issue:     " + issue + "\n"
                                   + "    maturity:  " + maturity + "\n"
                                   + "    coupon:    " + coupons[k] + "\n"
@@ -93,10 +96,10 @@ namespace TestSuite {
                 }
               }
             }
-
         }
-        void testTheoretical() {
-            Console.WriteLine("Testing theoretical bond price/yield calculation...");
+        [TestMethod()]
+        public void testTheoretical() {
+            // "Testing theoretical bond price/yield calculation...");
 
             CommonVars vars = new CommonVars();
 
@@ -142,7 +145,7 @@ namespace TestSuite {
                         double calculatedPrice = bond.cleanPrice();
 
                         if (Math.Abs(price-calculatedPrice) > tolerance) {
-                            Console.WriteLine("price calculation failed:"
+                            Assert.Fail("price calculation failed:"
                                 + "\n    issue:     " + issue
                                 + "\n    maturity:  " + maturity
                                 + "\n    coupon:    " + coupons[k]
@@ -156,7 +159,7 @@ namespace TestSuite {
                         double calculatedYield = bond.yield(bondDayCount, Compounding.Continuous, frequencies[l],
                                                  tolerance, maxEvaluations);
                         if (Math.Abs(yields[m]-calculatedYield) > tolerance) {
-                            Console.WriteLine("yield calculation failed:"
+                            Assert.Fail("yield calculation failed:"
                                 + "\n    issue:     " + issue
                                 + "\n    maturity:  " + maturity
                                 + "\n    coupon:    " + coupons[k]
@@ -170,13 +173,14 @@ namespace TestSuite {
               }
             }
         }
-        void testCached() {
-            Console.WriteLine("Testing bond price/yield calculation against cached values...");
+        [TestMethod()]
+        public void testCached() {
+            // ("Testing bond price/yield calculation against cached values...");
 
             CommonVars vars = new CommonVars();
 
             // with implicit settlement calculation:
-            Date today = new Date(2004, Month.November, 22);
+            Date today = new Date(22, Month.November, 2004);
             Settings.setEvaluationDate(today);
 
             Calendar bondCalendar = new NullCalendar();
@@ -187,12 +191,12 @@ namespace TestSuite {
 
             // actual market values from the evaluation date
             Frequency freq = Frequency.Semiannual;
-            Schedule sch1 = new Schedule(new Date(2004, Month.October, 31), new Date(2006, Month.October, 31), new Period(freq),
+            Schedule sch1 = new Schedule(new Date(31, Month.October, 2004), new Date(31, Month.October, 2006), new Period(freq),
                                          bondCalendar, BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted,
                                          DateGeneration.Rule.Backward, false);
 
             FixedRateBond bond1 = new FixedRateBond(settlementDays, vars.faceAmount, sch1, new List<double>() { 0.025 },
-                                    bondDayCount, BusinessDayConvention.ModifiedFollowing, 100.0, new Date(2004, Month.November, 1));
+                                    bondDayCount, BusinessDayConvention.ModifiedFollowing, 100.0, new Date(1, Month.November, 2004));
 
             PricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
             bond1.setPricingEngine(bondEngine);
@@ -200,13 +204,13 @@ namespace TestSuite {
             double marketPrice1 = 99.203125;
             double marketYield1 = 0.02925;
 
-            Schedule sch2 = new Schedule(new Date(2004, Month.November, 15), new Date(2009, Month.November, 15), new Period(freq),
+            Schedule sch2 = new Schedule(new Date(15, Month.November, 2004), new Date(15, Month.November, 2009), new Period(freq),
                                          bondCalendar, BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted,
                                          DateGeneration.Rule.Backward, false);
 
             FixedRateBond bond2 = new FixedRateBond(settlementDays, vars.faceAmount, sch2, new List<double>() { 0.035 },
                                          bondDayCount, BusinessDayConvention.ModifiedFollowing,
-                                         100.0, new Date(2004, Month.November, 15));
+                                         100.0, new Date(15, Month.November, 2004));
 
             bond2.setPricingEngine(bondEngine);
 
@@ -226,7 +230,7 @@ namespace TestSuite {
 
             price = bond1.cleanPrice(marketYield1, bondDayCount, Compounding.Compounded, freq);
             if (Math.Abs(price-cachedPrice1a) > tolerance) {
-                Console.WriteLine("failed to reproduce cached price:"
+                Assert.Fail("failed to reproduce cached price:"
                            + "\n    calculated: " + price
                            + "\n    expected:   " + cachedPrice1a
                            + "\n    tolerance:  " + tolerance
@@ -235,7 +239,7 @@ namespace TestSuite {
 
             price = bond1.cleanPrice();
             if (Math.Abs(price-cachedPrice1b) > tolerance) {
-                Console.WriteLine("failed to reproduce cached price:"
+                Assert.Fail("failed to reproduce cached price:"
                            + "\n    calculated: " + price
                            + "\n    expected:   " + cachedPrice1b
                            + "\n    tolerance:  " + tolerance
@@ -244,7 +248,7 @@ namespace TestSuite {
 
             yield = bond1.yield(marketPrice1, bondDayCount, Compounding.Compounded, freq);
             if (Math.Abs(yield-cachedYield1a) > tolerance) {
-                Console.WriteLine("failed to reproduce cached compounded yield:"
+                Assert.Fail("failed to reproduce cached compounded yield:"
                            + "\n    calculated: " + yield
                            + "\n    expected:   " + cachedYield1a
                            + "\n    tolerance:  " + tolerance
@@ -253,7 +257,7 @@ namespace TestSuite {
 
             yield = bond1.yield(marketPrice1, bondDayCount, Compounding.Continuous, freq);
             if (Math.Abs(yield-cachedYield1b) > tolerance) {
-                Console.WriteLine("failed to reproduce cached continuous yield:"
+                Assert.Fail("failed to reproduce cached continuous yield:"
                            + "\n    calculated: " + yield
                            + "\n    expected:   " + cachedYield1b
                            + "\n    tolerance:  " + tolerance
@@ -262,7 +266,7 @@ namespace TestSuite {
 
             yield = bond1.yield(bondDayCount, Compounding.Continuous, freq);
             if (Math.Abs(yield-cachedYield1c) > tolerance) {
-                Console.WriteLine("failed to reproduce cached continuous yield:"
+                Assert.Fail("failed to reproduce cached continuous yield:"
                            + "\n    calculated: " + yield
                            + "\n    expected:   " + cachedYield1c
                            + "\n    tolerance:  " + tolerance
@@ -272,7 +276,7 @@ namespace TestSuite {
 
             price = bond2.cleanPrice(marketYield2, bondDayCount, Compounding.Compounded, freq);
             if (Math.Abs(price-cachedPrice2a) > tolerance) {
-                Console.WriteLine("failed to reproduce cached price:"
+                Assert.Fail("failed to reproduce cached price:"
                            + "\n    calculated: " + price
                            + "\n    expected:   " + cachedPrice2a
                            + "\n    tolerance:  " + tolerance
@@ -281,7 +285,7 @@ namespace TestSuite {
 
             price = bond2.cleanPrice();
             if (Math.Abs(price-cachedPrice2b) > tolerance) {
-                Console.WriteLine("failed to reproduce cached price:"
+                Assert.Fail("failed to reproduce cached price:"
                            + "\n    calculated: " + price
                            + "\n    expected:   " + cachedPrice2b
                            + "\n    tolerance:  " + tolerance
@@ -290,7 +294,7 @@ namespace TestSuite {
 
             yield = bond2.yield(marketPrice2, bondDayCount, Compounding.Compounded, freq);
             if (Math.Abs(yield-cachedYield2a) > tolerance) {
-                Console.WriteLine("failed to reproduce cached compounded yield:"
+                Assert.Fail("failed to reproduce cached compounded yield:"
                            + "\n    calculated: " + yield
                            + "\n    expected:   " + cachedYield2a
                            + "\n    tolerance:  " + tolerance
@@ -299,7 +303,7 @@ namespace TestSuite {
 
             yield = bond2.yield(marketPrice2, bondDayCount, Compounding.Continuous, freq);
             if (Math.Abs(yield-cachedYield2b) > tolerance) {
-                Console.WriteLine("failed to reproduce cached continuous yield:"
+                Assert.Fail("failed to reproduce cached continuous yield:"
                            + "\n    calculated: " + yield
                            + "\n    expected:   " + cachedYield2b
                            + "\n    tolerance:  " + tolerance
@@ -308,7 +312,7 @@ namespace TestSuite {
 
             yield = bond2.yield(bondDayCount, Compounding.Continuous, freq);
             if (Math.Abs(yield-cachedYield2c) > tolerance) {
-                Console.WriteLine("failed to reproduce cached continuous yield:"
+                Assert.Fail("failed to reproduce cached continuous yield:"
                            + "\n    calculated: " + yield
                            + "\n    expected:   " + cachedYield2c
                            + "\n    tolerance:  " + tolerance
@@ -316,24 +320,24 @@ namespace TestSuite {
             }
 
             // with explicit settlement date:
-            Schedule sch3 = new Schedule(new Date(2004, Month.November, 30), new Date(2006, Month.November, 30), new Period(freq),
+            Schedule sch3 = new Schedule(new Date(30, Month.November, 2004), new Date(30, Month.November, 2006), new Period(freq),
                                          new UnitedStates(UnitedStates.Market.GovernmentBond), BusinessDayConvention.Unadjusted,
                                          BusinessDayConvention.Unadjusted, DateGeneration.Rule.Backward, false);
 
             FixedRateBond bond3 = new FixedRateBond(settlementDays, vars.faceAmount, sch3, new List<double>() { 0.02875 },
                                 new ActualActual(ActualActual.Convention.ISMA),
-                                BusinessDayConvention.ModifiedFollowing, 100.0, new Date(2004, Month.November, 30));
+                                BusinessDayConvention.ModifiedFollowing, 100.0, new Date(30, Month.November, 2004));
 
             bond3.setPricingEngine(bondEngine);
 
             double marketYield3 = 0.02997;
 
-            Date settlementDate = new Date(2004, Month.November, 30);
+            Date settlementDate = new Date(30, Month.November, 2004);
             double cachedPrice3 = 99.764874;
 
             price = bond3.cleanPrice(marketYield3, bondDayCount, Compounding.Compounded, freq, settlementDate);
             if (Math.Abs(price - cachedPrice3) > tolerance) {
-                Console.WriteLine("failed to reproduce cached price:"
+                Assert.Fail("failed to reproduce cached price:"
                            + "\n    calculated: " + price + ""
                            + "\n    expected:   " + cachedPrice3 + ""
                            + "\n    error:      " + (price - cachedPrice3));
@@ -341,22 +345,23 @@ namespace TestSuite {
 
             // this should give the same result since the issue date is the
             // earliest possible settlement date
-            Settings.setEvaluationDate(new Date(2004, Month.November, 22));
+            Settings.setEvaluationDate(new Date(22, Month.November, 2004));
 
             price = bond3.cleanPrice(marketYield3, bondDayCount, Compounding.Compounded, freq);
             if (Math.Abs(price - cachedPrice3) > tolerance) {
-                Console.WriteLine("failed to reproduce cached price:"
+                Assert.Fail("failed to reproduce cached price:"
                            + "\n    calculated: " + price + ""
                            + "\n    expected:   " + cachedPrice3 + ""
                            + "\n    error:      " + (price - cachedPrice3));
             }
         }
-        void testCachedZero() {
+        [TestMethod()]
+        public void testCachedZero() {
             Console.WriteLine("Testing zero-coupon bond prices against cached values...");
 
             CommonVars vars = new CommonVars();
 
-            Date today = new Date(2004, Month.November, 22);
+            Date today = new Date(22, Month.November, 2004);
             Settings.setEvaluationDate(today);
 
             int settlementDays = 1;
@@ -367,8 +372,8 @@ namespace TestSuite {
 
             // plain
             ZeroCouponBond bond1 = new ZeroCouponBond(settlementDays, new UnitedStates(UnitedStates.Market.GovernmentBond),
-                                 vars.faceAmount, new Date(2008, Month.November, 30), BusinessDayConvention.ModifiedFollowing,
-                                 100.0, new Date(2004, Month.November, 30));
+                                 vars.faceAmount, new Date(30, Month.November, 2008), BusinessDayConvention.ModifiedFollowing,
+                                 100.0, new Date(30, Month.November, 2004));
 
             PricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
             bond1.setPricingEngine(bondEngine);
@@ -384,8 +389,8 @@ namespace TestSuite {
             }
 
             ZeroCouponBond bond2 = new ZeroCouponBond(settlementDays, new UnitedStates(UnitedStates.Market.GovernmentBond),
-                                 vars.faceAmount, new Date(2007, Month.November, 30), BusinessDayConvention.ModifiedFollowing,
-                                 100.0, new Date(2004, Month.November, 30));
+                                 vars.faceAmount, new Date(30, Month.November, 2007), BusinessDayConvention.ModifiedFollowing,
+                                 100.0, new Date(30, Month.November, 2004));
 
             bond2.setPricingEngine(bondEngine);
 
@@ -400,8 +405,8 @@ namespace TestSuite {
             }
 
             ZeroCouponBond bond3 = new ZeroCouponBond(settlementDays, new UnitedStates(UnitedStates.Market.GovernmentBond),
-                                 vars.faceAmount, new Date(2006, Month.November, 30), BusinessDayConvention.ModifiedFollowing,
-                                 100.0, new Date(2004, Month.November, 30));
+                                 vars.faceAmount, new Date(30, Month.November, 2006), BusinessDayConvention.ModifiedFollowing,
+                                 100.0, new Date(30, Month.November, 2004));
 
             bond3.setPricingEngine(bondEngine);
 
@@ -415,12 +420,13 @@ namespace TestSuite {
                            + "    error:      " + (price-cachedPrice3));
             }
         }
-        void testCachedFixed() {
-            Console.WriteLine("Testing fixed-coupon bond prices against cached values...");
+        [TestMethod()]
+        public void testCachedFixed() {
+            // "Testing fixed-coupon bond prices against cached values...");
 
             CommonVars vars = new CommonVars();
 
-            Date today = new Date(2004, Month.November, 22);
+            Date today = new Date(22, Month.November, 2004);
             Settings.setEvaluationDate(today);
 
             int settlementDays = 1;
@@ -430,14 +436,14 @@ namespace TestSuite {
             double tolerance = 1.0e-6;
 
             // plain
-            Schedule sch = new Schedule(new Date(2004, Month.November, 30),
-                         new Date(2008, Month.November, 30), new Period(Frequency.Semiannual),
+            Schedule sch = new Schedule(new Date(30, Month.November, 2004),
+                         new Date(30, Month.November, 2008), new Period(Frequency.Semiannual),
                          new UnitedStates(UnitedStates.Market.GovernmentBond),
                          BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted, DateGeneration.Rule.Backward, false);
 
             FixedRateBond bond1 = new FixedRateBond(settlementDays, vars.faceAmount, sch, new List<double>() { 0.02875 },
                                 new ActualActual(ActualActual.Convention.ISMA), BusinessDayConvention.ModifiedFollowing,
-                                100.0, new Date(2004, Month.November, 30));
+                                100.0, new Date(30, Month.November, 2004));
 
             PricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
             bond1.setPricingEngine(bondEngine);
@@ -462,7 +468,7 @@ namespace TestSuite {
             FixedRateBond bond2 = new FixedRateBond(settlementDays, vars.faceAmount, sch, couponRates,
                                   new ActualActual(ActualActual.Convention.ISMA),
                                   BusinessDayConvention.ModifiedFollowing,
-                                  100.0, new Date(2004, Month.November, 30));
+                                  100.0, new Date(30, Month.November, 2004));
 
             bond2.setPricingEngine(bondEngine);
 
@@ -477,16 +483,16 @@ namespace TestSuite {
             }
 
             // stub date
-            Schedule sch3 = new Schedule(new Date(2004, Month.November, 30),
-                          new Date(2009, Month.March, 30), new Period(Frequency.Semiannual),
+            Schedule sch3 = new Schedule(new Date(30, Month.November, 2004),
+                          new Date(30, Month.March, 2009), new Period(Frequency.Semiannual),
                           new UnitedStates(UnitedStates.Market.GovernmentBond),
                           BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted, DateGeneration.Rule.Backward, false,
-                          null, new Date(2008, Month.November, 30));
+                          null, new Date(30, Month.November, 2008));
 
             FixedRateBond bond3 = new FixedRateBond(settlementDays, vars.faceAmount, sch3,
                                   couponRates, new ActualActual(ActualActual.Convention.ISMA),
                                   BusinessDayConvention.ModifiedFollowing,
-                                  100.0, new Date(2004, Month.November, 30));
+                                  100.0, new Date(30, Month.November, 2004));
 
             bond3.setPricingEngine(bondEngine);
 
@@ -494,18 +500,19 @@ namespace TestSuite {
 
             price = bond3.cleanPrice();
             if (Math.Abs(price-cachedPrice3) > tolerance) {
-                Console.WriteLine("failed to reproduce cached price:\n"
+                Assert.Fail("failed to reproduce cached price:\n"
                            + "    calculated: " + price + "\n"
                            + "    expected:   " + cachedPrice3 + "\n"
                            + "    error:      " + (price-cachedPrice3));
             }
         }
-        void testCachedFloating() {
-            Console.WriteLine("Testing floating-rate bond prices against cached values...");
+        [TestMethod()]
+        public void testCachedFloating() {
+            // "Testing floating-rate bond prices against cached values...");
 
             CommonVars vars = new CommonVars();
 
-            Date today = new Date(2004, Month.November, 22);
+            Date today = new Date(22, Month.November, 2004);
             Settings.setEvaluationDate(today);
 
             int settlementDays = 1;
@@ -521,7 +528,7 @@ namespace TestSuite {
             IborCouponPricer pricer = new BlackIborCouponPricer(new Handle<OptionletVolatilityStructure>());
 
             // plain
-            Schedule sch = new Schedule(new Date(2004, Month.November, 30), new Date(2008, Month.November, 30),
+            Schedule sch = new Schedule(new Date(30, Month.November, 2004), new Date(30, Month.November, 2008),
                                         new Period(Frequency.Semiannual), new UnitedStates(UnitedStates.Market.GovernmentBond),
                                         BusinessDayConvention.ModifiedFollowing, BusinessDayConvention.ModifiedFollowing,
                                         DateGeneration.Rule.Backward, false);
@@ -532,7 +539,7 @@ namespace TestSuite {
                                    new List<double>(), new List<double>(),
                                    new List<double>(), new List<double>(),
                                    false,
-                                   100.0, new Date(2004, Month.November, 30));
+                                   100.0, new Date(30, Month.November, 2004));
 
             PricingEngine bondEngine = new DiscountingBondEngine(riskFreeRate);
             bond1.setPricingEngine(bondEngine);
@@ -548,7 +555,7 @@ namespace TestSuite {
 
             double price = bond1.cleanPrice();
             if (Math.Abs(price-cachedPrice1) > tolerance) {
-                Console.WriteLine("failed to reproduce cached price:\n"
+                Assert.Fail("failed to reproduce cached price:\n"
                            + "    calculated: " + price + "\n"
                            + "    expected:   " + cachedPrice1 + "\n"
                            + "    error:      " + (price-cachedPrice1));
@@ -561,7 +568,7 @@ namespace TestSuite {
                                    new List<double>(), new List<double>(),
                                    new List<double>(), new List<double>(),
                                    false,
-                                   100.0, new Date(2004, Month.November, 30));
+                                   100.0, new Date(30, Month.November, 2004));
 
             PricingEngine bondEngine2 = new DiscountingBondEngine(discountCurve);
             bond2.setPricingEngine(bondEngine2);
@@ -576,7 +583,7 @@ namespace TestSuite {
 
             price = bond2.cleanPrice();
             if (Math.Abs(price-cachedPrice2) > tolerance) {
-                Console.WriteLine("failed to reproduce cached price:\n"
+                Assert.Fail("failed to reproduce cached price:\n"
                            + "    calculated: " + price + "\n"
                            + "    expected:   " + cachedPrice2 + "\n"
                            + "    error:      " + (price-cachedPrice2));
@@ -595,7 +602,7 @@ namespace TestSuite {
                                    new List<double>(), spreads,
                                    new List<double>(), new List<double>(),
                                    false,
-                                   100.0, new Date(2004, Month.November, 30));
+                                   100.0, new Date(30, Month.November, 2004));
 
             bond3.setPricingEngine(bondEngine2);
 
@@ -609,28 +616,29 @@ namespace TestSuite {
 
             price = bond3.cleanPrice();
             if (Math.Abs(price-cachedPrice3) > tolerance) {
-                Console.WriteLine("failed to reproduce cached price:\n"
+                Assert.Fail("failed to reproduce cached price:\n"
                            + "    calculated: " + price + "\n"
                            + "    expected:   " + cachedPrice3 + "\n"
                            + "    error:      " + (price-cachedPrice3));
             }
         }
-        void testBrazilianCached() {
-            Console.WriteLine("Testing Brazilian public bond prices against cached values...");
+        [TestMethod()]
+        public void testBrazilianCached() {
+            //("Testing Brazilian public bond prices against cached values...");
 
             CommonVars vars = new CommonVars();
 
-            Date today = new Date(2007, Month.June, 6);
+            Date today = new Date(6, Month.June, 2007);
             Settings.setEvaluationDate(today);
 
             // NTN-F maturity dates
             Array<Date> maturityDates = new Array<Date>(6);
-            maturityDates[0] = new Date(2008, Month.January, 1);
-            maturityDates[1] = new Date(2010, Month.January, 1);
-            maturityDates[2] = new Date(2010, Month.July, 1);
-            maturityDates[3] = new Date(2012, Month.January, 1);
-            maturityDates[4] = new Date(2014, Month.January, 1);
-            maturityDates[5] = new Date(2017, Month.January, 1);
+            maturityDates[0] = new Date(1, Month.January, 2008);
+            maturityDates[1] = new Date(1, Month.January, 2010);
+            maturityDates[2] = new Date(1, Month.July, 2010);
+            maturityDates[3] = new Date(1, Month.January, 2012);
+            maturityDates[4] = new Date(1, Month.January, 2014);
+            maturityDates[5] = new Date(1, Month.January, 2017);
 
             // NTN-F yields
             Array<double> yields = new Array<double>(6);
@@ -665,7 +673,7 @@ namespace TestSuite {
                 InterestRate yield = new InterestRate(yields[bondIndex], new Business252(new Brazil()),
                                                       Compounding.Compounded, Frequency.Annual);
 
-                Schedule schedule = new Schedule(new Date(2007, Month.January, 1),
+                Schedule schedule = new Schedule(new Date(1, Month.January, 2007),
                                   maturityDates[bondIndex], new Period(Frequency.Semiannual),
                                   new Brazil(Brazil.Market.Settlement),
                                   BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted,
@@ -681,7 +689,7 @@ namespace TestSuite {
 
                 Bond bond = new Bond(settlementDays, new Brazil(Brazil.Market.Settlement),
                                      vars.faceAmount, cashflows.Last().date(),
-                                     new Date(2007,Month.January,1), cashflows);
+                                     new Date(1, Month.January, 2007), cashflows);
 
                 double cachedPrice = prices[bondIndex];
 
@@ -691,24 +699,13 @@ namespace TestSuite {
                                                              yield.frequency(),
                                                              today)/100;
                 if (Math.Abs(price-cachedPrice) > tolerance) {
-                    Console.WriteLine("failed to reproduce cached price:\n"
+                    Assert.Fail("failed to reproduce cached price:\n"
                                 + "    calculated: " + price + "\n"
                                 + "    expected:   " + cachedPrice + "\n"
                                 + "    error:      " + (price-cachedPrice) + "\n"
                                 );
                 }
             }
-        }
-
-
-        public void suite() {
-            testYield();
-            testTheoretical();
-            testCached();
-            testCachedZero();
-            testCachedFixed();
-            testCachedFloating();
-            testBrazilianCached();
         }
     }
 }

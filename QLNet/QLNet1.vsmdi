@@ -1,5 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <TestLists xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2006">
+  <TestList name="Bonds" id="11bce97d-585a-40e4-bb7e-0fecd452f7c6" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
+    <TestLinks>
+      <TestLink id="905e7e83-ac17-d164-7c00-332aee943ebf" name="testBrazilianCached" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="6dedd105-7532-140b-2b82-37bc69a8d72c" name="testCachedFixed" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="a7feffcc-db48-6ab4-df10-00a5494c44ea" name="testTheoretical" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="2e159c46-764f-ad21-7b0f-676f2bfdc323" name="testCachedFloating" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="ab3ac37e-d457-63de-2204-c9a25f55fec9" name="testCached" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="d7571d29-ddb9-5b86-6135-2acbcc05515d" name="testCachedZero" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="af486b6a-ffe8-d458-89c3-9fcd3f6ec404" name="testYield" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+    </TestLinks>
+  </TestList>
   <TestList name="Lists of Tests" id="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
     <RunConfiguration id="680e51cf-5709-47c6-9773-83b4363f9544" name="Esecuzione locale dei test" storage="localtestrun.testrunconfig" type="Microsoft.VisualStudio.TestTools.Common.TestRunConfiguration, Microsoft.VisualStudio.QualityTools.Common,   PublicKeyToken=b03f5f7f11d50a3a" />
   </TestList>

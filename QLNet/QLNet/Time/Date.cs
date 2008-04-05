@@ -19,11 +19,8 @@
 using System;
 using QLNet;
 
-namespace QLNet
-{
-
-    public class Date : IComparable
-    {
+namespace QLNet {
+    public class Date : IComparable {
         private DateTime date;
 
         public Date() { }							//! Default constructor returning a null date.
@@ -31,8 +28,8 @@ namespace QLNet
         {			//! Constructor taking a serial number as given by Excel. Serial numbers in Excel have a known problem with leap year 1900
             date = (new DateTime(1899, 12, 31)).AddDays(serialNumber - 1);
         }
-        public Date(int y, Month m, int d) : this(y, (int)m, d) { }
-        public Date(int y, int m, int d) :		//! More traditional constructor.
+        public Date(int d, Month m, int y) : this(d, (int)m, y) { }
+        public Date(int d, int m, int y) :		//! More traditional constructor.
             this(new DateTime(y, m, d)) { }
         public Date(DateTime d)
         {				//! System DateTime constructor
@@ -89,7 +86,7 @@ namespace QLNet
             if (nth < 1 || nth > 5) throw new ArgumentException("Wrong n-th weekday in a given month/year: " + nth);
             DayOfWeek first = new DateTime(y, m, 1).DayOfWeek;
             int skip = nth - (dayOfWeek >= first ? 1 : 0);
-            return new Date(y, m, 1) + (int)(dayOfWeek - first + skip * 7);
+            return new Date(1, m, y) + (int)(dayOfWeek - first + skip * 7);
         }
         public static int monthOffset(int m, bool leapYear)
         {

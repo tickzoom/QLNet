@@ -143,7 +143,7 @@ namespace QLNet {
 
         private void setTurnOfYear() {
             Date refDate = referenceDate();
-            Date turnOfYear = new Date(refDate.Year, (int)Month.December, 31);
+            Date turnOfYear = new Date(31, Month.December, refDate.Year);
             turnOfYear_ = timeFromReference(turnOfYear);
             latestReference_ = refDate;
         }
