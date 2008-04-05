@@ -51,7 +51,13 @@ namespace QLNet
 
         // wrappers for interface
         public virtual string name() { return calendar.name(); }
-        public virtual bool isBusinessDay(Date d) { return calendar.isBusinessDay(d); }
+        public virtual bool isBusinessDay(Date d) {
+            if (calendar.addedHolidays.Contains(d))
+                return false;
+            if (calendar.removedHolidays.Contains(d))
+                return true;
+            return calendar.isBusinessDay(d);
+        }
         public virtual bool isWeekend(DayOfWeek w) { return calendar.isWeekend(w); }
 
         // other functions
@@ -183,33 +189,28 @@ namespace QLNet
             return wd;
         }
 
-        public void addHoliday(Date d)
-        {
+        public void addHoliday(Date d) {
             // if d was a genuine holiday previously removed, revert the change
-            removedHolidays.Remove(d);
+            calendar.removedHolidays.Remove(d);
             // if it's already a holiday, leave the calendar alone.
             // Otherwise, add it.
             if (isBusinessDay(d))
-                addedHolidays.Add(d);
+                calendar.addedHolidays.Add(d);
         }
-        public void removeHoliday(Date d)
-        {
+        public void removeHoliday(Date d) {
             // if d was an artificially-added holiday, revert the change
-            addedHolidays.Remove(d);
+            calendar.addedHolidays.Remove(d);
             // if it's already a business day, leave the calendar alone.
             // Otherwise, add it.
             if (!isBusinessDay(d))
-                removedHolidays.Add(d);
+                calendar.removedHolidays.Add(d);
         }
 
-        public static List<Date> holidayList(Calendar calendar, Date from, Date to)
-        {
+        public static List<Date> holidayList(Calendar calendar, Date from, Date to) {
             return holidayList(calendar, from, to, false);
         }
 
-        public static List<Date> holidayList(Calendar calendar, Date from, Date to, bool includeWeekEnds)
-        {
-
+        public static List<Date> holidayList(Calendar calendar, Date from, Date to, bool includeWeekEnds) {
             if (to <= from)
             {
                 throw new Exception("'from' date (" + from + ") must be earlier than 'to' date (" + to + ")");
