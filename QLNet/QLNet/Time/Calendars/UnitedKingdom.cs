@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008 Andrea Maggiulli
   
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -18,6 +19,7 @@
 */
 using System;
 
+namespace QLNet {
     //! United Kingdom calendars
     /*! Public holidays (data from http://www.dti.gov.uk/er/bankhol.htm):
         <ul>
@@ -70,7 +72,7 @@ using System;
         \todo add LIFFE
         \test the correctness of the returned results is tested  against a list of known holidays.
     */
-namespace QLNet {
+
     public class UnitedKingdom : Calendar {
         public enum Market { Settlement, Exchange, Metals }
 
