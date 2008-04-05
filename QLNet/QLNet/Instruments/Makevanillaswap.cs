@@ -27,7 +27,7 @@ namespace QLNet {
     public class MakeVanillaSwap {
         private Period forwardStart_, swapTenor_;
         private IborIndex iborIndex_;
-        private double fixedRate_;
+        private double? fixedRate_;
 
         private Date effectiveDate_, terminationDate_;
         private Calendar fixedCalendar_, floatCalendar_;
@@ -48,10 +48,10 @@ namespace QLNet {
 
 
         public MakeVanillaSwap(Period swapTenor, IborIndex index) :
-            this(swapTenor, index, default(double), new Period(0, TimeUnit.Days)) { }
-        public MakeVanillaSwap(Period swapTenor, IborIndex index, double fixedRate) :
+            this(swapTenor, index, null, new Period(0, TimeUnit.Days)) { }
+        public MakeVanillaSwap(Period swapTenor, IborIndex index, double? fixedRate) :
             this(swapTenor, index, fixedRate, new Period(0, TimeUnit.Days)) { }
-        public MakeVanillaSwap(Period swapTenor, IborIndex index, double fixedRate, Period forwardStart) {
+        public MakeVanillaSwap(Period swapTenor, IborIndex index, double? fixedRate, Period forwardStart) {
             swapTenor_ = swapTenor;
             iborIndex_ = index;
             fixedRate_ = fixedRate;
@@ -191,6 +191,7 @@ namespace QLNet {
 
 
         // swap creator
+        public static implicit operator VanillaSwap(MakeVanillaSwap o) { return o.value(); }
         public VanillaSwap value() {
             Date startDate;
 
@@ -222,9 +223,8 @@ namespace QLNet {
                                    floatRule_, floatEndOfMonth_,
                                    floatFirstDate_, floatNextToLastDate_);
 
-            double usedFixedRate = fixedRate_;
-            // recheck
-            if (fixedRate_ == 0) {       // calculated a fair fixed rate if no fixed rate is provided
+            double? usedFixedRate = fixedRate_;
+            if (fixedRate_ == null) {       // calculate a fair fixed rate if no fixed rate is provided
                 if (iborIndex_.termStructure().empty())
                     throw new ArgumentException("no forecasting term structure set to " + iborIndex_.name());
                 VanillaSwap temp = new VanillaSwap(type_, nominal_, fixedSchedule, 0.0, fixedDayCount_,
@@ -233,7 +233,7 @@ namespace QLNet {
                 usedFixedRate = temp.fairRate();
             }
 
-            VanillaSwap swap = new VanillaSwap(type_, nominal_, fixedSchedule, usedFixedRate, fixedDayCount_,
+            VanillaSwap swap = new VanillaSwap(type_, nominal_, fixedSchedule, usedFixedRate.Value, fixedDayCount_,
                                                floatSchedule, iborIndex_, floatSpread_, floatDayCount_);
             swap.setPricingEngine(engine_);
             return swap;

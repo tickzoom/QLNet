@@ -36,7 +36,7 @@ namespace QLNet {
             cashflows_ = new FixedRateLeg(schedule, accrualDayCounter)
                                          .withNotionals(faceAmount_)
                                          .withCouponRates(coupons)
-                                         .withPaymentAdjustment(paymentConvention).value();
+                                         .withPaymentAdjustment(paymentConvention);
 
             Date redemptionDate = calendar_.adjust(maturityDate_, paymentConvention);
             cashflows_.Add(new SimpleCashFlow(faceAmount_*redemption/100.0, redemptionDate));

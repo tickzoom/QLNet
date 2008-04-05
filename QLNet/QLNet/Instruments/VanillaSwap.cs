@@ -51,8 +51,8 @@ namespace QLNet {
 
         // constructor
         public VanillaSwap(Type type, double nominal,
-                            Schedule fixedSchedule, double fixedRate, DayCounter fixedDayCount,
-                            Schedule floatSchedule, IborIndex iborIndex, double spread, DayCounter floatingDayCount)
+                           Schedule fixedSchedule, double fixedRate, DayCounter fixedDayCount,
+                           Schedule floatSchedule, IborIndex iborIndex, double spread, DayCounter floatingDayCount)
             : this(type, nominal, fixedSchedule, fixedRate, fixedDayCount,
                    floatSchedule, iborIndex, spread, floatingDayCount,
                    BusinessDayConvention.Following) { }

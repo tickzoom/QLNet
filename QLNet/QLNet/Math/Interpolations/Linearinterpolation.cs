@@ -43,13 +43,17 @@ namespace QLNet {
 
         public override double value(double x) {
             int i = locate(x);
+            double result = yBegin_[i] + (x - xBegin_[i]) * s_[i];
+            
+            // this is a ringing bell for bootstrapping. should be removed after tests
+            if (result < 0)
+                throw new ApplicationException();
 
-            // workaround
-            double aaa = yBegin_[i] + (x - xBegin_[i]) * s_[i];
-            if (aaa < 0)
-                aaa = aaa;
+            // when interpolated value is too close to 0 we explicitily make it 0
+            if (Comparison.close(result, 0.0))
+                result = 0;
 
-            return yBegin_[i] + (x-xBegin_[i])*s_[i];
+            return result;
         }
         public override double primitive(double x) {
             int i = locate(x);
@@ -60,9 +64,7 @@ namespace QLNet {
             int i = locate(x);
             return s_[i];
         }
-        public override double secondDerivative(double x) {
-            return 0.0;
-        }
+        public override double secondDerivative(double x) { return 0.0; }
     }
 
     //! %Linear interpolation between discrete points

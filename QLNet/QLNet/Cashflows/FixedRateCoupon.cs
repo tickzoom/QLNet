@@ -20,7 +20,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using QLNet;
 
 namespace QLNet {
     public class FixedRateCoupon : Coupon {
@@ -125,6 +124,8 @@ namespace QLNet {
             return this;
         }
 
+        // creator
+        public static implicit operator List<CashFlow>(FixedRateLeg o) { return o.value(); }
         public List<CashFlow> value() {
             if (couponRates_.Count == 0) throw new ArgumentException("coupon rates not specified");
             if (notionals_.Count == 0) throw new ArgumentException("nominals not specified");

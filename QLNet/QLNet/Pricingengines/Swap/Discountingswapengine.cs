@@ -37,7 +37,7 @@ namespace QLNet {
             if (discountCurve_.empty()) throw new ArgumentException("no discounting term structure set");
 
             results_.value = 0;
-            results_.errorEstimate = 0;
+            results_.errorEstimate = null;
             results_.legNPV = new Array<double>(arguments_.legs.Count);
             results_.legBPS = new Array<double>(arguments_.legs.Count);
             for (int i=0; i<arguments_.legs.Count; ++i) {
