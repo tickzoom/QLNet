@@ -16,7 +16,7 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace QLNet {
