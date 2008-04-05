@@ -168,11 +168,11 @@ namespace TestSuite {
                                       euribor6m.endOfMonth(),
                                       euribor6m.dayCounter()));
                 }
-                //for (int i = 0; i < swaps; i++) {
-                //    Handle<Quote> r = new Handle<Quote>(rates[i + deposits]);
-                //    instruments.Add(new SwapRateHelper(r, new Period(swapData[i].n, swapData[i].units), calendar,
-                //                    fixedLegFrequency, fixedLegConvention, fixedLegDayCounter, euribor6m));
-                //}
+                for (int i = 0; i < swaps; i++) {
+                    Handle<Quote> r = new Handle<Quote>(rates[i + deposits]);
+                    instruments.Add(new SwapRateHelper(r, new Period(swapData[i].n, swapData[i].units), calendar,
+                                    fixedLegFrequency, fixedLegConvention, fixedLegDayCounter, euribor6m));
+                }
 
                 Euribor3M euribor3m = new Euribor3M();
                 for (int i=0; i<fras; i++) {
@@ -189,7 +189,7 @@ namespace TestSuite {
                     Handle<Quote> p = new Handle<Quote>(prices[i]);
                     Date maturity = calendar.advance(today, bondData[i].n, bondData[i].units);
                     Date issue =    calendar.advance(maturity, -bondData[i].length, TimeUnit.Years);
-                    List<double> coupons = new List<double>(); coupons.Add(1); coupons.Add(bondData[i].coupon / 100.0);
+                    List<double> coupons = new List<double>() { bondData[i].coupon / 100.0 };
                     schedules.Add(new Schedule(issue, maturity, new Period(bondData[i].frequency), calendar,
                                                bondConvention, bondConvention, DateGeneration.Rule.Backward, false));
                     bondHelpers.Add(new FixedRateBondHelper(p, bondSettlementDays, bondRedemption, schedules[i],
@@ -204,8 +204,8 @@ namespace TestSuite {
 
             CommonVars vars = new CommonVars();
 
-            InterpolatedDiscountCurve<Linear, IterativeBootstrap> curve = new InterpolatedDiscountCurve<Linear,IterativeBootstrap>(
-                vars.settlement, vars.instruments, new Actual360(), new Handle<Quote>(), 1.0e-12, new Linear());
+            var curve = new InterpolatedDiscountCurve<Linear,IterativeBootstrap>(vars.settlement, vars.instruments,
+                        new Actual360(), new Handle<Quote>(), 1.0e-12, new Linear());
 
             testCurveConsistency(curve, vars);
             //testBMACurveConsistency(Discount(), Linear(), vars);
@@ -223,7 +223,7 @@ namespace TestSuite {
                 double expectedRate = vars.depositData[i].rate / 100,
                        estimatedRate = index.fixing(vars.today);
                 if (Math.Abs(expectedRate-estimatedRate) > 1.0e-9) {
-                    throw new ApplicationException(vars.depositData[i].n + " "
+                    Assert.Fail(vars.depositData[i].n + " "
                         + (vars.depositData[i].units == TimeUnit.Weeks ? "week(s)" : "month(s)")
                         + " deposit:"
                         + "\n    estimated rate: " + estimatedRate
