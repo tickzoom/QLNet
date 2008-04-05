@@ -48,14 +48,7 @@ namespace QLNet {
 
 
         //! BootstrapHelper interface
-        public double quoteError() {
-            // workaround
-            double d = impliedQuote();
-            if (d < 0)
-                d = - d;
-            return quote_.link.value() - d;
-            // return quote_.link.value() - impliedQuote();
-        }
+        public double quoteError() { return quote_.link.value() - impliedQuote(); }
         public double quoteValue() { return quote_.link.value(); }
         public bool quoteIsValid() { return quote_.link.isValid(); }
         public abstract double impliedQuote();

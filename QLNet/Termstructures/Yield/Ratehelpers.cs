@@ -183,9 +183,8 @@ namespace QLNet {
         }
 
         public override void setTermStructure(YieldTermStructure t) {
-            // recheck
             // no need to register---the index is not lazy
-            termStructureHandle_.linkTo(t);
+            termStructureHandle_.linkTo(t, false);
             base.setTermStructure(t);
         }
 
@@ -387,8 +386,7 @@ namespace QLNet {
                                         .withFixedLegDayCount(fixedDayCount_)
                                         .withFixedLegTenor(new Period(fixedFrequency_))
                                         .withFixedLegConvention(fixedConvention_)
-                                        .withFixedLegTerminationDateConvention(fixedConvention_)
-                                        .value();
+                                        .withFixedLegTerminationDateConvention(fixedConvention_);
 
             earliestDate_ = swap_.startDate();
 
@@ -412,7 +410,7 @@ namespace QLNet {
             // do not set the relinkable handle as an observer -
             // force recalculation when needed
             // recheck
-            termStructureHandle_.linkTo(t);
+            termStructureHandle_.linkTo(t, false);
             base.setTermStructure(t);
         }
 
@@ -433,7 +431,7 @@ namespace QLNet {
         }
 
         //! \name SwapRateHelper inspectors
-        public double spread() { return spread_ == null ? 0.0 : spread_.link.value(); }
+        public double spread() { return spread_.empty() ? 0.0 : spread_.link.value(); }
         public VanillaSwap swap() { return swap_; }
         public Period forwardStart() { return fwdStart_; }
     };

@@ -57,7 +57,7 @@ namespace QLNet {
             tenor_.normalize();
 
             Settings.registerWith(update);
-            // todo
+            // recheck
             //IndexManager.notifier(name())
 //            registerWith(IndexManager::instance().notifier(name()));
         }

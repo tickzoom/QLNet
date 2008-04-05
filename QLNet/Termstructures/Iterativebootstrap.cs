@@ -96,17 +96,17 @@ namespace QLNet {
                     // is it really required?
                     ts_.interpolation_.update();
 
-                    try {
+                    // try {
                         BootstrapError error = new BootstrapError(ts_, instrument, i);
                         double r = solver.solve(error, ts_.accuracy_, guess, min, max);
                         // redundant assignment (as it has been already performed by BootstrapError in solve procedure), but safe
                         ts_.data_[i] = r;
-                    } catch (Exception e) {
-                        validCurve_ = false;
-                        throw new ArgumentException(" iteration: " + iteration+1 +
-                                "could not bootstrap the " + i + " instrument, maturity " + ts_.dates_[i] +
-                                ": " + e.Message);
-                    }
+                    //} catch (Exception e) {
+                    //    validCurve_ = false;
+                    //    throw new ArgumentException(" iteration: " + iteration+1 +
+                    //            "could not bootstrap the " + i + " instrument, maturity " + ts_.dates_[i] +
+                    //            ": " + e.Message);
+                    //}
                 }
 
                 if (!ts_.interpolator_.global)
