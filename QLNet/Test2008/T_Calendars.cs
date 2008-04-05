@@ -24,14 +24,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QLNet;
 using System.Diagnostics;
 
-namespace TestSuite
-{
+namespace TestSuite {
    [TestClass()]
-   public class T_Calendars
-   {
+   public class T_Calendars {
       [TestMethod()]
-      public void testModifiedCalendars() 
-      {
+      public void testModifiedCalendars() {
          Calendar c1 = new TARGET();
          Calendar c2 = new UnitedStates(UnitedStates.Market.NYSE);
          Date d1 = new Date(1,Month.May,2004);      // holiday for both calendars
