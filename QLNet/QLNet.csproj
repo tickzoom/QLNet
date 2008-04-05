@@ -171,7 +171,6 @@
     <Compile Include="Time\DayCounters\OneDayCounter.cs" />
     <Compile Include="Time\DayCounters\SimpleDayCounter.cs" />
     <Compile Include="Time\DayCounters\Thirty360.cs" />
-    <Compile Include="Time\Error.cs" />
     <Compile Include="Time\Frequency.cs" />
     <Compile Include="Time\Imm.cs" />
     <Compile Include="Time\Period.cs" />
