@@ -139,7 +139,7 @@ namespace TestSuite
 
             // check that the equivalent rate with *same* daycounter,
             // compounding, and frequency is the *same* rate
-            r2 = ir.equivalentRate(d1, d2, ir.dayCounter(), ir.compounding(), ir.frequency());
+            r2 = ir.equivalentRate(d1, d2, ir.dayCounter(), ir.compounding(), ir.frequency()).rate();
             error = Math.Abs(ir.rate() - r2);
             if (error > 1e-15)
                Assert.Fail("original rate: " + ir + " equivalent rate: " + r2 + " error: " + error);
@@ -161,7 +161,7 @@ namespace TestSuite
 
             // check that the equivalent rate with *different*
             // compounding, and frequency is the *expected* rate
-            r3 = ir.equivalentRate(d1, d2, ir.dayCounter(), cases[i].comp2, cases[i].freq2);
+            r3 = ir.equivalentRate(d1, d2, ir.dayCounter(), cases[i].comp2, cases[i].freq2).rate();
             r3 = roundingPrecision.Round(r3);
             error = Math.Abs(r3 - cases[i].expected);
             if (error > 1.0e-17)
