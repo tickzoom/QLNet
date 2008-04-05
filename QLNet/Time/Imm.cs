@@ -93,9 +93,9 @@ namespace QLNet {
             int y = Convert.ToInt32(immCode[1]);
 
             y += referenceDate.Year - (referenceDate.Year % 10);
-            Date result = IMM.nextDate(new Date(y, m, 1), false);
+            Date result = IMM.nextDate(new Date(1, m, y), false);
             if (result<referenceDate)
-                result = IMM.nextDate(new Date(y+10, m, 1), false);
+                result = IMM.nextDate(new Date(1, m, y + 10), false);
 
             return result;
         }
@@ -125,7 +125,7 @@ namespace QLNet {
 
             Date result = Date.nthWeekday(3, DayOfWeek.Wednesday, m, y);
             if (result<=refDate)
-                result = nextDate(new Date(y, m, 22), mainCycle);
+                result = nextDate(new Date(22, m, y), mainCycle);
             return result;
         }
 

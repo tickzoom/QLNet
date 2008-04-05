@@ -169,8 +169,8 @@ namespace QLNet
                        dib2 = (Date.IsLeapYear(y2) ? 366 : 365);
 
                 double sum = y2 - y1 - 1;
-                sum += dayCount(d1, new Date(y1 + 1, (int)Month.January, 1)) / dib1;
-                sum += dayCount(new Date(y2, (int)Month.January, 1), d2) / dib2;
+                sum += dayCount(d1, new Date(1, Month.January, y1 + 1)) / dib1;
+                sum += dayCount(new Date(1, Month.January, y2), d2) / dib2;
                 return sum;
             }
         };
@@ -207,13 +207,13 @@ namespace QLNet
 
                 if (Date.IsLeapYear(newD2.Year))
                 {
-                    temp = new Date(newD2.Year, (int)Month.February, 29);
+                    temp = new Date(29, Month.February, newD2.Year);
                     if (newD2 > temp && d1 <= temp)
                         den += 1;
                 }
                 else if (Date.IsLeapYear(d1.Year))
                 {
-                    temp = new Date(d1.Year, (int)Month.February, 29);
+                    temp = new Date(29, Month.February, d1.Year);
                     if (newD2 > temp && d1 <= temp)
                         den += 1;
                 }
