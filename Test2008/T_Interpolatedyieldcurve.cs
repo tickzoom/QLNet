@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QLNet;
 
 namespace TestSuite {
+    [TestClass()]
     public class InterpolatedYieldCurveTest {
         public class CommonVars {
             #region Values
@@ -196,6 +198,7 @@ namespace TestSuite {
             }
         }
 
+        [TestMethod()]
         public void testLinearDiscountConsistency() {
             Console.WriteLine("Testing consistency of piecewise-linear discount curve...");
 

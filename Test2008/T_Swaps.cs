@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QLNet;
 
 namespace TestSuite {
+    [TestClass()]
     public class SwapTest {
         class CommonVars {
             // global data
@@ -56,8 +58,9 @@ namespace TestSuite {
             }
         }
 
-        static void testFairRate() {
-            Console.WriteLine("Testing vanilla-swap calculation of fair fixed rate...");
+        [TestMethod()]
+        public void testFairRate() {
+            //("Testing vanilla-swap calculation of fair fixed rate...");
 
             CommonVars vars = new CommonVars();
 
@@ -70,7 +73,7 @@ namespace TestSuite {
                     VanillaSwap swap = vars.makeSwap(lengths[i],0.0,spreads[j]);
                     swap = vars.makeSwap(lengths[i],swap.fairRate(),spreads[j]);
                     if (Math.Abs(swap.NPV()) > 1.0e-10) {
-                        Console.WriteLine("recalculating with implied rate:\n"
+                        Assert.Fail("recalculating with implied rate:\n"
                                     + "    length: " + lengths[i] + " years\n"
                                     + "    floating spread: "
                                     + spreads[j] + "\n"
@@ -79,8 +82,9 @@ namespace TestSuite {
                 }
             }
         }
-        static void testFairSpread() {
-            Console.WriteLine("Testing vanilla-swap calculation of fair floating spread...");
+        [TestMethod()]
+        public void testFairSpread() {
+            //("Testing vanilla-swap calculation of fair floating spread...");
 
             CommonVars vars = new CommonVars();
 
@@ -93,7 +97,7 @@ namespace TestSuite {
                     VanillaSwap swap = vars.makeSwap(lengths[i], rates[j], 0.0);
                     swap = vars.makeSwap(lengths[i],rates[j],swap.fairSpread());
                     if (Math.Abs(swap.NPV()) > 1.0e-10) {
-                        Console.WriteLine("recalculating with implied spread:\n"
+                        Assert.Fail("recalculating with implied spread:\n"
                                     + "    length: " + lengths[i] + " years\n"
                                     + "    fixed rate: "
                                     + rates[j] + "\n"
@@ -102,8 +106,9 @@ namespace TestSuite {
                 }
             }
         }
-        static void testRateDependency() {
-            Console.WriteLine("Testing vanilla-swap dependency on fixed rate...");
+        [TestMethod()]
+        public void testRateDependency() {
+            //("Testing vanilla-swap dependency on fixed rate...");
 
             CommonVars vars = new CommonVars();
 
@@ -124,7 +129,7 @@ namespace TestSuite {
                     // and check that they go the right way
                     for(int z = 0; z < swap_values.Count-1; z++) {
                         if (swap_values[z] < swap_values[z+1])
-                        Console.WriteLine(
+                            Assert.Fail(
                             "NPV is increasing with the fixed rate in a swap: \n"
                             + "    length: " + lengths[i] + " years\n"
                             + "    value:  " + swap_values[z]
@@ -135,8 +140,9 @@ namespace TestSuite {
                 }
             }
         }
-        static void testSpreadDependency() {
-            Console.WriteLine("Testing vanilla-swap dependency on floating spread...");
+        [TestMethod()]
+        public void testSpreadDependency() {
+            //("Testing vanilla-swap dependency on floating spread...");
 
             CommonVars vars = new CommonVars();
 
@@ -157,7 +163,7 @@ namespace TestSuite {
                     // and check that they go the right way
                     for(int z = 0; z < swap_values.Count-1; z++) {
                         if (swap_values[z] > swap_values[z+1])
-                        Console.WriteLine(
+                            Assert.Fail(
                             "NPV is decreasing with the floating spread in a swap: \n"
                             + "    length: " + lengths[i] + " years\n"
                             + "    value:  " + swap_values[z]
@@ -168,8 +174,9 @@ namespace TestSuite {
                 }
             }
         }
-        static void testInArrears() {
-            Console.WriteLine("Testing in-arrears swap calculation...");
+        [TestMethod()]
+        public void testInArrears() {
+            //("Testing in-arrears swap calculation...");
 
             CommonVars vars = new CommonVars();
 
@@ -221,16 +228,17 @@ namespace TestSuite {
             double tolerance = 1.0;
 
             if (Math.Abs(swap.NPV()-storedValue) > tolerance)
-                Console.WriteLine("Wrong NPV calculation:\n"
+                Assert.Fail("Wrong NPV calculation:\n"
                             + "    expected:   " + storedValue + "\n"
                             + "    calculated: " + swap.NPV());
         }
-        static void testCachedValue() {
-            Console.WriteLine("Testing vanilla-swap calculation against cached value...");
+        [TestMethod()]
+        public void testCachedValue() {
+            //("Testing vanilla-swap calculation against cached value...");
 
             CommonVars vars = new CommonVars();
 
-            vars.today = new Date(2002, Month.June, 17);
+            vars.today = new Date(17, Month.June, 2002);
             Settings.setEvaluationDate(vars.today);
             vars.settlement = vars.calendar.advance(vars.today,vars.settlementDays, TimeUnit.Days);
             vars.termStructure.linkTo(Utilities.flatRate(vars.settlement,0.05, new Actual365Fixed()));
@@ -243,7 +251,7 @@ namespace TestSuite {
             #endif
 
             if (Math.Abs(swap.NPV()-cachedNPV) > 1.0e-11)
-                Console.WriteLine("failed to reproduce cached swap value:\n"
+                Assert.Fail("failed to reproduce cached swap value:\n"
                             + "    calculated: " + swap.NPV() + "\n"
                             + "    expected:   " + cachedNPV);
         }

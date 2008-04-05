@@ -41,8 +41,8 @@ namespace QLNet {
             results_.legNPV = new Array<double>(arguments_.legs.Count);
             results_.legBPS = new Array<double>(arguments_.legs.Count);
             for (int i=0; i<arguments_.legs.Count; ++i) {
-                results_.legNPV[i] = arguments_.payer[i] * CashFlows.npv(arguments_.legs[i], discountCurve_.link);
-                results_.legBPS[i] = arguments_.payer[i] * CashFlows.bps(arguments_.legs[i], discountCurve_.link);
+                results_.legNPV[i] = arguments_.payer[i] * CashFlows.npv(arguments_.legs[i], discountCurve_);
+                results_.legBPS[i] = arguments_.payer[i] * CashFlows.bps(arguments_.legs[i], discountCurve_);
                 results_.value += results_.legNPV[i];
             }
         }

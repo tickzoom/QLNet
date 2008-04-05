@@ -3,15 +3,42 @@
   <TestList name="Bonds" id="11bce97d-585a-40e4-bb7e-0fecd452f7c6" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
     <TestLinks>
       <TestLink id="905e7e83-ac17-d164-7c00-332aee943ebf" name="testBrazilianCached" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
-      <TestLink id="6dedd105-7532-140b-2b82-37bc69a8d72c" name="testCachedFixed" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="af486b6a-ffe8-d458-89c3-9fcd3f6ec404" name="testYield" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
       <TestLink id="a7feffcc-db48-6ab4-df10-00a5494c44ea" name="testTheoretical" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
       <TestLink id="2e159c46-764f-ad21-7b0f-676f2bfdc323" name="testCachedFloating" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
       <TestLink id="ab3ac37e-d457-63de-2204-c9a25f55fec9" name="testCached" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="6dedd105-7532-140b-2b82-37bc69a8d72c" name="testCachedFixed" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
       <TestLink id="d7571d29-ddb9-5b86-6135-2acbcc05515d" name="testCachedZero" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
-      <TestLink id="af486b6a-ffe8-d458-89c3-9fcd3f6ec404" name="testYield" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+    </TestLinks>
+  </TestList>
+  <TestList name="Solvers" id="613c5502-09a1-4873-b864-8b5b7b865934" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
+    <TestLinks>
+      <TestLink id="fe6a3728-ee08-3507-80b9-47a0ccfc419d" name="testBrent" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="5294ec4c-dfd9-e281-bfaa-bda9a0274b75" name="testNewton" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+    </TestLinks>
+  </TestList>
+  <TestList name="Instruments" id="88e73751-719f-4f3d-bed4-294066810694" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
+    <TestLinks>
+      <TestLink id="3981d4f5-be36-0b94-986f-0da51a8a6c43" name="testObservable" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
     </TestLinks>
   </TestList>
   <TestList name="Lists of Tests" id="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
     <RunConfiguration id="680e51cf-5709-47c6-9773-83b4363f9544" name="Esecuzione locale dei test" storage="localtestrun.testrunconfig" type="Microsoft.VisualStudio.TestTools.Common.TestRunConfiguration, Microsoft.VisualStudio.QualityTools.Common,   PublicKeyToken=b03f5f7f11d50a3a" />
+  </TestList>
+  <TestList name="Swaps" id="c12bbf25-5932-47e1-b047-6ae8cb00c199" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
+    <TestLinks>
+      <TestLink id="bbe2d937-bb70-a666-a879-b3063800a42e" name="testFairSpread" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="25b4118b-8066-f12f-3687-a5ef1886eb1c" name="testInArrears" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="0ee842b0-6275-252f-a1d0-000b0a6a4c52" name="testCachedValue" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="27ded393-6046-4057-bd65-31f629c9bf55" name="testFairRate" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="3b1816a9-7785-f64f-bc52-7014af11e8e5" name="testSpreadDependency" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="2b04fe68-610a-b2de-e241-ef9a50fdb3fb" name="testRateDependency" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+    </TestLinks>
+  </TestList>
+  <TestList name="InterpolatedYieldCurve" id="c819d083-2cb3-4696-94c4-f2bcd4e9bc8c" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
+    <Description>= PiecewiseInterpolation form QL</Description>
+    <TestLinks>
+      <TestLink id="762cd2ac-5715-69e6-563e-4525bc437b84" name="testLinearDiscountConsistency" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+    </TestLinks>
   </TestList>
 </TestLists>
