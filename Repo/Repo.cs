@@ -143,7 +143,7 @@ namespace Repo {
 				 + bondFwd.cleanForwardPrice());
 			Console.WriteLine("Repo dirty forward price: "
 				 + bondFwd.forwardPrice());
-			Console.WriteLine("Repo implied yield: {0}"
+			Console.WriteLine("Repo implied yield: "
 				 + bondFwd.impliedYield(bond.dirtyPrice(),
 										 dummyStrike,
 										 repoSettlementDate,
