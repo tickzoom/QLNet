@@ -36,6 +36,8 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -51,6 +53,7 @@
     <Compile Include="T_Rounding.cs" />
     <Compile Include="T_Solvers.cs" />
     <Compile Include="T_Swaps.cs" />
+    <Compile Include="T_TermStructure.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
