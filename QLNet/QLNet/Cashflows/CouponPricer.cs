@@ -88,6 +88,7 @@ namespace QLNet {
         private double gearing_;
         private double spread_;
         private double spreadLegValue_;
+        private double accrualPeriod_;
 
         public BlackIborCouponPricer() : this(new Handle<OptionletVolatilityStructure>()) { }
         public BlackIborCouponPricer(Handle<OptionletVolatilityStructure> v) : base(v) { }
@@ -108,6 +109,9 @@ namespace QLNet {
                 discount_ = rateCurve.link.discount(paymentDate);
             else
                 discount_ = 1.0;
+
+            // to be done in the future
+            // accrualPeriod_ = coupon_.accrualPeriod();
 
             spreadLegValue_ = spread_ * coupon_.accrualPeriod() * discount_;
         }
