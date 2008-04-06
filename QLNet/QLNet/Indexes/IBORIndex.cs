@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008 Andrea Maggiulli
   
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -23,7 +24,8 @@ using System.Text;
 
 namespace QLNet {
     //! base class for Inter-Bank-Offered-Rate indexes (e.g. %Libor, etc.)
-    public class IborIndex : InterestRateIndex {
+    public class IborIndex : InterestRateIndex 
+    {
         protected BusinessDayConvention convention_;
         public BusinessDayConvention businessDayConvention() { return convention_; }
 
@@ -35,6 +37,12 @@ namespace QLNet {
         public bool endOfMonth() { return endOfMonth_; }
 
         public IborIndex(string familyName, Period tenor, int settlementDays, Currency currency,
+                 Calendar fixingCalendar, BusinessDayConvention convention, bool endOfMonth,
+                 DayCounter dayCounter) : this(familyName, tenor, settlementDays, currency,
+                                               fixingCalendar,convention,endOfMonth,
+                                               dayCounter, new Handle<YieldTermStructure>()) {}
+
+            public IborIndex(string familyName, Period tenor, int settlementDays, Currency currency,
                          Calendar fixingCalendar, BusinessDayConvention convention, bool endOfMonth,
                          DayCounter dayCounter, Handle<YieldTermStructure> h) : 
             base(familyName, tenor, settlementDays, currency, fixingCalendar, dayCounter) {

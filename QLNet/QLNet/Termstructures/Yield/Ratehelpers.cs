@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008 Andrea Maggiulli
   
  This file is part of QLNet Project http://trac2.assembla.com/QLNet
 
@@ -157,6 +158,15 @@ namespace QLNet {
             initializeDates();
         }
 
+        public DepositRateHelper(double rate, Period tenor, int fixingDays, Calendar calendar,
+                          BusinessDayConvention convention, bool endOfMonth, DayCounter dayCounter) :
+            base(rate)
+        {
+            iborIndex_ = new IborIndex("no-fix", tenor, fixingDays, new Currency(), calendar, convention,
+                                       endOfMonth, dayCounter, termStructureHandle_);
+            initializeDates();
+        }
+
         public DepositRateHelper(Handle<Quote> rate, IborIndex i)
                 : base(rate) {
             iborIndex_ = new IborIndex("no-fix", // never take fixing into account
@@ -290,6 +300,13 @@ namespace QLNet {
                IborIndex iborIndex) :
             this(rate, tenor, calendar, fixedFrequency, fixedConvention, fixedDayCount, iborIndex,
                  new Handle<Quote>(), new Period(0, TimeUnit.Days)) { }
+
+        public SwapRateHelper(double rate, Period tenor, Calendar calendar,
+               Frequency fixedFrequency, BusinessDayConvention fixedConvention, DayCounter fixedDayCount,
+               IborIndex iborIndex) :
+            this(rate, tenor, calendar, fixedFrequency, fixedConvention, fixedDayCount, iborIndex,
+                 new Handle<Quote>(), new Period(0, TimeUnit.Days)) { }
+
         //public SwapRateHelper(Quote rate, Period tenor, Calendar calendar,
         //               Frequency fixedFrequency, BusinessDayConvention fixedConvention, DayCounter fixedDayCount,
         //               IborIndex iborIndex, Quote spread) :
