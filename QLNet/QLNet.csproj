@@ -50,7 +50,6 @@
     <Compile Include="Cashflows\FixedRateCoupon.cs" />
     <Compile Include="Cashflows\FloatingRateCoupon.cs" />
     <Compile Include="Cashflows\Iborcoupon.cs" />
-    <Compile Include="Cashflows\Leg.cs" />
     <Compile Include="Cashflows\SimpleCashFlow.cs" />
     <Compile Include="Currencies\Africa.cs" />
     <Compile Include="Currencies\America.cs" />
@@ -75,6 +74,8 @@
     <Compile Include="Instruments\Bonds\Fixedratebond.cs" />
     <Compile Include="Instruments\Bonds\FloatingRateBond.cs" />
     <Compile Include="Instruments\Bonds\Zerocouponbond.cs" />
+    <Compile Include="Instruments\fixedratebondforward.cs" />
+    <Compile Include="Instruments\forward.cs" />
     <Compile Include="Instruments\Instrument.cs" />
     <Compile Include="Instruments\Makevanillaswap.cs" />
     <Compile Include="Instruments\Stock.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Patterns\Observer.cs" />
     <Compile Include="Patterns\Singleton.cs" />
     <Compile Include="Patterns\Visitor.cs" />
+    <Compile Include="payoff.cs" />
     <Compile Include="PricingEngine.cs" />
     <Compile Include="Pricingengines\Bond\Discountingbondengine.cs" />
     <Compile Include="Pricingengines\Swap\Discountingswapengine.cs" />

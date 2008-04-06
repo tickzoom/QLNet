@@ -19,8 +19,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace QLNet
-{
+namespace QLNet {
     public class TimeSeries<T> : Dictionary<Date, T> {
 		// constructors
 		public TimeSeries() : base() {}
@@ -30,6 +29,10 @@ namespace QLNet
     public struct Duration {
         public enum Type { Simple, Macaulay, Modified };
     };
+
+	public struct Position {
+		public enum Type { Long, Short };
+	};
 
     public enum InterestRateType { Fixed, Floating }
     //! Interest rate coumpounding rule
@@ -64,6 +67,7 @@ namespace QLNet
                  Nov = 11,
                  Dec = 12
     };
+
 	public enum BusinessDayConvention {
         // ISDA
         Following,          /*!< Choose the first business day after
@@ -90,6 +94,7 @@ namespace QLNet
         Weeks,
         Months,
         Years };
+
     public enum Frequency {
         NoFrequency = -1,     //!< null frequency
         Once = 0,             //!< only once, e.g., a zero-coupon
