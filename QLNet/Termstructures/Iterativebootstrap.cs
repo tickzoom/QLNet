@@ -60,7 +60,7 @@ namespace QLNet {
                 List<double> previousData = ts_.data();
                 // restart from the previous interpolation
                 if (validCurve_) {
-                    ts_.interpolation_ = ts_.interpolator_.interpolate(ts_.times(), ts_.data());
+                    ts_.interpolation_ = ts_.interpolator_.interpolate(ts_.times(), ts_.times().Count, ts_.data());
                 }
                 for (int i=1; i<n+1; ++i) {
                     // calculate guess before extending interpolation to ensure that any extrapolation is performed
@@ -85,10 +85,10 @@ namespace QLNet {
                     if (!validCurve_ && iteration == 0) {
                         // extend interpolation a point at a time
                         try {
-                            ts_.interpolation_ = ts_.interpolator_.interpolate(ts_.times_.GetRange(0, i+1), ts_.data_);
+                            ts_.interpolation_ = ts_.interpolator_.interpolate(ts_.times_, i + 2, ts_.data_);
                         } catch {
                             // if the target interpolation is not usable yet
-                            ts_.interpolation_ = new Linear().interpolate(ts_.times_.GetRange(0, i + 1), ts_.data_);
+                           ts_.interpolation_ = new Linear().interpolate(ts_.times_, i + 2, ts_.data_);
                         }
                     }
 
@@ -96,24 +96,24 @@ namespace QLNet {
                     // is it really required?
                     ts_.interpolation_.update();
 
-                    // try {
+                     try {
                         BootstrapError error = new BootstrapError(ts_, instrument, i);
                         double r = solver.solve(error, ts_.accuracy_, guess, min, max);
                         // redundant assignment (as it has been already performed by BootstrapError in solve procedure), but safe
                         ts_.data_[i] = r;
-                    //} catch (Exception e) {
-                    //    validCurve_ = false;
-                    //    throw new ArgumentException(" iteration: " + iteration+1 +
-                    //            "could not bootstrap the " + i + " instrument, maturity " + ts_.dates_[i] +
-                    //            ": " + e.Message);
-                    //}
+                    } catch (Exception e) {
+                        validCurve_ = false;
+                        throw new ArgumentException(" iteration: " + iteration+1 +
+                                "could not bootstrap the " + i + " instrument, maturity " + ts_.dates_[i] +
+                                ": " + e.Message);
+                    }
                 }
 
                 if (!ts_.interpolator_.global)
                     break;      // no need for convergence loop
                 else if (!validCurve_ && iteration == 0) {
                     // ensure the target interpolation is used
-                    ts_.interpolation_ = ts_.interpolator_.interpolate(ts_.times_, ts_.data_);
+                   ts_.interpolation_ = ts_.interpolator_.interpolate(ts_.times_, ts_.times_.Count, ts_.data_);
                     // at least one more iteration is needed to check convergence
                     continue;
                 }

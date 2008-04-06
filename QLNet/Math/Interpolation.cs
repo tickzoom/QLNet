@@ -28,7 +28,7 @@ namespace QLNet {
 
     // Interpolation factory
     public interface IInterpolationFactory {
-        Interpolation interpolate(List<double> xBegin, List<double> yBegin);
+        Interpolation interpolate(List<double> xBegin, int size, List<double> yBegin);
         bool global { get; }
         int requiredPoints { get; }
     }
@@ -103,20 +103,22 @@ namespace QLNet {
         public abstract class templateImpl : Impl {
             protected List<double> xBegin_;
             protected List<double> yBegin_;
+            protected int size_;
 
             // this method should be used for initialisation
-            public templateImpl(List<double> xBegin, List<double> yBegin) {
+            public templateImpl(List<double> xBegin, int size, List<double> yBegin) {
                 xBegin_ = xBegin;
                 yBegin_ = yBegin;
-                if (xBegin_.Count < 2)
+                size_ = size;
+                if (size < 2)
                     throw new ArgumentException("not enough points to interpolate: at least 2 required, "
-                                                + (xBegin_.Count) + " provided");
+                                                + size + " provided");
             }
 
             public double xMin() { return xBegin_.First(); }
-            public double xMax() { return xBegin_.Last(); }
-            public List<double> xValues() { return xBegin_; }
-            public List<double> yValues() { return yBegin_; }
+            public double xMax() { return xBegin_[size_-1]; }
+            public List<double> xValues() { return xBegin_.GetRange(0, size_); }
+            public List<double> yValues() { return yBegin_.GetRange(0, size_); }
 
             public bool isInRange(double x) {
                 double x1 = xMin(), x2 = xMax();
@@ -124,15 +126,16 @@ namespace QLNet {
             }
 
             protected int locate(double x) {
-                int result = xBegin_.BinarySearch(x);
-                if (result < 0) result = ~result;           // value is not found and the index of the next larger item is returned
+               int result = xBegin_.BinarySearch(x);
+               if (result < 0)
+					   // The upper_bound() algorithm finds the last position in a sequence that value can occupy 
+					   // without violating the sequence's ordering
+					   // if BinarySearch does not find value the value, the index of the next larger item is returned
+					   result = ~result - 1;
 
-                // found or not, we take the previous item
-                result -= 1;
-
-                // finally, impose limits. we need the one before last at max or the first at min
-                result = Math.Max(Math.Min(result, xBegin_.Count - 2), 0);
-                return result;
+               // impose limits. we need the one before last at max or the first at min
+               result = Math.Max(Math.Min(result, size_ - 3), 0);
+               return result;
             }
 
             public abstract double value(double d);

@@ -49,7 +49,10 @@ namespace QLNet {
         public override double initialGuess() { return 0.9; }   // initial guess
         public override double guess(YieldTermStructure c, Date d) { return c.discount(d, true); }  // further guesses
         // possible constraints based on previous values
-        public override double minValueAfter(int s, List<double> l) { return double.Epsilon; }
+		public override double minValueAfter(int s, List<double> l) { 
+			// replace with Epsilon
+			return 2.2204460492503131e-016;
+		}
         public override double maxValueAfter(int i, List<double> data) { return data[i - 1]; }
         // update with new guess
         public override void updateGuess(List<double> data, double discount, int i) { data[i] = discount; }
@@ -99,7 +102,7 @@ namespace QLNet {
                     throw new ArgumentException("two dates correspond to the same time under this curve's day count convention");
             }
 
-            interpolation_ = interpolator_.interpolate(times_, data_);
+            interpolation_ = interpolator_.interpolate(times_, times_.Count, data_);
             interpolation_.update();
         }
 

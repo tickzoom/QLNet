@@ -215,12 +215,12 @@ namespace QLNet {
 
             if (fairRate_ == null) {
                 // calculate it from other results
-                if (legBPS_[0] != default(double))
+                if (legBPS_[0] != null)
                     fairRate_ = fixedRate_ - NPV_.GetValueOrDefault() / (legBPS_[0] / basisPoint);
             }
             if (fairSpread_ == null) {
                 // ditto
-                if (legBPS_[1] != default(double))
+                if (legBPS_[1] != null)
                     fairSpread_ = spread_ - NPV_.GetValueOrDefault() / (legBPS_[1] / basisPoint);
             }
         }
