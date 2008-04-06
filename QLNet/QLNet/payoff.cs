@@ -23,15 +23,15 @@ using System.Text;
 
 namespace QLNet {
 	//! Abstract base class for option payoffs
-	public abstract class Payoff {
+	public class Payoff {
         //! \name Payoff interface
         //@{
         /*! \warning This method is used for output and comparison between
                 payoffs. It is <b>not</b> meant to be used for writing
                 switch-on-type code.
         */
-        public abstract string name();
-        public abstract string description();
-        public abstract double value(double price);
+        public virtual string name() { throw new NotImplementedException(); }
+        public virtual string description() { throw new NotImplementedException(); }
+        public virtual double value(double price) { throw new NotImplementedException(); }
 	}
 }

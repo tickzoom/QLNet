@@ -76,6 +76,7 @@
     <Compile Include="Instruments\Bonds\Zerocouponbond.cs" />
     <Compile Include="Instruments\fixedratebondforward.cs" />
     <Compile Include="Instruments\forward.cs" />
+    <Compile Include="Instruments\forwardrateagreement.cs" />
     <Compile Include="Instruments\Instrument.cs" />
     <Compile Include="Instruments\Makevanillaswap.cs" />
     <Compile Include="Instruments\Stock.cs" />

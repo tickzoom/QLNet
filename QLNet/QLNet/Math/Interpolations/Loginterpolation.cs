@@ -28,11 +28,12 @@ namespace QLNet {
         private List<double> logY_;
         private Interpolation interpolation_;
 
-        public LogInterpolationImpl(List<double> xBegin, List<double> yBegin) : this(xBegin, yBegin, new Interpolator()) { }
-        public LogInterpolationImpl(List<double> xBegin, List<double> yBegin, IInterpolationFactory factory)
-            : base(xBegin, yBegin) {
+        public LogInterpolationImpl(List<double> xBegin, int size, List<double> yBegin)
+           : this(xBegin, size, yBegin, new Interpolator()) { }
+        public LogInterpolationImpl(List<double> xBegin, int size, List<double> yBegin, IInterpolationFactory factory)
+            : base(xBegin, size, yBegin) {
             logY_ = xBegin;
-            interpolation_ = factory.interpolate(xBegin_, logY_);
+            interpolation_ = factory.interpolate(xBegin_, size, logY_);
         }
 
         public override void update() {
@@ -61,8 +62,8 @@ namespace QLNet {
 
     //! log-linear interpolation factory and traits
     public class LogLinear : IInterpolationFactory {
-        public Interpolation interpolate(List<double> xBegin, List<double> yBegin) {
-            return new LogLinearInterpolation(xBegin, yBegin);
+        public Interpolation interpolate(List<double> xBegin, int size, List<double> yBegin) {
+            return new LogLinearInterpolation(xBegin, size, yBegin);
         }
         public bool global { get { return false; } }
         public int requiredPoints { get { return 2; } }
@@ -71,8 +72,8 @@ namespace QLNet {
     //! %log-linear interpolation between discrete points
     public class LogLinearInterpolation : Interpolation {
         /*! \pre the \f$ x \f$ values must be sorted. */
-        public LogLinearInterpolation(List<double> xBegin, List<double> yBegin) {
-            impl_ = new LogInterpolationImpl<Linear>(xBegin, yBegin);
+        public LogLinearInterpolation(List<double> xBegin, int size, List<double> yBegin) {
+            impl_ = new LogInterpolationImpl<Linear>(xBegin, size, yBegin);
             impl_.update();
         }
     };

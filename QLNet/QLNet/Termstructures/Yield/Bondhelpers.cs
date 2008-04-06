@@ -75,10 +75,11 @@ namespace QLNet {
         }
 
         public override void setTermStructure(YieldTermStructure ts) {
-            //recheck
-            throw new NotImplementedException();
-            termStructureHandle_.linkTo(ts);
-            base.setTermStructure(ts);
+           // do not set the relinkable handle as an observer -
+           // force recalculation when needed
+           // recheck
+           termStructureHandle_.linkTo(ts, false);
+           base.setTermStructure(ts);
         }
     }
 }

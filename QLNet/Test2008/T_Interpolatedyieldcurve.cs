@@ -231,103 +231,90 @@ namespace TestSuite {
                 }
             }
 
-            #region MyRegion
             // check swaps
-            //IborIndex euribor6m = new IborIndex(new Euribor6M(curveHandle));
-            //for (int i=0; i<vars.swaps; i++) {
-            //    Period tenor = new Period(swapData[i].n, swapData[i].units);
+            IborIndex euribor6m = new Euribor6M(curveHandle);
+            for (int i=0; i<vars.swaps; i++) {
+               Period tenor = new Period(vars.swapData[i].n, vars.swapData[i].units);
 
-            //    VanillaSwap swap = MakeVanillaSwap(tenor, euribor6m, 0.0)
-            //        .withEffectiveDate(vars.settlement)
-            //        .withFixedLegDayCount(vars.fixedLegDayCounter)
-            //        .withFixedLegTenor(Period(vars.fixedLegFrequency))
-            //        .withFixedLegConvention(vars.fixedLegConvention)
-            //        .withFixedLegTerminationDateConvention(vars.fixedLegConvention);
+                VanillaSwap swap = new MakeVanillaSwap(tenor, euribor6m, 0.0)
+                    .withEffectiveDate(vars.settlement)
+                    .withFixedLegDayCount(vars.fixedLegDayCounter)
+                    .withFixedLegTenor(new Period(vars.fixedLegFrequency))
+                    .withFixedLegConvention(vars.fixedLegConvention)
+                    .withFixedLegTerminationDateConvention(vars.fixedLegConvention);
 
-            //    Rate expectedRate = swapData[i].rate/100,
-            //         estimatedRate = swap.fairRate();
-            //    Real tolerance = 1.0e-9;
-            //    Spread error = std::fabs(expectedRate-estimatedRate);
-            //    if (error > tolerance) {
-            //        BOOST_ERROR(
-            //            swapData[i].n << " year(s) swap:\n"
-            //            << std::setprecision(8)
-            //            << "\n estimated rate: " << io::rate(estimatedRate)
-            //            << "\n expected rate:  " << io::rate(expectedRate)
-            //            << "\n error:          " << io::rate(error)
-            //            << "\n tolerance:      " << io::rate(tolerance));
-            //    }
-            //}
+                double expectedRate = vars.swapData[i].rate / 100,
+                     estimatedRate = swap.fairRate();
+                double tolerance = 1.0e-9;
+                double error = Math.Abs(expectedRate-estimatedRate);
+                if (error > tolerance) {
+                   Assert.Fail(vars.swapData[i].n + " year(s) swap:\n"
+                        + "\n estimated rate: " + estimatedRate
+                        + "\n expected rate:  " + expectedRate
+                        + "\n error:          " + error
+                        + "\n tolerance:      " + tolerance);
+                }
+            }
 
-            //// check bonds
-            //vars.termStructure = boost::shared_ptr<YieldTermStructure>(new
-            //    PiecewiseYieldCurve<T,I>(vars.settlement, vars.bondHelpers,
-            //                             Actual360(), Handle<Quote>(), 1.0e-12,
-            //                             interpolator));
-            //curveHandle.linkTo(vars.termStructure);
+            // check bonds
+            vars.termStructure = new InterpolatedDiscountCurve<Linear, IterativeBootstrap>(vars.settlement, vars.bondHelpers,
+                                     new Actual360(), new Handle<Quote>(), 1.0e-12, new Linear());
+            curveHandle.linkTo(vars.termStructure);
 
-            //for (Size i=0; i<vars.bonds; i++) {
-            //    Date maturity = vars.calendar.advance(vars.today,
-            //                                          bondData[i].n,
-            //                                          bondData[i].units);
-            //    Date issue = vars.calendar.advance(maturity,
-            //                                       -bondData[i].length,
-            //                                       Years);
-            //    std::vector<Rate> coupons(1, bondData[i].coupon/100.0);
+            for (int i=0; i<vars.bonds; i++) {
+                Date maturity = vars.calendar.advance(vars.today,
+                                                      vars.bondData[i].n,
+                                                      vars.bondData[i].units);
+                Date issue = vars.calendar.advance(maturity,
+                                                   -vars.bondData[i].length,
+                                                   TimeUnit.Years);
+                List<double> coupons = new List<double>() { vars.bondData[i].coupon / 100.0 };
 
-            //    FixedRateBond bond(vars.bondSettlementDays, 100.0,
-            //                       vars.schedules[i], coupons,
-            //                       vars.bondDayCounter, vars.bondConvention,
-            //                       vars.bondRedemption, issue);
+                FixedRateBond bond = new FixedRateBond(vars.bondSettlementDays, 100.0,
+                                   vars.schedules[i], coupons,
+                                   vars.bondDayCounter, vars.bondConvention,
+                                   vars.bondRedemption, issue);
 
-            //    boost::shared_ptr<PricingEngine> bondEngine(
-            //                              new DiscountingBondEngine(curveHandle));
-            //    bond.setPricingEngine(bondEngine);
+                PricingEngine bondEngine = new DiscountingBondEngine(curveHandle);
+                bond.setPricingEngine(bondEngine);
 
-            //    Real expectedPrice = bondData[i].price,
-            //         estimatedPrice = bond.cleanPrice();
-            //    Real tolerance = 1.0e-9;
-            //    if (std::fabs(expectedPrice-estimatedPrice) > tolerance) {
-            //        BOOST_ERROR(io::ordinal(i+1) << " bond failure:" <<
-            //                    std::setprecision(8) <<
-            //                    "\n  estimated price: " << estimatedPrice <<
-            //                    "\n  expected price:  " << expectedPrice);
-            //    }
-            //}
+                double expectedPrice = vars.bondData[i].price,
+                     estimatedPrice = bond.cleanPrice();
+                double tolerance = 1.0e-9;
+                if (Math.Abs(expectedPrice-estimatedPrice) > tolerance) {
+                   Assert.Fail(i+1 + " bond failure:" +
+                                "\n  estimated price: " + estimatedPrice +
+                                "\n  expected price:  " + expectedPrice);
+                }
+           }
 
-            //// check FRA
-            //vars.termStructure = boost::shared_ptr<YieldTermStructure>(new
-            //    PiecewiseYieldCurve<T,I>(vars.settlement, vars.fraHelpers,
-            //                             Actual360(), Handle<Quote>(), 1.0e-12,
-            //                             interpolator));
-            //curveHandle.linkTo(vars.termStructure);
+           // check FRA
+            vars.termStructure = new InterpolatedDiscountCurve<Linear, IterativeBootstrap>(vars.settlement, vars.fraHelpers,
+                                        new Actual360(), new Handle<Quote>(), 1.0e-12, new Linear());
+            curveHandle.linkTo(vars.termStructure);
 
-            //boost::shared_ptr<IborIndex> euribor3m(new Euribor3M(curveHandle));
-            //for (Size i=0; i<vars.fras; i++) {
-            //    Date start =
-            //        vars.calendar.advance(vars.settlement,
-            //                              fraData[i].n,
-            //                              fraData[i].units,
-            //                              euribor3m->businessDayConvention(),
-            //                              euribor3m->endOfMonth());
-            //    Date end = vars.calendar.advance(start, 3, Months,
-            //                                     euribor3m->businessDayConvention(),
-            //                                     euribor3m->endOfMonth());
+            IborIndex euribor3m = new Euribor3M(curveHandle);
+            for (int i=0; i<vars.fras; i++) {
+                Date start = vars.calendar.advance(vars.settlement,
+                                          vars.fraData[i].n,
+                                          vars.fraData[i].units,
+                                          euribor3m.businessDayConvention(),
+                                          euribor3m.endOfMonth());
+                Date end = vars.calendar.advance(start, 3, TimeUnit.Months,
+                                                 euribor3m.businessDayConvention(),
+                                                 euribor3m.endOfMonth());
 
-            //    ForwardRateAgreement fra(start, end, Position::Long,
-            //                             fraData[i].rate/100, 100.0,
-            //                             euribor3m, curveHandle);
-            //    Rate expectedRate = fraData[i].rate/100,
-            //         estimatedRate = fra.forwardRate();
-            //    Real tolerance = 1.0e-9;
-            //    if (std::fabs(expectedRate-estimatedRate) > tolerance) {
-            //        BOOST_ERROR(io::ordinal(i+1) << " FRA failure:" <<
-            //                    std::setprecision(8) <<
-            //                    "\n  estimated rate: " << io::rate(estimatedRate) <<
-            //                    "\n  expected rate:  " << io::rate(expectedRate));
-            //    }
-            //} 
-            #endregion
+                ForwardRateAgreement fra = new ForwardRateAgreement(start, end, Position.Type.Long, vars.fraData[i].rate / 100,
+                                                                    100.0, euribor3m, curveHandle);
+                double expectedRate = vars.fraData[i].rate / 100,
+                       estimatedRate = fra.forwardRate().rate();
+                double tolerance = 1.0e-9;
+                if (Math.Abs(expectedRate-estimatedRate) > tolerance) {
+                   Assert.Fail(i+1 + " FRA failure:" +
+                                "\n  estimated rate: " + estimatedRate +
+                                "\n  expected rate:  " + expectedRate);
+                }
+            } 
         }
 
         public void suite() {
