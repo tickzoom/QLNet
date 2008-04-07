@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cashflow.cs" />
+    <Compile Include="Cashflows\averagebmacoupon.cs" />
     <Compile Include="Cashflows\CashFlows.cs" />
     <Compile Include="Cashflows\Cashflowvectors.cs" />
     <Compile Include="Cashflows\Coupon.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Event.cs" />
     <Compile Include="Handle.cs" />
     <Compile Include="Index.cs" />
+    <Compile Include="Indexes\bmaindex.cs" />
     <Compile Include="Indexes\IBORIndex.cs" />
     <Compile Include="Indexes\Ibor\Euribor.cs" />
     <Compile Include="Indexes\Ibor\Libor.cs" />
@@ -70,6 +72,7 @@
     <Compile Include="Indexes\Indexmanager.cs" />
     <Compile Include="Indexes\InterestRateIndex.cs" />
     <Compile Include="Indexes\Swapindex.cs" />
+    <Compile Include="Instruments\bmaswap.cs" />
     <Compile Include="Instruments\Bond.cs" />
     <Compile Include="Instruments\Bonds\Fixedratebond.cs" />
     <Compile Include="Instruments\Bonds\FloatingRateBond.cs" />
@@ -179,7 +182,6 @@
     <Compile Include="Time\Period.cs" />
     <Compile Include="Time\Schedule.cs" />
     <Compile Include="Time\TimeUnit.cs" />
-    <Compile Include="Time\Weekday.cs" />
     <Compile Include="Types.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Util\make_pair.cs" />

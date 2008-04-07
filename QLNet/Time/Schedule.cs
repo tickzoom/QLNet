@@ -52,8 +52,15 @@ namespace QLNet {
         // since it is in periods, its size is 1 element less than the dates size, see isRegular
         private List<bool> isRegular_ = new List<bool>();
 
-        public Date[] dates { get { Date[] d = new Date[adjustedDates_.Count]; adjustedDates_.CopyTo(d); return d; } }
+        public List<Date> dates() {
+            List<Date> result = new List<Date>();
+            foreach(Date d in adjustedDates_)
+                result.Add(d);
+            return result;
+        }
         public int Count { get { return adjustedDates_.Count; } }
+
+        public Date date(int i) { return this[i]; }
         public Date this[int i] {
             get {
                 CheckInterface();
@@ -269,4 +276,64 @@ namespace QLNet {
             }
         }
 	}
+
+    //! helper class
+    /*! This class provides a more comfortable interface to the argument list of Schedule's constructor. */
+    public class MakeSchedule {
+        private Calendar calendar_;
+        private Date effectiveDate_, terminationDate_;
+        private Period tenor_;
+        private BusinessDayConvention convention_, terminationDateConvention_;
+        private DateGeneration.Rule rule_;
+        private bool endOfMonth_;
+        private Date firstDate_, nextToLastDate_;
+
+        public MakeSchedule(Date effectiveDate, Date terminationDate, Period tenor, Calendar calendar,
+                            BusinessDayConvention convention) {
+            calendar_ = calendar;
+            effectiveDate_ = effectiveDate;
+            terminationDate_ = terminationDate;
+            tenor_ = tenor;
+            convention_ = convention;
+            terminationDateConvention_ = convention;
+            rule_ = DateGeneration.Rule.Backward;
+            endOfMonth_ = false;
+            firstDate_ = nextToLastDate_ = null;
+        }
+
+
+        public MakeSchedule withTerminationDateConvention(BusinessDayConvention conv) {
+            terminationDateConvention_ = conv;
+            return this;
+        }
+        public MakeSchedule withRule(DateGeneration.Rule r) {
+            rule_ = r;
+            return this;
+        }
+        public MakeSchedule forwards() {
+            rule_ = DateGeneration.Rule.Forward;
+            return this;
+        }
+        public MakeSchedule backwards() {
+            rule_ = DateGeneration.Rule.Backward;
+            return this;
+        }
+        public MakeSchedule endOfMonth(bool flag) {
+            endOfMonth_ = flag;
+            return this;
+        }
+        public MakeSchedule withFirstDate(Date d) {
+            firstDate_ = d;
+            return this;
+        }
+        public MakeSchedule withNextToLastDate(Date d) {
+            nextToLastDate_ = d;
+            return this;
+        }
+        public Schedule value() {
+            return new Schedule(effectiveDate_, terminationDate_, tenor_, calendar_,
+                                convention_, terminationDateConvention_,
+                                rule_, endOfMonth_, firstDate_, nextToLastDate_);
+        }
+    }
 }

@@ -227,7 +227,7 @@ namespace TestSuite {
                         new Actual360(), new Handle<Quote>(), 1.0e-12, new Linear());
 
             testCurveConsistency(curve, vars);
-            //testBMACurveConsistency(Discount(), Linear(), vars);
+            testBMACurveConsistency(curve, vars);
         }
 
         public void testCurveConsistency(InterpolatedDiscountCurve<Linear, IterativeBootstrap> curve, CommonVars vars) {
@@ -334,6 +334,73 @@ namespace TestSuite {
                                 "\n  expected rate:  " + expectedRate);
                 }
             } 
+        }
+        public void testBMACurveConsistency(InterpolatedDiscountCurve<Linear, IterativeBootstrap> curve, CommonVars vars) {
+
+            Handle<YieldTermStructure> riskFreeCurve = new Handle<YieldTermStructure>(
+                                                       new FlatForward(vars.settlement, 0.04, new Actual360()));
+
+            BMAIndex bmaIndex = new BMAIndex();
+            IborIndex liborIndex = new USDLibor(new Period(6, TimeUnit.Months),riskFreeCurve);
+            for (int i=0; i<vars.bmas; ++i) {
+                Handle<Quote> f = new Handle<Quote>(vars.fractions[i]);
+                vars.bmaHelpers.Add(new BMASwapRateHelper(f, new Period(vars.bmaData[i].n, vars.bmaData[i].units),
+                                                vars.settlementDays,
+                                                bmaIndex.fixingCalendar(),
+                                                new Period(vars.bmaFrequency),
+                                                vars.bmaConvention,
+                                                vars.bmaDayCounter,
+                                                bmaIndex,
+                                                liborIndex));
+            }
+
+            int w = (int)vars.today.DayOfWeek;
+            Date lastWednesday = (w >= 4) ? vars.today - (w - 4) : vars.today + (4 - w - 7);
+            Date lastFixing = bmaIndex.fixingCalendar().adjust(lastWednesday);
+            bmaIndex.addFixing(lastFixing, 0.03);
+
+            vars.termStructure = new InterpolatedDiscountCurve<Linear, IterativeBootstrap>(vars.settlement, vars.bmaHelpers,
+                                     new Actual360(), new Handle<Quote>(), 1.0e-12, new Linear());
+
+            RelinkableHandle<YieldTermStructure> curveHandle = new RelinkableHandle<YieldTermStructure>();
+            curveHandle.linkTo(vars.termStructure);
+
+            // check BMA swaps
+            BMAIndex bma = new BMAIndex(curveHandle);
+            IborIndex libor6m = new USDLibor(new Period(6, TimeUnit.Months), riskFreeCurve);
+            for (int i=0; i<vars.bmas; i++) {
+                Period tenor = new Period(vars.bmaData[i].n, vars.bmaData[i].units);
+
+                Schedule bmaSchedule = new MakeSchedule(vars.settlement,
+                                                    vars.settlement+tenor,
+                                                    new Period(vars.bmaFrequency),
+                                                    bma.fixingCalendar(),
+                                                    vars.bmaConvention).backwards().value();
+                Schedule liborSchedule = new MakeSchedule(vars.settlement,
+                                                      vars.settlement+tenor,
+                                                      libor6m.tenor(),
+                                                      libor6m.fixingCalendar(),
+                                                      libor6m.businessDayConvention())
+                                        .endOfMonth(libor6m.endOfMonth())
+                                        .backwards().value();
+
+
+                BMASwap swap = new BMASwap(BMASwap.Type.Payer, 100.0, liborSchedule, 0.75, 0.0,
+                                           libor6m, libor6m.dayCounter(), bmaSchedule, bma, vars.bmaDayCounter);
+                swap.setPricingEngine(new DiscountingSwapEngine(libor6m.termStructure()));
+
+                double expectedFraction = vars.bmaData[i].rate / 100,
+                     estimatedFraction = swap.fairLiborFraction();
+                double tolerance = 1.0e-9;
+                double error = Math.Abs(expectedFraction-estimatedFraction);
+                if (error > tolerance) {
+                    Assert.Fail(vars.bmaData[i].n + " year(s) BMA swap:\n"
+                                + "\n estimated libor fraction: " + estimatedFraction
+                                + "\n expected libor fraction:  " + expectedFraction
+                                + "\n error:          " + error
+                                + "\n tolerance:      " + tolerance);
+                }
+            }
         }
 
         public void suite() {

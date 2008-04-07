@@ -51,5 +51,11 @@ namespace QLNet {
             for(int i=0; i<this.Capacity; i++)
                 this.Add(default(T));
         }
+
+        // erases the contents without changing the size
+        public void Erase() {
+            for (int i = 0; i < this.Count; i++)
+                this[i] = default(T);
+        }
     }
 }

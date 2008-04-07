@@ -126,20 +126,20 @@ namespace QLNet {
                 setTurnOfYear();
         }
 
-        protected double discountImplFactor(double t) {
-            calculate();
+        // recheck
+        //protected double discountImplFactor(double t) {
+        //    calculate();
 
-            // recheck
-            if (false && (!turnOfYearEffect_.empty()) && t > turnOfYear_) {
-                if (!turnOfYearEffect_.link.isValid())
-                    throw new ArgumentException("invalid turnOfYearEffect quote");
-                double turnOfYearEffect = turnOfYearEffect_.link.value();
-                if (!(turnOfYearEffect > 0.0 && turnOfYearEffect <= 1.0))
-                    throw new ArgumentException("invalid turnOfYearEffect value: " + turnOfYearEffect);
-                return turnOfYearEffect;
-            }
-            return 1;
-        }
+        //    if (!turnOfYearEffect_.empty() && t > turnOfYear_) {
+        //        if (!turnOfYearEffect_.link.isValid())
+        //            throw new ArgumentException("invalid turnOfYearEffect quote");
+        //        double turnOfYearEffect = turnOfYearEffect_.link.value();
+        //        if (!(turnOfYearEffect > 0.0 && turnOfYearEffect <= 1.0))
+        //            throw new ArgumentException("invalid turnOfYearEffect value: " + turnOfYearEffect);
+        //        return turnOfYearEffect;
+        //    }
+        //    return 1;
+        //}
 
         private void setTurnOfYear() {
             Date refDate = referenceDate();

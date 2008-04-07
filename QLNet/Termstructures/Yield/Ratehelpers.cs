@@ -106,7 +106,6 @@ namespace QLNet {
         }
     }
 
-
     // Rate helper with date schedule relative to the global evaluation date
     // This class takes care of rebuilding the date schedule when the global evaluation date changes
     public abstract class RelativeDateRateHelper : BootstrapHelper<YieldTermStructure> {
@@ -139,7 +138,6 @@ namespace QLNet {
         ///////////////////////////////////////////
         protected abstract void initializeDates();
     }
-
 
     // Rate helper for bootstrapping over deposit rates
     public class DepositRateHelper : RelativeDateRateHelper {
@@ -205,7 +203,6 @@ namespace QLNet {
         }
     }
 
-
     //! Rate helper for bootstrapping over %FRA rates
     public class FraRateHelper : RelativeDateRateHelper {
         private Date fixingDate_;
@@ -238,6 +235,12 @@ namespace QLNet {
             initializeDates();
         }
 
+        public override void setTermStructure(YieldTermStructure t) {
+            // no need to register---the index is not lazy
+            termStructureHandle_.linkTo(t, false);
+            base.setTermStructure(t);
+        }
+
 
         /////////////////////////////////////////////////////////
         //! RateHelper interface
@@ -255,7 +258,6 @@ namespace QLNet {
             fixingDate_ = iborIndex_.fixingDate(earliestDate_);
         }
     }
-
 
     // Rate helper for bootstrapping over swap rates
     public class SwapRateHelper : RelativeDateRateHelper {
@@ -452,4 +454,84 @@ namespace QLNet {
         public VanillaSwap swap() { return swap_; }
         public Period forwardStart() { return fwdStart_; }
     };
+
+    //! Rate helper for bootstrapping over BMA swap rates
+    public class BMASwapRateHelper : RelativeDateRateHelper {
+        protected Period tenor_;
+        protected int settlementDays_;
+        protected Calendar calendar_;
+        protected Period bmaPeriod_;
+        protected BusinessDayConvention bmaConvention_;
+        protected DayCounter bmaDayCount_;
+        protected BMAIndex bmaIndex_;
+        protected IborIndex iborIndex_;
+
+        protected BMASwap swap_;
+        protected RelinkableHandle<YieldTermStructure> termStructureHandle_ = new RelinkableHandle<YieldTermStructure>();
+
+        public BMASwapRateHelper(Handle<Quote> liborFraction, Period tenor,  int settlementDays, Calendar calendar,
+                          // bma leg
+                          Period bmaPeriod, BusinessDayConvention bmaConvention, DayCounter bmaDayCount, BMAIndex bmaIndex,
+                          // ibor leg
+                          IborIndex iborIndex)    
+            : base(liborFraction) {
+            tenor_ = tenor;
+            settlementDays_ = settlementDays;
+            calendar_ = calendar;
+            bmaPeriod_ = bmaPeriod;
+            bmaConvention_ = bmaConvention;
+            bmaDayCount_ = bmaDayCount;
+            bmaIndex_ = bmaIndex;
+            iborIndex_ = iborIndex;
+
+            iborIndex_.registerWith(update);
+            bmaIndex_.registerWith(update);
+
+            initializeDates();
+        }
+
+        //! \name RateHelper interface
+        public override double impliedQuote() {
+            if (termStructure_ == null)
+                throw new ApplicationException("term structure not set");
+            // we didn't register as observers - force calculation
+            swap_.recalculate();
+            return swap_.fairLiborFraction();
+        }
+
+        public override void setTermStructure(YieldTermStructure t) {
+            // do not set the relinkable handle as an observer -
+            // force recalculation when needed
+            termStructureHandle_.linkTo(t, false);
+            base.setTermStructure(t);
+        }
+
+        protected override void initializeDates() {
+            earliestDate_ = calendar_.advance(evaluationDate_, new Period(settlementDays_, TimeUnit.Days),
+                                              BusinessDayConvention.Following);
+
+            Date maturity = earliestDate_ + tenor_;
+
+            // dummy BMA index with curve/swap arguments
+            BMAIndex clonedIndex = new BMAIndex(termStructureHandle_);
+
+            Schedule bmaSchedule = new MakeSchedule(earliestDate_, maturity, bmaPeriod_, calendar_,
+                                                    bmaConvention_).backwards().value();
+
+            Schedule liborSchedule = new MakeSchedule(earliestDate_, maturity, iborIndex_.tenor(),
+                                                      iborIndex_.fixingCalendar(), iborIndex_.businessDayConvention())
+                                    .endOfMonth(iborIndex_.endOfMonth())
+                                    .backwards().value();
+
+            swap_ = new BMASwap(BMASwap.Type.Payer, 100.0, liborSchedule, 0.75, // arbitrary
+                                0.0, iborIndex_, iborIndex_.dayCounter(), bmaSchedule, clonedIndex, bmaDayCount_);
+            swap_.setPricingEngine(new DiscountingSwapEngine(iborIndex_.termStructure()));
+
+            Date d = calendar_.adjust(swap_.maturityDate(), BusinessDayConvention.Following);
+            int w = (int)d.DayOfWeek;
+            Date nextWednesday = (w >= 4) ? d + new Period((11 - w), TimeUnit.Days) :
+                                            d + new Period((4 - w), TimeUnit.Days);
+            latestDate_ = clonedIndex.valueDate(clonedIndex.fixingCalendar().adjust(nextWednesday));
+        }
+    }
 }

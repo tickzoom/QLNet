@@ -32,13 +32,16 @@ namespace QLNet {
 		
         //! returns the (possibly empty) history of the index fixings
         public static TimeSeries<double> getHistory(string name) {
-            return data_[name];
+            return hasHistory(name) ? data_[name] : new TimeSeries<double>();
 		}
 		
         //! stores the historical fixings of the index
         public static void setHistory(string name, TimeSeries<double> history) {
-            data_[name] = history;
-		}
+            if (hasHistory(name))
+                data_[name] = history;
+            else
+                data_.Add(name, history);
+        }
 
         //! observer notifying of changes in the index fixings
         public static TimeSeries<double> notifier(string name) {
