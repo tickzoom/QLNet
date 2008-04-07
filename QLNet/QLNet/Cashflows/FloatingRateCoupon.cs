@@ -113,7 +113,7 @@ namespace QLNet {
         // properties
         public InterestRateIndex index() { return index_; }              //! floating index
         public int fixingDays { get { return fixingDays_; } }                   //! fixing days
-        public Date fixingDate() {                                               //! fixing date
+        public virtual Date fixingDate() {                                               //! fixing date
             // if isInArrears_ fix at the end of period
             Date refDate = isInArrears_ ? accrualEndDate_ : accrualStartDate_;
             return index_.fixingCalendar().advance(refDate, -fixingDays_, TimeUnit.Days, BusinessDayConvention.Preceding);
@@ -144,7 +144,7 @@ namespace QLNet {
 		}
 
         //! convexity adjustment
-        public double convexityAdjustment() {
+        public virtual double convexityAdjustment() {
             return convexityAdjustmentImpl(indexFixing());
         }
 

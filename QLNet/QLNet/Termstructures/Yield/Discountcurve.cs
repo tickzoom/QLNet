@@ -40,7 +40,7 @@ namespace QLNet {
         // we do not need to override it. Check comments to InterpolatedYieldCurve
         //public override Date maxDate() { return dates_.Last(); }
 
-        protected override double discountImpl(double t) { return interpolation_.value(t, true) * discountImplFactor(t); }
+        protected override double discountImpl(double t) { return interpolation_.value(t, true); }
 
         #region Discount-curve traits
         public override Date initialDate(YieldTermStructure c) { return c.referenceDate(); }   // start of curve data

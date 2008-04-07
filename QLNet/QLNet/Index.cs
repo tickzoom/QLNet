@@ -70,9 +70,6 @@ namespace QLNet {
         public void addFixings(TimeSeries<double> source) { addFixings(source, false); }
         public void addFixings(TimeSeries<double> source, bool forceOverwrite) {
             TimeSeries<double> target = IndexManager.getHistory(name());
-            if (target == null)
-                target = new TimeSeries<double>();
-
             foreach (Date d in source.Keys) {
                 if (isValidFixingDate(d))
                     if (!target.ContainsKey(d))
