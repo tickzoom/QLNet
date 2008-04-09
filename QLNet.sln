@@ -4,9 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A1B2F21C-BD08-4751-9FBE-6DD0405E3DBC}"
 	ProjectSection(SolutionItems) = preProject
 		localtestrun.testrunconfig = localtestrun.testrunconfig
-		QLNet.vsmdi = QLNet.vsmdi
 		QLNet1.vsmdi = QLNet1.vsmdi
 		QLNet2.vsmdi = QLNet2.vsmdi
+		QLNet3.vsmdi = QLNet3.vsmdi
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QLNet", "QLNet\QLNet.csproj", "{F6E762BD-DCDF-4CA0-ABAD-CB21C7D03BEC}"
@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repo", "Repo\Repo.csproj", 
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = QLNet2.vsmdi
+		CategoryFile = QLNet3.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

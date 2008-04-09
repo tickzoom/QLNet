@@ -61,10 +61,33 @@ namespace TestSuite {
         public void testNewton() {
             test(new Newton(), "Newton");
         }
-
+        [TestMethod()]
+        public void testFalsePosition() {
+            test(new FalsePosition(), "FalsePosition");
+        }
+        [TestMethod()]
+        public void testBisection()
+        {
+            test(new Bisection(), "Bisection");
+        }
+        [TestMethod()]
+        public void testRidder()
+        {
+            test(new Ridder(), "Ridder");
+        }
+        [TestMethod()]
+        public void testSecant()
+        {
+            test(new Secant(), "Secant");
+        }
+ 
         public void suite() {
             testBrent();
             testNewton();
+            testFalsePosition();
+            testBisection();
+            testRidder();
+            testSecant();
         }
     }
 }
