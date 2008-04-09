@@ -125,11 +125,9 @@
     <Compile Include="Termstructures\YieldTermStructure.cs" />
     <Compile Include="Termstructures\Yield\Bondhelpers.cs" />
     <Compile Include="Termstructures\Yield\Bootstraptraits.cs" />
-    <Compile Include="Termstructures\Yield\Discountcurve.cs" />
     <Compile Include="Termstructures\Yield\Flatforward.cs" />
-    <Compile Include="Termstructures\Yield\InterpolatedYieldCurve.cs" />
+    <Compile Include="Termstructures\Yield\PiecewiseYieldCurve.cs" />
     <Compile Include="Termstructures\Yield\Ratehelpers.cs" />
-    <Compile Include="Termstructures\Yield\Zerocurve.cs" />
     <Compile Include="Termstructures\Yield\ZeroSpreadedTermStructure.cs" />
     <Compile Include="Termstructures\Yield\Zeroyieldstructure.cs" />
     <Compile Include="Time\Businessdayconvention.cs" />

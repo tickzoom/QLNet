@@ -23,30 +23,61 @@ using System.Text;
 
 namespace QLNet {
 
+    public interface ITraits {
+        Date initialDate(YieldTermStructure c);     // start of curve data
+        double initialValue(YieldTermStructure c);   // value at reference date
+        bool dummyInitialValue();                    // true if the initialValue is just a dummy value
+        double initialGuess();                       // initial guess
+        double guess(YieldTermStructure c, Date d); // further guesses
+        // possible constraints based on previous values
+        double minValueAfter(int s, List<double> l);
+        double maxValueAfter(int i, List<double> data);
+        // update with new guess
+        void updateGuess(List<double> data, double discount, int i);
+        int maxIterations();                          // upper bound for convergence loop 
+    }
+
+    public class DiscountTraits : ITraits {
+        public Date initialDate(YieldTermStructure c) { return c.referenceDate(); }   // start of curve data
+        public double initialValue(YieldTermStructure c) { return 1; }    // value at reference date
+        public bool dummyInitialValue() { return false; }   // true if the initialValue is just a dummy value
+        public double initialGuess() { return 0.9; }   // initial guess
+        public double guess(YieldTermStructure c, Date d) { return c.discount(d, true); }  // further guesses
+        // possible constraints based on previous values
+        public double minValueAfter(int s, List<double> l) {
+            // replace with Epsilon
+            return 2.2204460492503131e-016;
+        }
+        public double maxValueAfter(int i, List<double> data) { return data[i - 1]; }
+        // update with new guess
+        public void updateGuess(List<double> data, double discount, int i) { data[i] = discount; }
+        public int maxIterations() { return 25; }   // upper bound for convergence loop 
+    }
+
     //! Forward-curve traits
-    struct ForwardRate<Interpolator> {
-        static Date initialDate(YieldTermStructure c) { return c.referenceDate(); }   // start of curve data
-        static double initialValue(YieldTermStructure c) { return 0.02; } // dummy value at reference date
-        static bool dummyInitialValue() { return true; }    // true if the initialValue is just a dummy value
-        static double initialGuess() { return 0.02; } // initial guess
+    public class ForwardTraits : ITraits {
+        public Date initialDate(YieldTermStructure c) { return c.referenceDate(); }   // start of curve data
+        public double initialValue(YieldTermStructure c) { return 0.02; } // dummy value at reference date
+        public bool dummyInitialValue() { return true; }    // true if the initialValue is just a dummy value
+        public double initialGuess() { return 0.02; } // initial guess
         // further guesses
-        static double guess(YieldTermStructure c, Date d) {
+        public double guess(YieldTermStructure c, Date d) {
             return c.forwardRate(d, d, c.dayCounter(), Compounding.Continuous, Frequency.Annual, true).rate();
         }
         // possible constraints based on previous values
-        static double minValueAfter(int v, List<double> l) { return double.MinValue; }
-        static double maxValueAfter(int v, List<double> l) {
+        public double minValueAfter(int v, List<double> l) { return 2.2204460492503131e-016; }
+        public double maxValueAfter(int v, List<double> l) {
             // no constraints.
             // We choose as max a value very unlikely to be exceeded.
             return 3;
         }
         // update with new guess
-        static void updateGuess(List<decimal> data, decimal forward, int i) {
+        public void updateGuess(List<double> data, double forward, int i) {
             data[i] = forward;
             if (i == 1)
                 data[0] = forward; // first point is updated as well
         }
         // upper bound for convergence loop
-        static int maxIterations() { return 25; }
+        public int maxIterations() { return 25; }
     };
 }

@@ -33,7 +33,7 @@ namespace QLNet {
      * class to ensure consistancy between the algorithms used during bootstrapping
        and later instrument pricing. This is not yet fully enforced in the available rate helpers. */
     public abstract class BootstrapHelper<TS> : IObservable, IObserver 
-            where TS : YieldTermStructure, new() {
+            where TS : YieldTermStructure {
         protected Handle<Quote> quote_;
         protected TS termStructure_;
         protected Date earliestDate_, latestDate_;
