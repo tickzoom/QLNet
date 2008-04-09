@@ -32,12 +32,12 @@ namespace QLNet {
            : this(xBegin, size, yBegin, new Interpolator()) { }
         public LogInterpolationImpl(List<double> xBegin, int size, List<double> yBegin, IInterpolationFactory factory)
             : base(xBegin, size, yBegin) {
-            logY_ = xBegin;
+            logY_ = new Array<double>(size_ - 1);
             interpolation_ = factory.interpolate(xBegin_, size, logY_);
         }
 
         public override void update() {
-            for (int i = 0; i < logY_.Count; ++i) {
+            for (int i = 0; i < size_ - 1; ++i) {
                 if (!(yBegin_[i] > 0.0))
                     throw new ArgumentException("invalid value (" + yBegin_[i] + ") at index " + i);
                 logY_[i] = System.Math.Log(yBegin_[i]);

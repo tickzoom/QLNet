@@ -23,13 +23,16 @@ using System.Text;
 
 namespace QLNet {
     //! Universal piecewise-term-structure boostrapper.
-    public class IterativeBootstrap : IBootStrap {
+    public class IterativeBootstrap<Traits, Interpolator> : IBootStrap 
+            where Traits : ITraits, new()
+            where Interpolator : IInterpolationFactory, new() {
+        
         private bool validCurve_ = false;
         // define as whatever, actual genrics are not important
-        private InterpolatedYieldCurve<Linear, IterativeBootstrap> ts_;
+        private PiecewiseYieldCurve<Traits, Interpolator> ts_;
 
         public void setup(YieldTermStructure ts) {
-            ts_ = (InterpolatedYieldCurve<Linear, IterativeBootstrap>)ts;
+            ts_ = ts as PiecewiseYieldCurve<Traits, Interpolator>;
 
             int n = ts_.instruments.Count;
             if (n < ts_.interpolator_.requiredPoints)
@@ -97,7 +100,7 @@ namespace QLNet {
                     ts_.interpolation_.update();
 
                      try {
-                        BootstrapError error = new BootstrapError(ts_, instrument, i);
+                        var error = new BootstrapError<Traits, Interpolator>(ts_, instrument, i);
                         double r = solver.solve(error, ts_.accuracy_, guess, min, max);
                         // redundant assignment (as it has been already performed by BootstrapError in solve procedure), but safe
                         ts_.data_[i] = r;

@@ -22,15 +22,16 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-
     //! bootstrap error
-    public class BootstrapError : ISolver1d {
-        private InterpolatedYieldCurve<Linear, IterativeBootstrap> curve_;
+    public class BootstrapError<Traits, Interpolator> : ISolver1d
+            where Traits : ITraits, new()
+            where Interpolator : IInterpolationFactory, new() {
+        private PiecewiseYieldCurve<Traits, Interpolator> curve_;
         private BootstrapHelper<YieldTermStructure> helper_;
         private int segment_;
 
-        public BootstrapError(YieldTermStructure curve, BootstrapHelper<YieldTermStructure> helper, int segment) {
-            curve_ = (InterpolatedYieldCurve<Linear, IterativeBootstrap>)curve;
+        public BootstrapError(PiecewiseYieldCurve<Traits, Interpolator> curve, BootstrapHelper<YieldTermStructure> helper, int segment) {
+            curve_ = curve;
             helper_ = helper;
             segment_ = segment; 
         }

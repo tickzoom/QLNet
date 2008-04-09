@@ -219,22 +219,33 @@ namespace TestSuite {
 
         [TestMethod()]
         public void testLinearDiscountConsistency() {
-            Console.WriteLine("Testing consistency of piecewise-linear discount curve...");
+            // "Testing consistency of piecewise-linear discount curve..."
 
             CommonVars vars = new CommonVars();
 
-            var curve = new InterpolatedDiscountCurve<Linear,IterativeBootstrap>(vars.settlement, vars.instruments,
-                        new Actual360(), new Handle<Quote>(), 1.0e-12, new Linear());
-
-            testCurveConsistency(curve, vars);
-            testBMACurveConsistency(curve, vars);
+            testCurveConsistency<DiscountTraits, Linear>(vars);
+            testBMACurveConsistency<DiscountTraits, Linear>(vars);
         }
 
-        public void testCurveConsistency(InterpolatedDiscountCurve<Linear, IterativeBootstrap> curve, CommonVars vars) {
+        [TestMethod()]
+        public void testLogLinearDiscountConsistency() {
+            // "Testing consistency of piecewise-log-linear discount curve...");
 
-            vars.termStructure = curve;
+            CommonVars vars = new CommonVars(); ;
+
+            testCurveConsistency<DiscountTraits, LogLinear>(vars);
+            testBMACurveConsistency<DiscountTraits, LogLinear>(vars);
+        }
+
+        public void testCurveConsistency<T, I>(CommonVars vars)
+            where T : ITraits, new()
+            where I : IInterpolationFactory, new() {
+
+            vars.termStructure = new PiecewiseYieldCurve<DiscountTraits, Linear>(vars.settlement, vars.instruments,
+                                    new Actual360(), new Handle<Quote>(), 1.0e-12, new Linear());
+
             RelinkableHandle<YieldTermStructure> curveHandle = new RelinkableHandle<YieldTermStructure>();
-            curveHandle.linkTo(curve);
+            curveHandle.linkTo(vars.termStructure);
 
             // check deposits
             for (int i=0; i<vars.deposits; i++) {
@@ -276,17 +287,13 @@ namespace TestSuite {
             }
 
             // check bonds
-            vars.termStructure = new InterpolatedDiscountCurve<Linear, IterativeBootstrap>(vars.settlement, vars.bondHelpers,
-                                     new Actual360(), new Handle<Quote>(), 1.0e-12, new Linear());
+            vars.termStructure = new PiecewiseYieldCurve<T, I>(vars.settlement, vars.bondHelpers,
+                                     new Actual360(), new Handle<Quote>(), 1.0e-12, new I());
             curveHandle.linkTo(vars.termStructure);
 
             for (int i=0; i<vars.bonds; i++) {
-                Date maturity = vars.calendar.advance(vars.today,
-                                                      vars.bondData[i].n,
-                                                      vars.bondData[i].units);
-                Date issue = vars.calendar.advance(maturity,
-                                                   -vars.bondData[i].length,
-                                                   TimeUnit.Years);
+                Date maturity = vars.calendar.advance(vars.today, vars.bondData[i].n, vars.bondData[i].units);
+                Date issue = vars.calendar.advance(maturity, -vars.bondData[i].length, TimeUnit.Years);
                 List<double> coupons = new List<double>() { vars.bondData[i].coupon / 100.0 };
 
                 FixedRateBond bond = new FixedRateBond(vars.bondSettlementDays, 100.0,
@@ -298,7 +305,7 @@ namespace TestSuite {
                 bond.setPricingEngine(bondEngine);
 
                 double expectedPrice = vars.bondData[i].price,
-                     estimatedPrice = bond.cleanPrice();
+                      estimatedPrice = bond.cleanPrice();
                 double tolerance = 1.0e-9;
                 if (Math.Abs(expectedPrice-estimatedPrice) > tolerance) {
                    Assert.Fail(i+1 + " bond failure:" +
@@ -308,7 +315,7 @@ namespace TestSuite {
            }
 
            // check FRA
-            vars.termStructure = new InterpolatedDiscountCurve<Linear, IterativeBootstrap>(vars.settlement, vars.fraHelpers,
+            vars.termStructure = new PiecewiseYieldCurve<DiscountTraits, Linear>(vars.settlement, vars.fraHelpers,
                                         new Actual360(), new Handle<Quote>(), 1.0e-12, new Linear());
             curveHandle.linkTo(vars.termStructure);
 
@@ -335,7 +342,9 @@ namespace TestSuite {
                 }
             } 
         }
-        public void testBMACurveConsistency(InterpolatedDiscountCurve<Linear, IterativeBootstrap> curve, CommonVars vars) {
+        public void testBMACurveConsistency<T, I>(CommonVars vars)             
+            where T : ITraits, new()
+            where I : IInterpolationFactory, new() {
 
             Handle<YieldTermStructure> riskFreeCurve = new Handle<YieldTermStructure>(
                                                        new FlatForward(vars.settlement, 0.04, new Actual360()));
@@ -359,7 +368,7 @@ namespace TestSuite {
             Date lastFixing = bmaIndex.fixingCalendar().adjust(lastWednesday);
             bmaIndex.addFixing(lastFixing, 0.03);
 
-            vars.termStructure = new InterpolatedDiscountCurve<Linear, IterativeBootstrap>(vars.settlement, vars.bmaHelpers,
+            vars.termStructure = new PiecewiseYieldCurve<DiscountTraits, Linear>(vars.settlement, vars.bmaHelpers,
                                      new Actual360(), new Handle<Quote>(), 1.0e-12, new Linear());
 
             RelinkableHandle<YieldTermStructure> curveHandle = new RelinkableHandle<YieldTermStructure>();
