@@ -94,9 +94,21 @@
     <Compile Include="Math\Interpolations\Loginterpolation.cs" />
     <Compile Include="Math\Solver1d.cs" />
     <Compile Include="Math\Rounding.cs" />
-    <Compile Include="Math\Solvers1d\Brent.cs" />
+    <Compile Include="Math\Solvers1d\Bisection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Math\Solvers1d\Brent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Math\Solvers1d\FalsePosition.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Math\Solvers1d\Newton.cs" />
     <Compile Include="Math\Solvers1d\Newtonsafe.cs" />
+    <Compile Include="Math\Solvers1d\Ridder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Math\Solvers1d\Secant.cs" />
     <Compile Include="Money.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Patterns\LazyObject.cs" />
