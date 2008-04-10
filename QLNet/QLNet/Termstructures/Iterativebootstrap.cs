@@ -25,7 +25,7 @@ namespace QLNet {
     //! Universal piecewise-term-structure boostrapper.
     public class IterativeBootstrap<Traits, Interpolator> : IBootStrap 
             where Traits : ITraits, new()
-            where Interpolator : IInterpolationFactory, new() {
+        where Interpolator : IInterpolationFactory, new() {
         
         private bool validCurve_ = false;
         // define as whatever, actual genrics are not important
@@ -34,18 +34,18 @@ namespace QLNet {
         public void setup(YieldTermStructure ts) {
             ts_ = ts as PiecewiseYieldCurve<Traits, Interpolator>;
 
-            int n = ts_.instruments.Count;
+            int n = ts_.instruments_.Count;
             if (n < ts_.interpolator_.requiredPoints)
                 throw new ArgumentException("not enough instruments: " + n + " provided, " +
                        ts_.interpolator_.requiredPoints + " required");
 
             for (int i = 0; i < n; ++i) {
-                ts_.instruments[i].registerWith(ts_.update);
+                ts_.instruments_[i].registerWith(ts_.update);
             }
         }
 
         public void calculate() {
-            int n = ts_.instruments.Count;
+            int n = ts_.instruments_.Count;
 
             // set initial guess only if the current curve cannot be used as guess
             if (validCurve_) {
@@ -68,7 +68,7 @@ namespace QLNet {
                 for (int i=1; i<n+1; ++i) {
                     // calculate guess before extending interpolation to ensure that any extrapolation is performed
                     // using the curve bootstrapped so far and no more
-                    BootstrapHelper<YieldTermStructure> instrument = ts_.instruments[i-1];
+                    BootstrapHelper<YieldTermStructure> instrument = ts_.instruments_[i-1];
                     double guess;
                     if (validCurve_ || iteration>0) {
                         guess = ts_.data_[i];

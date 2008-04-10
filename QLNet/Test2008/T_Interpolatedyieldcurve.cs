@@ -19,8 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QLNet;
 
@@ -116,7 +114,7 @@ namespace TestSuite {
             public DayCounter bmaDayCounter;
 
             public int deposits, fras, swaps, bonds, bmas;
-            public List<Quote> rates, fraRates, prices, fractions;
+            public List<SimpleQuote> rates, fraRates, prices, fractions;
             public List<BootstrapHelper<YieldTermStructure>> instruments, fraHelpers, bondHelpers, bmaHelpers;
             public List<Schedule> schedules;
             public YieldTermStructure termStructure;
@@ -151,10 +149,10 @@ namespace TestSuite {
                 bmas = bmaData.Length;
 
                 // market elements
-                rates = new List<Quote>(deposits+swaps);
-                fraRates = new List<Quote>(fras);
-                prices = new List<Quote>(bonds);
-                fractions = new List<Quote>(bmas);
+                rates = new List<SimpleQuote>(deposits+swaps);
+                fraRates = new List<SimpleQuote>(fras);
+                prices = new List<SimpleQuote>(bonds);
+                fractions = new List<SimpleQuote>(bmas);
                 for (int i=0; i<deposits; i++) {
                     rates.Add(new SimpleQuote(depositData[i].rate/100));
                 }
@@ -223,26 +221,86 @@ namespace TestSuite {
 
             CommonVars vars = new CommonVars();
 
-            testCurveConsistency<DiscountTraits, Linear>(vars);
-            testBMACurveConsistency<DiscountTraits, Linear>(vars);
+            testCurveConsistency<Discount, Linear>(vars);
+            //testBMACurveConsistency<Discount, Linear>(vars);
+        }
+
+        [TestMethod()]
+        public void testLinearZeroConsistency() {
+            // "Testing consistency of piecewise-linear zero-yield curve...");
+
+            CommonVars vars = new CommonVars();
+
+            testCurveConsistency<ZeroYield, Linear>(vars);
+            //testBMACurveConsistency<ZeroYield, Linear>(vars);
+        }
+
+        [TestMethod()]
+        public void testLinearForwardConsistency() {
+            // "Testing consistency of piecewise-linear forward-rate curve...");
+
+            CommonVars vars = new CommonVars();
+
+            testCurveConsistency<ForwardRate, Linear>(vars);
+            //testBMACurveConsistency<ForwardRate, Linear>(vars);
         }
 
         [TestMethod()]
         public void testLogLinearDiscountConsistency() {
             // "Testing consistency of piecewise-log-linear discount curve...");
 
-            CommonVars vars = new CommonVars(); ;
+            CommonVars vars = new CommonVars();
 
-            testCurveConsistency<DiscountTraits, LogLinear>(vars);
-            testBMACurveConsistency<DiscountTraits, LogLinear>(vars);
+            testCurveConsistency<Discount, LogLinear>(vars);
+            //testBMACurveConsistency<Discount, LogLinear>(vars);
+        }
+
+        [TestMethod()]
+        public void testLogLinearZeroConsistency() {
+            // "Testing consistency of piecewise-log-linear zero-yield curve...");
+
+            CommonVars vars = new CommonVars();
+
+            testCurveConsistency<ZeroYield, LogLinear>(vars);
+            //testBMACurveConsistency<ZeroYield, LogLinear>(vars);
+        }
+
+
+        [TestMethod()]
+        public void testObservability() {
+            // "Testing observability of piecewise yield curve...");
+
+            CommonVars vars = new CommonVars();
+
+            vars.termStructure = new PiecewiseYieldCurve<Discount,LogLinear>(vars.settlementDays,
+                                                           vars.calendar, vars.instruments, new Actual360());
+            Flag f = new Flag();
+            vars.termStructure.registerWith(f.update);
+
+            for (int i=0; i<vars.deposits+vars.swaps; i++) {
+                double testTime = new Actual360().yearFraction(vars.settlement, vars.instruments[i].latestDate());
+                double discount = vars.termStructure.discount(testTime);
+                f.lower();
+                vars.rates[i].setValue(vars.rates[i].value()*1.01);
+                if (!f.isUp())
+                    Console.WriteLine("Observer was not notified of underlying rate change");
+                if (vars.termStructure.discount(testTime,true) == discount)
+                    Console.WriteLine("rate change did not trigger recalculation");
+                vars.rates[i].setValue(vars.rates[i].value()/1.01);
+            }
+
+            f.lower();
+            Settings.setEvaluationDate(vars.calendar.advance(vars.today,15,TimeUnit.Days));
+            if (!f.isUp())
+                Console.WriteLine("Observer was not notified of date change");
         }
 
         public void testCurveConsistency<T, I>(CommonVars vars)
             where T : ITraits, new()
             where I : IInterpolationFactory, new() {
 
-            vars.termStructure = new PiecewiseYieldCurve<DiscountTraits, Linear>(vars.settlement, vars.instruments,
-                                    new Actual360(), new Handle<Quote>(), 1.0e-12, new Linear());
+            vars.termStructure = new PiecewiseYieldCurve<T, I>(vars.settlement, vars.instruments,
+                                    new Actual360(), new Handle<Quote>(), 1.0e-12);
 
             RelinkableHandle<YieldTermStructure> curveHandle = new RelinkableHandle<YieldTermStructure>();
             curveHandle.linkTo(vars.termStructure);
@@ -253,7 +311,7 @@ namespace TestSuite {
                 double expectedRate = vars.depositData[i].rate / 100,
                        estimatedRate = index.fixing(vars.today);
                 if (Math.Abs(expectedRate-estimatedRate) > 1.0e-9) {
-                    Assert.Fail(vars.depositData[i].n + " "
+                    Console.WriteLine(vars.depositData[i].n + " "
                         + (vars.depositData[i].units == TimeUnit.Weeks ? "week(s)" : "month(s)")
                         + " deposit:"
                         + "\n    estimated rate: " + estimatedRate
@@ -278,7 +336,7 @@ namespace TestSuite {
                 double tolerance = 1.0e-9;
                 double error = Math.Abs(expectedRate-estimatedRate);
                 if (error > tolerance) {
-                   Assert.Fail(vars.swapData[i].n + " year(s) swap:\n"
+                    Console.WriteLine(vars.swapData[i].n + " year(s) swap:\n"
                         + "\n estimated rate: " + estimatedRate
                         + "\n expected rate:  " + expectedRate
                         + "\n error:          " + error
@@ -288,7 +346,7 @@ namespace TestSuite {
 
             // check bonds
             vars.termStructure = new PiecewiseYieldCurve<T, I>(vars.settlement, vars.bondHelpers,
-                                     new Actual360(), new Handle<Quote>(), 1.0e-12, new I());
+                                     new Actual360(), new Handle<Quote>(), 1.0e-12);
             curveHandle.linkTo(vars.termStructure);
 
             for (int i=0; i<vars.bonds; i++) {
@@ -308,15 +366,15 @@ namespace TestSuite {
                       estimatedPrice = bond.cleanPrice();
                 double tolerance = 1.0e-9;
                 if (Math.Abs(expectedPrice-estimatedPrice) > tolerance) {
-                   Assert.Fail(i+1 + " bond failure:" +
+                    Console.WriteLine(i + 1 + " bond failure:" +
                                 "\n  estimated price: " + estimatedPrice +
                                 "\n  expected price:  " + expectedPrice);
                 }
            }
 
            // check FRA
-            vars.termStructure = new PiecewiseYieldCurve<DiscountTraits, Linear>(vars.settlement, vars.fraHelpers,
-                                        new Actual360(), new Handle<Quote>(), 1.0e-12, new Linear());
+            vars.termStructure = new PiecewiseYieldCurve<T, I>(vars.settlement, vars.fraHelpers,
+                                        new Actual360(), new Handle<Quote>(), 1.0e-12);
             curveHandle.linkTo(vars.termStructure);
 
             IborIndex euribor3m = new Euribor3M(curveHandle);
@@ -336,7 +394,7 @@ namespace TestSuite {
                        estimatedRate = fra.forwardRate().rate();
                 double tolerance = 1.0e-9;
                 if (Math.Abs(expectedRate-estimatedRate) > tolerance) {
-                   Assert.Fail(i+1 + " FRA failure:" +
+                    Console.WriteLine(i + 1 + " FRA failure:" +
                                 "\n  estimated rate: " + estimatedRate +
                                 "\n  expected rate:  " + expectedRate);
                 }
@@ -368,8 +426,8 @@ namespace TestSuite {
             Date lastFixing = bmaIndex.fixingCalendar().adjust(lastWednesday);
             bmaIndex.addFixing(lastFixing, 0.03);
 
-            vars.termStructure = new PiecewiseYieldCurve<DiscountTraits, Linear>(vars.settlement, vars.bmaHelpers,
-                                     new Actual360(), new Handle<Quote>(), 1.0e-12, new Linear());
+            vars.termStructure = new PiecewiseYieldCurve<T, I>(vars.settlement, vars.bmaHelpers,
+                                     new Actual360(), new Handle<Quote>(), 1.0e-12);
 
             RelinkableHandle<YieldTermStructure> curveHandle = new RelinkableHandle<YieldTermStructure>();
             curveHandle.linkTo(vars.termStructure);
@@ -403,7 +461,7 @@ namespace TestSuite {
                 double tolerance = 1.0e-9;
                 double error = Math.Abs(expectedFraction-estimatedFraction);
                 if (error > tolerance) {
-                    Assert.Fail(vars.bmaData[i].n + " year(s) BMA swap:\n"
+                    Console.WriteLine(vars.bmaData[i].n + " year(s) BMA swap:\n"
                                 + "\n estimated libor fraction: " + estimatedFraction
                                 + "\n expected libor fraction:  " + expectedFraction
                                 + "\n error:          " + error
@@ -413,7 +471,15 @@ namespace TestSuite {
         }
 
         public void suite() {
-            testLinearDiscountConsistency();
+            //testLogLinearDiscountConsistency();
+            //testLinearDiscountConsistency();
+
+            //testLogLinearZeroConsistency();
+            //testLinearZeroConsistency();
+
+            //testLinearForwardConsistency();
+
+            testObservability();
         }
     }
 }
