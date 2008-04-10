@@ -65,14 +65,10 @@ namespace QLNet {
         bool isInRange(double x) {
             return impl_.isInRange(x);
         }
-        public void update() {
+        public override void update() {
             impl_.update();
         }
 
-        //Real operator()(Real x, bool allowExtrapolation = false) const {
-        //    checkRange(x,allowExtrapolation);
-        //    return impl_->value(x);
-        //}
         // main method to derive an interpolated point
         public double value(double x) { return value(x, false); }
         public double value(double x, bool allowExtrapolation) {
@@ -134,7 +130,7 @@ namespace QLNet {
 					   result = ~result - 1;
 
                // impose limits. we need the one before last at max or the first at min
-               result = Math.Max(Math.Min(result, size_ - 3), 0);
+               result = Math.Max(Math.Min(result, size_ - 2), 0);
                return result;
             }
 

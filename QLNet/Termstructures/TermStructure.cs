@@ -22,7 +22,7 @@ using QLNet;
 namespace QLNet
 {
     //! Basic term-structure functionality
-    public abstract class TermStructure : Extrapolator, IObserver
+    public abstract class TermStructure : Extrapolator, IObservable, IObserver
     {
         // fields
         private Date referenceDate_;
@@ -138,14 +138,13 @@ namespace QLNet
             if (moving_)
                 updated_ = false;
 
-            // this is in order to notify observers in the base method
+            // recheck. this is in order to notify observers in the base method of LazyObject
             calculated_ = true;
+            base.update();
             // otherwise the following code would be required
             //if (notifyObservers != null)
             //    notifyObservers();
             // the grand reason is that multiple inheritance is not allowed in c# and we need to notify observers in such way
-
-            base.update();
         }
         #endregion
     }

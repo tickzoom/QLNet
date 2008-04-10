@@ -32,7 +32,7 @@ namespace QLNet {
            : this(xBegin, size, yBegin, new Interpolator()) { }
         public LogInterpolationImpl(List<double> xBegin, int size, List<double> yBegin, IInterpolationFactory factory)
             : base(xBegin, size, yBegin) {
-            logY_ = new Array<double>(size_ - 1);
+            logY_ = new Array<double>(size_);
             interpolation_ = factory.interpolate(xBegin_, size, logY_);
         }
 

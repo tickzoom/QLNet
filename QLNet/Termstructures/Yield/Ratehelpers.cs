@@ -428,7 +428,6 @@ namespace QLNet {
         public override void setTermStructure(YieldTermStructure t) {
             // do not set the relinkable handle as an observer -
             // force recalculation when needed
-            // recheck
             termStructureHandle_.linkTo(t, false);
             base.setTermStructure(t);
         }

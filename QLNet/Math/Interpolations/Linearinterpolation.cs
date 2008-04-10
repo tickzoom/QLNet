@@ -28,16 +28,16 @@ namespace QLNet {
 
         public LinearInterpolationImpl(List<double> xBegin, int size, List<double> yBegin)
             : base(xBegin, size, yBegin) {
-           primitiveConst_ = new Array<double>(size_-1);
-           s_ = new Array<double>(size_-1);
+           primitiveConst_ = new Array<double>(size_);
+           s_ = new Array<double>(size_);
         }
 
         public override void update() {
             primitiveConst_[0] = 0.0;
-            for (int i = 1; i < size_-1; ++i) {
-                double dx = xBegin_[i]-xBegin_[i-1];
-                s_[i-1] = (yBegin_[i]-yBegin_[i-1])/dx;
-                primitiveConst_[i] = primitiveConst_[i-1] + dx * (yBegin_[i-1] + 0.5 * dx * s_[i-1]);
+            for (int i = 1; i < size_ - 1; ++i) {
+                double dx = xBegin_[i] - xBegin_[i - 1];
+                s_[i - 1] = (yBegin_[i] - yBegin_[i - 1]) / dx;
+                primitiveConst_[i] = primitiveConst_[i - 1] + dx * (yBegin_[i - 1] + 0.5 * dx * s_[i - 1]);
             }
         }
 
@@ -48,8 +48,8 @@ namespace QLNet {
         }
         public override double primitive(double x) {
             int i = locate(x);
-            double dx = x-xBegin_[i];
-            return primitiveConst_[i] + dx*(yBegin_[i] + 0.5*dx*s_[i]);
+            double dx = x - xBegin_[i];
+            return primitiveConst_[i] + dx * (yBegin_[i] + 0.5 * dx * s_[i]);
         }
         public override double derivative(double x) {
             int i = locate(x);
