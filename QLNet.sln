@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test2008", "Test2008\Test20
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repo", "Repo\Repo.csproj", "{B164BA00-F6C6-43FD-804C-412FFD763E7B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Swap", "Swap\Swap.csproj", "{49B855BB-E828-48DF-90BC-A14D1233F746}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = QLNet3.vsmdi
@@ -36,6 +38,10 @@ Global
 		{B164BA00-F6C6-43FD-804C-412FFD763E7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B164BA00-F6C6-43FD-804C-412FFD763E7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B164BA00-F6C6-43FD-804C-412FFD763E7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49B855BB-E828-48DF-90BC-A14D1233F746}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49B855BB-E828-48DF-90BC-A14D1233F746}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49B855BB-E828-48DF-90BC-A14D1233F746}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49B855BB-E828-48DF-90BC-A14D1233F746}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

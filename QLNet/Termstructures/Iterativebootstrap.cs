@@ -49,8 +49,8 @@ namespace QLNet {
 
             // set initial guess only if the current curve cannot be used as guess
             if (validCurve_) {
-                if (ts_.data().Count != n + 1)
-                    throw new ArgumentException("dimension mismatch: expected " + n + 1 + ", actual " + ts_.data().Count);
+                if (ts_.data_.Count != n + 1)
+                    throw new ArgumentException("dimension mismatch: expected " + n + 1 + ", actual " + ts_.data_.Count);
             } else {
                 ts_.data_ = new Array<double>(n + 1);
                 ts_.data_[0] = ts_.initialValue(ts_);
@@ -63,7 +63,7 @@ namespace QLNet {
                 List<double> previousData = ts_.data();
                 // restart from the previous interpolation
                 if (validCurve_) {
-                    ts_.interpolation_ = ts_.interpolator_.interpolate(ts_.times(), ts_.times().Count, ts_.data());
+                    ts_.interpolation_ = ts_.interpolator_.interpolate(ts_.times_, ts_.times_.Count, ts_.data_);
                 }
                 for (int i=1; i<n+1; ++i) {
                     // calculate guess before extending interpolation to ensure that any extrapolation is performed
@@ -88,10 +88,10 @@ namespace QLNet {
                     if (!validCurve_ && iteration == 0) {
                         // extend interpolation a point at a time
                         try {
-                            ts_.interpolation_ = ts_.interpolator_.interpolate(ts_.times_, i + 2, ts_.data_);
+                            ts_.interpolation_ = ts_.interpolator_.interpolate(ts_.times_, i + 1, ts_.data_);
                         } catch {
                             // if the target interpolation is not usable yet
-                           ts_.interpolation_ = new Linear().interpolate(ts_.times_, i + 2, ts_.data_);
+                           ts_.interpolation_ = new Linear().interpolate(ts_.times_, i + 1, ts_.data_);
                         }
                     }
 

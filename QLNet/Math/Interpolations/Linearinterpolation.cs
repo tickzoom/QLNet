@@ -34,7 +34,7 @@ namespace QLNet {
 
         public override void update() {
             primitiveConst_[0] = 0.0;
-            for (int i = 1; i < size_ - 1; ++i) {
+            for (int i = 1; i < size_; ++i) {
                 double dx = xBegin_[i] - xBegin_[i - 1];
                 s_[i - 1] = (yBegin_[i] - yBegin_[i - 1]) / dx;
                 primitiveConst_[i] = primitiveConst_[i - 1] + dx * (yBegin_[i - 1] + 0.5 * dx * s_[i - 1]);
