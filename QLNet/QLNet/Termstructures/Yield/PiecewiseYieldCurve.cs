@@ -29,9 +29,9 @@ namespace QLNet {
         //public InterpolatedYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
         //                      DayCounter dayCounter) :
         //    this(referenceDate, instruments, dayCounter, new SimpleQuote()) { }
-        //public InterpolatedYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
-        //                              DayCounter dayCounter, Quote turnOfYearEffect) :
-        //    this(referenceDate, instruments, dayCounter, turnOfYearEffect, 1.0e-12) { }
+        public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
+                                   DayCounter dayCounter, Handle<Quote> turnOfYearEffect) :
+            this(referenceDate, instruments, dayCounter, turnOfYearEffect, 1.0e-12) { }
         public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
                                       DayCounter dayCounter, Handle<Quote> turnOfYearEffect, double accuracy)
             : base(referenceDate, instruments, dayCounter, turnOfYearEffect, accuracy) {
@@ -97,7 +97,7 @@ namespace QLNet {
             //        return turnOfYearEffect;
             //    }
             //}
-            return traits_.discountImpl(i, t);
+            return traits_.discountImpl(interpolation_, t);
         }
         protected double zeroYieldImpl(double t) { return zeroYieldImpl(interpolation_, t); }
         public double zeroYieldImpl(Interpolation i, double t) { return traits_.zeroYieldImpl(i, t); }

@@ -37,7 +37,7 @@ namespace QLNet {
         }
 
         public override void update() {
-            for (int i = 0; i < size_ - 1; ++i) {
+            for (int i = 0; i < size_; ++i) {
                 if (!(yBegin_[i] > 0.0))
                     throw new ArgumentException("invalid value (" + yBegin_[i] + ") at index " + i);
                 logY_[i] = System.Math.Log(yBegin_[i]);

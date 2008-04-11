@@ -283,16 +283,17 @@ namespace TestSuite {
                 f.lower();
                 vars.rates[i].setValue(vars.rates[i].value()*1.01);
                 if (!f.isUp())
-                    Console.WriteLine("Observer was not notified of underlying rate change");
-                if (vars.termStructure.discount(testTime,true) == discount)
-                    Console.WriteLine("rate change did not trigger recalculation");
+                    Assert.Fail("Observer was not notified of underlying rate change");
+                double discount_new = vars.termStructure.discount(testTime, true);
+                if (discount_new == discount)
+                    Assert.Fail("rate change did not trigger recalculation");
                 vars.rates[i].setValue(vars.rates[i].value()/1.01);
             }
 
             f.lower();
             Settings.setEvaluationDate(vars.calendar.advance(vars.today,15,TimeUnit.Days));
             if (!f.isUp())
-                Console.WriteLine("Observer was not notified of date change");
+                Assert.Fail("Observer was not notified of date change");
         }
 
         public void testCurveConsistency<T, I>(CommonVars vars)

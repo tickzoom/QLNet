@@ -23,6 +23,10 @@ using System.Text;
 
 namespace QLNet {
     public static partial class Utils {
+        public static string ToPercent(this double r) {
+            return r.ToString("0.00%");
+        }
+
         public static T Get<T>(this List<T> v, int i) { return Get(v, i, default(T)); }
         public static T Get<T>(this List<T> v, int i, T defval) {
             if (v == null || v.Count == 0)    return defval;
