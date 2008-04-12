@@ -1,4 +1,22 @@
-﻿using System;
+﻿/*
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+  
+ This file is part of QLNet Project http://www.qlnet.org
+
+ QLNet is free software: you can redistribute it and/or modify it
+ under the terms of the QLNet license.  You should have received a
+ copy of the license along with this program; if not, license is  
+ available online at <http://trac2.assembla.com/QLNet/wiki/License>.
+  
+ QLNet is a based on QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+ The QuantLib license is available online at http://quantlib.org/license.shtml.
+ 
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +24,7 @@ using QLNet;
 
 namespace Swap {
     /*  This example shows how to set up a Term Structure and then price a simple swap */
-    class swap {
+    class SwapValuation {
         static void Main(string[] args) {
 
             DateTime timer = DateTime.Now;
@@ -33,7 +51,7 @@ namespace Swap {
 
 
             // deposits
-            double d1wQuote=0.0382;
+            double d1wQuote = 0.0382;
             double d1mQuote = 0.0372;
             double d3mQuote = 0.0363;
             double d6mQuote = 0.0353;
@@ -131,40 +149,40 @@ namespace Swap {
 
 
             // setup futures
-            Handle<Quote> convexityAdjustment = new Handle<Quote>(new SimpleQuote(0.0));
+            // Handle<Quote> convexityAdjustment = new Handle<Quote>(new SimpleQuote(0.0));
             int futMonths = 3;
             Date imm = IMM.nextDate(settlementDate);
 
             BootstrapHelper<YieldTermStructure> fut1 = new FuturesRateHelper(new Handle<Quote>(fut1Price), imm, futMonths, calendar,
-                    BusinessDayConvention.ModifiedFollowing, true, depositDayCounter, convexityAdjustment);
+                    BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
 
             imm = IMM.nextDate(imm + 1);
             BootstrapHelper<YieldTermStructure> fut2 = new FuturesRateHelper(new Handle<Quote>(fut2Price), imm, futMonths, calendar,
-                    BusinessDayConvention.ModifiedFollowing, true, depositDayCounter, convexityAdjustment);
+                    BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
 
             imm = IMM.nextDate(imm + 1);
             BootstrapHelper<YieldTermStructure> fut3 = new FuturesRateHelper(new Handle<Quote>(fut3Price), imm, futMonths, calendar,
-                    BusinessDayConvention.ModifiedFollowing, true, depositDayCounter, convexityAdjustment);
+                    BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
 
             imm = IMM.nextDate(imm + 1);
             BootstrapHelper<YieldTermStructure> fut4 = new FuturesRateHelper(new Handle<Quote>(fut4Price), imm, futMonths, calendar,
-                    BusinessDayConvention.ModifiedFollowing, true, depositDayCounter, convexityAdjustment);
+                    BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
 
             imm = IMM.nextDate(imm + 1);
             BootstrapHelper<YieldTermStructure> fut5 = new FuturesRateHelper(new Handle<Quote>(fut5Price), imm, futMonths, calendar,
-                    BusinessDayConvention.ModifiedFollowing, true, depositDayCounter, convexityAdjustment);
+                    BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
 
             imm = IMM.nextDate(imm + 1);
             BootstrapHelper<YieldTermStructure> fut6 = new FuturesRateHelper(new Handle<Quote>(fut6Price), imm, futMonths, calendar,
-                    BusinessDayConvention.ModifiedFollowing, true, depositDayCounter, convexityAdjustment);
+                    BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
 
             imm = IMM.nextDate(imm + 1);
             BootstrapHelper<YieldTermStructure> fut7 = new FuturesRateHelper(new Handle<Quote>(fut7Price), imm, futMonths, calendar,
-                    BusinessDayConvention.ModifiedFollowing, true, depositDayCounter, convexityAdjustment);
+                    BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
 
             imm = IMM.nextDate(imm + 1);
             BootstrapHelper<YieldTermStructure> fut8 = new FuturesRateHelper(new Handle<Quote>(fut8Price), imm, futMonths, calendar,
-                    BusinessDayConvention.ModifiedFollowing, true, depositDayCounter, convexityAdjustment);
+                    BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
 
 
             // setup swaps
@@ -318,10 +336,10 @@ namespace Swap {
             // calculations
 
             Console.WriteLine(dblrule);
-            Console.WriteLine("5-year market swap-rate = " + s5yRate.value().ToPercent());
+            Console.WriteLine("5-year market swap-rate = {0:0.00%}", s5yRate.value());
             Console.WriteLine(dblrule);
 
-            Console.WriteLine(tab + "5-years swap paying " + fixedRate.ToPercent());
+            Console.WriteLine(tab + "5-years swap paying {0:0.00%}" + fixedRate);
             Console.WriteLine(headers[0] + separator
                       + headers[1] + separator
                       + headers[2] + separator
@@ -345,15 +363,15 @@ namespace Swap {
             fairSpread = spot5YearSwap.fairSpread();
             fairRate = spot5YearSwap.fairRate();
 
-            Console.Write("depo-swap".PadLeft(headers[0].Length) + separator);
-            Console.Write(NPV.ToString().PadLeft(headers[1].Length) + separator);
-            Console.Write(fairSpread.ToPercent().PadLeft(headers[2].Length) + separator);
-            Console.WriteLine(fairRate.ToPercent().PadLeft(headers[3].Length) + separator);
-
+            Console.Write("{0," + headers[0].Length + ":0.00}" + separator, "depo-swap");
+            Console.Write("{0," + headers[1].Length + ":0.00}" + separator, NPV);
+            Console.Write("{0," + headers[2].Length + ":0.00%}" + separator, fairSpread);
+            Console.WriteLine("{0," + headers[3].Length + ":0.00%}" + separator, fairRate);
 
             // let's check that the 5 years swap has been correctly re-priced
             if (!(Math.Abs(fairRate-s5yQuote)<1e-8))
                 throw new ApplicationException("5-years swap mispriced by " + Math.Abs(fairRate-s5yQuote));
+
 
             forecastingTermStructure.linkTo(depoFutSwapTermStructure);
             discountingTermStructure.linkTo(depoFutSwapTermStructure);
@@ -362,10 +380,10 @@ namespace Swap {
             fairSpread = spot5YearSwap.fairSpread();
             fairRate = spot5YearSwap.fairRate();
 
-            Console.Write("depo-fut-swap".PadLeft(headers[0].Length) + separator);
-            Console.Write(NPV.ToString().PadLeft(headers[1].Length) + separator);
-            Console.Write(fairSpread.ToPercent().PadLeft(headers[2].Length) + separator);
-            Console.WriteLine(fairRate.ToPercent().PadLeft(headers[3].Length) + separator);
+            Console.Write("{0," + headers[0].Length + ":0.00}" + separator, "depo-fut-swap");
+            Console.Write("{0," + headers[1].Length + ":0.00}" + separator, NPV);
+            Console.Write("{0," + headers[2].Length + ":0.00%}" + separator, fairSpread);
+            Console.WriteLine("{0," + headers[3].Length + ":0.00%}" + separator, fairRate);
 
             if (!(Math.Abs(fairRate-s5yQuote)<1e-8))
                 throw new ApplicationException("5-years swap mispriced by " + Math.Abs(fairRate-s5yQuote));
@@ -377,10 +395,10 @@ namespace Swap {
             fairSpread = spot5YearSwap.fairSpread();
             fairRate = spot5YearSwap.fairRate();
 
-            Console.Write("depo-FRA-swap".PadLeft(headers[0].Length) + separator);
-            Console.Write(NPV.ToString().PadLeft(headers[1].Length) + separator);
-            Console.Write(fairSpread.ToPercent().PadLeft(headers[2].Length) + separator);
-            Console.WriteLine(fairRate.ToPercent().PadLeft(headers[3].Length) + separator);
+            Console.Write("{0," + headers[0].Length + ":0.00}" + separator, "depo-FRA-swap");
+            Console.Write("{0," + headers[1].Length + ":0.00}" + separator, NPV);
+            Console.Write("{0," + headers[2].Length + ":0.00%}" + separator, fairSpread);
+            Console.WriteLine("{0," + headers[3].Length + ":0.00%}" + separator, fairRate);
 
             if (!(Math.Abs(fairRate-s5yQuote)<1e-8))
                 throw new ApplicationException("5-years swap mispriced by " + Math.Abs(fairRate-s5yQuote));
@@ -388,7 +406,7 @@ namespace Swap {
             Console.WriteLine(rule);
 
             // now let's price the 1Y forward 5Y swap
-            Console.WriteLine(tab + "5-years, 1-year forward swap paying " + fixedRate.ToPercent());
+            Console.WriteLine(tab + "5-years, 1-year forward swap paying {0:0.00%}", fixedRate);
             Console.WriteLine(headers[0] + separator
                       + headers[1] + separator
                       + headers[2] + separator
@@ -402,10 +420,10 @@ namespace Swap {
             fairSpread = oneYearForward5YearSwap.fairSpread();
             fairRate = oneYearForward5YearSwap.fairRate();
 
-            Console.Write("depo-swap".PadLeft(headers[0].Length) + separator);
-            Console.Write(NPV.ToString().PadLeft(headers[1].Length) + separator);
-            Console.Write(fairSpread.ToPercent().PadLeft(headers[2].Length) + separator);
-            Console.WriteLine(fairRate.ToPercent().PadLeft(headers[3].Length) + separator);
+            Console.Write("{0," + headers[0].Length + ":0.00}" + separator, "depo-swap");
+            Console.Write("{0," + headers[1].Length + ":0.00}" + separator, NPV);
+            Console.Write("{0," + headers[2].Length + ":0.00%}" + separator, fairSpread);
+            Console.WriteLine("{0," + headers[3].Length + ":0.00%}" + separator, fairRate);
 
             forecastingTermStructure.linkTo(depoFutSwapTermStructure);
             discountingTermStructure.linkTo(depoFutSwapTermStructure);
@@ -414,10 +432,10 @@ namespace Swap {
             fairSpread = oneYearForward5YearSwap.fairSpread();
             fairRate = oneYearForward5YearSwap.fairRate();
 
-            Console.Write("depo-fut-swap".PadLeft(headers[0].Length) + separator);
-            Console.Write(NPV.ToString().PadLeft(headers[1].Length) + separator);
-            Console.Write(fairSpread.ToPercent().PadLeft(headers[2].Length) + separator);
-            Console.WriteLine(fairRate.ToPercent().PadLeft(headers[3].Length) + separator);
+            Console.Write("{0," + headers[0].Length + ":0.00}" + separator, "depo-fut-swap");
+            Console.Write("{0," + headers[1].Length + ":0.00}" + separator, NPV);
+            Console.Write("{0," + headers[2].Length + ":0.00%}" + separator, fairSpread);
+            Console.WriteLine("{0," + headers[3].Length + ":0.00%}" + separator, fairRate);
 
             forecastingTermStructure.linkTo(depoFRASwapTermStructure);
             discountingTermStructure.linkTo(depoFRASwapTermStructure);
@@ -426,10 +444,10 @@ namespace Swap {
             fairSpread = oneYearForward5YearSwap.fairSpread();
             fairRate = oneYearForward5YearSwap.fairRate();
 
-            Console.Write("depo-FRA-swap".PadLeft(headers[0].Length) + separator);
-            Console.Write(NPV.ToString().PadLeft(headers[1].Length) + separator);
-            Console.Write(fairSpread.ToPercent().PadLeft(headers[2].Length) + separator);
-            Console.WriteLine(fairRate.ToPercent().PadLeft(headers[3].Length) + separator);
+            Console.Write("{0," + headers[0].Length + ":0.00}" + separator, "depo-FRA-swap");
+            Console.Write("{0," + headers[1].Length + ":0.00}" + separator, NPV);
+            Console.Write("{0," + headers[2].Length + ":0.00%}" + separator, fairSpread);
+            Console.WriteLine("{0," + headers[3].Length + ":0.00%}" + separator, fairRate);
 
             // now let's say that the 5-years swap rate goes up to 4.60%.
             // A smarter market element--say, connected to a data source-- would
@@ -444,10 +462,10 @@ namespace Swap {
             fiveYearsRate.setValue(0.0460);
 
             Console.WriteLine(dblrule);
-            Console.WriteLine("5-year market swap-rate = " + s5yRate.value().ToPercent());
+            Console.WriteLine("5-year market swap-rate = {0:0.00%}", s5yRate.value());
             Console.WriteLine(dblrule);
 
-            Console.WriteLine(tab + "5-years swap paying " + fixedRate.ToPercent());
+            Console.WriteLine(tab + "5-years swap paying {0:0.00%}", fixedRate);
             Console.WriteLine(headers[0] + separator
                       + headers[1] + separator
                       + headers[2] + separator
@@ -462,10 +480,10 @@ namespace Swap {
             fairSpread = spot5YearSwap.fairSpread();
             fairRate = spot5YearSwap.fairRate();
 
-            Console.Write("depo-swap".PadLeft(headers[0].Length) + separator);
-            Console.Write(NPV.ToString().PadLeft(headers[1].Length) + separator);
-            Console.Write(fairSpread.ToPercent().PadLeft(headers[2].Length) + separator);
-            Console.WriteLine(fairRate.ToPercent().PadLeft(headers[3].Length) + separator);
+            Console.Write("{0," + headers[0].Length + ":0.00}" + separator, "depo-swap");
+            Console.Write("{0," + headers[1].Length + ":0.00}" + separator, NPV);
+            Console.Write("{0," + headers[2].Length + ":0.00%}" + separator, fairSpread);
+            Console.WriteLine("{0," + headers[3].Length + ":0.00%}" + separator, fairRate);
 
             if (!(Math.Abs(fairRate-s5yRate.value())<1e-8))
                 throw new ApplicationException("5-years swap mispriced by " + Math.Abs(fairRate-s5yRate.value()));
@@ -477,10 +495,10 @@ namespace Swap {
             fairSpread = spot5YearSwap.fairSpread();
             fairRate = spot5YearSwap.fairRate();
 
-            Console.Write("depo-fut-swap".PadLeft(headers[0].Length) + separator);
-            Console.Write(NPV.ToString().PadLeft(headers[1].Length) + separator);
-            Console.Write(fairSpread.ToPercent().PadLeft(headers[2].Length) + separator);
-            Console.WriteLine(fairRate.ToPercent().PadLeft(headers[3].Length) + separator);
+            Console.Write("{0," + headers[0].Length + ":0.00}" + separator, "depo-fut-swap");
+            Console.Write("{0," + headers[1].Length + ":0.00}" + separator, NPV);
+            Console.Write("{0," + headers[2].Length + ":0.00%}" + separator, fairSpread);
+            Console.WriteLine("{0," + headers[3].Length + ":0.00%}" + separator, fairRate);
 
             if (!(Math.Abs(fairRate-s5yRate.value())<1e-8))
                 throw new ApplicationException("5-years swap mispriced by " + Math.Abs(fairRate-s5yRate.value()));
@@ -492,10 +510,10 @@ namespace Swap {
             fairSpread = spot5YearSwap.fairSpread();
             fairRate = spot5YearSwap.fairRate();
 
-            Console.Write("depo-FRA-swap".PadLeft(headers[0].Length) + separator);
-            Console.Write(NPV.ToString().PadLeft(headers[1].Length) + separator);
-            Console.Write(fairSpread.ToPercent().PadLeft(headers[2].Length) + separator);
-            Console.WriteLine(fairRate.ToPercent().PadLeft(headers[3].Length) + separator);
+            Console.Write("{0," + headers[0].Length + ":0.00}" + separator, "depo-FRA-swap");
+            Console.Write("{0," + headers[1].Length + ":0.00}" + separator, NPV);
+            Console.Write("{0," + headers[2].Length + ":0.00%}" + separator, fairSpread);
+            Console.WriteLine("{0," + headers[3].Length + ":0.00%}" + separator, fairRate);
 
             if (!(Math.Abs(fairRate-s5yRate.value())<1e-8))
                 throw new ApplicationException("5-years swap mispriced by " + Math.Abs(fairRate-s5yRate.value()));
@@ -504,7 +522,7 @@ namespace Swap {
 
             // the 1Y forward 5Y swap changes as well
 
-            Console.WriteLine(tab + "5-years, 1-year forward swap paying " + fixedRate.ToPercent());
+            Console.WriteLine(tab + "5-years, 1-year forward swap paying {0:0.00%}", fixedRate);
             Console.WriteLine(headers[0] + separator
                       + headers[1] + separator
                       + headers[2] + separator
@@ -518,10 +536,10 @@ namespace Swap {
             fairSpread = oneYearForward5YearSwap.fairSpread();
             fairRate = oneYearForward5YearSwap.fairRate();
 
-            Console.Write("depo-swap".PadLeft(headers[0].Length) + separator);
-            Console.Write(NPV.ToString().PadLeft(headers[1].Length) + separator);
-            Console.Write(fairSpread.ToPercent().PadLeft(headers[2].Length) + separator);
-            Console.WriteLine(fairRate.ToPercent().PadLeft(headers[3].Length) + separator);
+            Console.Write("{0," + headers[0].Length + ":0.00}" + separator, "depo-swap");
+            Console.Write("{0," + headers[1].Length + ":0.00}" + separator, NPV);
+            Console.Write("{0," + headers[2].Length + ":0.00%}" + separator, fairSpread);
+            Console.WriteLine("{0," + headers[3].Length + ":0.00%}" + separator, fairRate);
 
             forecastingTermStructure.linkTo(depoFutSwapTermStructure);
             discountingTermStructure.linkTo(depoFutSwapTermStructure);
@@ -530,10 +548,10 @@ namespace Swap {
             fairSpread = oneYearForward5YearSwap.fairSpread();
             fairRate = oneYearForward5YearSwap.fairRate();
 
-            Console.Write("depo-fut-swap".PadLeft(headers[0].Length) + separator);
-            Console.Write(NPV.ToString().PadLeft(headers[1].Length) + separator);
-            Console.Write(fairSpread.ToPercent().PadLeft(headers[2].Length) + separator);
-            Console.WriteLine(fairRate.ToPercent().PadLeft(headers[3].Length) + separator);
+            Console.Write("{0," + headers[0].Length + ":0.00}" + separator, "depo-fut-swap");
+            Console.Write("{0," + headers[1].Length + ":0.00}" + separator, NPV);
+            Console.Write("{0," + headers[2].Length + ":0.00%}" + separator, fairSpread);
+            Console.WriteLine("{0," + headers[3].Length + ":0.00%}" + separator, fairRate);
 
             forecastingTermStructure.linkTo(depoFRASwapTermStructure);
             discountingTermStructure.linkTo(depoFRASwapTermStructure);
@@ -542,10 +560,10 @@ namespace Swap {
             fairSpread = oneYearForward5YearSwap.fairSpread();
             fairRate = oneYearForward5YearSwap.fairRate();
 
-            Console.Write("depo-FRA-swap".PadLeft(headers[0].Length) + separator);
-            Console.Write(NPV.ToString().PadLeft(headers[1].Length) + separator);
-            Console.Write(fairSpread.ToPercent().PadLeft(headers[2].Length) + separator);
-            Console.WriteLine(fairRate.ToPercent().PadLeft(headers[3].Length) + separator);
+            Console.Write("{0," + headers[0].Length + ":0.00}" + separator, "depo-FRA-swap");
+            Console.Write("{0," + headers[1].Length + ":0.00}" + separator, NPV);
+            Console.Write("{0," + headers[2].Length + ":0.00%}" + separator, fairSpread);
+            Console.WriteLine("{0," + headers[3].Length + ":0.00%}" + separator, fairRate);
 
 
             Console.WriteLine(" \nRun completed in {0}", DateTime.Now - timer);
