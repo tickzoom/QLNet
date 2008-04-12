@@ -48,7 +48,7 @@ namespace QLNet {
             : base(settlementDays, calendar, instruments, dayCounter, turnOfYearEffect, accuracy) { }
     }
 
-    public class PiecewiseYieldCurve<Traits, Interpolator, BootStrap> : YieldTermStructure, ITraits
+    public class PiecewiseYieldCurve<Traits, Interpolator, BootStrap> : YieldTermStructure // , ITraits
         where Traits : ITraits, new()
         where Interpolator : IInterpolationFactory, new()
         where BootStrap : IBootStrap, new() {
@@ -83,11 +83,10 @@ namespace QLNet {
         public void updateGuess(List<double> data, double discount, int i) { traits_.updateGuess(data, discount, i); }
         public int maxIterations() { return traits_.maxIterations(); }
 
-        protected override double discountImpl(double t) { return discountImpl(interpolation_, t); }
-        public double discountImpl(Interpolation i, double t) {
+        protected override double discountImpl(double t) {
             // recheck
             calculate();
-            
+
             //    if (!turnOfYearEffect_.empty() && t > turnOfYear_) {
             //        if (!turnOfYearEffect_.link.isValid())
             //            throw new ArgumentException("invalid turnOfYearEffect quote");
@@ -99,10 +98,13 @@ namespace QLNet {
             //}
             return traits_.discountImpl(interpolation_, t);
         }
-        protected double zeroYieldImpl(double t) { return zeroYieldImpl(interpolation_, t); }
-        public double zeroYieldImpl(Interpolation i, double t) { return traits_.zeroYieldImpl(i, t); }
-        protected double forwardImpl(double t) { return forwardImpl(interpolation_, t); }
-        public double forwardImpl(Interpolation i, double t) { return traits_.forwardImpl(i, t); }
+        protected double zeroYieldImpl(double t) { return traits_.zeroYieldImpl(interpolation_, t); }
+        protected double forwardImpl(double t) { return traits_.forwardImpl(interpolation_, t); }
+
+        // these are dummy methods (for the sake of ITraits and should not be called directly
+        // public double discountImpl(Interpolation i, double t) { throw new NotSupportedException(); }
+        // public double zeroYieldImpl(Interpolation i, double t) { throw new NotSupportedException(); }
+        // public double forwardImpl(Interpolation i, double t) { throw new NotSupportedException(); }
         #endregion
 
         #region Constructors

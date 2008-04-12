@@ -56,7 +56,7 @@ namespace QLNet {
         //! returns whether or not the given string is an IMM code
         public static bool isIMMcode(string s) { return isIMMcode(s, true); }
         public static bool isIMMcode(string s, bool mainCycle) {
-            if (s.Count() != 2)
+            if (s.Length != 2)
                 return false;
 
             string str1 = "0123456789";

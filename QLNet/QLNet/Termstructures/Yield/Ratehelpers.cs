@@ -30,6 +30,9 @@ namespace QLNet {
 
         // constructors. special case when convexityAdjustment is really delivered as Quote
         public FuturesRateHelper(Handle<Quote> price, Date immDate, int nMonths, Calendar calendar,
+                                 BusinessDayConvention convention, bool endOfMonth, DayCounter dayCounter)
+            : this(price, immDate, nMonths, calendar, convention, endOfMonth, dayCounter, new Handle<Quote>()) { }
+        public FuturesRateHelper(Handle<Quote> price, Date immDate, int nMonths, Calendar calendar,
                                  BusinessDayConvention convention, bool endOfMonth, DayCounter dayCounter,
                                  Handle<Quote> convexityAdjustment)
             : base(price) {
@@ -90,7 +93,7 @@ namespace QLNet {
             if (termStructure_ == null) throw new ArgumentException("term structure not set");
 
             double forwardRate = (termStructure_.discount(earliestDate_) /
-                                   termStructure_.discount(latestDate_) - 1) / yearFraction_;
+                                  termStructure_.discount(latestDate_) - 1) / yearFraction_;
             double convAdj = convAdj_.link.value();
 
             if (convAdj < 0) throw new ArgumentException("Negative (" + convAdj + ") futures convexity adjustment");
@@ -102,7 +105,7 @@ namespace QLNet {
         /////////////////////////////////////////////////////
         //! FuturesRateHelper inspectors
         public double convexityAdjustment() {
-            return convAdj_.link.value();
+            return convAdj_.empty() ? 0.0 : convAdj_.link.value();
         }
     }
 

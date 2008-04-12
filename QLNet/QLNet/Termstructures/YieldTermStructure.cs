@@ -48,20 +48,24 @@ namespace QLNet
         // These methods return the implied zero-yield rate for a given date or time.  In the former case, the time is calculated as a fraction of year from the reference date.
 
         // The resulting interest rate has the required daycounting rule.
-        public InterestRate zeroRate(Date d, DayCounter resultDayCounter, Compounding comp) { return zeroRate(d, resultDayCounter, comp, Frequency.Annual, false); }
-        public InterestRate zeroRate(Date d, DayCounter resultDayCounter, Compounding comp, Frequency freq) { return zeroRate(d, resultDayCounter, comp, freq, false); }
-        public InterestRate zeroRate(Date d, DayCounter resultDayCounter, Compounding comp, Frequency freq, bool extrapolate)
+        public InterestRate zeroRate(Date d, DayCounter dayCounter, Compounding comp) {
+            return zeroRate(d, dayCounter, comp, Frequency.Annual, false);
+        }
+        public InterestRate zeroRate(Date d, DayCounter dayCounter, Compounding comp, Frequency freq) {
+            return zeroRate(d, dayCounter, comp, freq, false);
+        }
+        public InterestRate zeroRate(Date d, DayCounter dayCounter, Compounding comp, Frequency freq, bool extrapolate)
         {
             if (d == referenceDate())
             {
                 double t = 0.0001;
                 double compound = 1 / discount(t, extrapolate);
-                return InterestRate.impliedRate(compound, t, dayCounter(), comp, freq);
+                return InterestRate.impliedRate(compound, t, dayCounter, comp, freq);
             }
             else
             {
                 double compound = 1 / discount(d, extrapolate);
-                return InterestRate.impliedRate(compound, referenceDate(), d, dayCounter(), comp, freq);
+                return InterestRate.impliedRate(compound, referenceDate(), d, dayCounter, comp, freq);
             }
         }
 
