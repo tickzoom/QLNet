@@ -34,7 +34,7 @@ namespace QLNet.Global
       public static bool close(double x, double y, int n)
       {
          double diff = System.Math.Abs(x - y);
-         double tolerance = n * 2.22045e-016; // double.Epsilon;
+         double tolerance = n * 2.2204460492503131e-016; // double.Epsilon;
          // FLOATING_POINT_EXCEPTION
          return diff <= tolerance * System.Math.Abs(x) && diff <= tolerance * System.Math.Abs(y);
       }

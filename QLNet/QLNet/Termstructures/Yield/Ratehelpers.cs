@@ -98,7 +98,7 @@ namespace QLNet {
 
             if (convAdj < 0) throw new ArgumentException("Negative (" + convAdj + ") futures convexity adjustment");
             double futureRate = forwardRate + convAdj;
-            return 100 * (1 - futureRate);
+            return 100.0 * (1.0 - futureRate);
         }
 
 

@@ -339,7 +339,7 @@ namespace Swap {
             Console.WriteLine("5-year market swap-rate = {0:0.00%}", s5yRate.value());
             Console.WriteLine(dblrule);
 
-            Console.WriteLine(tab + "5-years swap paying {0:0.00%}" + fixedRate);
+            Console.WriteLine(tab + "5-years swap paying {0:0.00%}", fixedRate);
             Console.WriteLine(headers[0] + separator
                       + headers[1] + separator
                       + headers[2] + separator
