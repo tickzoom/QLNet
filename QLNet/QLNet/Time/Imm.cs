@@ -74,7 +74,7 @@ namespace QLNet {
         // returns the IMM code for the given date (e.g. H3 for March 20th, 2013).
         public static string code(Date immDate) {
             if (!isIMMdate(immDate, false)) throw new ArgumentException(immDate + " is not an IMM date");
-            return "FGHJKMNQUVXZ"[immDate.Month] + (immDate.Year % 10).ToString();
+            return "FGHJKMNQUVXZ"[immDate.Month-1] + (immDate.Year % 10).ToString();
         }
 
         // returns the IMM date for the given IMM code (e.g. March 20th, 2013 for H3).
@@ -84,15 +84,20 @@ namespace QLNet {
 
             Date referenceDate = (refDate != null ? refDate : Settings.evaluationDate());
 
-            int m = "FGHJKMNQUVXZ".IndexOf(immCode.ToUpper()[0]);
-            if (m == -1)
+            int m = "FGHJKMNQUVXZ".IndexOf(immCode.ToUpper()[0]) + 1;
+            if (m == 0)
                 throw new ArgumentException("invalid IMM month letter");
 
             if (!Char.IsDigit(immCode[1]))
                 throw new ArgumentException(immCode + " is not a valid IMM code");
-            int y = Convert.ToInt32(immCode[1]);
+            int y = immCode[1] - '0';
 
             y += referenceDate.Year - (referenceDate.Year % 10);
+
+            /* year<10 are not valid years: to avoid a run-time
+               exception in few lines below we need to add 10 years right away */
+            if (y == 0 && referenceDate.Year <= 1909) y += 10;
+
             Date result = IMM.nextDate(new Date(1, m, y), false);
             if (result<referenceDate)
                 result = IMM.nextDate(new Date(1, m, y + 10), false);

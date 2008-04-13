@@ -59,7 +59,7 @@ namespace QLNet {
         }
 
 
-        public override Date maxDate() { return Date.MaxValue; }
+        public override Date maxDate() { return Date.maxDate(); }
         public override double minStrike() { return double.MinValue; }
         public override double maxStrike() { return double.MaxValue; }
 

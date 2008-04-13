@@ -422,7 +422,7 @@ namespace TestSuite {
                                                 liborIndex));
             }
 
-            int w = (int)vars.today.DayOfWeek;
+            int w = (int)vars.today.weekday();
             Date lastWednesday = (w >= 4) ? vars.today - (w - 4) : vars.today + (4 - w - 7);
             Date lastFixing = bmaIndex.fixingCalendar().adjust(lastWednesday);
             bmaIndex.addFixing(lastFixing, 0.03);
