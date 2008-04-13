@@ -108,7 +108,7 @@ namespace QLNet {
         //! \name Calculations
         //@{
         /*! A FRA expires/settles on the valueDate */
-        public bool isExpired() {
+        public override bool isExpired() {
             #if QL_TODAYS_PAYMENTS
             return valueDate_ < settlementDate();
             #else

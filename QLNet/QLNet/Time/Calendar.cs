@@ -410,7 +410,8 @@ namespace QLNet
         {
             return !(c1 == c2);
         }
+        public override bool Equals(object o) { return (this == (Calendar)o); }
+        public override int GetHashCode() { return 0; }
         //@}
-
     }
 }

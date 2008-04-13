@@ -92,14 +92,14 @@ namespace QLNet {
             calculate();
             if (legBPS_[0] == null)
                 throw new ApplicationException("result not available");
-            return legBPS_[0];
+            return legBPS_[0].GetValueOrDefault();
         }
 
         public double liborLegNPV() {
             calculate();
             if (legNPV_[0] == null)
                 throw new ApplicationException("result not available");
-            return legNPV_[0];
+            return legNPV_[0].GetValueOrDefault();
         }
 
         public double fairLiborFraction() {
@@ -121,14 +121,14 @@ namespace QLNet {
             calculate();
             if (legBPS_[1] == null)
                 throw new ApplicationException("result not available");
-            return legBPS_[1];
+            return legBPS_[1].GetValueOrDefault();
         }
         
         public double bmaLegNPV() {
             calculate();
             if (legNPV_[1] == null)
                 throw new ApplicationException("result not available");
-            return legNPV_[1];
+            return legNPV_[1].GetValueOrDefault();
         }
     }
 }
