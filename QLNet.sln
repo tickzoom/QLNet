@@ -4,6 +4,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A1B2F21C-BD08-4751-9FBE-6DD0405E3DBC}"
 	ProjectSection(SolutionItems) = preProject
 		localtestrun.testrunconfig = localtestrun.testrunconfig
+		QLNet.vsmdi = QLNet.vsmdi
 		QLNet1.vsmdi = QLNet1.vsmdi
 		QLNet2.vsmdi = QLNet2.vsmdi
 		QLNet3.vsmdi = QLNet3.vsmdi
@@ -17,12 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repo", "Repo\Repo.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Swap", "Swap\Swap.csproj", "{49B855BB-E828-48DF-90BC-A14D1233F746}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FRA", "FRA\FRA.csproj", "{B6C64B44-0776-467D-A997-ADBE4FB7C1C8}"
-EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = QLNet3.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -44,10 +40,6 @@ Global
 		{49B855BB-E828-48DF-90BC-A14D1233F746}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49B855BB-E828-48DF-90BC-A14D1233F746}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49B855BB-E828-48DF-90BC-A14D1233F746}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B6C64B44-0776-467D-A997-ADBE4FB7C1C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B6C64B44-0776-467D-A997-ADBE4FB7C1C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B6C64B44-0776-467D-A997-ADBE4FB7C1C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B6C64B44-0776-467D-A997-ADBE4FB7C1C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
