@@ -52,7 +52,7 @@ namespace QLNet {
                     fxMax_ = fxMin_;
                 }
                 // Convergence check
-                xAcc1 = 2.0 * double.Epsilon * Math.Abs(root_) + 0.5 * xAccuracy;
+                xAcc1 = 2.0 * 2.2204460492503131e-016 * Math.Abs(root_) + 0.5 * xAccuracy;
                 xMid = (xMax_ - root_) / 2.0;
                 if (Math.Abs(xMid) <= xAcc1 || froot == 0.0)
                     return root_;
