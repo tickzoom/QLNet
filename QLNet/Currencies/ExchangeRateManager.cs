@@ -52,35 +52,35 @@ namespace QLNet
       private void addKnownRates()
       {
          // currencies obsoleted by Euro
-         add(new ExchangeRate(new EURCurrency(), new ATSCurrency(), 13.7603), new Date(1, Month.January, 1999), Date.MaxValue);
-         add(new ExchangeRate(new EURCurrency(), new BEFCurrency(), 40.3399), new Date(1, Month.January, 1999), Date.MaxValue);
-         add(new ExchangeRate(new EURCurrency(), new DEMCurrency(), 1.95583), new Date(1, Month.January, 1999), Date.MaxValue);
-         add(new ExchangeRate(new EURCurrency(), new ESPCurrency(), 166.386), new Date(1, Month.January, 1999), Date.MaxValue);
-         add(new ExchangeRate(new EURCurrency(), new FIMCurrency(), 5.94573), new Date(1, Month.January, 1999), Date.MaxValue);
-         add(new ExchangeRate(new EURCurrency(), new FRFCurrency(), 6.55957), new Date(1, Month.January, 1999), Date.MaxValue);
-         add(new ExchangeRate(new EURCurrency(), new GRDCurrency(), 340.750), new Date(1, Month.January, 2001), Date.MaxValue);
-         add(new ExchangeRate(new EURCurrency(), new IEPCurrency(), 0.787564), new Date(1, Month.January, 1999), Date.MaxValue);
-         add(new ExchangeRate(new EURCurrency(), new ITLCurrency(), 1936.27), new Date(1, Month.January, 1999), Date.MaxValue);
-         add(new ExchangeRate(new EURCurrency(), new LUFCurrency(), 40.3399), new Date(1, Month.January, 1999), Date.MaxValue);
-         add(new ExchangeRate(new EURCurrency(), new NLGCurrency(), 2.20371), new Date(1, Month.January, 1999), Date.MaxValue);
-         add(new ExchangeRate(new EURCurrency(), new PTECurrency(), 200.482), new Date(1, Month.January, 1999), Date.MaxValue);
+          add(new ExchangeRate(new EURCurrency(), new ATSCurrency(), 13.7603), new Date(1, Month.January, 1999), Date.maxDate());
+          add(new ExchangeRate(new EURCurrency(), new BEFCurrency(), 40.3399), new Date(1, Month.January, 1999), Date.maxDate());
+          add(new ExchangeRate(new EURCurrency(), new DEMCurrency(), 1.95583), new Date(1, Month.January, 1999), Date.maxDate());
+          add(new ExchangeRate(new EURCurrency(), new ESPCurrency(), 166.386), new Date(1, Month.January, 1999), Date.maxDate());
+          add(new ExchangeRate(new EURCurrency(), new FIMCurrency(), 5.94573), new Date(1, Month.January, 1999), Date.maxDate());
+          add(new ExchangeRate(new EURCurrency(), new FRFCurrency(), 6.55957), new Date(1, Month.January, 1999), Date.maxDate());
+          add(new ExchangeRate(new EURCurrency(), new GRDCurrency(), 340.750), new Date(1, Month.January, 2001), Date.maxDate());
+          add(new ExchangeRate(new EURCurrency(), new IEPCurrency(), 0.787564), new Date(1, Month.January, 1999), Date.maxDate());
+          add(new ExchangeRate(new EURCurrency(), new ITLCurrency(), 1936.27), new Date(1, Month.January, 1999), Date.maxDate());
+          add(new ExchangeRate(new EURCurrency(), new LUFCurrency(), 40.3399), new Date(1, Month.January, 1999), Date.maxDate());
+          add(new ExchangeRate(new EURCurrency(), new NLGCurrency(), 2.20371), new Date(1, Month.January, 1999), Date.maxDate());
+          add(new ExchangeRate(new EURCurrency(), new PTECurrency(), 200.482), new Date(1, Month.January, 1999), Date.maxDate());
          // other obsoleted currencies
-         add(new ExchangeRate(new TRYCurrency(), new TRLCurrency(), 1000000.0), new Date(1, Month.January, 2005), Date.MaxValue);
-         add(new ExchangeRate(new RONCurrency(), new ROLCurrency(), 10000.0), new Date(1, Month.July, 2005), Date.MaxValue);
-         add(new ExchangeRate(new PENCurrency(), new PEICurrency(), 1000000.0), new Date(1, Month.July, 1991), Date.MaxValue);
-         add(new ExchangeRate(new PEICurrency(), new PEHCurrency(), 1000.0), new Date(1, Month.February, 1985), Date.MaxValue);
+          add(new ExchangeRate(new TRYCurrency(), new TRLCurrency(), 1000000.0), new Date(1, Month.January, 2005), Date.maxDate());
+          add(new ExchangeRate(new RONCurrency(), new ROLCurrency(), 10000.0), new Date(1, Month.July, 2005), Date.maxDate());
+          add(new ExchangeRate(new PENCurrency(), new PEICurrency(), 1000000.0), new Date(1, Month.July, 1991), Date.maxDate());
+          add(new ExchangeRate(new PEICurrency(), new PEHCurrency(), 1000.0), new Date(1, Month.February, 1985), Date.maxDate());
 
       }
 
       public void add(ExchangeRate rate)
       {
-          add(rate, Date.MinValue, Date.MaxValue);
+          add(rate, Date.minDate(), Date.maxDate());
       }
 
 
       public void add(ExchangeRate rate, Date startDate)
       {
-          add(rate, startDate, Date.MaxValue);
+          add(rate, startDate, Date.maxDate());
       }
       /// <summary>
       /// Add an exchange rate.
