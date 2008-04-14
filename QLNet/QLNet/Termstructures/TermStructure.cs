@@ -29,14 +29,14 @@ namespace QLNet
         private bool updated_;
         private int settlementDays_;
         private DayCounter dayCounter_;
-        public DayCounter dayCounter() { return dayCounter_; }
+        public virtual DayCounter dayCounter() { return dayCounter_; }
 
         protected bool moving_;
         protected Calendar calendar_;
 
         // properties
         public virtual Calendar calendar() { return calendar_; }
-        public int settlementDays { get { return settlementDays_; } }
+        public virtual int settlementDays() { return settlementDays_; }
         //! the latest time for which the curve can return values
         public virtual double maxTime() { return timeFromReference(maxDate()); }
         //! the latest date for which the curve can return values. should be overridden later
