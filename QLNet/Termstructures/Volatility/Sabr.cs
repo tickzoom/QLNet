@@ -53,7 +53,7 @@ namespace QLNet {
 
             // recheck epsilon
             throw new ApplicationException();
-            if (Math.Abs(z * z) > 2.2204460492503131e-016 * m)
+            if (Math.Abs(z * z) > Const.QL_Epsilon * m)
                 multiplier = z/xx;
             else {
                 alpha = (0.5-rho*rho)/(1.0-rho);

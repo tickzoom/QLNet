@@ -33,7 +33,7 @@ namespace QLNet {
             \f$ n \f$ equals 42 if not given.  */
         public static bool close(double x, double y) { return close(x, y, 42); }
         public static bool close(double x, double y, int n) {
-            double diff = System.Math.Abs(x - y), tolerance = n * double.MinValue;
+            double diff = System.Math.Abs(x - y), tolerance = n * Const.QL_Epsilon;
             return diff <= tolerance * System.Math.Abs(x) && diff <= tolerance * System.Math.Abs(y);
         }
 

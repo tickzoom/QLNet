@@ -61,7 +61,7 @@ namespace QLNet {
                 throw new ArgumentException("accuracy (" + accuracy + ") must be positive");
 
             // check whether we really want to use epsilon
-            accuracy = Math.Max(accuracy, 2.2204460492503131e-016);
+            accuracy = Math.Max(accuracy, Const.QL_Epsilon);
 
             const double growthFactor = 1.6;
             int flipflop = -1;
@@ -129,7 +129,7 @@ namespace QLNet {
                 throw new ArgumentException("accuracy (" + accuracy + ") must be positive");
 
             // check whether we really want to use epsilon
-            accuracy = Math.Max(accuracy, 2.2204460492503131e-016);
+            accuracy = Math.Max(accuracy, Const.QL_Epsilon);
 
             xMin_ = xMin;
             xMax_ = xMax;

@@ -20,6 +20,10 @@ using System;
 using System.Collections.Generic;
 
 namespace QLNet {
+    public struct Const {
+        public const double QL_Epsilon = 2.2204460492503131e-016;
+    }
+
     public class TimeSeries<T> : Dictionary<Date, T> {
 		// constructors
 		public TimeSeries() : base() {}

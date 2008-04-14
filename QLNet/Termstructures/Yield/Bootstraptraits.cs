@@ -51,7 +51,7 @@ namespace QLNet {
         // possible constraints based on previous values
         public double minValueAfter(int s, List<double> l) {
             // replace with Epsilon
-            return 2.2204460492503131e-016;
+            return Const.QL_Epsilon;
         }
         public double maxValueAfter(int i, List<double> data) { return data[i - 1]; }
         // update with new guess
@@ -81,7 +81,7 @@ namespace QLNet {
             // We choose as min a value very unlikely to be exceeded.
             return -3.0;
             #else
-            return 2.2204460492503131e-016;
+            return Const.QL_Epsilon;
             #endif
         }
         public double maxValueAfter(int i, List<double> data) {
@@ -116,7 +116,7 @@ namespace QLNet {
             return c.forwardRate(d, d, c.dayCounter(), Compounding.Continuous, Frequency.Annual, true).rate();
         }
         // possible constraints based on previous values
-        public double minValueAfter(int v, List<double> l) { return 2.2204460492503131e-016; }
+        public double minValueAfter(int v, List<double> l) { return Const.QL_Epsilon; }
         public double maxValueAfter(int v, List<double> l) {
             // no constraints.
             // We choose as max a value very unlikely to be exceeded.

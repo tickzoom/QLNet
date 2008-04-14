@@ -116,16 +116,15 @@ namespace QLNet {
 
         ///////////////////////////////////////////
         // constructors
-        public RelativeDateRateHelper(Handle<Quote> quote) : 
-            base(quote) {
-            // register Observer with Settings.evaluationDate
+        public RelativeDateRateHelper(Handle<Quote> quote) : base(quote) {
             Settings.registerWith(update);
-
             evaluationDate_ = Settings.evaluationDate();
         }
 
-        public RelativeDateRateHelper(double quote) :
-            base(quote) {}
+        public RelativeDateRateHelper(double quote) : base(quote) {
+            Settings.registerWith(update);
+            evaluationDate_ = Settings.evaluationDate();
+        }
 
 
         //////////////////////////////////////

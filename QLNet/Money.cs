@@ -216,7 +216,8 @@ namespace QLNet
          return !( m1 == m2 ) ;
       }
 
-
-#endregion
+      public override bool Equals(object o) { return (this == (Money)o); }
+      public override int GetHashCode() { return 0; }
+    #endregion
   }
 }
