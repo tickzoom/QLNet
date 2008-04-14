@@ -88,7 +88,7 @@ namespace QLNet {
         private double gearing_;
         private double spread_;
         private double spreadLegValue_;
-        private double accrualPeriod_;
+        // private double accrualPeriod_;       recheck
 
         public BlackIborCouponPricer() : this(new Handle<OptionletVolatilityStructure>()) { }
         public BlackIborCouponPricer(Handle<OptionletVolatilityStructure> v) : base(v) { }

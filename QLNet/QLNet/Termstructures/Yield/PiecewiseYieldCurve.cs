@@ -26,20 +26,19 @@ namespace QLNet {
         where Traits : ITraits, new()
         where Interpolator : IInterpolationFactory, new() {
 
-        //public InterpolatedYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
-        //                      DayCounter dayCounter) :
-        //    this(referenceDate, instruments, dayCounter, new SimpleQuote()) { }
+        public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments, DayCounter dayCounter)
+            : base(referenceDate, instruments, dayCounter) { }
         public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
-                                   DayCounter dayCounter, Handle<Quote> turnOfYearEffect) :
-            this(referenceDate, instruments, dayCounter, turnOfYearEffect, 1.0e-12) { }
+                                   DayCounter dayCounter, Handle<Quote> turnOfYearEffect)
+            : base(referenceDate, instruments, dayCounter, turnOfYearEffect) { }
         public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
                                       DayCounter dayCounter, Handle<Quote> turnOfYearEffect, double accuracy)
             : base(referenceDate, instruments, dayCounter, turnOfYearEffect, accuracy) {
         }
 
         public PiecewiseYieldCurve(int settlementDays, Calendar calendar, List<BootstrapHelper<YieldTermStructure>> instruments,
-                                   DayCounter dayCounter) :
-            this(settlementDays, calendar, instruments, dayCounter, new Handle<Quote>(), 1.0e-12) { }
+                                   DayCounter dayCounter)
+            : this(settlementDays, calendar, instruments, dayCounter, new Handle<Quote>(), 1.0e-12) { }
         //public InterpolatedYieldCurve(int settlementDays, Calendar calendar, List<BootstrapHelper<YieldTermStructure>> instruments,
         //                              DayCounter dayCounter, Quote turnOfYearEffect) :
         //    this(settlementDays, calendar, instruments, dayCounter, turnOfYearEffect, 1.0e-12) { }
@@ -108,12 +107,11 @@ namespace QLNet {
         #endregion
 
         #region Constructors
-        //public InterpolatedYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
-        //                      DayCounter dayCounter) :
-        //    this(referenceDate, instruments, dayCounter, new SimpleQuote()) { }
-        //public InterpolatedYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
-        //                              DayCounter dayCounter, Quote turnOfYearEffect) :
-        //    this(referenceDate, instruments, dayCounter, turnOfYearEffect, 1.0e-12) { }
+        public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments, DayCounter dayCounter) :
+            this(referenceDate, instruments, dayCounter, new Handle<Quote>(), 1.0e-12) { }
+        public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
+                                   DayCounter dayCounter, Handle<Quote> turnOfYearEffect) :
+            this(referenceDate, instruments, dayCounter, turnOfYearEffect, 1.0e-12) { }
         public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
                                       DayCounter dayCounter, Handle<Quote> turnOfYearEffect, double accuracy)
             : base(referenceDate, new Calendar(), dayCounter) {
