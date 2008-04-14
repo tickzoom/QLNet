@@ -44,7 +44,7 @@ namespace TestSuite
          Money calculated = eur_usd.exchange(m1);
          Money expected = new Money(m1.value*eur_usd.rate, USD);
 
-         if (!QLNet.Global.Math.close(calculated, expected))
+         if (!Comparison.close(calculated, expected))
          {
            Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -52,7 +52,7 @@ namespace TestSuite
          calculated = eur_usd.exchange(m2);
          expected = new Money(m2.value/eur_usd.rate, EUR);
 
-         if (!QLNet.Global.Math.close(calculated, expected))
+         if (!Comparison.close(calculated, expected))
          {
            Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -80,7 +80,7 @@ namespace TestSuite
          Money calculated = derived.exchange(m1);
          Money expected = new Money(m1.value*eur_usd.rate/eur_gbp.rate, USD);
 
-         if (!QLNet.Global.Math.close(calculated, expected)) 
+         if (!Comparison.close(calculated, expected)) 
          {
             Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -88,7 +88,7 @@ namespace TestSuite
          calculated = derived.exchange(m2);
          expected = new Money(m2.value*eur_gbp.rate/eur_usd.rate, GBP);
 
-         if (!QLNet.Global.Math.close(calculated, expected)) 
+         if (!Comparison.close(calculated, expected)) 
          {
             Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -119,7 +119,7 @@ namespace TestSuite
          Money calculated = eur_usd.exchange(m1);
          Money expected = new Money(m1.value*eur_usd1.rate, USD);
 
-         if (!QLNet.Global.Math.close(calculated,expected)) 
+         if (!Comparison.close(calculated, expected)) 
          {
             Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -128,7 +128,7 @@ namespace TestSuite
          calculated = eur_usd.exchange(m1);
          expected = new Money(m1.value/eur_usd2.rate, USD);
 
-         if (!QLNet.Global.Math.close(calculated,expected)) 
+         if (!Comparison.close(calculated, expected)) 
          {
             Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -138,7 +138,7 @@ namespace TestSuite
          calculated = usd_eur.exchange(m2);
          expected = new Money(m2.value/eur_usd1.rate, EUR);
 
-         if (!QLNet.Global.Math.close(calculated,expected)) 
+         if (!Comparison.close(calculated, expected)) 
          {
             Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -148,7 +148,7 @@ namespace TestSuite
          calculated = usd_eur.exchange(m2);
          expected = new Money(m2.value*eur_usd2.rate, EUR);
 
-         if (!QLNet.Global.Math.close(calculated,expected)) 
+         if (!Comparison.close(calculated, expected)) 
          {
             Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -180,7 +180,7 @@ namespace TestSuite
          Money calculated = itl_usd.exchange(m1);
          Money expected = new Money(m1.value*eur_usd1.rate/1936.27, USD);
 
-         if (!QLNet.Global.Math.close(calculated, expected))
+         if (!Comparison.close(calculated, expected))
          {
             Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -189,7 +189,7 @@ namespace TestSuite
          calculated = itl_usd.exchange(m1);
          expected = new Money(m1.value*eur_usd2.rate/1936.27, USD);
 
-         if (!QLNet.Global.Math.close(calculated, expected))
+         if (!Comparison.close(calculated, expected))
          {
             Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -199,7 +199,7 @@ namespace TestSuite
          calculated = usd_itl.exchange(m2);
          expected = new Money(m2.value*1936.27/eur_usd1.rate, ITL);
 
-         if (!QLNet.Global.Math.close(calculated, expected))
+         if (!Comparison.close(calculated, expected))
          {
             Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -209,7 +209,7 @@ namespace TestSuite
          calculated = usd_itl.exchange(m2);
          expected = new Money(m2.value*1936.27/eur_usd2.rate, ITL);
 
-         if (!QLNet.Global.Math.close(calculated, expected))
+         if (!Comparison.close(calculated, expected))
          {
             Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -268,7 +268,7 @@ namespace TestSuite
          Money calculated = usd_sek.exchange(m1);
          Money expected = new Money(m1.value*usd_chf1.rate/chf_sek1.rate, SEK);
 
-         if (!QLNet.Global.Math.close(calculated, expected))
+         if (!Comparison.close(calculated, expected))
          {
             Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -277,7 +277,7 @@ namespace TestSuite
          calculated = usd_sek.exchange(m5);
          expected = new Money(m5.value*usd_chf2.rate/chf_sek2.rate, USD);
 
-         if (!QLNet.Global.Math.close(calculated, expected))
+         if (!Comparison.close(calculated, expected))
          {
             Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -288,7 +288,7 @@ namespace TestSuite
          calculated = eur_sek.exchange(m2);
          expected = new Money(m2.value*eur_usd1.rate*usd_chf1.rate/chf_sek1.rate, SEK);
 
-         if (!QLNet.Global.Math.close(calculated, expected))
+         if (!Comparison.close(calculated, expected))
          {
             Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -297,7 +297,7 @@ namespace TestSuite
          calculated = eur_sek.exchange(m5);
          expected = new Money(m5.value*eur_usd2.rate*usd_chf2.rate/chf_sek2.rate, EUR);
 
-         if (!QLNet.Global.Math.close(calculated, expected))
+         if (!Comparison.close(calculated, expected))
          {
             Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -308,7 +308,7 @@ namespace TestSuite
          calculated = eur_jpy.exchange(m2);
          expected = new Money(m2.value*eur_usd1.rate*usd_chf1.rate*jpy_sek1.rate/chf_sek1.rate, JPY);
 
-         if (!QLNet.Global.Math.close(calculated, expected))
+         if (!Comparison.close(calculated, expected))
          {
             Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -317,7 +317,7 @@ namespace TestSuite
          calculated = eur_jpy.exchange(m6);
          expected = new Money(m6.value*jpy_sek2.rate*eur_usd2.rate*usd_chf2.rate/chf_sek2.rate, EUR);
 
-         if (!QLNet.Global.Math.close(calculated, expected))
+         if (!Comparison.close(calculated, expected))
          {
             Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -328,7 +328,7 @@ namespace TestSuite
          calculated = gbp_jpy.exchange(m3);
          expected = new Money(m3.value*eur_gbp1.rate*eur_usd1.rate*usd_chf1.rate*jpy_sek1.rate/chf_sek1.rate, JPY);
 
-         if (!QLNet.Global.Math.close(calculated, expected))
+         if (!Comparison.close(calculated, expected))
          {
             Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }
@@ -337,7 +337,7 @@ namespace TestSuite
          calculated = gbp_jpy.exchange(m6);
          expected = new Money(m6.value*jpy_sek2.rate*eur_usd2.rate*usd_chf2.rate*eur_gbp2.rate/chf_sek2.rate, GBP);
 
-         if (!QLNet.Global.Math.close(calculated, expected))
+         if (!Comparison.close(calculated, expected))
          {
             Assert.Fail("Wrong result: expected: " + expected + " calculated: " + calculated);
          }

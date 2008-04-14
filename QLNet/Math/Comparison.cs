@@ -1,7 +1,8 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
-  
- This file is part of QLNet Project http://www.qlnet.org
+ Copyright (C) 2008 Andrea Maggiulli
+
+ * This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
  under the terms of the QLNet license.  You should have received a
@@ -36,6 +37,26 @@ namespace QLNet {
             double diff = System.Math.Abs(x - y), tolerance = n * Const.QL_Epsilon;
             return diff <= tolerance * System.Math.Abs(x) && diff <= tolerance * System.Math.Abs(y);
         }
+        public static bool close(Money m1, Money m2) {
+            return close(m1, m2, 42);
+        }
 
+        public static bool close(Money m1, Money m2, int n) {
+            if (m1.currency == m2.currency) {
+                return close(m1.value, m2.value, n);
+            } else if (Money.conversionType == Money.ConversionType.BaseCurrencyConversion) {
+                Money tmp1 = m1;
+                Money.convertToBase(ref tmp1);
+                Money tmp2 = m2;
+                Money.convertToBase(ref tmp2);
+                return close(tmp1, tmp2, n);
+            } else if (Money.conversionType == Money.ConversionType.AutomatedConversion) {
+                Money tmp = m2;
+                Money.convertTo(ref tmp, m1.currency);
+                return close(m1, tmp, n);
+            } else {
+                throw new Exception("currency mismatch and no conversion specified");
+            }
+        }
     }
 }
