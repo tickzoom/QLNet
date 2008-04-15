@@ -22,6 +22,12 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
+    // The bootstrapping traits are wrapped in the PiecewiseYield curve
+    // The traits require only the implementation of ITraits interface
+    // What should be heavily considered is that each Trait type derives from the respective Yield curve structure
+    // i.e. ForwardRate derives from InterpolatedForwardCurve which derives from ForwardRateStructure
+    // and same for other traits. This should make things consistent with reliance on inheritance
+    // However such inheritance can conflict with PiecewiseYieldCurve inheritance
 
     public interface ITraits {
         Date initialDate(YieldTermStructure c);     // start of curve data

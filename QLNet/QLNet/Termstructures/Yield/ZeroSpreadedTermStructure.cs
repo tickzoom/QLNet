@@ -39,7 +39,8 @@ namespace QLNet {
         private Frequency freq_;
         private DayCounter dc_;
 
-        public ZeroSpreadedTermStructure() { }
+        public ZeroSpreadedTermStructure(Handle<YieldTermStructure> h, Quote spread)
+            : this(h, spread, Compounding.Continuous, Frequency.NoFrequency, new DayCounter()) { }
         public ZeroSpreadedTermStructure(Handle<YieldTermStructure> h, Quote spread, Compounding comp, Frequency freq, DayCounter dc) {
             originalCurve_ = h;
             spread_ = spread;
@@ -55,7 +56,9 @@ namespace QLNet {
             spread_.registerWith(update);
         }
 
+        public override DayCounter dayCounter() { return originalCurve_.link.dayCounter(); }
         public override Calendar calendar() { return originalCurve_.link.calendar(); }
+        public override int settlementDays() { return originalCurve_.link.settlementDays(); }
         public override Date referenceDate() { return originalCurve_.link.referenceDate(); }
         public override Date maxDate() { return originalCurve_.link.maxDate(); }
         public override double maxTime() { return originalCurve_.link.maxTime(); }
