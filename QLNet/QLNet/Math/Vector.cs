@@ -1,0 +1,146 @@
+﻿/*
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+  
+ This file is part of QLNet Project http://www.qlnet.org
+
+ QLNet is free software: you can redistribute it and/or modify it
+ under the terms of the QLNet license.  You should have received a
+ copy of the license along with this program; if not, license is  
+ available online at <http://trac2.assembla.com/QLNet/wiki/License>.
+  
+ QLNet is a based on QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+ The QuantLib license is available online at http://quantlib.org/license.shtml.
+ 
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace QLNet {
+    //! 1-D array used in linear algebra.
+    /*! This class implements the concept of vector as used in linear algebra.
+        As such, it is <b>not</b> meant to be used as a container -
+        <tt>std::vector</tt> should be used instead.
+
+        \test construction of arrays is checked in a number of cases
+    */
+    public class Vector : InitializedList<double> {
+        //! \name Constructors, and assignment
+        //! creates the array with the given dimension
+        public Vector(int size) : base(size) { }
+
+        //! creates the array and fills it with <tt>value</tt>
+        public Vector(int size, double value) : base(size, value) { }
+
+        /*! \brief creates the array and fills it according to \f$ a_{0} = value, a_{i}=a_{i-1}+increment \f$ */
+        public Vector(int size, double value, double increment) : base(size) {
+            for (int i = 0; i < this.Count; i++)
+                this[i] = value += increment;
+        }
+
+        public Vector(Vector from) : this(from.Count) {
+            for (int i = 0; i < this.Count; i++)
+                this[i] = from[i];
+        }
+
+        //! creates the array as a copy of a given stl vector
+        public Vector(List<double> from) : this(from.Count) {
+            for (int i = 0; i < this.Count; i++)
+                this[i] = from[i];
+        }
+
+        //public Vector(const Disposable<Vector>&);
+
+        // these can not be overloaded
+        //Array& operator=(const Array&);
+        //Array& operator=(const Disposable<Vector>&);
+
+        public static bool operator==(Vector to, Vector from)  {
+            if (from.Count != to.Count) return false;
+
+            for (int i = 0; i < from.Count; i++)
+                if (from[i] != to[i]) return false;
+
+            return true;
+        }
+        public static bool operator !=(Vector to, Vector from) { return (!(to == from)); }
+        public override bool Equals(object o) { return (this == (Vector)o); }
+        public override int GetHashCode() { return 0; }
+
+        #region Vector algebra
+        //    <tt>v += x</tt> and similar operation involving a scalar value
+        //    are shortcuts for \f$ \forall i : v_i = v_i + x \f$
+
+        //    <tt>v *= w</tt> and similar operation involving two vectors are
+        //    shortcuts for \f$ \forall i : v_i = v_i \times w_i \f$
+
+        //    \pre all arrays involved in an algebraic expression must have the same size.
+        ////@{
+        public static Vector operator +(Vector v1, Vector v2) {
+            if (v1.Count != v2.Count)
+                throw new ApplicationException("arrays with different sizes (" + v1.Count + ", " + v2.Count + ") cannot be added");
+
+            Vector temp = new Vector(v1.Count);
+            for (int i = 0; i < v1.Count; i++)
+                temp[i] = v1[i] + v2[i];
+            return temp;
+        }
+        public static Vector operator +(Vector v1, double value) {
+            Vector temp = new Vector(v1.Count);
+            for (int i = 0; i < v1.Count; i++)
+                temp[i] = v1[i] + value;
+            return temp;
+        }
+        public static Vector operator -(Vector v1, Vector v2) {
+            if (v1.Count != v2.Count)
+                throw new ApplicationException("arrays with different sizes (" + v1.Count + ", " + v2.Count + ") cannot be subtracted");
+
+            Vector temp = new Vector(v1.Count);
+            for (int i = 0; i < v1.Count; i++)
+                temp[i] = v1[i] - v2[i];
+            return temp;
+        }
+        public static Vector operator -(Vector v1, double value) {
+            Vector temp = new Vector(v1.Count);
+            for (int i = 0; i < v1.Count; i++)
+                temp[i] = v1[i] - value;
+            return temp;
+        }
+        public static Vector operator *(Vector v1, Vector v2) {
+            if (v1.Count != v2.Count)
+                throw new ApplicationException("arrays with different sizes (" + v1.Count + ", " + v2.Count + ") cannot be multiplied");
+
+            Vector temp = new Vector(v1.Count);
+            for (int i = 0; i < v1.Count; i++)
+                temp[i] = v1[i] * v2[i];
+            return temp;
+        }
+        public static Vector operator *(Vector v1, double value) {
+            Vector temp = new Vector(v1.Count);
+            for (int i = 0; i < v1.Count; i++)
+                temp[i] = v1[i] * value;
+            return temp;
+        }
+        public static Vector operator /(Vector v1, Vector v2) {
+            if (v1.Count != v2.Count)
+                throw new ApplicationException("arrays with different sizes (" + v1.Count + ", " + v2.Count + ") cannot be divided");
+
+            Vector temp = new Vector(v1.Count);
+            for (int i = 0; i < v1.Count; i++)
+                temp[i] = v1[i] / v2[i];
+            return temp;
+        }
+        public static Vector operator /(Vector v1, double value) {
+            Vector temp = new Vector(v1.Count);
+            for (int i = 0; i < v1.Count; i++)
+                temp[i] = v1[i] / value;
+            return temp;
+        }
+        #endregion
+    }
+}

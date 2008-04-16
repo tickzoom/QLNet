@@ -53,7 +53,7 @@ namespace TestSuite {
                 int deposits = depositData.Length,
                     swaps = swapData.Length;
 
-                List<BootstrapHelper<YieldTermStructure>> instruments = new Array<BootstrapHelper<YieldTermStructure>>(deposits+swaps);
+                List<BootstrapHelper<YieldTermStructure>> instruments = new InitializedList<BootstrapHelper<YieldTermStructure>>(deposits+swaps);
                 for (int i=0; i<deposits; i++) {
                     instruments[i] = new DepositRateHelper(depositData[i].rate/100, new Period(depositData[i].n, depositData[i].units),
                                           settlementDays, calendar, BusinessDayConvention.ModifiedFollowing, true, new Actual360());
@@ -84,12 +84,12 @@ namespace TestSuite {
             int[] days = new int[] { 10, 30, 60, 120, 360, 720 };
 
             Date today = Settings.evaluationDate();
-            List<double> expected = new Array<double>(days.Length);
+            List<double> expected = new InitializedList<double>(days.Length);
             for (int i=0; i<days.Length; i++)
                 expected[i] = vars.termStructure.discount(today+days[i]);
 
             Settings.setEvaluationDate(today+30);
-            List<double> calculated = new Array<double>(days.Length);
+            List<double> calculated = new InitializedList<double>(days.Length);
             for (int i=0; i<days.Length; i++)
                 calculated[i] = vars.termStructure.discount(today+30+days[i]);
 

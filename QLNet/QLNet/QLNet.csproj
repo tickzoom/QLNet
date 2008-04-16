@@ -108,6 +108,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Math\Solvers1d\Secant.cs" />
+    <Compile Include="Math\Vector.cs" />
     <Compile Include="Money.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Patterns\LazyObject.cs" />
@@ -137,8 +138,6 @@
     <Compile Include="Termstructures\Yield\Bondhelpers.cs" />
     <Compile Include="Termstructures\Yield\Bootstraptraits.cs" />
     <Compile Include="Termstructures\Yield\Flatforward.cs" />
-    <Compile Include="Termstructures\Yield\ForwardSpreadedTermStructure.cs" />
-    <Compile Include="Termstructures\Yield\ForwardStructure.cs" />
     <Compile Include="Termstructures\Yield\ImpliedTermStructure.cs" />
     <Compile Include="Termstructures\Yield\PiecewiseYieldCurve.cs" />
     <Compile Include="Termstructures\Yield\Ratehelpers.cs" />
