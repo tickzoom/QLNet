@@ -478,7 +478,7 @@ namespace TestSuite {
             }
 
             // varying coupons
-            Array<double> couponRates = new Array<double>(4);
+            InitializedList<double> couponRates = new InitializedList<double>(4);
             couponRates[0] = 0.02875;
             couponRates[1] = 0.03;
             couponRates[2] = 0.03125;
@@ -609,7 +609,7 @@ namespace TestSuite {
             }
 
             // varying spread
-            Array<double> spreads = new Array<double>(4);
+            InitializedList<double> spreads = new InitializedList<double>(4);
             spreads[0] = 0.001;
             spreads[1] = 0.0012;
             spreads[2] = 0.0014;
@@ -651,7 +651,7 @@ namespace TestSuite {
             Settings.setEvaluationDate(today);
 
             // NTN-F maturity dates
-            Array<Date> maturityDates = new Array<Date>(6);
+            InitializedList<Date> maturityDates = new InitializedList<Date>(6);
             maturityDates[0] = new Date(1, Month.January, 2008);
             maturityDates[1] = new Date(1, Month.January, 2010);
             maturityDates[2] = new Date(1, Month.July, 2010);
@@ -660,7 +660,7 @@ namespace TestSuite {
             maturityDates[5] = new Date(1, Month.January, 2017);
 
             // NTN-F yields
-            Array<double> yields = new Array<double>(6);
+            InitializedList<double> yields = new InitializedList<double>(6);
             yields[0] = 0.114614;
             yields[1] = 0.105726;
             yields[2] = 0.105328;
@@ -669,7 +669,7 @@ namespace TestSuite {
             yields[5] = 0.102948;
 
             // NTN-F prices
-            Array<double> prices = new Array<double>(6);
+            InitializedList<double> prices = new InitializedList<double>(6);
             prices[0] = 1034.63031372;
             prices[1] = 1030.09919487;
             prices[2] = 1029.98307160;
@@ -683,7 +683,7 @@ namespace TestSuite {
             // The tolerance is high because Andima truncate yields
             double tolerance = 1.0e-4;
 
-            Array<InterestRate> couponRates = new Array<InterestRate>(1);
+            InitializedList<InterestRate> couponRates = new InitializedList<InterestRate>(1);
             couponRates[0] = new InterestRate(0.1,new Thirty360(), Compounding.Compounded, Frequency.Annual);
 
             for (int bondIndex = 0; bondIndex < maturityDates.Count; bondIndex++) {

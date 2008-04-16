@@ -202,8 +202,8 @@ namespace QLNet {
             }
 
             // calculate dates and times
-            dates_ = new Array<Date>(n + 1);
-            times_ = new Array<double>(n + 1);
+            dates_ = new InitializedList<Date>(n + 1);
+            times_ = new InitializedList<double>(n + 1);
             dates_[0] = initialDate(this);
             times_[0] = timeFromReference(dates_[0]);
             for (int i = 0; i < n; ++i) {

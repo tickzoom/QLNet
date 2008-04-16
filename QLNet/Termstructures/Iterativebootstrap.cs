@@ -52,7 +52,7 @@ namespace QLNet {
                 if (ts_.data_.Count != n + 1)
                     throw new ArgumentException("dimension mismatch: expected " + n + 1 + ", actual " + ts_.data_.Count);
             } else {
-                ts_.data_ = new Array<double>(n + 1);
+                ts_.data_ = new InitializedList<double>(n + 1);
                 ts_.data_[0] = ts_.initialValue(ts_);
             }
 

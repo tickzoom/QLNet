@@ -24,12 +24,12 @@ using System.Text;
 namespace QLNet {
     /* linear interpolation between discrete points */
     public class LinearInterpolationImpl : Interpolation.templateImpl {
-        private Array<double> primitiveConst_, s_;
+        private InitializedList<double> primitiveConst_, s_;
 
         public LinearInterpolationImpl(List<double> xBegin, int size, List<double> yBegin)
             : base(xBegin, size, yBegin) {
-           primitiveConst_ = new Array<double>(size_);
-           s_ = new Array<double>(size_);
+           primitiveConst_ = new InitializedList<double>(size_);
+           s_ = new InitializedList<double>(size_);
         }
 
         public override void update() {

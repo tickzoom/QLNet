@@ -45,10 +45,10 @@ namespace QLNet {
     }
 
     // this is a redefined collection class to emulate array-type behaviour at initialisation
-    public class Array<T> : List<T> {
-        public Array() : base() { }
-        public Array(int size) : this(size, default(T)) { }
-        public Array(int size, T value)
+    public class InitializedList<T> : List<T> {
+        public InitializedList() : base() { }
+        public InitializedList(int size) : this(size, default(T)) { }
+        public InitializedList(int size, T value)
             : base() {
             for (int i = 0; i < this.Capacity; i++)
                 this.Add(value);
