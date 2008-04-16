@@ -25,9 +25,9 @@ namespace QLNet {
     public static partial class Utils {
         public static T Get<T>(this List<T> v, int i) { return Get(v, i, default(T)); }
         public static T Get<T>(this List<T> v, int i, T defval) {
-            if (v == null || v.Count == 0)    return defval;
-            else if (i >= v.Count)            return v.Last();
-            else                              return v[i];  
+            if (v == null || v.Count == 0) return defval;
+            else if (i >= v.Count) return v.Last();
+            else return v[i];
         }
 
         public static double effectiveFixedRate(List<double> spreads, List<double> caps, List<double> floors, int i) {
@@ -47,11 +47,11 @@ namespace QLNet {
     // this is a redefined collection class to emulate array-type behaviour at initialisation
     public class Array<T> : List<T> {
         public Array() : base() { }
-        public Array(Array<T> T) : base(T) { }
-
-        public Array(int size) : base(size) {
-            for(int i=0; i<this.Capacity; i++)
-                this.Add(default(T));
+        public Array(int size) : this(size, default(T)) { }
+        public Array(int size, T value)
+            : base() {
+            for (int i = 0; i < this.Capacity; i++)
+                this.Add(value);
         }
 
         // erases the contents without changing the size
