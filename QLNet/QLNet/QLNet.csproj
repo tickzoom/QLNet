@@ -139,6 +139,8 @@
     <Compile Include="Termstructures\Yield\Bondhelpers.cs" />
     <Compile Include="Termstructures\Yield\Bootstraptraits.cs" />
     <Compile Include="Termstructures\Yield\Flatforward.cs" />
+    <Compile Include="Termstructures\Yield\ForwardSpreadedTermStructure.cs" />
+    <Compile Include="Termstructures\Yield\ForwardStructure.cs" />
     <Compile Include="Termstructures\Yield\ImpliedTermStructure.cs" />
     <Compile Include="Termstructures\Yield\PiecewiseYieldCurve.cs" />
     <Compile Include="Termstructures\Yield\Ratehelpers.cs" />
