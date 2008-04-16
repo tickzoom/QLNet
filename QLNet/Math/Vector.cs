@@ -38,18 +38,21 @@ namespace QLNet {
         public Vector(int size, double value) : base(size, value) { }
 
         /*! \brief creates the array and fills it according to \f$ a_{0} = value, a_{i}=a_{i-1}+increment \f$ */
-        public Vector(int size, double value, double increment) : base(size) {
+        public Vector(int size, double value, double increment)
+            : base(size) {
             for (int i = 0; i < this.Count; i++)
                 this[i] = value += increment;
         }
 
-        public Vector(Vector from) : this(from.Count) {
+        public Vector(Vector from)
+            : this(from.Count) {
             for (int i = 0; i < this.Count; i++)
                 this[i] = from[i];
         }
 
         //! creates the array as a copy of a given stl vector
-        public Vector(List<double> from) : this(from.Count) {
+        public Vector(List<double> from)
+            : this(from.Count) {
             for (int i = 0; i < this.Count; i++)
                 this[i] = from[i];
         }
@@ -60,7 +63,7 @@ namespace QLNet {
         //Array& operator=(const Array&);
         //Array& operator=(const Disposable<Vector>&);
 
-        public static bool operator==(Vector to, Vector from)  {
+        public static bool operator ==(Vector to, Vector from) {
             if (from.Count != to.Count) return false;
 
             for (int i = 0; i < from.Count; i++)
