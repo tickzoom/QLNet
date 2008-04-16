@@ -109,6 +109,7 @@
     </Compile>
     <Compile Include="Math\Solvers1d\Secant.cs" />
     <Compile Include="Math\Vector.cs" />
+    <Compile Include="Methods\Finitedifferences\TridiagonalOperator.cs" />
     <Compile Include="Money.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Patterns\LazyObject.cs" />
