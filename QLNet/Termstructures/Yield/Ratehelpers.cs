@@ -529,7 +529,7 @@ namespace QLNet {
             swap_.setPricingEngine(new DiscountingSwapEngine(iborIndex_.termStructure()));
 
             Date d = calendar_.adjust(swap_.maturityDate(), BusinessDayConvention.Following);
-            int w = (int)d.DayOfWeek;
+            int w = (int)d.weekday();
             Date nextWednesday = (w >= 4) ? d + new Period((11 - w), TimeUnit.Days) :
                                             d + new Period((4 - w), TimeUnit.Days);
             latestDate_ = clonedIndex.valueDate(clonedIndex.fixingCalendar().adjust(nextWednesday));
