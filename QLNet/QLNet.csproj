@@ -87,6 +87,7 @@
     <Compile Include="Instruments\VanillaSwap.cs" />
     <Compile Include="InterestRate.cs" />
     <Compile Include="Math\Comparison.cs" />
+    <Compile Include="Math\Interpolations\CubicInterpolation.cs" />
     <Compile Include="Math\Interpolations\Extrapolator.cs" />
     <Compile Include="Math\Interpolation.cs" />
     <Compile Include="Math\Interpolations\Linearinterpolation.cs" />
