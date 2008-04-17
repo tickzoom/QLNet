@@ -49,7 +49,7 @@ namespace QLNet {
         public InitializedList() : base() { }
         public InitializedList(int size) : this(size, default(T)) { }
         public InitializedList(int size, T value)
-            : base() {
+            : base(size) {
             for (int i = 0; i < this.Capacity; i++)
                 this.Add(value);
         }
