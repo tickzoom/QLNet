@@ -81,7 +81,7 @@ namespace QLNet {
 
     public partial class Utils {
         public static Date previousWednesday(Date date) {
-            int w = (int)date.weekday();
+            int w = date.weekday();
             if (w >= 4) // roll back w-4 days
                 return date - new Period((w - 4), TimeUnit.Days);
             else // roll forward 4-w days and back one week

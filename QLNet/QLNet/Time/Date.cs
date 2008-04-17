@@ -66,7 +66,7 @@ namespace QLNet {
         public int Month { get { return date.Month; } }
         public int Year { get { return date.Year; } }
         public int DayOfYear { get { return date.DayOfYear; } }
-        public DayOfWeek weekday() { return date.DayOfWeek + 1; }       // QL compatible definition
+        public int weekday() { return (int)date.DayOfWeek + 1; }       // QL compatible definition
         public DayOfWeek DayOfWeek { get { return date.DayOfWeek; } }
         public static Date minDate() { return new Date(1, 1, 1901); }
         public static Date maxDate() { return new Date(31, 12, 2199); }

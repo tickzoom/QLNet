@@ -105,7 +105,7 @@ namespace TestSuite {
                 dold  = new Date(minDate-1).Day,
                 mold  = new Date(minDate-1).Month,
                 yold  = new Date(minDate-1).Year,
-                wdold = (int)(new Date(minDate - 1).weekday());
+                wdold = new Date(minDate - 1).weekday();
 
             for (int i=minDate; i<=maxDate; i++) {
                 Date t = new Date(i);
@@ -122,7 +122,7 @@ namespace TestSuite {
                     d  = t.Day,
                     m  = t.Month,
                     y  = t.Year,
-                    wd = (int)t.weekday();
+                    wd = t.weekday();
 
                 // check if skipping any date
                 if (!((dy == dyold+1) ||

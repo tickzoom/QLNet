@@ -76,5 +76,53 @@ namespace QLNet {
             impl_ = new LogInterpolationImpl<Linear>(xBegin, size, yBegin);
             impl_.update();
         }
-    };
+    }
+
+    //! log-cubic interpolation factory and traits
+    public class LogCubic : IInterpolationFactory {
+        private CubicInterpolation.DerivativeApprox da_;
+        private bool monotonic_;
+        private CubicInterpolation.BoundaryCondition leftType_, rightType_;
+        private double leftValue_, rightValue_;
+
+        public LogCubic() { }
+        //public LogCubic(CubicInterpolation::DerivativeApprox da, bool monotonic = true,
+        //          CubicInterpolation::BoundaryCondition leftCondition = CubicInterpolation::SecondDerivative,
+        //          double leftConditionValue = 0.0,
+        //          CubicInterpolation::BoundaryCondition rightCondition = CubicInterpolation::SecondDerivative,
+        //          double rightConditionValue = 0.0) {
+        public LogCubic(CubicInterpolation.DerivativeApprox da, bool monotonic,
+                        CubicInterpolation.BoundaryCondition leftCondition, double leftConditionValue,
+                        CubicInterpolation.BoundaryCondition rightCondition, double rightConditionValue) {
+            da_ = da;
+            monotonic_ = monotonic;
+            leftType_ = leftCondition;
+            rightType_ = rightCondition;
+            leftValue_ = leftConditionValue;
+            rightValue_ = rightConditionValue;
+        }
+
+        public Interpolation interpolate(List<double> xBegin, int size, List<double> yBegin) {
+            return new LogCubicInterpolation(xBegin, size, yBegin, da_, monotonic_,
+                                             leftType_, leftValue_, rightType_, rightValue_);
+        }
+        public bool global { get { return true; } }
+        public int requiredPoints { get { return 2; } }
+    }
+
+    //! %log-cubic interpolation between discrete points
+    public class LogCubicInterpolation : Interpolation {
+        /*! \pre the \f$ x \f$ values must be sorted. */
+        public LogCubicInterpolation(List<double> xBegin, int size, List<double> yBegin,
+                              CubicInterpolation.DerivativeApprox da,
+                              bool monotonic,
+                              CubicInterpolation.BoundaryCondition leftC,
+                              double leftConditionValue,
+                              CubicInterpolation.BoundaryCondition rightC,
+                              double rightConditionValue) {
+            impl_ = new LogInterpolationImpl<Cubic>(xBegin, size, yBegin,
+                            new Cubic(da, monotonic, leftC, leftConditionValue, rightC, rightConditionValue));
+            impl_.update();
+        }
+    }
 }

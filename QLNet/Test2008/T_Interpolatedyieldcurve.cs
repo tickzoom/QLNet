@@ -216,13 +216,29 @@ namespace TestSuite {
         }
 
         [TestMethod()]
+        public void testLogCubicDiscountConsistency() {
+            // "Testing consistency of piecewise-log-cubic discount curve...");
+
+            CommonVars vars = new CommonVars();
+
+            testCurveConsistency<Discount, LogCubic>(vars, 
+                        new LogCubic(CubicInterpolation.DerivativeApprox.Spline, true,
+                            CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
+                            CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0));
+            testBMACurveConsistency<Discount, LogCubic>(vars,
+                        new LogCubic(CubicInterpolation.DerivativeApprox.Spline, true,
+                         CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
+                         CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0));
+        }
+
+        [TestMethod()]
         public void testLinearDiscountConsistency() {
             // "Testing consistency of piecewise-linear discount curve..."
 
             CommonVars vars = new CommonVars();
 
             testCurveConsistency<Discount, Linear>(vars);
-            //testBMACurveConsistency<Discount, Linear>(vars);
+            testBMACurveConsistency<Discount, Linear>(vars);
         }
 
         [TestMethod()]
@@ -232,7 +248,7 @@ namespace TestSuite {
             CommonVars vars = new CommonVars();
 
             testCurveConsistency<ZeroYield, Linear>(vars);
-            //testBMACurveConsistency<ZeroYield, Linear>(vars);
+            testBMACurveConsistency<ZeroYield, Linear>(vars);
         }
 
         [TestMethod()]
@@ -242,7 +258,7 @@ namespace TestSuite {
             CommonVars vars = new CommonVars();
 
             testCurveConsistency<ForwardRate, Linear>(vars);
-            //testBMACurveConsistency<ForwardRate, Linear>(vars);
+            testBMACurveConsistency<ForwardRate, Linear>(vars);
         }
 
         [TestMethod()]
@@ -252,7 +268,7 @@ namespace TestSuite {
             CommonVars vars = new CommonVars();
 
             testCurveConsistency<Discount, LogLinear>(vars);
-            //testBMACurveConsistency<Discount, LogLinear>(vars);
+            testBMACurveConsistency<Discount, LogLinear>(vars);
         }
 
         [TestMethod()]
@@ -262,9 +278,8 @@ namespace TestSuite {
             CommonVars vars = new CommonVars();
 
             testCurveConsistency<ZeroYield, LogLinear>(vars);
-            //testBMACurveConsistency<ZeroYield, LogLinear>(vars);
+            testBMACurveConsistency<ZeroYield, LogLinear>(vars);
         }
-
 
         [TestMethod()]
         public void testObservability() {
@@ -296,12 +311,16 @@ namespace TestSuite {
                 Assert.Fail("Observer was not notified of date change");
         }
 
+
         public void testCurveConsistency<T, I>(CommonVars vars)
+            where T : ITraits, new()
+            where I : IInterpolationFactory, new() { testCurveConsistency<T, I>(vars, new I()); }
+        public void testCurveConsistency<T, I>(CommonVars vars, I interpolator)
             where T : ITraits, new()
             where I : IInterpolationFactory, new() {
 
             vars.termStructure = new PiecewiseYieldCurve<T, I>(vars.settlement, vars.instruments,
-                                    new Actual360(), new Handle<Quote>(), 1.0e-12);
+                                    new Actual360(), new Handle<Quote>(), 1.0e-12, interpolator);
 
             RelinkableHandle<YieldTermStructure> curveHandle = new RelinkableHandle<YieldTermStructure>();
             curveHandle.linkTo(vars.termStructure);
@@ -347,7 +366,7 @@ namespace TestSuite {
 
             // check bonds
             vars.termStructure = new PiecewiseYieldCurve<T, I>(vars.settlement, vars.bondHelpers,
-                                     new Actual360(), new Handle<Quote>(), 1.0e-12);
+                                     new Actual360(), new Handle<Quote>(), 1.0e-12, interpolator);
             curveHandle.linkTo(vars.termStructure);
 
             for (int i=0; i<vars.bonds; i++) {
@@ -375,7 +394,7 @@ namespace TestSuite {
 
            // check FRA
             vars.termStructure = new PiecewiseYieldCurve<T, I>(vars.settlement, vars.fraHelpers,
-                                        new Actual360(), new Handle<Quote>(), 1.0e-12);
+                                        new Actual360(), new Handle<Quote>(), 1.0e-12, interpolator);
             curveHandle.linkTo(vars.termStructure);
 
             IborIndex euribor3m = new Euribor3M(curveHandle);
@@ -401,7 +420,11 @@ namespace TestSuite {
                 }
             } 
         }
-        public void testBMACurveConsistency<T, I>(CommonVars vars)             
+
+        public void testBMACurveConsistency<T, I>(CommonVars vars)
+            where T : ITraits, new()
+            where I : IInterpolationFactory, new() { testBMACurveConsistency<T, I>(vars, new I()); }
+        public void testBMACurveConsistency<T, I>(CommonVars vars, I interpolator)             
             where T : ITraits, new()
             where I : IInterpolationFactory, new() {
 
@@ -422,13 +445,13 @@ namespace TestSuite {
                                                 liborIndex));
             }
 
-            int w = (int)vars.today.weekday();
+            int w = vars.today.weekday();
             Date lastWednesday = (w >= 4) ? vars.today - (w - 4) : vars.today + (4 - w - 7);
             Date lastFixing = bmaIndex.fixingCalendar().adjust(lastWednesday);
             bmaIndex.addFixing(lastFixing, 0.03);
 
             vars.termStructure = new PiecewiseYieldCurve<T, I>(vars.settlement, vars.bmaHelpers,
-                                     new Actual360(), new Handle<Quote>(), 1.0e-12);
+                                     new Actual360(), new Handle<Quote>(), 1.0e-12, interpolator);
 
             RelinkableHandle<YieldTermStructure> curveHandle = new RelinkableHandle<YieldTermStructure>();
             curveHandle.linkTo(vars.termStructure);
@@ -469,18 +492,6 @@ namespace TestSuite {
                                 + "\n tolerance:      " + tolerance);
                 }
             }
-        }
-
-        public void suite() {
-            //testLogLinearDiscountConsistency();
-            //testLinearDiscountConsistency();
-
-            //testLogLinearZeroConsistency();
-            //testLinearZeroConsistency();
-
-            //testLinearForwardConsistency();
-
-            testObservability();
         }
     }
 }
