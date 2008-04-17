@@ -188,7 +188,7 @@ namespace QLNet {
         public double fixedRate { get { return fixedRate_; } }
         public double spread { get { return spread_; } }
         public double nominal { get { return nominal_; } }
-        public Type type { get { return type_; } }
+        public Type swapType { get { return type_; } }
         public List<CashFlow> fixedLeg() { return legs_[0]; }
         public List<CashFlow> floatingLeg() { return legs_[1]; }
 
