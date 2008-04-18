@@ -21,24 +21,20 @@ using System.Collections.Generic;
 using System.Text;
 using QLNet;
 
-namespace QLNet
-{
+namespace QLNet {
     // we need only one instance of the class
     // we can not derive it from IObservable because the class is static
-    public static class Settings
-    {
+    public static class Settings {
         private static Date evaluationDate_ = Date.Today;
         private static bool enforcesTodaysHistoricFixings_ = false;
 
         public static Date evaluationDate() { return evaluationDate_; }
-        public static void setEvaluationDate(Date d)
-        {
+        public static void setEvaluationDate(Date d) {
             evaluationDate_ = d;
             notifyObservers();
         }
 
-        public static bool enforcesTodaysHistoricFixings
-        {
+        public static bool enforcesTodaysHistoricFixings {
             get { return enforcesTodaysHistoricFixings_; }
             set { enforcesTodaysHistoricFixings_ = value; }
         }
@@ -48,13 +44,27 @@ namespace QLNet
         private static event Callback notifyObserversEvent;
         public static void registerWith(Callback handler) { notifyObserversEvent += handler; }
         public static void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
-        private static void notifyObservers()
-        {
+        private static void notifyObservers() {
             Callback handler = notifyObserversEvent;
-            if (handler != null)
-            {
+            if (handler != null) {
                 handler();
             }
+        }
+    }
+
+    // helper class to temporarily and safely change the settings
+    public class SavedSettings {
+        private Date evaluationDate_;
+        private bool enforcesTodaysHistoricFixings_;
+
+        public SavedSettings() {
+            evaluationDate_ = Settings.evaluationDate();
+            enforcesTodaysHistoricFixings_ = Settings.enforcesTodaysHistoricFixings;
+        }
+
+        ~SavedSettings() {
+            Settings.setEvaluationDate(evaluationDate_);
+            Settings.enforcesTodaysHistoricFixings = enforcesTodaysHistoricFixings_;
         }
     }
 }

@@ -45,4 +45,9 @@ namespace TestSuite {
             return new FlatForward(today, forward, dc);
         }
     }
+
+    // this cleans up index-fixing histories when destroyed
+    public class IndexHistoryCleaner {
+        ~IndexHistoryCleaner() { IndexManager.clearHistories(); }
+    };
 }
