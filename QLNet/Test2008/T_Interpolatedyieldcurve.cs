@@ -120,11 +120,16 @@ namespace TestSuite {
             public YieldTermStructure termStructure;
 
             // cleanup
-            //SavedSettings backup;
-            //IndexHistoryCleaner cleaner;
+            SavedSettings backup = new SavedSettings();
+            IndexHistoryCleaner cleaner = new IndexHistoryCleaner();
 
             // setup
             public CommonVars() {
+
+                // force garbage collection
+                // garbage collection in .NET is rather weird and we do need when we run several tests in a row
+                GC.Collect();
+
                 // data
                 calendar = new TARGET();
                 settlementDays = 2;
