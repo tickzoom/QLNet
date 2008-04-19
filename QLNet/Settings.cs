@@ -63,7 +63,8 @@ namespace QLNet {
         }
 
         ~SavedSettings() {
-            Settings.setEvaluationDate(evaluationDate_);
+            if (evaluationDate_ != Settings.evaluationDate())
+                Settings.setEvaluationDate(evaluationDate_);
             Settings.enforcesTodaysHistoricFixings = enforcesTodaysHistoricFixings_;
         }
     }
