@@ -147,7 +147,6 @@
     <Compile Include="Termstructures\Yield\Ratehelpers.cs" />
     <Compile Include="Termstructures\Yield\ZeroSpreadedTermStructure.cs" />
     <Compile Include="Termstructures\Yield\Zeroyieldstructure.cs" />
-    <Compile Include="Time\Businessdayconvention.cs" />
     <Compile Include="Time\Calendar.cs" />
     <Compile Include="Time\Calendars\argentina.cs" />
     <Compile Include="Time\Calendars\australia.cs" />
@@ -192,11 +191,9 @@
     <Compile Include="Time\DayCounters\OneDayCounter.cs" />
     <Compile Include="Time\DayCounters\SimpleDayCounter.cs" />
     <Compile Include="Time\DayCounters\Thirty360.cs" />
-    <Compile Include="Time\Frequency.cs" />
     <Compile Include="Time\Imm.cs" />
     <Compile Include="Time\Period.cs" />
     <Compile Include="Time\Schedule.cs" />
-    <Compile Include="Time\TimeUnit.cs" />
     <Compile Include="Types.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Util\make_pair.cs" />

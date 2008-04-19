@@ -120,18 +120,17 @@ namespace TestSuite {
             public YieldTermStructure termStructure;
 
             // cleanup
-            SavedSettings backup;
-            IndexHistoryCleaner cleaner;
+            // SavedSettings backup = new SavedSettings();
+            // IndexHistoryCleaner cleaner;
 
             // setup
             public CommonVars() {
 
-                cleaner = new IndexHistoryCleaner();
+                //cleaner = new IndexHistoryCleaner();
+                ////GC.Collect();
+                //// force garbage collection
+                //// garbage collection in .NET is rather weird and we do need when we run several tests in a row
                 //GC.Collect();
-                backup = new SavedSettings();
-                // force garbage collection
-                // garbage collection in .NET is rather weird and we do need when we run several tests in a row
-                GC.Collect();
 
                 // data
                 calendar = new TARGET();
@@ -500,6 +499,10 @@ namespace TestSuite {
                                 + "\n tolerance:      " + tolerance);
                 }
             }
+
+            // this is a workaround for grabage collection
+            // garbage collection needs a proper solution
+            IndexManager.clearHistories();
         }
     }
 }
