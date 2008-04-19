@@ -120,12 +120,15 @@ namespace TestSuite {
             public YieldTermStructure termStructure;
 
             // cleanup
-            SavedSettings backup = new SavedSettings();
-            IndexHistoryCleaner cleaner = new IndexHistoryCleaner();
+            SavedSettings backup;
+            IndexHistoryCleaner cleaner;
 
             // setup
             public CommonVars() {
 
+                cleaner = new IndexHistoryCleaner();
+                //GC.Collect();
+                backup = new SavedSettings();
                 // force garbage collection
                 // garbage collection in .NET is rather weird and we do need when we run several tests in a row
                 GC.Collect();

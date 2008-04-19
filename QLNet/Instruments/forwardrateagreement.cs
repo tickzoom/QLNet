@@ -49,7 +49,7 @@ namespace QLNet {
           constructor is irrelevant and will be ignored.
 
        <b>Example: </b>
-       \link FRA.cpp
+       \link FRA.cs
        valuation of a forward-rate agreement
        \endlink
 
@@ -88,7 +88,7 @@ namespace QLNet {
          index_ = index;
 
          if (notionalAmount <= 0.0)
-            throw new ApplicationException("notionalAmount must be positive");
+            throw new ApplicationException("notional Amount must be positive");
 
          // do I adjust this ?
          // valueDate_ = calendar_.adjust(valueDate_,businessDayConvention_);
@@ -107,12 +107,16 @@ namespace QLNet {
 
         //! \name Calculations
         //@{
+        public override Date settlementDate() {
+            return calendar_.advance(Settings.evaluationDate(), settlementDays_, TimeUnit.Days);
+        }
+
         /*! A FRA expires/settles on the valueDate */
         public override bool isExpired() {
             #if QL_TODAYS_PAYMENTS
-            return valueDate_ < settlementDate();
+                return valueDate_ < settlementDate();
             #else
-            return valueDate_ <= settlementDate();
+                return valueDate_ <= settlementDate();
             #endif
         }
 
