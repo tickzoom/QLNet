@@ -83,14 +83,14 @@ namespace QLNet {
 			discountCurve_.registerWith(update);
 		}
 
-		public Date settlementDate() {
+		public virtual Date settlementDate() {
 			Date d = calendar_.advance(Settings.evaluationDate(), settlementDays_, TimeUnit.Days);
 			return Date.Max(d,valueDate_);
 		}
 
 		public override bool isExpired() {
 			#if QL_TODAYS_PAYMENTS
-			return maturityDate_ < settlementDate();
+			    return maturityDate_ < settlementDate();
 			#else
 				return maturityDate_ <= settlementDate();
 			#endif
