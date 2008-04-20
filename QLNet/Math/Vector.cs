@@ -35,7 +35,7 @@ namespace QLNet {
         public double this[int i] { get { return data_[i]; } set { data_[i] = value; } }
 
         private int n_;
-        public int Count { get { return n_; } }
+        public int size() { return n_; }
 
         //! \name Constructors, and assignment
         //! creates the array with the given dimension
@@ -96,8 +96,6 @@ namespace QLNet {
         ////@{
         public static Vector operator +(Vector v1, Vector v2) { return operVector(ref v1, ref v2, (x, y) => x + y); }
         public static Vector operator -(Vector v1, Vector v2) { return operVector(ref v1, ref v2, (x, y) => x - y); }
-        public static Vector operator *(Vector v1, Vector v2) { return operVector(ref v1, ref v2, (x, y) => x * y); }
-        public static Vector operator /(Vector v1, Vector v2) { return operVector(ref v1, ref v2, (x, y) => x / y); }
 
         public static Vector operator +(Vector v1, double value) { return operValue(ref v1, value, (x, y) => x + y); }
         public static Vector operator -(Vector v1, double value) { return operValue(ref v1, value, (x, y) => x - y); }
@@ -118,7 +116,18 @@ namespace QLNet {
             for (int i = 0; i < v1.n_; i++)
                 temp.data_[i] = func(v1.data_[i], value);
             return temp;
-        } 
+        }
+
+        public static double operator *(Vector v1, Vector v2) {
+            if (v1.n_ != v2.n_)
+                throw new ApplicationException("operation on vectors with different sizes (" + v1.n_ + ", " + v2.n_);
+
+            double result = 0;
+            for (int i = 0; i < v1.n_; i++)
+                result += v1[i] * v2[i];
+            return result;
+        }
+        //public static double operator /(Vector v1, Vector v2) { return operVector(ref v1, ref v2, (x, y) => x / y); }
         #endregion
     }
 }
