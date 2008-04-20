@@ -85,66 +85,31 @@ namespace QLNet {
 
         //    \pre all arrays involved in an algebraic expression must have the same size.
         ////@{
-        public static Vector operator +(Vector v1, Vector v2) {
+        public static Vector operator +(Vector v1, Vector v2) { return operVector(v1, v2, (x, y) => x + y); }
+        public static Vector operator -(Vector v1, Vector v2) { return operVector(v1, v2, (x, y) => x - y); }
+        public static Vector operator *(Vector v1, Vector v2) { return operVector(v1, v2, (x, y) => x * y); }
+        public static Vector operator /(Vector v1, Vector v2) { return operVector(v1, v2, (x, y) => x / y); }
+
+        public static Vector operator +(Vector v1, double value) { return operValue(v1, value, (x, y) => x + y); }
+        public static Vector operator -(Vector v1, double value) { return operValue(v1, value, (x, y) => x - y); }
+        public static Vector operator *(Vector v1, double value) { return operValue(v1, value, (x, y) => x * y); }
+        public static Vector operator /(Vector v1, double value) { return operValue(v1, value, (x, y) => x / y); }
+
+        private static Vector operVector(Vector v1, Vector v2, Func<double, double, double> func) {
             if (v1.Count != v2.Count)
-                throw new ApplicationException("arrays with different sizes (" + v1.Count + ", " + v2.Count + ") cannot be added");
+                throw new ApplicationException("operation on vectors with different sizes (" + v1.Count + ", " + v2.Count);
 
             Vector temp = new Vector(v1.Count);
             for (int i = 0; i < v1.Count; i++)
-                temp[i] = v1[i] + v2[i];
+                temp[i] = func(v1[i], v2[i]);
             return temp;
         }
-        public static Vector operator +(Vector v1, double value) {
+        private static Vector operValue(Vector v1, double value, Func<double, double, double> func) {
             Vector temp = new Vector(v1.Count);
             for (int i = 0; i < v1.Count; i++)
-                temp[i] = v1[i] + value;
+                temp[i] = func(v1[i], value);
             return temp;
-        }
-        public static Vector operator -(Vector v1, Vector v2) {
-            if (v1.Count != v2.Count)
-                throw new ApplicationException("arrays with different sizes (" + v1.Count + ", " + v2.Count + ") cannot be subtracted");
-
-            Vector temp = new Vector(v1.Count);
-            for (int i = 0; i < v1.Count; i++)
-                temp[i] = v1[i] - v2[i];
-            return temp;
-        }
-        public static Vector operator -(Vector v1, double value) {
-            Vector temp = new Vector(v1.Count);
-            for (int i = 0; i < v1.Count; i++)
-                temp[i] = v1[i] - value;
-            return temp;
-        }
-        public static Vector operator *(Vector v1, Vector v2) {
-            if (v1.Count != v2.Count)
-                throw new ApplicationException("arrays with different sizes (" + v1.Count + ", " + v2.Count + ") cannot be multiplied");
-
-            Vector temp = new Vector(v1.Count);
-            for (int i = 0; i < v1.Count; i++)
-                temp[i] = v1[i] * v2[i];
-            return temp;
-        }
-        public static Vector operator *(Vector v1, double value) {
-            Vector temp = new Vector(v1.Count);
-            for (int i = 0; i < v1.Count; i++)
-                temp[i] = v1[i] * value;
-            return temp;
-        }
-        public static Vector operator /(Vector v1, Vector v2) {
-            if (v1.Count != v2.Count)
-                throw new ApplicationException("arrays with different sizes (" + v1.Count + ", " + v2.Count + ") cannot be divided");
-
-            Vector temp = new Vector(v1.Count);
-            for (int i = 0; i < v1.Count; i++)
-                temp[i] = v1[i] / v2[i];
-            return temp;
-        }
-        public static Vector operator /(Vector v1, double value) {
-            Vector temp = new Vector(v1.Count);
-            for (int i = 0; i < v1.Count; i++)
-                temp[i] = v1[i] / value;
-            return temp;
-        }
+        } 
         #endregion
     }
 }
