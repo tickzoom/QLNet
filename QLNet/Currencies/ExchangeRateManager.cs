@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Andrea Maggiulli
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -27,8 +28,13 @@ namespace QLNet
    /// exchange-rate repository
    /// test lookup of direct, triangulated, and derived exchange rates is tested
    /// </summary>
-   public class ExchangeRateManager : Singleton<ExchangeRateManager>
+   public class ExchangeRateManager 
    {
+      public static readonly ExchangeRateManager Instance = new ExchangeRateManager();
+      private ExchangeRateManager() {
+          addKnownRates();
+      }
+
       private System.Collections.Generic.Dictionary<int,List<Entry>> data_ = new Dictionary<int,List<Entry>>();
 
       public struct Entry
@@ -42,11 +48,6 @@ namespace QLNet
          public ExchangeRate rate;
          public Date startDate;
          public Date endDate;
-      }
-
-      private ExchangeRateManager()
-      {
-         addKnownRates();
       }
 
       private void addKnownRates()

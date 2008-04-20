@@ -92,6 +92,7 @@
     <Compile Include="Math\Interpolation.cs" />
     <Compile Include="Math\Interpolations\Linearinterpolation.cs" />
     <Compile Include="Math\Interpolations\Loginterpolation.cs" />
+    <Compile Include="Math\Matrix.cs" />
     <Compile Include="Math\Solver1d.cs" />
     <Compile Include="Math\Rounding.cs" />
     <Compile Include="Math\Solvers1d\Bisection.cs">
@@ -114,9 +115,7 @@
     <Compile Include="Money.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Patterns\LazyObject.cs" />
-    <Compile Include="Patterns\Observable.cs" />
     <Compile Include="Patterns\Observer.cs" />
-    <Compile Include="Patterns\Singleton.cs" />
     <Compile Include="Patterns\Visitor.cs" />
     <Compile Include="payoff.cs" />
     <Compile Include="PricingEngine.cs" />
@@ -126,6 +125,7 @@
     <Compile Include="Quotes\Quote.cs" />
     <Compile Include="Quotes\SimpleQuote.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="StochasticProcess.cs" />
     <Compile Include="Termstructures\Bootstraperror.cs" />
     <Compile Include="Termstructures\Bootstraphelper.cs" />
     <Compile Include="Termstructures\Iterativebootstrap.cs" />
