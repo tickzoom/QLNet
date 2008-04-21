@@ -61,6 +61,7 @@
     <Compile Include="Currencies\ExchangeRateManager.cs" />
     <Compile Include="Error.cs" />
     <Compile Include="Event.cs" />
+    <Compile Include="Exercise.cs" />
     <Compile Include="Handle.cs" />
     <Compile Include="Index.cs" />
     <Compile Include="Indexes\bmaindex.cs" />
@@ -81,6 +82,8 @@
     <Compile Include="Instruments\forwardrateagreement.cs" />
     <Compile Include="Instruments\Instrument.cs" />
     <Compile Include="Instruments\Makevanillaswap.cs" />
+    <Compile Include="Instruments\OneAssetOption.cs" />
+    <Compile Include="Instruments\payoffs.cs" />
     <Compile Include="Instruments\Stock.cs" />
     <Compile Include="Instruments\Swap.cs" />
     <Compile Include="Instruments\VanillaSwap.cs" />
