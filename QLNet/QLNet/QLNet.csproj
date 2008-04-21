@@ -59,7 +59,6 @@
     <Compile Include="Currencies\Europe.cs" />
     <Compile Include="Currencies\ExchangeRate.cs" />
     <Compile Include="Currencies\ExchangeRateManager.cs" />
-    <Compile Include="Enum.cs" />
     <Compile Include="Error.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="Handle.cs" />
@@ -121,6 +120,7 @@
     <Compile Include="PricingEngine.cs" />
     <Compile Include="Pricingengines\Bond\Discountingbondengine.cs" />
     <Compile Include="Pricingengines\Swap\Discountingswapengine.cs" />
+    <Compile Include="processes\BlackScholesProcess.cs" />
     <Compile Include="processes\EulerDiscretization.cs" />
     <Compile Include="processes\GeometricBrownianMotionProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -133,6 +133,13 @@
     <Compile Include="Termstructures\Iterativebootstrap.cs" />
     <Compile Include="Termstructures\TermStructure.cs" />
     <Compile Include="Termstructures\VolatilityTermStructure.cs" />
+    <Compile Include="Termstructures\Volatility\equityfx\BlackConstantVol.cs" />
+    <Compile Include="Termstructures\Volatility\equityfx\BlackVarianceCurve.cs" />
+    <Compile Include="Termstructures\Volatility\equityfx\BlackVolTermStructure.cs" />
+    <Compile Include="Termstructures\Volatility\equityfx\LocalConstantVol.cs" />
+    <Compile Include="Termstructures\Volatility\equityfx\LocalVolCurve.cs" />
+    <Compile Include="Termstructures\Volatility\equityfx\LocalVolSurface.cs" />
+    <Compile Include="Termstructures\Volatility\equityfx\LocalVolTermStructure.cs" />
     <Compile Include="Termstructures\Volatility\FlatSmileSection.cs" />
     <Compile Include="Termstructures\Volatility\Optionlet\ConstantOptionletVolatility.cs" />
     <Compile Include="Termstructures\Volatility\Optionlet\OptionletVolatilityStructure.cs" />

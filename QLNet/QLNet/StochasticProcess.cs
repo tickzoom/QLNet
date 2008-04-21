@@ -29,7 +29,7 @@ namespace QLNet {
         Matrix covariance(StochasticProcess sp, double t0, Vector x0, double dt);
     }
 
-    //! discretization of a stochastic process over a given time interval
+    //! discretization of a 1D stochastic process over a given time interval
     public interface IDiscretization1D {
         double drift(StochasticProcess1D sp, double t0, double x0, double dt);
         double diffusion(StochasticProcess1D sp, double t0, double x0, double dt);
@@ -52,7 +52,6 @@ namespace QLNet {
         }
    
         //! \name Stochastic process interface
-        //@{
         //! returns the number of dimensions of the stochastic process
         public abstract int size();
 
@@ -160,6 +159,12 @@ namespace QLNet {
 	    #endregion   
     }
 
+    //! 1-dimensional stochastic process
+    /*! This class describes a stochastic process governed by
+        \f[
+            dx_t = \mu(t, x_t)dt + \sigma(t, x_t)dW_t.
+        \f]
+    */
     public abstract class StochasticProcess1D : StochasticProcess {
         new protected IDiscretization1D discretization_;
 
@@ -184,7 +189,8 @@ namespace QLNet {
         }
 
         /*! \brief returns the diffusion part of the equation, i.e.
-           \f$ \sigma(t, \mathrm{x}_t) \f$ */
+            \f$ \sigma(t, x_t) \f$
+        */
         public abstract double diffusion(double t, double x);
         public override Matrix diffusion(double t, Vector x) {
             #if QL_EXTRA_SAFETY_CHECKS
@@ -195,8 +201,7 @@ namespace QLNet {
         }
 
         /*! returns the expectation
-            \f$ E(\mathrm{x}_{t_0 + \Delta t}
-                | \mathrm{x}_{t_0} = \mathrm{x}_0) \f$
+            \f$ E(x_{t_0 + \Delta t} | x_{t_0} = x_0) \f$
             of the process after a time interval \f$ \Delta t \f$
             according to the given discretization. This method can be
             overridden in derived classes which want to hard-code a
@@ -214,8 +219,7 @@ namespace QLNet {
         }
 
         /*! returns the standard deviation
-            \f$ S(\mathrm{x}_{t_0 + \Delta t}
-                | \mathrm{x}_{t_0} = \mathrm{x}_0) \f$
+            \f$ S(x_{t_0 + \Delta t} | x_{t_0} = x_0) \f$
             of the process after a time interval \f$ \Delta t \f$
             according to the given discretization. This method can be
             overridden in derived classes which want to hard-code a
@@ -232,9 +236,8 @@ namespace QLNet {
             return m;
         }
 
-        /*! returns the covariance
-            \f$ V(\mathrm{x}_{t_0 + \Delta t}
-                | \mathrm{x}_{t_0} = \mathrm{x}_0) \f$
+        /*! returns the variance
+            \f$ V(x_{t_0 + \Delta t} | x_{t_0} = x_0) \f$
             of the process after a time interval \f$ \Delta t \f$
             according to the given discretization. This method can be
             overridden in derived classes which want to hard-code a
@@ -255,8 +258,7 @@ namespace QLNet {
             \f$ according to the given discretization. By default, it
             returns
             \f[
-            E(\mathrm{x}_0,t_0,\Delta t) +
-            S(\mathrm{x}_0,t_0,\Delta t) \cdot \Delta \mathrm{w}
+            E(x_0,t_0,\Delta t) + S(x_0,t_0,\Delta t) \cdot \Delta w
             \f]
             where \f$ E \f$ is the expectation and \f$ S \f$ the
             standard deviation.
@@ -274,7 +276,7 @@ namespace QLNet {
         }
 
         /*! applies a change to the asset value. By default, it
-            returns \f$ \mathrm{x} + \Delta \mathrm{x} \f$.
+            returns \f$ x + \Delta x \f$.
         */
         public virtual double apply(double x0, double dx) { return x0 + dx; }
         public virtual Vector apply(ref Vector x0, ref Vector dx) {
