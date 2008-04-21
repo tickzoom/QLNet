@@ -24,10 +24,14 @@ using System.Text;
 namespace QLNet {
     //! Volatility term structure
     /*! This abstract class defines the interface of concrete volatility structures which will be derived from this one. */
-    public abstract class VolatilityTermStructure : TermStructure {
+    public class VolatilityTermStructure : TermStructure {
         //! the business day convention used in tenor to date conversion
         private BusinessDayConvention bdc_;
         public BusinessDayConvention businessDayConvention() { return bdc_; }
+
+
+        // parameterless ctor is required for Handles
+        public VolatilityTermStructure() { }
 
         //! default constructor
         /*! \warning term structures initialized by means of this constructor must manage their own reference date
@@ -59,9 +63,9 @@ namespace QLNet {
         }
 
         //! the minimum strike for which the term structure can return vols
-        public abstract double minStrike();
+        public virtual double minStrike() { throw new NotSupportedException(); }
         //! the maximum strike for which the term structure can return vols
-        public abstract double maxStrike();
+        public virtual double maxStrike() { throw new NotSupportedException(); }
       
         //! strike-range check
         protected void checkStrike(double strike, bool extrapolate) {

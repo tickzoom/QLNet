@@ -22,6 +22,7 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
+    //! Euler discretization for stochastic processes
     public class EulerDiscretization : IDiscretization, IDiscretization1D {
         /*! Returns an approximation of the drift defined as
             \f$ \mu(t_0, \mathbf{x}_0) \Delta t \f$. */

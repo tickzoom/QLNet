@@ -22,7 +22,7 @@ using QLNet;
 namespace QLNet
 {
     //! Basic term-structure functionality
-    public abstract class TermStructure : Extrapolator, IObservable, IObserver
+    public class TermStructure : Extrapolator, IObservable, IObserver
     {
         // fields
         private Date referenceDate_;
@@ -40,7 +40,7 @@ namespace QLNet
         //! the latest time for which the curve can return values
         public virtual double maxTime() { return timeFromReference(maxDate()); }
         //! the latest date for which the curve can return values. should be overridden later
-        public abstract Date maxDate();
+        public virtual Date maxDate() { throw new NotSupportedException(); }
         //! the date at which discount = 1.0 and/or variance = 0.0
         public virtual Date referenceDate()
         {
