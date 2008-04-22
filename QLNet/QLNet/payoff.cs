@@ -33,5 +33,12 @@ namespace QLNet {
         public virtual string name() { throw new NotImplementedException(); }
         public virtual string description() { throw new NotImplementedException(); }
         public virtual double value(double price) { throw new NotImplementedException(); }
+
+        public virtual void accept(IAcyclicVisitor v) {
+            if (v != null)
+                v.visit(this);
+            else
+                throw new ApplicationException("not an event visitor");
+        }
 	}
 }

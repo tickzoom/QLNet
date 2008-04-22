@@ -368,7 +368,7 @@ namespace QLNet {
             public List<CashFlow> cashflows;
             public Calendar calendar;
 
-            public override void Validate() {
+            public override void validate() {
                 if (settlementDate == null)
                     throw new ApplicationException("no settlement date provided");
                 foreach(CashFlow cf in cashflows)

@@ -230,5 +230,189 @@ namespace TestSuite {
          
       }
 
+        [TestMethod()]
+        public void testSouthKoreanSettlement() {
+            //("Testing South-Korean settlement holiday list...");
+
+            List<Date> expectedHol = new List<Date>();
+            expectedHol.Add(new Date(1, Month.January,2004));
+            expectedHol.Add(new Date(21, Month.January,2004));
+            expectedHol.Add(new Date(22, Month.January,2004));
+            expectedHol.Add(new Date(23, Month.January,2004));
+            expectedHol.Add(new Date(1, Month.March,2004));
+            expectedHol.Add(new Date(5, Month.April,2004));
+            expectedHol.Add(new Date(15, Month.April,2004)); // election day
+        //    expectedHol.Add(new Date(1, Month.May,2004)); // Saturday
+            expectedHol.Add(new Date(5, Month.May,2004));
+            expectedHol.Add(new Date(26, Month.May,2004));
+        //    expectedHol.Add(new Date(6, Month.June,2004)); // Sunday
+        //    expectedHol.Add(new Date(17, Month.July,2004)); // Saturday
+        //    expectedHol.Add(new Date(15, Month.August,2004)); // Sunday
+            expectedHol.Add(new Date(27, Month.September,2004));
+            expectedHol.Add(new Date(28, Month.September,2004));
+            expectedHol.Add(new Date(29, Month.September,2004));
+        //    expectedHol.Add(new Date(3, Month.October,2004)); // Sunday
+        //    expectedHol.Add(new Date(25,December,2004)); // Saturday
+
+        //    expectedHol.Add(new Date(1, Month.January,2005)); // Saturday
+            expectedHol.Add(new Date(8, Month.February,2005));
+            expectedHol.Add(new Date(9, Month.February,2005));
+            expectedHol.Add(new Date(10, Month.February,2005));
+            expectedHol.Add(new Date(1, Month.March,2005));
+            expectedHol.Add(new Date(5, Month.April,2005));
+            expectedHol.Add(new Date(5, Month.May,2005));
+        //    expectedHol.Add(new Date(15, Month.May,2005)); // Sunday
+            expectedHol.Add(new Date(6, Month.June,2005));
+        //    expectedHol.Add(new Date(17, Month.July,2005)); // Sunday
+            expectedHol.Add(new Date(15, Month.August,2005));
+        //    expectedHol.Add(new Date(17, Month.September,2005)); // Saturday
+        //    expectedHol.Add(new Date(18, Month.September,2005)); // Sunday
+            expectedHol.Add(new Date(19, Month.September,2005));
+            expectedHol.Add(new Date(3, Month.October,2005));
+        //    expectedHol.Add(new Date(25,December,2005)); // Sunday
+
+        //    expectedHol.Add(new Date(1, Month.January,2006)); // Sunday
+        //    expectedHol.Add(new Date(28, Month.January,2006)); // Saturday
+        //    expectedHol.Add(new Date(29, Month.January,2006)); // Sunday
+            expectedHol.Add(new Date(30, Month.January,2006));
+            expectedHol.Add(new Date(1, Month.March,2006));
+            expectedHol.Add(new Date(1, Month.May,2006));
+            expectedHol.Add(new Date(5, Month.May,2006));
+            expectedHol.Add(new Date(31, Month.May,2006)); // election
+            expectedHol.Add(new Date(6, Month.June,2006));
+            expectedHol.Add(new Date(17, Month.July,2006));
+            expectedHol.Add(new Date(15, Month.August,2006));
+            expectedHol.Add(new Date(3, Month.October,2006));
+            expectedHol.Add(new Date(5, Month.October,2006));
+            expectedHol.Add(new Date(6, Month.October,2006));
+        //    expectedHol.Add(new Date(7, Month.October,2006)); // Saturday
+            expectedHol.Add(new Date(25, Month.December, 2006));
+
+            expectedHol.Add(new Date(1, Month.January,2007));
+        //    expectedHol.Add(new Date(17, Month.February,2007)); // Saturday
+        //    expectedHol.Add(new Date(18, Month.February,2007)); // Sunday
+            expectedHol.Add(new Date(19, Month.February,2007));
+            expectedHol.Add(new Date(1, Month.March,2007));
+            expectedHol.Add(new Date(1, Month.May,2007));
+        //    expectedHol.Add(new Date(5, Month.May,2007)); // Saturday
+            expectedHol.Add(new Date(24, Month.May,2007));
+            expectedHol.Add(new Date(6, Month.June,2007));
+            expectedHol.Add(new Date(17, Month.July,2007));
+            expectedHol.Add(new Date(15, Month.August,2007));
+            expectedHol.Add(new Date(24, Month.September,2007));
+            expectedHol.Add(new Date(25, Month.September,2007));
+            expectedHol.Add(new Date(26, Month.September,2007));
+            expectedHol.Add(new Date(3, Month.October,2007));
+            expectedHol.Add(new Date(19,Month.December,2007)); // election
+            expectedHol.Add(new Date(25,Month.December,2007));
+
+            Calendar c = new SouthKorea(SouthKorea.Market.Settlement);
+            List<Date> hol = Calendar.holidayList(c, new Date(1, Month.January,2004),
+                                                             new Date(31, Month.December,2007));
+            for (int i=0; i<Math.Min(hol.Count, expectedHol.Count); i++) {
+                if (hol[i]!=expectedHol[i])
+                    Assert.Fail("expected holiday was " + expectedHol[i] + " while calculated holiday is " + hol[i]);
+            }
+            if (hol.Count!=expectedHol.Count)
+                Assert.Fail("there were " + expectedHol.Count
+                           + " expected holidays, while there are " + hol.Count
+                           + " calculated holidays");
+        }
+
+        [TestMethod()]
+        public void testKoreaStockExchange() {
+            //("Testing Korea Stock Exchange holiday list...");
+
+            List<Date> expectedHol = new List<Date>();
+            expectedHol.Add(new Date(1, Month.January,2004));
+            expectedHol.Add(new Date(21, Month.January,2004));
+            expectedHol.Add(new Date(22, Month.January,2004));
+            expectedHol.Add(new Date(23, Month.January,2004));
+            expectedHol.Add(new Date(1, Month.March,2004));
+            expectedHol.Add(new Date(5, Month.April,2004));
+            expectedHol.Add(new Date(15, Month.April,2004)); //election day
+        //    expectedHol.Add(new Date(1, Month.May,2004)); // Saturday
+            expectedHol.Add(new Date(5, Month.May,2004));
+            expectedHol.Add(new Date(26, Month.May,2004));
+        //    expectedHol.Add(new Date(6, Month.June,2004)); // Sunday
+        //    expectedHol.Add(new Date(17, Month.July,2004)); // Saturday
+        //    expectedHol.Add(new Date(15, Month.August,2004)); // Sunday
+            expectedHol.Add(new Date(27, Month.September,2004));
+            expectedHol.Add(new Date(28, Month.September,2004));
+            expectedHol.Add(new Date(29, Month.September,2004));
+        //    expectedHol.Add(new Date(3, Month.October,2004)); // Sunday
+        //    expectedHol.Add(new Date(25,December,2004)); // Saturday
+            expectedHol.Add(new Date(31,Month.December,2004));
+
+        //    expectedHol.Add(new Date(1, Month.January,2005)); // Saturday
+            expectedHol.Add(new Date(8, Month.February,2005));
+            expectedHol.Add(new Date(9, Month.February,2005));
+            expectedHol.Add(new Date(10, Month.February,2005));
+            expectedHol.Add(new Date(1, Month.March,2005));
+            expectedHol.Add(new Date(5, Month.April,2005));
+            expectedHol.Add(new Date(5, Month.May,2005));
+        //    expectedHol.Add(new Date(15, Month.May,2005)); // Sunday
+            expectedHol.Add(new Date(6, Month.June,2005));
+        //    expectedHol.Add(new Date(17, Month.July,2005)); // Sunday
+            expectedHol.Add(new Date(15, Month.August,2005));
+        //    expectedHol.Add(new Date(17, Month.September,2005)); // Saturday
+        //    expectedHol.Add(new Date(18, Month.September,2005)); // Sunday
+            expectedHol.Add(new Date(19, Month.September,2005));
+            expectedHol.Add(new Date(3, Month.October,2005));
+        //    expectedHol.Add(new Date(25,December,2005)); // Sunday
+            expectedHol.Add(new Date(30,Month.December,2005));
+
+        //    expectedHol.Add(new Date(1, Month.January,2006)); // Sunday
+        //    expectedHol.Add(new Date(28, Month.January,2006)); // Saturday
+        //    expectedHol.Add(new Date(29, Month.January,2006)); // Sunday
+            expectedHol.Add(new Date(30, Month.January,2006));
+            expectedHol.Add(new Date(1, Month.March,2006));
+            expectedHol.Add(new Date(1, Month.May,2006));
+            expectedHol.Add(new Date(5, Month.May,2006));
+            expectedHol.Add(new Date(31, Month.May,2006)); // election
+            expectedHol.Add(new Date(6, Month.June,2006));
+            expectedHol.Add(new Date(17, Month.July,2006));
+            expectedHol.Add(new Date(15, Month.August,2006));
+            expectedHol.Add(new Date(3, Month.October,2006));
+            expectedHol.Add(new Date(5, Month.October,2006));
+            expectedHol.Add(new Date(6, Month.October,2006));
+        //    expectedHol.Add(new Date(7, Month.October,2006)); // Saturday
+            expectedHol.Add(new Date(25,Month.December,2006));
+            expectedHol.Add(new Date(29,Month.December,2006));
+
+            expectedHol.Add(new Date(1, Month.January,2007));
+        //    expectedHol.Add(new Date(17, Month.February,2007)); // Saturday
+        //    expectedHol.Add(new Date(18, Month.February,2007)); // Sunday
+            expectedHol.Add(new Date(19, Month.February,2007));
+            expectedHol.Add(new Date(1, Month.March,2007));
+            expectedHol.Add(new Date(1, Month.May,2007));
+        //    expectedHol.Add(new Date(5, Month.May,2007)); // Saturday
+            expectedHol.Add(new Date(24, Month.May,2007));
+            expectedHol.Add(new Date(6, Month.June,2007));
+            expectedHol.Add(new Date(17, Month.July,2007));
+            expectedHol.Add(new Date(15, Month.August,2007));
+            expectedHol.Add(new Date(24, Month.September,2007));
+            expectedHol.Add(new Date(25, Month.September,2007));
+            expectedHol.Add(new Date(26, Month.September,2007));
+            expectedHol.Add(new Date(3, Month.October,2007));
+            expectedHol.Add(new Date(19,Month.December,2007)); // election
+            expectedHol.Add(new Date(25,Month.December,2007));
+            expectedHol.Add(new Date(31,Month.December,2007));
+
+            Calendar c = new SouthKorea(SouthKorea.Market.KRX);
+            List<Date> hol = Calendar.holidayList(c, new Date(1, Month.January,2004),
+                                                             new Date(31,Month.December,2007));
+
+            for (int i = 0; i < Math.Min(hol.Count, expectedHol.Count); i++) {
+                if (hol[i]!=expectedHol[i])
+                    Assert.Fail("expected holiday was " + expectedHol[i]
+                               + " while calculated holiday is " + hol[i]);
+            }
+            if (hol.Count != expectedHol.Count)
+                Assert.Fail("there were " + expectedHol.Count
+                           + " expected holidays, while there are " + hol.Count
+                           + " calculated holidays");
+        }
+
    }
 }
