@@ -48,9 +48,9 @@ namespace EquityOption {
             Console.WriteLine("Maturity = "    + maturity);
             Console.WriteLine("Underlying price = " + underlying);
             Console.WriteLine("Strike = "      + strike);
-            Console.WriteLine("Risk-free interest rate = " + riskFreeRate);
-            Console.WriteLine("Dividend yield = " + dividendYield);
-            Console.WriteLine("Volatility = " + volatility);
+            Console.WriteLine("Risk-free interest rate = {0:0.000000%}", riskFreeRate);
+            Console.WriteLine("Dividend yield = {0:0.000000%}", dividendYield);
+            Console.WriteLine("Volatility = {0:0.000000%}", volatility);
             Console.Write("\n");
 
             string method;
@@ -59,10 +59,10 @@ namespace EquityOption {
 
             // write column headings
             int[] widths = new int[]{ 35, 14, 14, 14 };
-            Console.WriteLine("{0," + widths[0] + "}" + "Method" +
-                              "{0," + widths[1] + "}" + "European" +
-                              "{0," + widths[2] + "}" + "Bermudan" +
-                              "{0," + widths[3] + "}" + "American");
+            Console.Write("{0,-" + widths[0] + "}", "Method");
+            Console.Write("{0,-" + widths[1] + "}", "European");
+            Console.Write("{0,-" + widths[2] + "}", "Bermudan");
+            Console.WriteLine("{0,-" + widths[3] + "}", "American");
 
             List<Date> exerciseDates = new List<Date>(); ;
             for (int i = 1; i <= 4; i++)
@@ -82,23 +82,22 @@ namespace EquityOption {
             BlackScholesMertonProcess bsmProcess = new BlackScholesMertonProcess(underlyingH, flatDividendTS,
                                                                                  flatTermStructure, flatVolTS);
 
-            //// options
-            //VanillaOption europeanOption(payoff, europeanExercise);
-            //VanillaOption bermudanOption(payoff, bermudanExercise);
-            //VanillaOption americanOption(payoff, americanExercise);
+            // options
+            VanillaOption europeanOption = new VanillaOption(payoff, europeanExercise);
+            VanillaOption bermudanOption = new VanillaOption(payoff, bermudanExercise);
+            VanillaOption americanOption = new VanillaOption(payoff, americanExercise);
 
-            //// Analytic formulas:
+            // Analytic formulas:
 
-            //// Black-Scholes for European
-            //method = "Black-Scholes";
-            //europeanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //                             new AnalyticEuropeanEngine(bsmProcess)));
-            //std::cout << std::setw(widths[0]) << std::left << method
-            //          << std::fixed
-            //          << std::setw(widths[1]) << std::left << europeanOption.NPV()
-            //          << std::setw(widths[2]) << std::left << "N/A"
-            //          << std::setw(widths[3]) << std::left << "N/A"
-            //          << std::endl;
+            // Black-Scholes for European
+            method = "Black-Scholes";
+            europeanOption.setPricingEngine(new AnalyticEuropeanEngine(bsmProcess));
+
+            Console.Write("{0,-" + widths[0] + "}", method);
+            Console.Write("{0,-" + widths[1] + ":0.000000}", europeanOption.NPV());
+            Console.Write("{0,-" + widths[2] + "}", "N/A");
+            Console.WriteLine("{0,-" + widths[3] + "}", "N/A");
+
 
             //// Barone-Adesi and Whaley approximation for American
             //method = "Barone-Adesi/Whaley";
