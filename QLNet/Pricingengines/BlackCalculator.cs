@@ -328,13 +328,14 @@ namespace QLNet {
                     methodInfo.Invoke(this, new object[] { o });
                 }
             }
-            void visit(Payoff p) {
+
+            public void visit(Payoff p) {
                 throw new NotSupportedException("unsupported payoff type: " + p.name());
             }
 
-            void visit(PlainVanillaPayoff p ) { }
+            public void visit(PlainVanillaPayoff p) { }
 
-            void visit(CashOrNothingPayoff payoff) {
+            public void visit(CashOrNothingPayoff payoff) {
                 black_.alpha_ = black_.DalphaDd1_ = 0.0;
                 black_.X_ = payoff.cashPayoff();
                 black_.DXDstrike_ = 0.0;
@@ -352,7 +353,7 @@ namespace QLNet {
                 }
             }
 
-            void visit(AssetOrNothingPayoff payoff) {
+            public void visit(AssetOrNothingPayoff payoff) {
                 black_.beta_ = black_.DbetaDd2_ = 0.0;
                 switch (payoff.optionType()) {
                     case Option.Type.Call:
@@ -368,7 +369,7 @@ namespace QLNet {
                 }
             }
 
-            void visit(GapPayoff payoff) {
+            public void visit(GapPayoff payoff) {
                 black_.X_ = payoff.secondStrike();
                 black_.DXDstrike_ = 0.0;
             }

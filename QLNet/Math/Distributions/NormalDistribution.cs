@@ -35,7 +35,7 @@ namespace QLNet {
     public class NormalDistribution {
         private double average_, sigma_, normalizationFactor_, denominator_, derNormalizationFactor_;
 
-        //public NormalDistribution(double average = 0.0, double sigma = 1.0);
+        public NormalDistribution() : this(0.0, 1.0) { }
         public NormalDistribution(double average, double sigma) {
             average_ = average;
             sigma_ = sigma;
@@ -74,7 +74,7 @@ namespace QLNet {
     */
     public class CumulativeNormalDistribution {
         private double average_, sigma_;
-        private NormalDistribution gaussian_;
+        private NormalDistribution gaussian_ = new NormalDistribution();
         
         public CumulativeNormalDistribution() : this(0.0, 1.0) { }
         public CumulativeNormalDistribution(double average, double sigma) {
