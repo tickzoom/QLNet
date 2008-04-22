@@ -125,9 +125,11 @@
     <Compile Include="payoff.cs" />
     <Compile Include="PricingEngine.cs" />
     <Compile Include="Pricingengines\BlackCalculator.cs" />
+    <Compile Include="Pricingengines\blackformula.cs" />
     <Compile Include="Pricingengines\Bond\Discountingbondengine.cs" />
     <Compile Include="Pricingengines\Swap\Discountingswapengine.cs" />
     <Compile Include="Pricingengines\vanilla\AnalyticEuropeanEngine.cs" />
+    <Compile Include="Pricingengines\vanilla\baroneadesiwhaleyengine.cs" />
     <Compile Include="processes\BlackScholesProcess.cs" />
     <Compile Include="processes\EulerDiscretization.cs" />
     <Compile Include="processes\GeometricBrownianMotionProcess.cs" />

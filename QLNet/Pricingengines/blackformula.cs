@@ -1,0 +1,76 @@
+﻿/*
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+  
+ This file is part of QLNet Project http://www.qlnet.org
+
+ QLNet is free software: you can redistribute it and/or modify it
+ under the terms of the QLNet license.  You should have received a
+ copy of the license along with this program; if not, license is  
+ available online at <http://trac2.assembla.com/QLNet/wiki/License>.
+  
+ QLNet is a based on QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+ The QuantLib license is available online at http://quantlib.org/license.shtml.
+ 
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace QLNet {
+    /*! Black 1976 formula
+    \warning instead of volatility it uses standard deviation,
+             i.e. volatility*sqrt(timeToMaturity)
+    */
+    public partial class Utils {
+        private static void checkParameters(double strike, double forward, double displacement) {
+            if (!(strike >= 0.0))
+                throw new ApplicationException("strike (" + strike + ") must be non-negative");
+            if (!(forward > 0.0))
+                throw new ApplicationException("forward (" + forward + ") must be positive");
+            if (!(displacement >= 0.0))
+                throw new ApplicationException("displacement (" + displacement + ") must be non-negative");
+        }
+
+        public static double blackFormula(Option.Type optionType, double strike, double forward, double stdDev) {
+            return blackFormula(optionType, strike, forward, stdDev, 1.0, 0.0);
+        }
+        public static double blackFormula(Option.Type optionType, double strike, double forward, double stdDev,
+                                          double discount, double displacement) {
+            checkParameters(strike, forward, displacement);
+            if (!(stdDev>=0.0))
+                throw new ApplicationException("stdDev (" + stdDev + ") must be non-negative");
+            if (!(discount>0.0))
+                throw new ApplicationException("discount (" + discount + ") must be positive");
+
+            if (stdDev==0.0)
+                return Math.Max((forward-strike)*(int)optionType, 0.0)*discount;
+
+            forward = forward + displacement;
+            strike = strike + displacement;
+
+            // since displacement is non-negative strike==0 iff displacement==0
+            // so returning forward*discount is OK 
+            if (strike==0.0)
+                return (optionType==Option.Type.Call ? forward*discount : 0.0);
+
+            double d1 = Math.Log(forward/strike)/stdDev + 0.5*stdDev;
+            double d2 = d1 - stdDev;
+            CumulativeNormalDistribution phi = new CumulativeNormalDistribution();
+            double nd1 = phi.value((int)optionType * d1);
+            double nd2 = phi.value((int)optionType * d2);
+            double result = discount * (int)optionType * (forward * nd1 - strike * nd2);
+            if (!(result>=0.0))
+                throw new ApplicationException("negative value (" + result + ") for " +
+                      stdDev + " stdDev, " +
+                      optionType + " option, " +
+                      strike + " strike , " +
+                      forward + " forward");
+            return result;
+        }
+    }
+}
