@@ -71,7 +71,7 @@ namespace QLNet {
         }
 
         //! spot variance
-        // public double blackVariance(Date maturity, double strike, bool extrapolate = false);
+        public double blackVariance(Date maturity, double strike) { return blackVariance(maturity, strike, false); }
         public double blackVariance(Date d, double strike, bool extrapolate) {
             checkRange(d, extrapolate);
             checkStrike(strike, extrapolate);

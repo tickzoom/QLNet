@@ -24,42 +24,72 @@ using System.Text;
 
 namespace QLNet {
     //! South Korean calendars
-    /*! Holidays for the Korea exchange
-        (data from <http://www.krx.co.kr>):
+    /*! Public holidays:
         <ul>
         <li>Saturdays</li>
         <li>Sundays</li>
         <li>New Year's Day, January 1st</li>
         <li>Independence Day, March 1st</li>
-        <li>Arbour Day, April 5th</li>
-        <li>Labor Day, May 1st</li>
+        <li>Arbour Day, April 5th (until 2005)</li>
+        <li>Labour Day, May 1st</li>
         <li>Children's Day, May 5th</li>
         <li>Memorial Day, June 6th</li>
-        <li>Constitution Day, July 17th</li>
+        <li>Constitution Day, July 17th (until 2007)</li>
         <li>Liberation Day, August 15th</li>
         <li>National Fondation Day, October 3th</li>
         <li>Christmas Day, December 25th</li>
         </ul>
 
         Other holidays for which no rule is given
-        (data available for 2004-2007 only:)
+        (data available for 2004-2010 only:)
         <ul>
-        <li>Lunar New Year</li>
-        <li>Election Day 2004</li>
-        <li>Buddha's birthday</li>
-        <li>Harvest Moon Day</li>
+        <li>Lunar New Year, the last day of the previous lunar year,
+            January 1st, 2nd in lunar calendar</li>
+        <li>Election Days</li>
+        <li>National Assemblies</li>
+        <li>Presidency</li>
+        <li>Regional Election Days</li>
+        <li>Buddha's birthday, April 8th in lunar calendar</li>
+        <li>Harvest Moon Day, August 14th, 15th, 16th in lunar calendar</li>
+        </ul>
+
+        Holidays for the Korea exchange
+        (data from <http://www.krx.co.kr> or
+        <http://www.dooriworld.com/daishin/holiday/holiday.html>):
+        <ul>
+        <li>Public holidays as listed above</li>
+        <li>Year-end closing</li>
         </ul>
 
         \ingroup calendars
     */
     public class SouthKorea : Calendar {
-        public SouthKorea() : base(Impl.Singleton) { }
+        public enum Market { Settlement,  //!< Public holidays
+                      KRX          //!< Korea exchange
+        }
 
-        class Impl : Calendar {
-            public static readonly Impl Singleton = new Impl();
-            private Impl() { }
+        public SouthKorea() : this(Market.KRX) { }
+        public SouthKorea(Market m)
+            : base() {
+            // all calendar instances on the same market share the same
+            // implementation instance
+            switch (m) {
+                case Market.Settlement:
+                    calendar_ = Settlement.Singleton;
+                    break;
+                case Market.KRX:
+                    calendar_ = KRX.Singleton;
+                    break;
+                default:
+                    throw new ArgumentException("Unknown market: " + m); ;
+            }
+        }
+
+        class Settlement : Calendar {
+            public static readonly Settlement Singleton = new Settlement();
+            public Settlement() { }
           
-            public override string name() { return "Korea exchange"; }
+            public override string name() { return "South-Korean settlement"; }
             public override bool isWeekend(DayOfWeek w) {
                 return w == DayOfWeek.Saturday || w == DayOfWeek.Sunday;
             }
@@ -75,15 +105,15 @@ namespace QLNet {
                     // Independence Day
                     || (d == 1 && m == Month.March)
                     // Arbour Day
-                    || (d == 5 && m == Month.April)
-                    // Labor Day
+                    || (d == 5 && m == Month.April && y <= 2005)
+                    // Labour Day
                     || (d == 1 && m == Month.May)
                     // Children's Day
                     || (d == 5 && m == Month.May)
                     // Memorial Day
                     || (d == 6 && m == Month.June)
                     // Constitution Day
-                    || (d == 17 && m == Month.July)
+                    || (d == 17 && m == Month.July && y <= 2007)
                     // Liberation Day
                     || (d == 15 && m == Month.August)
                     // National Foundation Day
@@ -91,29 +121,67 @@ namespace QLNet {
                     // Christmas Day
                     || (d == 25 && m == Month.December)
 
-                    // Lunar New Year 2004
-                    || ((d == 21 || d==22 || d==23 || d==24 || d==26 )
-                        && m == Month.January && y==2004)
-                    || ((d == 8 || d==9 || d==10) && m == Month.February && y==2005)
-                    || ((d==29 || d==30 || d==31 ) && m == Month.January && y==2006)
-                    || (d==19 && m == Month.February && y==2007)
+                    // Lunar New Year
+                    || ((d == 21 || d == 22 || d == 23) && m == Month.January && y == 2004)
+                    || ((d == 8 || d == 9 || d == 10) && m == Month.February && y == 2005)
+                    || ((d == 28 || d == 29 || d == 30) && m == Month.January && y == 2006)
+                    || (d == 19 && m == Month.February && y == 2007)
+                    || ((d == 6 || d == 7 || d == 8) && m == Month.February && y == 2008)
+                    || ((d == 25 || d == 26 || d == 27) && m == Month.January && y == 2009)
+                    || ((d == 13 || d == 14 || d == 15) && m == Month.February && y == 2010)
                     // Election Day 2004
-                    || (d == 15 && m == Month.April && y==2004)
+                    || (d == 15 && m == Month.April && y == 2004)    // National Assembly
+                    || (d == 31 && m == Month.May && y == 2006)      // Regional election
+                    || (d == 19 && m == Month.December && y == 2007) // Presidency
+                    || (d == 9 && m == Month.April && y == 2008)
                     // Buddha's birthday
-                    || (d == 26 && m == Month.May && y==2004)
-                    || (d == 15 && m == Month.May && y==2005)
-                    || (d == 5 && m == Month.May && y==2006)
-                    || (d == 24 && m == Month.May && y==2007)
+                    || (d == 26 && m == Month.May && y == 2004)
+                    || (d == 15 && m == Month.May && y == 2005)
+                    || (d == 5 && m == Month.May && y == 2006)
+                    || (d == 24 && m == Month.May && y == 2007)
+                    || (d == 12 && m == Month.May && y == 2008)
+                    || (d == 2 && m == Month.May && y == 2009)
+                    || (d == 21 && m == Month.May && y == 2010)
                     // Harvest Moon Day
-                    || ((d == 27 || d == 28 || d == 29) && m == Month.September && y==2004)
-                    || ((d == 17 || d == 18 || d == 19) && m == Month.September && y==2005)
-                    || ((d == 5 || d == 6 || d == 7) && m == Month.October && y==2006)
-                    || ((d == 24 || d == 25 || d == 26) && m == Month.September && y==2007)
+                    || ((d == 27 || d == 28 || d == 29) && m == Month.September && y == 2004)
+                    || ((d == 17 || d == 18 || d == 19) && m == Month.September && y == 2005)
+                    || ((d == 5 || d == 6 || d == 7) && m == Month.October && y == 2006)
+                    || ((d == 24 || d == 25 || d == 26) && m == Month.September && y == 2007)
+                    || ((d == 13 || d == 14 || d == 15) && m == Month.September && y == 2008)
+                    || ((d == 2 || d == 3 || d == 4) && m == Month.October && y == 2009)
+                    || ((d == 21 || d == 22 || d == 23) && m == Month.September && y == 2010)
                     )
                     return false;
+
                 return true;
             }
         }
+
+        class KRX : Settlement {
+            new public static readonly KRX Singleton = new KRX();
+            public KRX() { }
+
+            public override string name() { return "South-Korea exchange"; }
+            public override bool isBusinessDay(Date date)  {
+                // public holidays
+                if ( !base.isBusinessDay(date) )
+                    return false;
+
+                int d = date.Day;
+                Month m = (Month)date.Month;
+                int y = date.Year;
+
+                if (// Year-end closing
+                       (d == 31 && m == Month.December && y == 2004)
+                    || (d == 30 && m == Month.December && y == 2005)
+                    || (d == 29 && m == Month.December && y == 2006)
+                    || (d == 31 && m == Month.December && y == 2007)
+                    )
+                    return false;
+
+                return true;
+            }
+        };
     }
 }
 

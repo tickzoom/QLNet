@@ -79,9 +79,9 @@ namespace QLNet {
         private bool updated_;
 
 
-        //public GeneralizedBlackScholesProcess(Handle<Quote> x0, Handle<YieldTermStructure> dividendTS,
-        //                    Handle<YieldTermStructure> riskFreeTS, Handle<BlackVolTermStructure> blackVolTS,
-        //                    IDiscretization1D d = new EulerDiscretization());
+        public GeneralizedBlackScholesProcess(Handle<Quote> x0, Handle<YieldTermStructure> dividendTS,
+                            Handle<YieldTermStructure> riskFreeTS, Handle<BlackVolTermStructure> blackVolTS)
+            : this(x0, dividendTS, riskFreeTS, blackVolTS, new EulerDiscretization()) { }
         public GeneralizedBlackScholesProcess(Handle<Quote> x0, Handle<YieldTermStructure> dividendTS,
                                               Handle<YieldTermStructure> riskFreeTS, Handle<BlackVolTermStructure> blackVolTS,
                                               IDiscretization1D disc)

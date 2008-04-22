@@ -247,8 +247,9 @@ namespace QLNet {
                 nominal = default(double);
             }
             
-            public override void Validate() {
-                base.Validate();
+            public override void validate() {
+                base.validate();
+
                 if (nominal == default(double)) throw new ArgumentException("nominal null or not set");
                 if (fixedResetDates.Count != fixedPayDates.Count)
                     throw new ArgumentException("number of fixed start dates different from number of fixed payment dates");
@@ -270,8 +271,8 @@ namespace QLNet {
         //! %Results from simple swap calculation
         new class Results : Swap.Results {
             public double? fairRate, fairSpread;
-            public override void Reset() {
-                base.Reset();
+            public override void reset() {
+                base.reset();
                 fairRate = fairSpread = null;
             }
         };
