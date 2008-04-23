@@ -24,10 +24,10 @@ ABBREVIATE_BRIEF       = "The $name class" \
                          the
 ALWAYS_DETAILED_SEC    = NO
 INLINE_INHERITED_MEMB  = NO
-FULL_PATH_NAMES        = YES
+FULL_PATH_NAMES        = NO
 STRIP_FROM_PATH        = "C:/Documents and Settings/andrea.EMK/"
 STRIP_FROM_INC_PATH    = 
-SHORT_NAMES            = NO
+SHORT_NAMES            = YES
 JAVADOC_AUTOBRIEF      = NO
 QT_AUTOBRIEF           = NO
 MULTILINE_CPP_IS_BRIEF = NO
@@ -35,7 +35,7 @@ DETAILS_AT_TOP         = YES
 INHERIT_DOCS           = YES
 SEPARATE_MEMBER_PAGES  = NO
 TAB_SIZE               = 4
-ALIASES                = 
+ALIASES                = region=\name
 OPTIMIZE_OUTPUT_FOR_C  = NO
 OPTIMIZE_OUTPUT_JAVA   = NO
 OPTIMIZE_FOR_FORTRAN   = NO
@@ -100,15 +100,15 @@ FILE_PATTERNS          = *.cs \
 RECURSIVE              = YES
 EXCLUDE                = 
 EXCLUDE_SYMLINKS       = NO
-EXCLUDE_PATTERNS       = 
+EXCLUDE_PATTERNS       = */.svn/*
 EXCLUDE_SYMBOLS        = 
 EXAMPLE_PATH           = 
 EXAMPLE_PATTERNS       = *
 EXAMPLE_RECURSIVE      = NO
 IMAGE_PATH             = 
-INPUT_FILTER           = 
+INPUT_FILTER           = D:/Andrea/Sviluppi/QLNet/Docs/CFilter.exe
 FILTER_PATTERNS        = 
-FILTER_SOURCE_FILES    = NO
+FILTER_SOURCE_FILES    = YES
 #---------------------------------------------------------------------------
 # configuration options related to source browsing
 #---------------------------------------------------------------------------
@@ -132,9 +132,9 @@ IGNORE_PREFIX          =
 GENERATE_HTML          = YES
 HTML_OUTPUT            = html
 HTML_FILE_EXTENSION    = .html
-HTML_HEADER            = D:/QLNet/Docs/qlnetheader.html
-HTML_FOOTER            = D:/QLNet/Docs/qlnetfooter.html
-HTML_STYLESHEET        = D:/QLNet/Docs/qlnet.css
+HTML_HEADER            = qlnetheader.html
+HTML_FOOTER            = qlnetfooter.html
+HTML_STYLESHEET        = qlnet.css
 HTML_ALIGN_MEMBERS     = YES
 GENERATE_HTMLHELP      = NO
 GENERATE_DOCSET        = NO
