@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008 Andrea Maggiulli 
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -22,18 +23,33 @@ using System.Collections.Generic;
 
 namespace QLNet
 {
-    // Interest-rate term structure
-    // This class defines the interface of concrete rate structures which will be derived from this one.
-    // Rates are assumed to be annual continuous compounding.
+   /// <summary>
+   /// Interest-rate term structure
+   /// This class defines the interface of concrete rate structures which will be derived from 
+   /// this one.
+   /// Rates are assumed to be annual continuous compounding.
+   /// \ingroup yieldtermstructures
+   /// \test observability against evaluation date changes is checked.
+   /// </summary>
     public class YieldTermStructure : TermStructure
     {
-        // See the TermStructure documentation for issues regarding constructors.
-        // term structures initialized by means of this constructor must manage their own reference date
-        // by overriding the referenceDate() method.
-        public YieldTermStructure() : this(new DayCounter()) { }
+       #region Constructors
+       /// See the TermStructure documentation for issues regarding constructors.
+
+       public YieldTermStructure() : this(new DayCounter()) { }
+        /// <summary>
+        /// Default constructor
+        /// <remarks>
+        /// \warning term structures initialized by means of this
+        /// constructor must manage their own reference date
+        /// by overriding the referenceDate() method.
+        /// </remarks> 
+        /// </summary>
         public YieldTermStructure(DayCounter dc) : base(dc) { }
 
-        //! initialize with a fixed reference date
+        /// <summary>
+        /// initialize with a fixed reference date
+        /// </summary>
         public YieldTermStructure(Date referenceDate) : this(referenceDate, new Calendar(), new DayCounter()) { }
         public YieldTermStructure(Date referenceDate, Calendar cal) : this(referenceDate, cal, new DayCounter()) { }
         public YieldTermStructure(Date referenceDate, Calendar cal, DayCounter dc) : base(referenceDate, cal, dc) { }
@@ -43,9 +59,10 @@ namespace QLNet
         public YieldTermStructure(int settlementDays, Calendar cal, DayCounter dc) :
             base(settlementDays, cal, dc) { }
 
+       #endregion
 
-        #region zero-yield rates
-        // These methods return the implied zero-yield rate for a given date or time.  In the former case, the time is calculated as a fraction of year from the reference date.
+       #region zero-yield rates
+       /// These methods return the implied zero-yield rate for a given date or time.  In the former case, the time is calculated as a fraction of year from the reference date.
 
         // The resulting interest rate has the required daycounting rule.
         public InterestRate zeroRate(Date d, DayCounter dayCounter, Compounding comp) {
@@ -80,8 +97,9 @@ namespace QLNet
         }
         #endregion
 
-        #region discount factors
-        // These methods return the discount factor for a given date or time.  In the former case, the time is calculated as a fraction of year from the reference date.
+       #region discount factors
+        /// These methods return the discount factor for a given date or time.  In the former case, the time is calculated as a fraction of year from the reference date.
+         
         public double discount(Date d) { return discount(timeFromReference(d), false); }
         public double discount(Date d, bool extrapolate) { return discount(timeFromReference(d), extrapolate); }
 
@@ -90,9 +108,9 @@ namespace QLNet
         public double discount(double t, bool extrapolate) { checkRange(t, extrapolate); return discountImpl(t); }
         #endregion
 
-        #region forward rates
-        // These methods returns the implied forward interest rate between two dates or times.  In the former case, times are calculated as fractions of year from the reference date.
-        // The resulting interest rate has the required day-counting rule.
+       #region forward rates
+       /// These methods returns the implied forward interest rate between two dates or times.  In the former case, times are calculated as fractions of year from the reference date.
+       /// The resulting interest rate has the required day-counting rule.
         public InterestRate forwardRate(Date d1, Date d2, DayCounter resultDayCounter, Compounding comp)
         {
             return forwardRate(d1, d2, resultDayCounter, comp, Frequency.Annual, false);
@@ -151,25 +169,37 @@ namespace QLNet
         }
         #endregion
 
-        #region par rates
-        // These methods returns the implied par rate for a given sequence of payments at the given dates or times.  In the former case, times are calculated as fractions of year from the reference date.
-        // !warning though somewhat related to a swap rate, this method is not to be used for the fair rate of a real swap, since it does not take into account all the market conventions' details.
-        // The correct way to evaluate such rate is to instantiate a SimpleSwap with the correct conventions, pass it the term structure and call the swap's fairRate() method.
-        public double parRate(int tenor, Date startDate) { return parRate(tenor, startDate, Frequency.Annual, false); }
-        public double parRate(int tenor, Date startDate, Frequency freq) { return parRate(tenor, startDate, freq, false); }
-        public double parRate(int tenor, Date startDate, Frequency freq, bool extrapolate)
-        {
-            List<Date> dates = new List<Date>(); dates.Add(startDate);
-            for (int i = 1; i <= tenor; ++i)
-                dates.Add(startDate + new Period(i, TimeUnit.Years));
-            return parRate(dates, freq, extrapolate);
-        }
+       #region parRates
+       /// These methods returns the implied par rate for a given
+       /// sequence of payments at the given dates or times.  In the
+       /// former case, times are calculated as fractions of year
+       /// from the reference date.
+       /// 
+       /// \warning though somewhat related to a swap rate, this
+       ///          method is not to be used for the fair rate of a
+       ///          real swap, since it does not take into account
+       ///          all the market conventions' details. The correct
+       ///          way to evaluate such rate is to instantiate a
+       ///          SimpleSwap with the correct conventions, pass it
+       ///          the term structure and call the swap's fairRate()
+       ///          method.
+       /// 
+       
+       public double parRate(int tenor, Date startDate) { return parRate(tenor, startDate, Frequency.Annual, false); }
+       public double parRate(int tenor, Date startDate, Frequency freq) { return parRate(tenor, startDate, freq, false); }
+       public double parRate(int tenor, Date startDate, Frequency freq, bool extrapolate)
+       {
+           List<Date> dates = new List<Date>(); dates.Add(startDate);
+           for (int i = 1; i <= tenor; ++i)
+               dates.Add(startDate + new Period(i, TimeUnit.Years));
+           return parRate(dates, freq, extrapolate);
+       }
 
-        // the first date in the vector must equal the start date; the following dates must equal the payment dates.
-        public double parRate(List<Date> dates) { return parRate(dates, Frequency.Annual, false); }
-        public double parRate(List<Date> dates, Frequency freq) { return parRate(dates, freq, false); }
-        public double parRate(List<Date> dates, Frequency freq, bool extrapolate)
-        {
+       // the first date in the vector must equal the start date; the following dates must equal the payment dates.
+       public double parRate(List<Date> dates) { return parRate(dates, Frequency.Annual, false); }
+       public double parRate(List<Date> dates, Frequency freq) { return parRate(dates, freq, false); }
+       public double parRate(List<Date> dates, Frequency freq, bool extrapolate)
+       {
             List<double> times = new List<double>(dates.Count);
             for (int i = 0; i < dates.Count; i++)
                 times[i] = timeFromReference(dates[i]);
@@ -192,14 +222,18 @@ namespace QLNet
         }
         #endregion
 
-        ////////////////////////////////////////////
-        // TermStructure interface
+        /// <summary>
+        /// TermStructure interface
+        /// </summary>
         public override Date maxDate() { throw new NotImplementedException(); }
 
-        // Returns the discount factor for the given date calculating it from the zero yield.
-        // This method must be implemented in derived classes to perform the actual discount and rate calculations.
-        // When they are called, range check has already been performed;
-        // therefore, they must assume that extrapolation is required.
+       /// <summary>
+       /// Returns the discount factor for the given date calculating it from the zero yield.
+       /// This method must be implemented in derived classes to perform the actual discount a
+       /// nd rate calculations.
+       /// When they are called, range check has already been performed
+       /// therefore, they must assume that extrapolation is required.
+       /// </summary>
         protected virtual double discountImpl(double t) { throw new NotImplementedException(); }
     }
 }
