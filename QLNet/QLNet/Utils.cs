@@ -42,6 +42,12 @@ namespace QLNet {
         public static bool noOption(List<double> caps, List<double> floors, int i) {
             return (Get(caps, i) == default(double)) && (Get(floors, i) == default(double));
         }
+
+        public static void swap<T>(ref T a1, ref T a2) {
+            T t = a2;
+            a2 = a1;
+            a1 = t;
+        }
     }
 
     // this is a redefined collection class to emulate array-type behaviour at initialisation

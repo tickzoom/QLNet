@@ -111,21 +111,21 @@ namespace QLNet {
         }
 
         public static Vector operator *(Vector v, Matrix m){
-            if (!(v.size() == m.rows()))
+            if (!(v.Count == m.rows()))
                 throw new ApplicationException("vectors and matrices with different sizes ("
-                       + v.size() + ", " + m.rows() + "x" + m.columns() + ") cannot be multiplied");
+                       + v.Count + ", " + m.rows() + "x" + m.columns() + ") cannot be multiplied");
             Vector result = new Vector(m.columns());
-            for (int i=0; i<result.size(); i++)
+            for (int i = 0; i < result.Count; i++)
                 result[i] = v * m.column(i);
             return result;
         }
         /*! \relates Matrix */
         public static Vector operator *(Matrix m, Vector v) {
-            if (!(v.size() == m.columns()))
+            if (!(v.Count == m.columns()))
                 throw new ApplicationException("vectors and matrices with different sizes ("
-                       + v.size() + ", " + m.rows() + "x" + m.columns() + ") cannot be multiplied");
+                       + v.Count + ", " + m.rows() + "x" + m.columns() + ") cannot be multiplied");
             Vector result = new Vector(m.rows());
-            for (int i=0; i<result.size(); i++)
+            for (int i = 0; i < result.Count; i++)
                 result[i] = m.row(i) * v;
             return result;
         }

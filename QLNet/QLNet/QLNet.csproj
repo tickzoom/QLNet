@@ -62,6 +62,7 @@
     <Compile Include="Error.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="Exercise.cs" />
+    <Compile Include="grid.cs" />
     <Compile Include="Handle.cs" />
     <Compile Include="Index.cs" />
     <Compile Include="Indexes\bmaindex.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Math\Interpolations\Linearinterpolation.cs" />
     <Compile Include="Math\Interpolations\Loginterpolation.cs" />
     <Compile Include="Math\Matrix.cs" />
+    <Compile Include="Math\SampledCurve.cs" />
     <Compile Include="Math\Solver1d.cs" />
     <Compile Include="Math\Rounding.cs" />
     <Compile Include="Math\Solvers1d\Bisection.cs">
@@ -131,6 +133,7 @@
     <Compile Include="Pricingengines\Swap\Discountingswapengine.cs" />
     <Compile Include="Pricingengines\vanilla\AnalyticEuropeanEngine.cs" />
     <Compile Include="Pricingengines\vanilla\baroneadesiwhaleyengine.cs" />
+    <Compile Include="Pricingengines\vanilla\bjerksundstenslandengine.cs" />
     <Compile Include="processes\BlackScholesProcess.cs" />
     <Compile Include="processes\EulerDiscretization.cs" />
     <Compile Include="processes\GeometricBrownianMotionProcess.cs" />
