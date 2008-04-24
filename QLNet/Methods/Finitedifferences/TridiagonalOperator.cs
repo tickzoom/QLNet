@@ -36,7 +36,7 @@ namespace QLNet {
         public Vector diagonal() { return diagonal_; }
         public Vector upperDiagonal() { return upperDiagonal_; }
 
-        public int size() { return diagonal_.size(); }
+        public int size() { return diagonal_.Count; }
 
         // protected TimeSetter timeSetter_;
 
@@ -57,13 +57,13 @@ namespace QLNet {
         }
 
         public TridiagonalOperator(Vector low, Vector mid, Vector high) {
-            diagonal_ = mid;
-            lowerDiagonal_ = low;
-            upperDiagonal_ = high;
+            diagonal_ = (Vector)mid.Clone();
+            lowerDiagonal_ = (Vector)low.Clone();
+            upperDiagonal_ = (Vector)high.Clone();
 
-            if (!(low.size() == mid.size() - 1))
+            if (!(low.Count == mid.Count - 1))
                 throw new ApplicationException("wrong size for lower diagonal vector");
-            if (!(high.size() == mid.size() - 1))
+            if (!(high.Count == mid.Count - 1))
                 throw new ApplicationException("wrong size for upper diagonal vector");
         }
 
@@ -73,14 +73,14 @@ namespace QLNet {
 
         //! apply operator to a given array
         public Vector applyTo(Vector v) {
-            if (!(v.size() == size()))
-                throw new ApplicationException("vector of the wrong size (" + v.size() + "instead of " + size() + ")");
+            if (!(v.Count == size()))
+                throw new ApplicationException("vector of the wrong size (" + v.Count + "instead of " + size() + ")");
 
             Vector result = new Vector(size());
 
             // transform(InputIterator1 start1, InputIterator1 finish1, InputIterator2 start2, OutputIterator result,
             // BinaryOperation binary_op)
-            for (int i = 0; i < diagonal_.size(); i++)
+            for (int i = 0; i < diagonal_.Count; i++)
                 result[i] = diagonal_[i] * v[i];
 
             // matricial product
@@ -94,7 +94,7 @@ namespace QLNet {
 
         //! solve linear system for a given right-hand side
         public Vector solveFor(Vector rhs) {
-            if (rhs.size() != size()) throw new ApplicationException("rhs has the wrong size");
+            if (rhs.Count != size()) throw new ApplicationException("rhs has the wrong size");
 
             Vector result = new Vector(size()), tmp = new Vector(size());
 
@@ -117,10 +117,10 @@ namespace QLNet {
 
         //! solve linear system with SOR approach
         public Vector SOR(Vector rhs, double tol) {
-            if (rhs.size() != size()) throw new ApplicationException("rhs has the wrong size");
+            if (rhs.Count != size()) throw new ApplicationException("rhs has the wrong size");
 
             // initial guess
-            Vector result = rhs;
+            Vector result = (Vector)rhs.Clone();
 
             // solve tridiagonal system with SOR technique
             double omega = 1.5;

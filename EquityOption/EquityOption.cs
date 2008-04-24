@@ -79,8 +79,7 @@ namespace EquityOption {
             var flatDividendTS = new Handle<YieldTermStructure>(new FlatForward(settlementDate, dividendYield, dayCounter));
             var flatVolTS = new Handle<BlackVolTermStructure>(new BlackConstantVol(settlementDate, calendar, volatility, dayCounter));
             StrikedTypePayoff payoff = new PlainVanillaPayoff(type, strike);
-            BlackScholesMertonProcess bsmProcess = new BlackScholesMertonProcess(underlyingH, flatDividendTS,
-                                                                                 flatTermStructure, flatVolTS);
+            var bsmProcess = new BlackScholesMertonProcess(underlyingH, flatDividendTS, flatTermStructure, flatVolTS);
 
             // options
             VanillaOption europeanOption = new VanillaOption(payoff, europeanExercise);
@@ -109,16 +108,13 @@ namespace EquityOption {
             Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
 
 
-            //// Bjerksund and Stensland approximation for American
-            //method = "Bjerksund/Stensland";
-            //americanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //              new BjerksundStenslandApproximationEngine(bsmProcess)));
-            //std::cout << std::setw(widths[0]) << std::left << method
-            //          << std::fixed
-            //          << std::setw(widths[1]) << std::left << "N/A"
-            //          << std::setw(widths[2]) << std::left << "N/A"
-            //          << std::setw(widths[3]) << std::left << americanOption.NPV()
-            //          << std::endl;
+            // Bjerksund and Stensland approximation for American
+            method = "Bjerksund/Stensland";
+            americanOption.setPricingEngine(new BjerksundStenslandApproximationEngine(bsmProcess));
+            Console.Write("{0,-" + widths[0] + "}", method);
+            Console.Write("{0,-" + widths[1] + "}", "N/A");
+            Console.Write("{0,-" + widths[2] + "}", "N/A");
+            Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
 
             //// Integral
             //method = "Integral";
