@@ -77,6 +77,7 @@
     <Compile Include="Instruments\Bonds\Fixedratebond.cs" />
     <Compile Include="Instruments\Bonds\FloatingRateBond.cs" />
     <Compile Include="Instruments\Bonds\Zerocouponbond.cs" />
+    <Compile Include="Instruments\CapFloor.cs" />
     <Compile Include="Instruments\fixedratebondforward.cs" />
     <Compile Include="Instruments\forward.cs" />
     <Compile Include="Instruments\forwardrateagreement.cs" />
