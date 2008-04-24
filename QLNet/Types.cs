@@ -125,4 +125,7 @@ namespace QLNet {
             ThirdWednesday /*!< All dates but effective date and termination date are taken to be on the third wednesday of their month*/
         };
     };
+
+    public enum CapFloorType { Cap, Floor, Collar };
+
 }
