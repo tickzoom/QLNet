@@ -111,21 +111,21 @@ namespace EquityOption {
             // Bjerksund and Stensland approximation for American
             method = "Bjerksund/Stensland";
             americanOption.setPricingEngine(new BjerksundStenslandApproximationEngine(bsmProcess));
+
             Console.Write("{0,-" + widths[0] + "}", method);
             Console.Write("{0,-" + widths[1] + "}", "N/A");
             Console.Write("{0,-" + widths[2] + "}", "N/A");
             Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
 
-            //// Integral
-            //method = "Integral";
-            //europeanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //                                     new IntegralEngine(bsmProcess)));
-            //std::cout << std::setw(widths[0]) << std::left << method
-            //          << std::fixed
-            //          << std::setw(widths[1]) << std::left << europeanOption.NPV()
-            //          << std::setw(widths[2]) << std::left << "N/A"
-            //          << std::setw(widths[3]) << std::left << "N/A"
-            //          << std::endl;
+            // Integral
+            method = "Integral";
+            europeanOption.setPricingEngine(new IntegralEngine(bsmProcess));
+
+            Console.Write("{0,-" + widths[0] + "}", method);
+            Console.Write("{0,-" + widths[1] + ":0.000000}", europeanOption.NPV());
+            Console.Write("{0,-" + widths[2] + "}", "N/A");
+            Console.WriteLine("{0,-" + widths[3] + "}", "N/A");
+
 
             //// Finite differences
             //Size timeSteps = 801;
