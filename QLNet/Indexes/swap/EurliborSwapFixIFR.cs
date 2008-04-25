@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ Copyright (C) 2008 Andrea Maggiulli
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -23,14 +24,14 @@ using System.Text;
 
 namespace QLNet {
 
-	//! %EurliborSwapFixIFR index base class
-//    ! EuriborSwapFix indexes published by IFR Markets and distributed
-//        by Reuters page TGM42281 and by Telerate. For more info see
-//        <http://www.ifrmarkets.com>.
-//
-//        \warning The 1Y swap's floating leg is based on Eurlibor3M; the
-//                 floating legs of longer swaps are based on Eurlibor6M
-//    
+   /// <summary>
+   /// %EurliborSwapFixIFR index base class
+   /// EuriborSwapFix indexes published by IFR Markets and distributed
+   /// by Reuters page TGM42281 and by Telerate. For more info see
+   /// <http://www.ifrmarkets.com>.
+   /// \warning The 1Y swap's floating leg is based on Eurlibor3M; the
+   /// floating legs of longer swaps are based on Eurlibor6M
+   /// </summary>
 	public class EurliborSwapFixIFR : SwapIndex
 	{
         public EurliborSwapFixIFR(Period tenor)
@@ -48,7 +49,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 1-year %EurliborSwapFixIFR index
+   /// <summary>
+   /// 1-year %EurliborSwapFixIFR index
+   /// </summary>
 	public class EurliborSwapFixIFR1Y : EurliborSwapFixIFR
 	{
 		public EurliborSwapFixIFR1Y(Handle<YieldTermStructure> h) : base(new Period(1, TimeUnit.Years), h)
@@ -56,7 +59,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 2-year %EurliborSwapFixIFR index
+   /// <summary>
+   /// 2-year %EurliborSwapFixIFR index
+   /// </summary>
 	public class EurliborSwapFixIFR2Y : EurliborSwapFixIFR
 	{
 		public EurliborSwapFixIFR2Y(Handle<YieldTermStructure> h) : base(new Period(2, TimeUnit.Years), h)
@@ -64,7 +69,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 3-year %EurliborSwapFixIFR index
+   /// <summary>
+   /// 3-year %EurliborSwapFixIFR index
+   /// </summary>
 	public class EurliborSwapFixIFR3Y : EurliborSwapFixIFR
 	{
 		public EurliborSwapFixIFR3Y(Handle<YieldTermStructure> h) : base(new Period(3, TimeUnit.Years), h)
@@ -72,7 +79,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 4-year %EurliborSwapFixIFR index
+   /// <summary>
+   /// 4-year %EurliborSwapFixIFR index
+   /// </summary>
 	public class EurliborSwapFixIFR4Y : EurliborSwapFixIFR
 	{
 		public EurliborSwapFixIFR4Y(Handle<YieldTermStructure> h) : base(new Period(4, TimeUnit.Years), h)
@@ -80,7 +89,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 5-year %EurliborSwapFixIFR index
+   /// <summary>
+   /// 5-year %EurliborSwapFixIFR index
+   /// </summary>
 	public class EurliborSwapFixIFR5Y : EurliborSwapFixIFR
 	{
 		public EurliborSwapFixIFR5Y(Handle<YieldTermStructure> h) : base(new Period(5, TimeUnit.Years), h)
@@ -88,7 +99,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 6-year %EurliborSwapFixIFR index
+   /// <summary>
+   /// 6-year %EurliborSwapFixIFR index
+   /// </summary>
 	public class EurliborSwapFixIFR6Y : EurliborSwapFixIFR
 	{
 		public EurliborSwapFixIFR6Y(Handle<YieldTermStructure> h) : base(new Period(6, TimeUnit.Years), h)
@@ -96,7 +109,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 7-year %EurliborSwapFixIFR index
+   /// <summary>
+   /// 7-year %EurliborSwapFixIFR index
+   /// </summary>
 	public class EurliborSwapFixIFR7Y : EurliborSwapFixIFR
 	{
 		public EurliborSwapFixIFR7Y(Handle<YieldTermStructure> h) : base(new Period(7, TimeUnit.Years), h)
@@ -104,7 +119,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 8-year %EurliborSwapFixIFR index
+   /// <summary>
+   /// 8-year %EurliborSwapFixIFR index
+   /// </summary>
 	public class EurliborSwapFixIFR8Y : EurliborSwapFixIFR
 	{
 		public EurliborSwapFixIFR8Y(Handle<YieldTermStructure> h) : base(new Period(8, TimeUnit.Years), h)
@@ -112,7 +129,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 9-year %EurliborSwapFixIFR index
+   /// <summary>
+   /// 9-year %EurliborSwapFixIFR index
+   /// </summary>
 	public class EurliborSwapFixIFR9Y : EurliborSwapFixIFR
 	{
 		public EurliborSwapFixIFR9Y(Handle<YieldTermStructure> h) : base(new Period(9, TimeUnit.Years), h)
@@ -120,7 +139,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 10-year %EurliborSwapFixIFR index
+   /// <summary>
+   /// 10-year %EurliborSwapFixIFR index
+   /// </summary>
 	public class EurliborSwapFixIFR10Y : EurliborSwapFixIFR
 	{
 		public EurliborSwapFixIFR10Y(Handle<YieldTermStructure> h) : base(new Period(10, TimeUnit.Years), h)
@@ -128,7 +149,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 12-year %EurliborSwapFixIFR index
+   /// <summary>
+   /// 12-year %EurliborSwapFixIFR index
+   /// </summary>
 	public class EurliborSwapFixIFR12Y : EurliborSwapFixIFR
 	{
 		public EurliborSwapFixIFR12Y(Handle<YieldTermStructure> h) : base(new Period(12, TimeUnit.Years), h)
@@ -136,7 +159,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 15-year %EurliborSwapFixIFR index
+   /// <summary>
+   /// 15-year %EurliborSwapFixIFR index
+   /// </summary>
 	public class EurliborSwapFixIFR15Y : EurliborSwapFixIFR
 	{
 		public EurliborSwapFixIFR15Y(Handle<YieldTermStructure> h) : base(new Period(15, TimeUnit.Years), h)
@@ -144,7 +169,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 20-year %EurliborSwapFixIFR index
+   /// <summary>
+   /// 20-year %EurliborSwapFixIFR index
+   /// </summary>
 	public class EurliborSwapFixIFR20Y : EurliborSwapFixIFR
 	{
 		public EurliborSwapFixIFR20Y(Handle<YieldTermStructure> h) : base(new Period(20, TimeUnit.Years), h)
@@ -152,7 +179,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 25-year %EurliborSwapFixIFR index
+   /// <summary>
+   /// 25-year %EurliborSwapFixIFR index
+   /// </summary>
 	public class EurliborSwapFixIFR25Y : EurliborSwapFixIFR
 	{
 		public EurliborSwapFixIFR25Y(Handle<YieldTermStructure> h) : base(new Period(25, TimeUnit.Years), h)
@@ -160,7 +189,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 30-year %EurliborSwapFixIFR index
+   /// <summary>
+   /// 30-year %EurliborSwapFixIFR index
+   /// </summary>
 	public class EurliborSwapFixIFR30Y : EurliborSwapFixIFR
 	{
 		public EurliborSwapFixIFR30Y(Handle<YieldTermStructure> h) : base(new Period(30, TimeUnit.Years), h)
