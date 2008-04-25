@@ -89,6 +89,17 @@
     <Compile Include="Indexes\Indexmanager.cs" />
     <Compile Include="Indexes\InterestRateIndex.cs" />
     <Compile Include="Indexes\Swapindex.cs" />
+    <Compile Include="Indexes\swap\EuriborSwapFixA.cs" />
+    <Compile Include="Indexes\swap\EuriborSwapFixB.cs" />
+    <Compile Include="Indexes\swap\EuriborSwapFixIFR.cs" />
+    <Compile Include="Indexes\swap\EurliborSwapFixA.cs" />
+    <Compile Include="Indexes\swap\EurliborSwapFixB.cs" />
+    <Compile Include="Indexes\swap\EurliborSwapFixIFR.cs" />
+    <Compile Include="Instruments\AsianOption.cs" />
+    <Compile Include="Instruments\AverageType.cs" />
+    <Compile Include="Instruments\BarrierOption.cs" />
+    <Compile Include="Instruments\BarrierType.cs" />
+    <Compile Include="Instruments\BasketOption.cs" />
     <Compile Include="Instruments\bmaswap.cs" />
     <Compile Include="Instruments\Bond.cs" />
     <Compile Include="Instruments\Bonds\Fixedratebond.cs" />
@@ -101,6 +112,7 @@
     <Compile Include="Instruments\ImpliedVolatility.cs" />
     <Compile Include="Instruments\Instrument.cs" />
     <Compile Include="Instruments\Makevanillaswap.cs" />
+    <Compile Include="Instruments\MultiAssetOption.cs" />
     <Compile Include="Instruments\OneAssetOption.cs" />
     <Compile Include="Instruments\payoffs.cs" />
     <Compile Include="Instruments\Stock.cs" />
@@ -147,6 +159,7 @@
     <Compile Include="PricingEngine.cs" />
     <Compile Include="Pricingengines\Americanpayoffatexpiry.cs" />
     <Compile Include="Pricingengines\Americanpayoffathit.cs" />
+    <Compile Include="Pricingengines\barrier\AnalyticBarrierEngine.cs" />
     <Compile Include="Pricingengines\BlackCalculator.cs" />
     <Compile Include="Pricingengines\blackformula.cs" />
     <Compile Include="Pricingengines\Blackscholescalculator.cs" />
