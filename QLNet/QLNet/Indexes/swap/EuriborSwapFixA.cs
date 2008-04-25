@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ Copyright (C) 2008 Andrea Maggiulli
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -23,13 +24,13 @@ using System.Text;
 
 namespace QLNet {
 
-	//! %EuriborSwapFixA index base class
-//    ! EuriborSwapFixA indexes fixed by ISDA at 11:00AM FRANKFURT.
-//        Reuters page ISDAFIX2 or EURSFIXA=.
-//
-//        \warning The 1Y swap's floating leg is based on Euribor3M; the
-//                 floating legs of longer swaps are based on Euribor6M
-//    
+   /// <summary>
+   /// %EuriborSwapFixA index base class
+   /// EuriborSwapFixA indexes fixed by ISDA at 11:00AM FRANKFURT.
+   /// Reuters page ISDAFIX2 or EURSFIXA=.
+   /// \warning The 1Y swap's floating leg is based on Euribor3M; the
+   /// floating legs of longer swaps are based on Euribor6M
+   /// </summary>
 	public class EuriborSwapFixA : SwapIndex
 	{
         public EuriborSwapFixA(Period tenor)
@@ -47,7 +48,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 1-year %EuriborSwapFixA index
+   /// <summary>
+   /// 1-year %EuriborSwapFixA index
+   /// </summary>
 	public class EuriborSwapFixA1Y : EuriborSwapFixA
 	{
 		public EuriborSwapFixA1Y(Handle<YieldTermStructure> h) : base(new Period(1,TimeUnit.Years), h)
@@ -55,7 +58,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 2-year %EuriborSwapFixA index
+   /// <summary>
+   /// 2-year %EuriborSwapFixA index
+   /// </summary>
 	public class EuriborSwapFixA2Y : EuriborSwapFixA
 	{
 		public EuriborSwapFixA2Y(Handle<YieldTermStructure> h) : base(new Period(2 , TimeUnit.Years), h)
@@ -63,7 +68,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 3-year %EuriborSwapFixA index
+   /// <summary>
+   /// 3-year %EuriborSwapFixA index
+   /// </summary>
 	public class EuriborSwapFixA3Y : EuriborSwapFixA
 	{
 		public EuriborSwapFixA3Y(Handle<YieldTermStructure> h) : base(new Period(3 , TimeUnit.Years), h)
@@ -71,7 +78,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 4-year %EuriborSwapFixA index
+   /// <summary>
+   /// 4-year %EuriborSwapFixA index
+   /// </summary>
 	public class EuriborSwapFixA4Y : EuriborSwapFixA
 	{
 		public EuriborSwapFixA4Y(Handle<YieldTermStructure> h) : base(new Period(4 , TimeUnit.Years), h)
@@ -79,7 +88,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 5-year %EuriborSwapFixA index
+   /// <summary>
+   /// 5-year %EuriborSwapFixA index
+   /// </summary>
 	public class EuriborSwapFixA5Y : EuriborSwapFixA
 	{
 		public EuriborSwapFixA5Y(Handle<YieldTermStructure> h) : base(new Period(5 , TimeUnit.Years), h)
@@ -87,7 +98,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 6-year %EuriborSwapFixA index
+   /// <summary>
+   /// 6-year %EuriborSwapFixA index
+   /// </summary>
 	public class EuriborSwapFixA6Y : EuriborSwapFixA
 	{
 		public EuriborSwapFixA6Y(Handle<YieldTermStructure> h) : base(new Period(6 , TimeUnit.Years), h)
@@ -95,7 +108,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 7-year %EuriborSwapFixA index
+   /// <summary>
+   /// 7-year %EuriborSwapFixA index
+   /// </summary>
 	public class EuriborSwapFixA7Y : EuriborSwapFixA
 	{
 		public EuriborSwapFixA7Y(Handle<YieldTermStructure> h) : base(new Period(7 , TimeUnit.Years), h)
@@ -103,7 +118,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 8-year %EuriborSwapFixA index
+   /// <summary>
+   /// 8-year %EuriborSwapFixA index
+   /// </summary>
 	public class EuriborSwapFixA8Y : EuriborSwapFixA
 	{
 		public EuriborSwapFixA8Y(Handle<YieldTermStructure> h) : base(new Period(8 , TimeUnit.Years), h)
@@ -111,7 +128,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 9-year %EuriborSwapFixA index
+   /// <summary>
+   /// 9-year %EuriborSwapFixA index
+   /// </summary>
 	public class EuriborSwapFixA9Y : EuriborSwapFixA
 	{
 		public EuriborSwapFixA9Y(Handle<YieldTermStructure> h) : base(new Period(9 , TimeUnit.Years), h)
@@ -119,7 +138,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 10-year %EuriborSwapFixA index
+   /// <summary>
+   /// 10-year %EuriborSwapFixA index
+   /// </summary>
 	public class EuriborSwapFixA10Y : EuriborSwapFixA
 	{
 		public EuriborSwapFixA10Y(Handle<YieldTermStructure> h) : base(new Period(10 , TimeUnit.Years), h)
@@ -127,7 +148,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 12-year %EuriborSwapFixA index
+   /// <summary>
+   /// 12-year %EuriborSwapFixA index
+   /// </summary>
 	public class EuriborSwapFixA12Y : EuriborSwapFixA
 	{
 		public EuriborSwapFixA12Y(Handle<YieldTermStructure> h) : base(new Period(12 , TimeUnit.Years), h)
@@ -135,7 +158,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 15-year %EuriborSwapFixA index
+   /// <summary>
+   /// 15-year %EuriborSwapFixA index
+   /// </summary>
 	public class EuriborSwapFixA15Y : EuriborSwapFixA
 	{
 		public EuriborSwapFixA15Y(Handle<YieldTermStructure> h) : base(new Period(15 , TimeUnit.Years), h)
@@ -143,7 +168,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 20-year %EuriborSwapFixA index
+   /// <summary>
+   /// 20-year %EuriborSwapFixA index
+   /// </summary>
 	public class EuriborSwapFixA20Y : EuriborSwapFixA
 	{
 		public EuriborSwapFixA20Y(Handle<YieldTermStructure> h) : base(new Period(20 , TimeUnit.Years), h)
@@ -151,7 +178,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 25-year %EuriborSwapFixA index
+   /// <summary>
+   /// 25-year %EuriborSwapFixA index
+   /// </summary>
 	public class EuriborSwapFixA25Y : EuriborSwapFixA
 	{
 		public EuriborSwapFixA25Y(Handle<YieldTermStructure> h) : base(new Period(25 , TimeUnit.Years), h)
@@ -159,7 +188,9 @@ namespace QLNet {
 		}
 	}
 
-	//! 30-year %EuriborSwapFixA index
+   /// <summary>
+   /// 30-year %EuriborSwapFixA index
+   /// </summary>
 	public class EuriborSwapFixA30Y : EuriborSwapFixA
 	{
 		public EuriborSwapFixA30Y(Handle<YieldTermStructure> h) : base(new Period(30 , TimeUnit.Years), h)
