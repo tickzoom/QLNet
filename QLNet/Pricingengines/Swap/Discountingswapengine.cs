@@ -22,7 +22,7 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    public class DiscountingSwapEngine : Swap.Engine {
+    public class DiscountingSwapEngine : Swap.SwapEngine {
         private Handle<YieldTermStructure> discountCurve_;
 
         public DiscountingSwapEngine(Handle<YieldTermStructure> discountCurve) {
