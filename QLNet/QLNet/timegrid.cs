@@ -1,4 +1,4 @@
-/*
+﻿/*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
@@ -22,28 +22,11 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    public delegate void Callback();
-
-    // Subjects, i.e. observables, should define interface internally like follows.
-    //public event Callback notifyObserversEvent;
-    //// this method is required for calling from derived classes
-    //protected void notifyObservers() {
-    //    Callback handler = notifyObserversEvent;
-    //    if (handler != null) {
-    //        handler();
-    //    }
-    //}
-    //public void registerWith(Callback handler) { notifyObserversEvent += handler; }
-    //public void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
-
-    public interface IObservable {
-        event Callback notifyObserversEvent;
-        //void notifyObservers();
-        void registerWith(Callback handler);
-        void unregisterWith(Callback handler);
-    }
-
-    public interface IObserver {
-        void update();
+    //! time grid class
+    /*! \todo what was the rationale for limiting the grid to
+              positive times? Investigate and see whether we
+              can use it for negative ones as well.
+    */
+    public class TimeGrid {
     }
 }

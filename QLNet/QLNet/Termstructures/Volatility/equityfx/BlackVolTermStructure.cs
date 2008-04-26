@@ -78,7 +78,7 @@ namespace QLNet {
             double t = timeFromReference(d);
             return blackVarianceImpl(t, strike);
         }
-        // public double blackVariance(double maturity, double strike, bool extrapolate = false);
+        public double blackVariance(double maturity, double strike) { return blackVariance(maturity, strike, false); }
         public double blackVariance(double t, double strike, bool extrapolate) {
             checkRange(t, extrapolate);
             checkStrike(strike, extrapolate);

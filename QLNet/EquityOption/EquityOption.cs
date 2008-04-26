@@ -127,9 +127,9 @@ namespace EquityOption {
             Console.WriteLine("{0,-" + widths[3] + "}", "N/A");
 
 
-            //// Finite differences
-            //Size timeSteps = 801;
-            //method = "Finite differences";
+            // Finite differences
+            int timeSteps = 801;
+            method = "Finite differences";
             //europeanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
             //             new FDEuropeanEngine(bsmProcess,timeSteps,timeSteps-1)));
             //bermudanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(

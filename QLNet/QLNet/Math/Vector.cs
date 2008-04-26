@@ -74,6 +74,8 @@ namespace QLNet {
         public override bool Equals(object o) { return (this == (Vector)o); }
         public override int GetHashCode() { return 0; }
 
+        public int size() { return this.Count; }
+
         #region Vector algebra
         //    <tt>v += x</tt> and similar operation involving a scalar value
         //    are shortcuts for \f$ \forall i : v_i = v_i + x \f$
@@ -88,6 +90,7 @@ namespace QLNet {
 
         public static Vector operator +(Vector v1, double value) { return operValue(v1, value, (x, y) => x + y); }
         public static Vector operator -(Vector v1, double value) { return operValue(v1, value, (x, y) => x - y); }
+        public static Vector operator *(double value, Vector v1) { return operValue(v1, value, (x, y) => x * y); }
         public static Vector operator *(Vector v1, double value) { return operValue(v1, value, (x, y) => x * y); }
         public static Vector operator /(Vector v1, double value) { return operValue(v1, value, (x, y) => x / y); }
 
