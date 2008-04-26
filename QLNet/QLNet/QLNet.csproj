@@ -120,9 +120,13 @@
     <Compile Include="Instruments\VanillaOption.cs" />
     <Compile Include="Instruments\VanillaSwap.cs" />
     <Compile Include="InterestRate.cs" />
+    <Compile Include="Math\beta.cs" />
     <Compile Include="Math\Comparison.cs" />
     <Compile Include="Math\CostFunction.cs" />
+    <Compile Include="Math\Distributions\binomialdistribution.cs" />
+    <Compile Include="Math\Distributions\GammaDistribution.cs" />
     <Compile Include="Math\Distributions\NormalDistribution.cs" />
+    <Compile Include="Math\factorial.cs" />
     <Compile Include="Math\integrals\Integral.cs" />
     <Compile Include="Math\integrals\Segmentintegral.cs" />
     <Compile Include="Math\Interpolations\CubicInterpolation.cs" />
@@ -157,6 +161,8 @@
     <Compile Include="Methods\Finitedifferences\BoundaryCondition.cs" />
     <Compile Include="Methods\Finitedifferences\OperatorFactory.cs" />
     <Compile Include="Methods\Finitedifferences\TridiagonalOperator.cs" />
+    <Compile Include="Methods\lattices\binominaltree.cs" />
+    <Compile Include="Methods\lattices\tree.cs" />
     <Compile Include="Models\CalibrationHelper.cs" />
     <Compile Include="Models\model.cs">
       <SubType>Code</SubType>
