@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    public static class Comparison {
+    public static partial class Utils {
         /*! Follows somewhat the advice of Knuth on checking for floating-point
             equality. The closeness relationship is:
             \f[
@@ -37,6 +37,7 @@ namespace QLNet {
             double diff = System.Math.Abs(x - y), tolerance = n * Const.QL_Epsilon;
             return diff <= tolerance * System.Math.Abs(x) && diff <= tolerance * System.Math.Abs(y);
         }
+
         public static bool close(Money m1, Money m2) {
             return close(m1, m2, 42);
         }

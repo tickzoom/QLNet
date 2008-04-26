@@ -53,5 +53,10 @@ namespace QLNet {
         public Tree(int columns) {
             columns_ = columns;
         }
+
+        public virtual T construct(StochasticProcess1D p, double end, int steps, double strike) {
+            throw new NotSupportedException();
+        }
+
     }
 }

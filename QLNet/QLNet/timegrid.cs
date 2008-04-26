@@ -28,5 +28,89 @@ namespace QLNet {
               can use it for negative ones as well.
     */
     public class TimeGrid {
+        private List<double> times_;
+        public double this[int i] { get { return times_[i]; } }
+
+        private List<double> dt_;
+        public double dt(int i) { return dt_[i]; }
+
+        private List<double> mandatoryTimes_;
+        public List<double> mandatoryTimes() { return mandatoryTimes_; }
+
+
+        public TimeGrid(double end, int steps) {
+            // We seem to assume that the grid begins at 0.
+            // Let's enforce the assumption for the time being
+            // (even though I'm not sure that I agree.)
+            if (!(end > 0.0)) throw new ApplicationException("negative times not allowed");
+            double dt = end/steps;
+            // times_.reserve(steps);
+            for (int i=0; i<=steps; i++)
+                times_.Add(dt*i);
+
+            mandatoryTimes_ = new InitializedList<double>(1);
+            mandatoryTimes_[0] = end;
+
+            dt_ = new InitializedList<double>(steps, dt);
+        }
+
+        //@}
+        //! \name Time grid interface
+        //@{
+        //! returns the index i such that grid[i] = t
+        public int index(double t) {
+            int i = closestIndex(t);
+            if (Utils.close(t,times_[i])) {
+                return i;
+            } else {
+                if (t < times_.First()) {
+                    throw new ApplicationException("using inadequate time grid: all nodes are later than the required time t = "
+                            + t + " (earliest node is t1 = " + times_.First() + ")");
+                } else if (t > times_.Last()) {
+                    throw new ApplicationException("using inadequate time grid: all nodes are earlier than the required time t = "
+                            + t + " (latest node is t1 = " + times_.Last() + ")");
+                } else {
+                    int j, k;
+                    if (t > times_[i]) {
+                        j = i;
+                        k = i+1;
+                    } else {
+                        j = i-1;
+                        k = i;
+                    }
+                    throw new ApplicationException("using inadequate time grid: the nodes closest to the required time t = "
+                            + t + " are t1 = " + times_[j] + " and t2 = " + times_[k]);
+                }
+            }
+        }
+
+        //! returns the index i such that grid[i] is closest to t
+        public int closestIndex(double t) {
+            int result = times_.BinarySearch(t);
+            if (result < 0)
+                //Lower_bound is a version of binary search: it attempts to find the element value in an ordered range [first, last)
+                // [1]. Specifically, it returns the first position where value could be inserted without violating the ordering. 
+                // [2] The first version of lower_bound uses operator< for comparison, and the second uses the function object comp.
+                // lower_bound returns the furthermost iterator i in [first, last) such that, for every iterator j in [first, i), *j < value. 
+                result = ~result;
+
+            if (result == 0) {
+                return 0;
+            } else if (result == times_.Count) {
+                return times_.Count - 1;
+            } else {
+                double dt1 = times_[result] - t;
+                double dt2 = t - times_[result - 1];
+                if (dt1 < dt2)
+                    return result;
+                else
+                    return result - 1;
+            }
+        }
+
+        //! returns the time on the grid closest to the given t
+        public double closestTime(double t) {
+            return times_[closestIndex(t)];
+        }
     }
 }
