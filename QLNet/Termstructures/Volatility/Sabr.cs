@@ -30,7 +30,7 @@ namespace QLNet {
             double sqrtA= Math.Sqrt(A);
             double logM;
 
-            if (!Comparison.close(forward, strike))
+            if (!Utils.close(forward, strike))
                 logM = Math.Log(forward/strike);
             else {
                 double epsilon = (forward-strike)/strike;

@@ -189,6 +189,7 @@
     <Compile Include="Pricingengines\Swap\Discountingswapengine.cs" />
     <Compile Include="Pricingengines\vanilla\AnalyticEuropeanEngine.cs" />
     <Compile Include="Pricingengines\vanilla\baroneadesiwhaleyengine.cs" />
+    <Compile Include="Pricingengines\vanilla\binomialengine.cs" />
     <Compile Include="Pricingengines\vanilla\bjerksundstenslandengine.cs" />
     <Compile Include="Pricingengines\vanilla\FDVanillaEngine.cs" />
     <Compile Include="Pricingengines\vanilla\Integralengine.cs" />

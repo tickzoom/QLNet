@@ -118,7 +118,7 @@ namespace QLNet {
 
             public bool isInRange(double x) {
                 double x1 = xMin(), x2 = xMax();
-                return (x >= x1 && x <= x2) || Comparison.close(x, x1) || Comparison.close(x, x2);
+                return (x >= x1 && x <= x2) || Utils.close(x, x1) || Utils.close(x, x2);
             }
 
             protected int locate(double x) {

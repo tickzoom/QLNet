@@ -74,19 +74,29 @@ namespace QLNet {
     }
 
 
+    public interface ITreeFactory<T> {
+        T factory(StochasticProcess1D process, double end, int steps, double strike);
+    }
+
+
+
     //! Jarrow-Rudd (multiplicative) equal probabilities binomial tree
     /*! \ingroup lattices */
-    public class JarrowRudd : EqualProbabilitiesBinomialTree<JarrowRudd> {
+    public class JarrowRudd : EqualProbabilitiesBinomialTree<JarrowRudd>, ITreeFactory<JarrowRudd> {
         public JarrowRudd(StochasticProcess1D process, double end, int steps, double strike) 
             : base(process, end, steps) {
             // drift removed
             up_ = process.stdDeviation(0.0, x0_, dt_);
         }
+
+        public JarrowRudd factory(StochasticProcess1D process, double end, int steps, double strike) {
+            return new JarrowRudd(process, end, steps, strike);
+        }
     }
 
     //! Cox-Ross-Rubinstein (multiplicative) equal jumps binomial tree
     /*! \ingroup lattices */
-    public class CoxRossRubinstein : EqualJumpsBinomialTree<CoxRossRubinstein> {
+    public class CoxRossRubinstein : EqualJumpsBinomialTree<CoxRossRubinstein>, ITreeFactory<CoxRossRubinstein> {
         public CoxRossRubinstein(StochasticProcess1D process, double end, int steps, double strike)    
             : base(process, end, steps) {
 
@@ -97,20 +107,28 @@ namespace QLNet {
             if (!(pu_<=1.0)) throw new ApplicationException("negative probability");
             if (!(pu_ >= 0.0)) throw new ApplicationException("negative probability");
         }
+
+        public CoxRossRubinstein factory(StochasticProcess1D process, double end, int steps, double strike) {
+            return new CoxRossRubinstein(process, end, steps, strike);
+        }
     }
 
     //! Additive equal probabilities binomial tree
     /*! \ingroup lattices */
-    public class AdditiveEQPBinomialTree : EqualProbabilitiesBinomialTree<AdditiveEQPBinomialTree> {
+    public class AdditiveEQPBinomialTree : EqualProbabilitiesBinomialTree<AdditiveEQPBinomialTree>, ITreeFactory<AdditiveEQPBinomialTree> {
         public AdditiveEQPBinomialTree(StochasticProcess1D process, double end, int steps, double strike)    
             : base(process, end, steps) {
             up_ = - 0.5 * driftPerStep_ + 0.5 * Math.Sqrt(4.0*process.variance(0.0, x0_, dt_)- 3.0*driftPerStep_*driftPerStep_);
+        }
+
+        public AdditiveEQPBinomialTree factory(StochasticProcess1D process, double end, int steps, double strike) {
+            return new AdditiveEQPBinomialTree(process, end, steps, strike);
         }
     }
 
     //! %Trigeorgis (additive equal jumps) binomial tree
     /*! \ingroup lattices */
-    public class Trigeorgis : EqualJumpsBinomialTree<Trigeorgis> {
+    public class Trigeorgis : EqualJumpsBinomialTree<Trigeorgis>, ITreeFactory<Trigeorgis> {
         public Trigeorgis(StochasticProcess1D process, double end, int steps, double strike)    
             : base(process, end, steps) {
 
@@ -121,11 +139,15 @@ namespace QLNet {
             if (!(pu_<=1.0)) throw new ApplicationException("negative probability");
             if (!(pu_ >= 0.0)) throw new ApplicationException("negative probability");
         }
+
+        public Trigeorgis factory(StochasticProcess1D process, double end, int steps, double strike) {
+            return new Trigeorgis(process, end, steps, strike);
+        }
     }
 
     //! %Tian tree: third moment matching, multiplicative approach
     /*! \ingroup lattices */
-    public class Tian : BinomialTree<Tian> {
+    public class Tian : BinomialTree<Tian>, ITreeFactory<Tian> {
         protected double up_, down_, pu_, pd_;
 
         public Tian(StochasticProcess1D process, double end, int steps, double strike)    
@@ -152,11 +174,15 @@ namespace QLNet {
             return x0_ * Math.Pow(down_, i-index) * Math.Pow(up_, index);
         }
         public double probability(int i, int j, int branch) { return (branch == 1 ? pu_ : pd_); }
+
+        public Tian factory(StochasticProcess1D process, double end, int steps, double strike) {
+            return new Tian(process, end, steps, strike);
+        }
     }
 
     //! Leisen & Reimer tree: multiplicative approach
     /*! \ingroup lattices */
-    public class LeisenReimer : BinomialTree<LeisenReimer> {
+    public class LeisenReimer : BinomialTree<LeisenReimer>, ITreeFactory<LeisenReimer> {
         protected double up_, down_, pu_, pd_;
         public LeisenReimer(StochasticProcess1D process, double end, int steps, double strike)    
             : base(process, end, (steps%2 != 0 ? steps : steps+1)) {
@@ -180,9 +206,13 @@ namespace QLNet {
         public double probability(int i, int j, int branch) {
             return (branch == 1 ? pu_ : pd_);
         }
+
+        public LeisenReimer factory(StochasticProcess1D process, double end, int steps, double strike) {
+            return new LeisenReimer(process, end, steps, strike);
+        }
     }
 
-    public class Joshi4 : BinomialTree<Joshi4> {
+    public class Joshi4 : BinomialTree<Joshi4>, ITreeFactory<Joshi4> {
         protected double up_, down_, pu_, pd_;
 
         public Joshi4(StochasticProcess1D process, double end, int steps, double strike)    
@@ -227,5 +257,8 @@ namespace QLNet {
             return p;
         }
 
+        public Joshi4 factory(StochasticProcess1D process, double end, int steps, double strike) {
+            return new Joshi4(process, end, steps, strike);
+        }
     }
 }

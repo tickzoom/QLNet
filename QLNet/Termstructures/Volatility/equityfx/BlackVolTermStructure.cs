@@ -56,7 +56,7 @@ namespace QLNet {
         //! \name Black Volatility
         //@{
         //! spot volatility
-        // public Volatility blackVol(Date maturity, double strike, bool extrapolate = false) {
+        public double blackVol(Date maturity, double strike) { return blackVol(maturity, strike, false); }
         public double blackVol(Date d, double strike, bool extrapolate) {
             checkRange(d, extrapolate);
             checkStrike(strike, extrapolate);
