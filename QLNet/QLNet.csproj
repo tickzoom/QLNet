@@ -121,6 +121,7 @@
     <Compile Include="Instruments\VanillaSwap.cs" />
     <Compile Include="InterestRate.cs" />
     <Compile Include="Math\Comparison.cs" />
+    <Compile Include="Math\CostFunction.cs" />
     <Compile Include="Math\Distributions\NormalDistribution.cs" />
     <Compile Include="Math\integrals\Integral.cs" />
     <Compile Include="Math\integrals\Segmentintegral.cs" />
@@ -130,6 +131,10 @@
     <Compile Include="Math\Interpolations\Linearinterpolation.cs" />
     <Compile Include="Math\Interpolations\Loginterpolation.cs" />
     <Compile Include="Math\Matrix.cs" />
+    <Compile Include="Math\Optimization\Constraint.cs" />
+    <Compile Include="Math\Optimization\EndCriteria.cs" />
+    <Compile Include="Math\Optimization\method.cs" />
+    <Compile Include="Math\Optimization\problem.cs" />
     <Compile Include="Math\SampledCurve.cs" />
     <Compile Include="Math\Solver1d.cs" />
     <Compile Include="Math\Rounding.cs" />
@@ -149,8 +154,17 @@
     </Compile>
     <Compile Include="Math\Solvers1d\Secant.cs" />
     <Compile Include="Math\Vector.cs" />
+    <Compile Include="Methods\Finitedifferences\BoundaryCondition.cs" />
+    <Compile Include="Methods\Finitedifferences\OperatorFactory.cs" />
     <Compile Include="Methods\Finitedifferences\TridiagonalOperator.cs" />
+    <Compile Include="Models\CalibrationHelper.cs" />
+    <Compile Include="Models\model.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\Parameter.cs" />
+    <Compile Include="Models\Shortrate\OneFactorModel.cs" />
     <Compile Include="Money.cs" />
+    <Compile Include="numericalmethod.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Patterns\LazyObject.cs" />
     <Compile Include="Patterns\Observer.cs" />
@@ -170,6 +184,7 @@
     <Compile Include="Pricingengines\vanilla\AnalyticEuropeanEngine.cs" />
     <Compile Include="Pricingengines\vanilla\baroneadesiwhaleyengine.cs" />
     <Compile Include="Pricingengines\vanilla\bjerksundstenslandengine.cs" />
+    <Compile Include="Pricingengines\vanilla\FDVanillaEngine.cs" />
     <Compile Include="Pricingengines\vanilla\Integralengine.cs" />
     <Compile Include="Pricingengines\vanilla\Juquadraticengine.cs" />
     <Compile Include="processes\BlackScholesProcess.cs" />
@@ -211,6 +226,7 @@
     <Compile Include="Termstructures\Yield\Ratehelpers.cs" />
     <Compile Include="Termstructures\Yield\ZeroSpreadedTermStructure.cs" />
     <Compile Include="Termstructures\Yield\Zeroyieldstructure.cs" />
+    <Compile Include="timegrid.cs" />
     <Compile Include="Time\Calendar.cs" />
     <Compile Include="Time\Calendars\argentina.cs" />
     <Compile Include="Time\Calendars\australia.cs" />
