@@ -22,6 +22,10 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
+    public interface ISchemeFactory {
+        IMixedScheme factory(IOperator L, List<BoundaryCondition<IOperator>> bcs);
+    }
+
     public interface IMixedScheme {
         void step(Vector a, double t);
         void setStep(double dt);
@@ -70,10 +74,10 @@ namespace QLNet {
         protected Operator L_, I_, explicitPart_, implicitPart_;
         protected double dt_;
         protected double theta_;
-        protected List<BoundaryCondition<Operator>> bcs_;
+        protected List<BoundaryCondition<IOperator>> bcs_;
 
         // constructors
-        public MixedScheme(Operator L, double theta, List<BoundaryCondition<Operator>> bcs) {
+        public MixedScheme(Operator L, double theta, List<BoundaryCondition<IOperator>> bcs) {
             L_ = L;
             I_ = (Operator)(new Operator().identity(L.size()));
             dt_ = 0.0;

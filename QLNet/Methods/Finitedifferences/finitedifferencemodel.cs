@@ -22,7 +22,7 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    public class FiniteDifferenceModel<Evolver> where Evolver : IMixedScheme {
+    public class FiniteDifferenceModel<Evolver> where Evolver : IMixedScheme, ISchemeFactory, new() {
         private Evolver evolver_;
         public Evolver evolver() { return evolver_; }
 
@@ -31,12 +31,12 @@ namespace QLNet {
         // constructors
         //public FiniteDifferenceModel(Operator L, List<BoundaryCondition<Operator>> bcs,
         //                      List<double> stoppingTimes = new List<double>())
-        //public FiniteDifferenceModel(IOperator L, List<BoundaryCondition<IOperator>> bcs, List<double> stoppingTimes) {
-        //    evolver_ = new L().factory(L, bcs);
-        //    stoppingTimes_ = stoppingTimes;
-        //    stoppingTimes_.Sort();
-        //    stoppingTimes_.Distinct();
-        //}
+        public FiniteDifferenceModel(IOperator L, List<BoundaryCondition<IOperator>> bcs, List<double> stoppingTimes) {
+            evolver_ = (Evolver)new Evolver().factory(L, bcs);
+            stoppingTimes_ = stoppingTimes;
+            stoppingTimes_.Sort();
+            stoppingTimes_.Distinct();
+        }
 
         //public FiniteDifferenceModel(Evolver evolver, List<double> stoppingTimes = List<double>())
         public FiniteDifferenceModel(Evolver evolver, List<double> stoppingTimes) {
