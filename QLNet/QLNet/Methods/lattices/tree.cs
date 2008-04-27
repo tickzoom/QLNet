@@ -43,9 +43,8 @@ namespace QLNet {
         private int columns_;
         public int columns() { return columns_; }
 
-        private T leaves_;
-        public T leaves { get { return leaves_; } }
-
+        // parameterless constructor is requried for generics
+        public Tree() { }
         public Tree(int columns) {
             columns_ = columns;
         }

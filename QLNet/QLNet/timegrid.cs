@@ -44,7 +44,7 @@ namespace QLNet {
             // (even though I'm not sure that I agree.)
             if (!(end > 0.0)) throw new ApplicationException("negative times not allowed");
             double dt = end/steps;
-            // times_.reserve(steps);
+            times_ = new List<double>(steps);
             for (int i=0; i<=steps; i++)
                 times_.Add(dt*i);
 
