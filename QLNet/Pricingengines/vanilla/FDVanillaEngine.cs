@@ -39,7 +39,7 @@ namespace QLNet {
         protected SampledCurve intrinsicValues_;
 
         // typedef BoundaryCondition<TridiagonalOperator> bc_type;
-        protected List<BoundaryCondition<TridiagonalOperator>> BCs_;
+        protected List<BoundaryCondition<IOperator>> BCs_;
         // temporaries
         protected double sMin_, center_, sMax_;
 
@@ -56,7 +56,7 @@ namespace QLNet {
             gridPoints_ = gridPoints;
             timeDependent_ = timeDependent;
             intrinsicValues_ = new SampledCurve(gridPoints);
-            BCs_ = new InitializedList<BoundaryCondition<TridiagonalOperator>>(2);
+            BCs_ = new InitializedList<BoundaryCondition<IOperator>>(2);
         }
 
         public Vector grid() { return intrinsicValues_.grid(); }
@@ -122,8 +122,8 @@ namespace QLNet {
         }
 
         protected void initializeBoundaryConditions() {
-            BCs_[0] = new NeumannBC(intrinsicValues_.value(1)- intrinsicValues_.value(0), NeumannBC.Side.Lower);
-            BCs_[1] = new NeumannBC(intrinsicValues_.value(intrinsicValues_.size()-1) -
+            BCs_[0] = new NeumannBC(intrinsicValues_.value(1) - intrinsicValues_.value(0), NeumannBC.Side.Lower);
+            BCs_[1] = new NeumannBC(intrinsicValues_.value(intrinsicValues_.size() - 1) -
                                     intrinsicValues_.value(intrinsicValues_.size()-2),
                                     NeumannBC.Side.Upper);
         }

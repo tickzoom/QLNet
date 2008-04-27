@@ -74,7 +74,7 @@ namespace QLNet {
         }
 
         /*! \todo replace or complement with a more general function firstDerivativeAt(spot) */
-        public double irstDerivativeAtCenter() {
+        public double firstDerivativeAtCenter() {
             if (!(size() >= 3))
                 throw new ApplicationException("the size of the curve must be at least 3");
             

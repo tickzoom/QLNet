@@ -77,6 +77,7 @@ namespace QLNet {
         protected List<BoundaryCondition<IOperator>> bcs_;
 
         // constructors
+        public MixedScheme() { }  // required for generics
         public MixedScheme(Operator L, double theta, List<BoundaryCondition<IOperator>> bcs) {
             L_ = L;
             I_ = (Operator)(new Operator().identity(L.size()));

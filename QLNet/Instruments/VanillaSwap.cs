@@ -247,7 +247,7 @@ namespace QLNet {
                 nominal = default(double);
             }
             
-            public void validate() {
+            public override void validate() {
                 base.validate();
 
                 if (nominal == default(double)) throw new ArgumentException("nominal null or not set");
@@ -275,10 +275,6 @@ namespace QLNet {
                 base.reset();
                 fairRate = fairSpread = null;
             }
-        };
-
-        new class Engine : GenericEngine<VanillaSwap.Arguments, VanillaSwap.Results> {
-            public override void calculate() { throw new NotImplementedException(); }
         }
     }
 }
