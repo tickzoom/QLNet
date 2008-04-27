@@ -22,6 +22,12 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
+    // this is just a wrapper for QL compatibility
+    public class BlackScholesLattice<T> : BlackScholesLattice where T : ITree {
+        public BlackScholesLattice(ITree tree, double riskFreeRate, double end, int steps)
+            : base(tree, riskFreeRate, end, steps) { }
+    }
+
     //! Simple binomial lattice approximating the Black-Scholes model
     /*! \ingroup lattices */
     public class BlackScholesLattice : TreeLattice1D<BlackScholesLattice> {
@@ -48,5 +54,9 @@ namespace QLNet {
         public override double underlying(int i, int index) { return tree_.underlying(i, index); }
         public int descendant(int i, int index, int branch) { return tree_.descendant(i, index, branch); }
         public double probability(int i, int index, int branch) { return tree_.probability(i, index, branch); }
+
+        // this is a workaround for CuriouslyRecurringTemplate of TreeLattice
+        // recheck it
+        protected override BlackScholesLattice impl() { return this; }
     }
 }

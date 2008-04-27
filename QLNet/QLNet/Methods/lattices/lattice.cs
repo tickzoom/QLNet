@@ -46,7 +46,7 @@ namespace QLNet {
     */
     public class TreeLattice<T> : Lattice where T : BlackScholesLattice {
         protected T link_;
-        protected T impl() { throw new NotImplementedException(); }
+        protected virtual T impl() { throw new NotSupportedException(); }
 
         private int n_;
         private int statePricesLimit_;
