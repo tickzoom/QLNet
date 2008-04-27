@@ -22,32 +22,25 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    //! %Tree approximating a single-factor diffusion
+    //! One-dimensional tree-based lattice.
     /*! Derived classes must implement the following interface:
         \code
-        public:
-          Real underlying(Size i, Size index) const;
-          Size size(Size i) const;
-          Size descendant(Size i, Size index, Size branch) const;
-          Real probability(Size i, Size index, Size branch) const;
+        Real underlying(Size i, Size index) const;
         \endcode
-        and provide a public enumeration
-        \code
-        enum { branches = N };
-        \endcode
-        where N is a suitable constant (2 for binomial, 3 for trinomial...)
 
-        \ingroup lattices
-    */
-    public class Tree<T> {
-        private int columns_;
-        public int columns() { return columns_; }
+        \ingroup lattices */
+    public class TreeLattice1D<T> : TreeLattice<T> where T : BlackScholesLattice {
+        public TreeLattice1D(TimeGrid timeGrid, int n) : base(timeGrid, n) { }
 
-        private T leaves_;
-        public T leaves { get { return leaves_; } }
-
-        public Tree(int columns) {
-            columns_ = columns;
+        public override Vector grid(double t) {
+            int i = timeGrid().index(t);
+            Vector grid = new Vector(impl().size(i));
+            for (int j=0; j<grid.size(); j++)
+                grid[j] = impl().underlying(i,j);
+            return grid;
+        }
+        public virtual double underlying(int i, int index) {
+            return impl().underlying(i,index);
         }
     }
 }

@@ -68,6 +68,6 @@ namespace QLNet {
         public abstract double presentValue(DiscretizedAsset a);
 
         // this is a smell, but we need it. We'll rethink it later.
-        public abstract Vector grid(double t);
+        public virtual Vector grid(double t) { throw new NotImplementedException(); }
     }
 }

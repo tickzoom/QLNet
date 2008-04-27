@@ -27,9 +27,17 @@ namespace QLNet {
         T factory(StochasticProcess1D process, double end, int steps, double strike);
     }
 
+    // interface for all trees
+    public interface ITree {
+        int size(int i);
+        int descendant(int x, int index, int branch);
+        double underlying(int i, int index);
+        double probability(int x, int y, int z);
+    }
+
     //! Binomial tree base class
     /*! \ingroup lattices */
-    public class BinomialTree<T> : Tree<T> {
+    public abstract class BinomialTree<T> : Tree<T>, ITree {
         public enum Branches { branches = 2 };
 
         protected double x0_, driftPerStep_;
@@ -44,6 +52,9 @@ namespace QLNet {
 
         public int size(int i) { return i+1; }
         public int descendant(int x, int index, int branch) { return index + branch; }
+
+        public abstract double underlying(int i, int index);
+        public abstract double probability(int x, int y, int z);
     }
 
     //! Base class for equal probabilities binomial tree
@@ -54,12 +65,12 @@ namespace QLNet {
         public EqualProbabilitiesBinomialTree(StochasticProcess1D process, double end, int steps)
             : base(process, end, steps) {}
 
-        public double underlying(int i, int index) {
+        public override double underlying(int i, int index) {
             long j = 2*index - i;
             // exploiting the forward value tree centering
             return this.x0_*Math.Exp(i*driftPerStep_ + j*up_);
         }
-        public double probability(int x, int y, int z) { return 0.5; }
+        public override double probability(int x, int y, int z) { return 0.5; }
     }
 
     //! Base class for equal jumps binomial tree
@@ -70,12 +81,12 @@ namespace QLNet {
         public EqualJumpsBinomialTree(StochasticProcess1D process, double end, int steps)
             : base(process, end, steps) {}
 
-        public double underlying(int i, int index) {
+        public override double underlying(int i, int index) {
             long j = 2*index - i;
             // exploiting equal jump and the x0_ tree centering
             return x0_*Math.Exp(j*dx_);
         }
-        public double probability(int x, int y, int branch) { return (branch == 1 ? pu_ : pd_); }
+        public override double probability(int x, int y, int branch) { return (branch == 1 ? pu_ : pd_); }
     }
 
     //! Jarrow-Rudd (multiplicative) equal probabilities binomial tree
@@ -168,10 +179,10 @@ namespace QLNet {
             if (!(pu_ >= 0.0)) throw new ApplicationException("negative probability");
         }
 
-        public double underlying(int i, int index) {
+        public override double underlying(int i, int index) {
             return x0_ * Math.Pow(down_, i-index) * Math.Pow(up_, index);
         }
-        public double probability(int i, int j, int branch) { return (branch == 1 ? pu_ : pd_); }
+        public override double probability(int i, int j, int branch) { return (branch == 1 ? pu_ : pd_); }
 
         public Tian factory(StochasticProcess1D process, double end, int steps, double strike) {
             return new Tian(process, end, steps, strike);
@@ -198,10 +209,10 @@ namespace QLNet {
 
         }
 
-        public double underlying(int i, int index) {
+        public override double underlying(int i, int index) {
             return x0_ * Math.Pow(down_, i-index) * Math.Pow(up_, index); 
         }
-        public double probability(int i, int j, int branch) {
+        public override double probability(int i, int j, int branch) {
             return (branch == 1 ? pu_ : pd_);
         }
 
@@ -229,10 +240,10 @@ namespace QLNet {
             down_ = (ermqdt - pu_ * up_) / (1.0 - pu_);
         }
 
-        public double underlying(int i, int index) {
+        public override double underlying(int i, int index) {
             return x0_ * Math.Pow(down_, i-index) * Math.Pow(up_, index);
         }
-        public double probability(int x, int y, int branch) { return (branch == 1 ? pu_ : pd_); }
+        public override double probability(int x, int y, int branch) { return (branch == 1 ? pu_ : pd_); }
 
         protected double computeUpProb(double k, double dj) {
             double alpha = dj / (Math.Sqrt(8.0));

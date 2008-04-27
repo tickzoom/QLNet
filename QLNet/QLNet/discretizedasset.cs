@@ -138,6 +138,12 @@ namespace QLNet {
         protected virtual void preAdjustValuesImpl() {}
         /*! This method performs the actual post-adjustment */
         protected virtual void postAdjustValuesImpl() {}
+
+        // safe version of QL double* time()
+        public void setTime(double t) { time_ = t; }
+
+        // safe version of QL Vector* values()
+        public void setValues(Vector v) { values_ = v; }
     }
 
     //! Useful discretized discount bond asset

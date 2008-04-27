@@ -123,4 +123,11 @@ namespace QLNet {
         //public static double operator /(Vector v1, Vector v2) { return operVector(ref v1, ref v2, (x, y) => x / y); }
         #endregion
     }
+
+    public static partial class Utils {
+        // dot product. It is already overloaded in the vector. Thus for compatibility only
+        public static double DotProduct(Vector v1, Vector  v2) {
+            return v1 * v2;
+        }
+    }
 }
