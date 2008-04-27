@@ -88,7 +88,7 @@ namespace QLNet {
 			rebate_ = rebate;
 		}
 
-		public override void setupArguments(PricingEngine.Arguments args)
+        public override void setupArguments(IPricingEngineArguments args)
 		{
 	
 			base.setupArguments(args);

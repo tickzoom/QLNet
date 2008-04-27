@@ -105,7 +105,7 @@ namespace QLNet {
 			arguments.exercise = exercise_;
 		}
 
-		public override void fetchResults(PricingEngine.Results r)
+        public override void fetchResults(IPricingEngineResults r)
 		{
 			base.fetchResults(r);
 

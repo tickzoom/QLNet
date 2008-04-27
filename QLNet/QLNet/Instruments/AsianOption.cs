@@ -54,7 +54,7 @@ namespace QLNet {
 		{
 			averageType_ = averageType;
 		}
-		public override void setupArguments(PricingEngine.Arguments args)
+        public override void setupArguments(IPricingEngineArguments args)
 		{
 	
 			base.setupArguments(args);
@@ -130,7 +130,7 @@ namespace QLNet {
             fixingDates_.Sort();
 		}
 
-        public override void setupArguments(PricingEngine.Arguments args)
+        public override void setupArguments(IPricingEngineArguments args)
 		{
 	
 			base.setupArguments(args);

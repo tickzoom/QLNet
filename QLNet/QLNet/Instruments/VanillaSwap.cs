@@ -99,7 +99,7 @@ namespace QLNet {
         }
 
 
-        public override void setupArguments(PricingEngine.Arguments args) {
+        public override void setupArguments(IPricingEngineArguments args) {
             base.setupArguments(args);
 
             VanillaSwap.Arguments arguments = args as VanillaSwap.Arguments;
@@ -198,8 +198,8 @@ namespace QLNet {
             legBPS_[0] = legBPS_[1] = 0.0;
             fairRate_ = fairSpread_ = null;
         }
-        
-        public override void fetchResults(PricingEngine.Results r) {
+
+        public override void fetchResults(IPricingEngineResults r) {
             const double basisPoint = 1.0e-4;
 
             base.fetchResults(r);
