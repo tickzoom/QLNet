@@ -42,7 +42,7 @@ namespace QLNet {
         private Handle<BlackVolTermStructure> blackVolatility_;
         public Handle<BlackVolTermStructure> blackVolatility() { return blackVolatility_; }
 
-        private RelinkableHandle<LocalVolTermStructure> localVolatility_;
+        private RelinkableHandle<LocalVolTermStructure> localVolatility_ = new RelinkableHandle<LocalVolTermStructure>();
         public Handle<LocalVolTermStructure> localVolatility()  {
             if (!updated_) {
 

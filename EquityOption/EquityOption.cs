@@ -143,20 +143,18 @@ namespace EquityOption {
             //          << std::setw(widths[3]) << std::left << americanOption.NPV()
             //          << std::endl;
 
-            //// Binomial method: Jarrow-Rudd
-            //method = "Binomial Jarrow-Rudd";
-            //europeanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //        new BinomialVanillaEngine<JarrowRudd>(bsmProcess,timeSteps)));
-            //bermudanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //        new BinomialVanillaEngine<JarrowRudd>(bsmProcess,timeSteps)));
-            //americanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //        new BinomialVanillaEngine<JarrowRudd>(bsmProcess,timeSteps)));
-            //std::cout << std::setw(widths[0]) << std::left << method
-            //          << std::fixed
-            //          << std::setw(widths[1]) << std::left << europeanOption.NPV()
-            //          << std::setw(widths[2]) << std::left << bermudanOption.NPV()
-            //          << std::setw(widths[3]) << std::left << americanOption.NPV()
-            //          << std::endl;
+            // Binomial method: Jarrow-Rudd
+            method = "Binomial Jarrow-Rudd";
+            europeanOption.setPricingEngine(new BinomialVanillaEngine<JarrowRudd>(bsmProcess,timeSteps));
+            bermudanOption.setPricingEngine(new BinomialVanillaEngine<JarrowRudd>(bsmProcess,timeSteps));
+            americanOption.setPricingEngine(new BinomialVanillaEngine<JarrowRudd>(bsmProcess,timeSteps));
+
+            Console.Write("{0,-" + widths[0] + "}", method);
+            Console.Write("{0,-" + widths[1] + ":0.000000}", europeanOption.NPV());
+            Console.Write("{0,-" + widths[2] + ":0.000000}", bermudanOption.NPV());
+            Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
+
+
             //method = "Binomial Cox-Ross-Rubinstein";
             //europeanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
             //              new BinomialVanillaEngine<CoxRossRubinstein>(bsmProcess,

@@ -43,6 +43,8 @@ namespace QLNet {
         protected double x0_, driftPerStep_;
         protected double dt_;
 
+        // parameterless constructor is requried for generics
+        public BinomialTree() { }
         public BinomialTree(StochasticProcess1D process, double end, int steps)
             : base(steps+1) {
             x0_ = process.x0();
@@ -62,6 +64,8 @@ namespace QLNet {
     public class EqualProbabilitiesBinomialTree<T> : BinomialTree<T> {
         protected double up_;
 
+        // parameterless constructor is requried for generics
+        public EqualProbabilitiesBinomialTree() { }
         public EqualProbabilitiesBinomialTree(StochasticProcess1D process, double end, int steps)
             : base(process, end, steps) {}
 
@@ -78,6 +82,8 @@ namespace QLNet {
     public class EqualJumpsBinomialTree<T> : BinomialTree<T> {
         protected double dx_, pu_, pd_;
 
+        // parameterless constructor is requried for generics
+        public EqualJumpsBinomialTree() { }
         public EqualJumpsBinomialTree(StochasticProcess1D process, double end, int steps)
             : base(process, end, steps) {}
 
@@ -92,6 +98,8 @@ namespace QLNet {
     //! Jarrow-Rudd (multiplicative) equal probabilities binomial tree
     /*! \ingroup lattices */
     public class JarrowRudd : EqualProbabilitiesBinomialTree<JarrowRudd>, ITreeFactory<JarrowRudd> {
+        // parameterless constructor is requried for generics
+        public JarrowRudd() { }
         public JarrowRudd(StochasticProcess1D process, double end, int steps, double strike) 
             : base(process, end, steps) {
             // drift removed
@@ -106,6 +114,8 @@ namespace QLNet {
     //! Cox-Ross-Rubinstein (multiplicative) equal jumps binomial tree
     /*! \ingroup lattices */
     public class CoxRossRubinstein : EqualJumpsBinomialTree<CoxRossRubinstein>, ITreeFactory<CoxRossRubinstein> {
+        // parameterless constructor is requried for generics
+        public CoxRossRubinstein() { }
         public CoxRossRubinstein(StochasticProcess1D process, double end, int steps, double strike)    
             : base(process, end, steps) {
 
@@ -125,6 +135,8 @@ namespace QLNet {
     //! Additive equal probabilities binomial tree
     /*! \ingroup lattices */
     public class AdditiveEQPBinomialTree : EqualProbabilitiesBinomialTree<AdditiveEQPBinomialTree>, ITreeFactory<AdditiveEQPBinomialTree> {
+        // parameterless constructor is requried for generics
+        public AdditiveEQPBinomialTree() { }
         public AdditiveEQPBinomialTree(StochasticProcess1D process, double end, int steps, double strike)    
             : base(process, end, steps) {
             up_ = - 0.5 * driftPerStep_ + 0.5 * Math.Sqrt(4.0*process.variance(0.0, x0_, dt_)- 3.0*driftPerStep_*driftPerStep_);
@@ -138,6 +150,8 @@ namespace QLNet {
     //! %Trigeorgis (additive equal jumps) binomial tree
     /*! \ingroup lattices */
     public class Trigeorgis : EqualJumpsBinomialTree<Trigeorgis>, ITreeFactory<Trigeorgis> {
+        // parameterless constructor is requried for generics
+        public Trigeorgis() { }
         public Trigeorgis(StochasticProcess1D process, double end, int steps, double strike)    
             : base(process, end, steps) {
 
@@ -159,6 +173,8 @@ namespace QLNet {
     public class Tian : BinomialTree<Tian>, ITreeFactory<Tian> {
         protected double up_, down_, pu_, pd_;
 
+        // parameterless constructor is requried for generics
+        public Tian() { }
         public Tian(StochasticProcess1D process, double end, int steps, double strike)    
             : base(process, end, steps) {
 
@@ -193,6 +209,9 @@ namespace QLNet {
     /*! \ingroup lattices */
     public class LeisenReimer : BinomialTree<LeisenReimer>, ITreeFactory<LeisenReimer> {
         protected double up_, down_, pu_, pd_;
+
+        // parameterless constructor is requried for generics
+        public LeisenReimer() { }
         public LeisenReimer(StochasticProcess1D process, double end, int steps, double strike)    
             : base(process, end, (steps%2 != 0 ? steps : steps+1)) {
 
@@ -224,6 +243,8 @@ namespace QLNet {
     public class Joshi4 : BinomialTree<Joshi4>, ITreeFactory<Joshi4> {
         protected double up_, down_, pu_, pd_;
 
+        // parameterless constructor is requried for generics
+        public Joshi4() { }
         public Joshi4(StochasticProcess1D process, double end, int steps, double strike)    
             : base(process, end, (steps%2 != 0 ? steps : steps+1)) {
 
