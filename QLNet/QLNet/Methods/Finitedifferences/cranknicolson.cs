@@ -57,9 +57,13 @@ namespace QLNet {
 
         \ingroup findiff
     */
-    class CrankNicolson<Operator> : MixedScheme<Operator> where Operator : IOperator, new() {
+    class CrankNicolson<Operator> : MixedScheme<Operator>, ISchemeFactory where Operator : IOperator, new() {
         // constructors
-        public CrankNicolson(Operator L, List<BoundaryCondition<Operator>> bcs)
+        public CrankNicolson(Operator L, List<BoundaryCondition<IOperator>> bcs)
             : base(L, 0.5, bcs) { }
+
+        public IMixedScheme factory(IOperator L, List<BoundaryCondition<IOperator>> bcs) {
+            return new CrankNicolson<Operator>((Operator)L, bcs);
+        }
     }
 }
