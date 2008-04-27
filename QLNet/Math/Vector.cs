@@ -33,6 +33,7 @@ namespace QLNet {
     public class Vector : InitializedList<double>, ICloneable {
         //! \name Constructors, and assignment
         //! creates the array with the given dimension
+        public Vector() : this(0) { }
         public Vector(int size) : base(size) { }
 
         //! creates the array and fills it with <tt>value</tt>

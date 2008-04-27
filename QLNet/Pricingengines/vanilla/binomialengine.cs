@@ -79,8 +79,7 @@ namespace QLNet {
 
             T tree = new T().factory(bs, maturity, timeSteps_, payoff.strike());
 
-            //boost::shared_ptr<BlackScholesLattice<T> > lattice(
-            //    new BlackScholesLattice<T>(tree, r, maturity, timeSteps_));
+            //BlackScholesLattice<T> lattice = new BlackScholesLattice<T>(tree, r, maturity, timeSteps_);
 
             //DiscretizedVanillaOption option(arguments_, *process_, grid);
 
