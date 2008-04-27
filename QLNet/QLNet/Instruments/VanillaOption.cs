@@ -56,7 +56,7 @@ namespace QLNet {
             GeneralizedBlackScholesProcess newProcess = ImpliedVolatilityHelper.clone(process, volQuote);
 
             // engines are built-in for the time being
-            PricingEngine engine;
+            IPricingEngine engine;
             switch (exercise_.type()) {
                 case Exercise.Type.European:
                     engine = new AnalyticEuropeanEngine(newProcess);

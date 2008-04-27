@@ -265,7 +265,7 @@ namespace QLNet
 
       #region Pricing
 
-      public class Arguments : PricingEngine.Arguments
+      public class Arguments : IPricingEngineArguments
       {
          public Arguments() 
          {
@@ -282,7 +282,7 @@ namespace QLNet
          public List<double> gearings;
          public List<double> spreads;
          public List<double> nominals;
-         public override void validate() 
+         public void validate() 
          {
             if (endDates.Count != startDates.Count)
                throw new ArgumentException( "number of start dates (" + startDates.Count

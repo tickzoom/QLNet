@@ -247,7 +247,7 @@ namespace QLNet {
                 nominal = default(double);
             }
             
-            public override void validate() {
+            public void validate() {
                 base.validate();
 
                 if (nominal == default(double)) throw new ArgumentException("nominal null or not set");

@@ -41,7 +41,7 @@ namespace QLNet {
 			public double? barrier;
 			public double? rebate;
 
-			public override void validate()
+			public void validate()
 			{
 				base.validate();
 		
@@ -131,7 +131,7 @@ namespace QLNet {
 			GeneralizedBlackScholesProcess newProcess = ImpliedVolatilityHelper.clone(process, volQuote);
 	
 			// engines are built-in for the time being
-			PricingEngine engine = null;
+			IPricingEngine engine = null;
 			switch (exercise_.type())
 			{
 			  case Exercise.Type.European:

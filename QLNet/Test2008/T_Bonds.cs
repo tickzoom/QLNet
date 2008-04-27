@@ -153,7 +153,7 @@ namespace TestSuite {
                     FixedRateBond bond = new FixedRateBond(settlementDays, vars.faceAmount, sch, new List<double>() { coupons[k] },
                                                            bondDayCount, paymentConvention, redemption, issue);
 
-                    PricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
+                    IPricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
                     bond.setPricingEngine(bondEngine);
 
                     for (int m=0; m<yields.Length; m++) {
@@ -217,7 +217,7 @@ namespace TestSuite {
             FixedRateBond bond1 = new FixedRateBond(settlementDays, vars.faceAmount, sch1, new List<double>() { 0.025 },
                                     bondDayCount, BusinessDayConvention.ModifiedFollowing, 100.0, new Date(1, Month.November, 2004));
 
-            PricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
+            IPricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
             bond1.setPricingEngine(bondEngine);
 
             double marketPrice1 = 99.203125;
@@ -394,7 +394,7 @@ namespace TestSuite {
                                  vars.faceAmount, new Date(30, Month.November, 2008), BusinessDayConvention.ModifiedFollowing,
                                  100.0, new Date(30, Month.November, 2004));
 
-            PricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
+            IPricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
             bond1.setPricingEngine(bondEngine);
 
             double cachedPrice1 = 88.551726;
@@ -464,7 +464,7 @@ namespace TestSuite {
                                 new ActualActual(ActualActual.Convention.ISMA), BusinessDayConvention.ModifiedFollowing,
                                 100.0, new Date(30, Month.November, 2004));
 
-            PricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
+            IPricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
             bond1.setPricingEngine(bondEngine);
 
             double cachedPrice1 = 99.298100;
@@ -560,7 +560,7 @@ namespace TestSuite {
                                    false,
                                    100.0, new Date(30, Month.November, 2004));
 
-            PricingEngine bondEngine = new DiscountingBondEngine(riskFreeRate);
+            IPricingEngine bondEngine = new DiscountingBondEngine(riskFreeRate);
             bond1.setPricingEngine(bondEngine);
 
             Utils.setCouponPricer(bond1.cashflows(),pricer);
@@ -589,7 +589,7 @@ namespace TestSuite {
                                    false,
                                    100.0, new Date(30, Month.November, 2004));
 
-            PricingEngine bondEngine2 = new DiscountingBondEngine(discountCurve);
+            IPricingEngine bondEngine2 = new DiscountingBondEngine(discountCurve);
             bond2.setPricingEngine(bondEngine2);
 
             Utils.setCouponPricer(bond2.cashflows(),pricer);

@@ -29,7 +29,7 @@ namespace QLNet {
 
         protected Handle<Quote> volatility_;
         protected Handle<YieldTermStructure> termStructure_;
-        protected PricingEngine engine_;
+        protected IPricingEngine engine_;
 
         private bool calibrateVolatility_;
 
@@ -84,7 +84,7 @@ namespace QLNet {
         //! Black price given a volatility
         public abstract double blackPrice(double volatility);
 
-        public void setPricingEngine(PricingEngine engine) {
+        public void setPricingEngine(IPricingEngine engine) {
             engine_ = engine;
         }
 

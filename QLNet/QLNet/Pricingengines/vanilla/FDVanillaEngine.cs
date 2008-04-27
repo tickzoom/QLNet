@@ -66,7 +66,7 @@ namespace QLNet {
             ensureStrikeInGrid();
         }
 
-        protected void setupArguments(PricingEngine.Arguments a) {
+        protected void setupArguments(IPricingEngineArguments a) {
             OneAssetOption.Arguments args = a as OneAssetOption.Arguments;
             if (args == null) throw new ApplicationException("incorrect argument type");
 

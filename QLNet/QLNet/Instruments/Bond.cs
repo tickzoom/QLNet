@@ -349,7 +349,7 @@ namespace QLNet {
         }
 
         public override void setupArguments(IPricingEngineArguments args) {
-            if (!(args is PricingEngine.Arguments))
+            if (!(args is IPricingEngineArguments))
                 throw new ApplicationException("wrong argument type");
 
             Bond.Arguments arguments = (Bond.Arguments)args;
@@ -363,12 +363,12 @@ namespace QLNet {
 
         public new class Results : Instrument.Results { }
 
-        public class Arguments : PricingEngine.Arguments {
+        public class Arguments : IPricingEngineArguments {
             public Date settlementDate;
             public List<CashFlow> cashflows;
             public Calendar calendar;
 
-            public override void validate() {
+            public void validate() {
                 if (settlementDate == null)
                     throw new ApplicationException("no settlement date provided");
                 foreach(CashFlow cf in cashflows)

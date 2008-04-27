@@ -49,7 +49,7 @@ namespace QLNet {
 
             Settings.registerWith(update);
 
-            PricingEngine bondEngine = new DiscountingBondEngine(termStructureHandle_);
+            IPricingEngine bondEngine = new DiscountingBondEngine(termStructureHandle_);
             bond_.setPricingEngine(bondEngine);
         }
 
@@ -59,7 +59,7 @@ namespace QLNet {
 
             Settings.registerWith(update);
 
-            PricingEngine bondEngine = new DiscountingBondEngine(termStructureHandle_);
+            IPricingEngine bondEngine = new DiscountingBondEngine(termStructureHandle_);
             bond_.setPricingEngine(bondEngine);
         }
 
