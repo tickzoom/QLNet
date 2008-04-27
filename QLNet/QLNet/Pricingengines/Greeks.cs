@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -22,10 +23,7 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-
-public static class BSGreeks
-{
-
+    public static partial class Utils {
 		//! default theta calculation for Black-Scholes options
 		public static double blackScholesTheta(GeneralizedBlackScholesProcess p, double value, double delta, double gamma)
 		{
