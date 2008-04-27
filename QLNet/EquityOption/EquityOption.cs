@@ -136,12 +136,11 @@ namespace EquityOption {
             //             new FDBermudanEngine(bsmProcess,timeSteps,timeSteps-1)));
             //americanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
             //             new FDAmericanEngine(bsmProcess,timeSteps,timeSteps-1)));
-            //std::cout << std::setw(widths[0]) << std::left << method
-            //          << std::fixed
-            //          << std::setw(widths[1]) << std::left << europeanOption.NPV()
-            //          << std::setw(widths[2]) << std::left << bermudanOption.NPV()
-            //          << std::setw(widths[3]) << std::left << americanOption.NPV()
-            //          << std::endl;
+
+            Console.Write("{0,-" + widths[0] + "}", method);
+            Console.Write("{0,-" + widths[1] + ":0.000000}", europeanOption.NPV());
+            Console.Write("{0,-" + widths[2] + ":0.000000}", bermudanOption.NPV());
+            Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
 
             // Binomial method: Jarrow-Rudd
             method = "Binomial Jarrow-Rudd";
@@ -155,100 +154,70 @@ namespace EquityOption {
             Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
 
 
-            //method = "Binomial Cox-Ross-Rubinstein";
-            //europeanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //              new BinomialVanillaEngine<CoxRossRubinstein>(bsmProcess,
-            //                                                           timeSteps)));
-            //bermudanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //              new BinomialVanillaEngine<CoxRossRubinstein>(bsmProcess,
-            //                                                           timeSteps)));
-            //americanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //              new BinomialVanillaEngine<CoxRossRubinstein>(bsmProcess,
-            //                                                           timeSteps)));
-            //std::cout << std::setw(widths[0]) << std::left << method
-            //          << std::fixed
-            //          << std::setw(widths[1]) << std::left << europeanOption.NPV()
-            //          << std::setw(widths[2]) << std::left << bermudanOption.NPV()
-            //          << std::setw(widths[3]) << std::left << americanOption.NPV()
-            //          << std::endl;
+            method = "Binomial Cox-Ross-Rubinstein";
+            europeanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(bsmProcess, timeSteps));
+            bermudanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(bsmProcess, timeSteps));
+            americanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(bsmProcess, timeSteps));
 
-            //// Binomial method: Additive equiprobabilities
-            //method = "Additive equiprobabilities";
-            //europeanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //        new BinomialVanillaEngine<AdditiveEQPBinomialTree>(bsmProcess,
-            //                                                           timeSteps)));
-            //bermudanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //        new BinomialVanillaEngine<AdditiveEQPBinomialTree>(bsmProcess,
-            //                                                           timeSteps)));
-            //americanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //        new BinomialVanillaEngine<AdditiveEQPBinomialTree>(bsmProcess,
-            //                                                           timeSteps)));
-            //std::cout << std::setw(widths[0]) << std::left << method
-            //          << std::fixed
-            //          << std::setw(widths[1]) << std::left << europeanOption.NPV()
-            //          << std::setw(widths[2]) << std::left << bermudanOption.NPV()
-            //          << std::setw(widths[3]) << std::left << americanOption.NPV()
-            //          << std::endl;
+            Console.Write("{0,-" + widths[0] + "}", method);
+            Console.Write("{0,-" + widths[1] + ":0.000000}", europeanOption.NPV());
+            Console.Write("{0,-" + widths[2] + ":0.000000}", bermudanOption.NPV());
+            Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
 
-            //// Binomial method: Binomial Trigeorgis
-            //method = "Binomial Trigeorgis";
-            //europeanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //        new BinomialVanillaEngine<Trigeorgis>(bsmProcess,timeSteps)));
-            //bermudanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //        new BinomialVanillaEngine<Trigeorgis>(bsmProcess,timeSteps)));
-            //americanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //        new BinomialVanillaEngine<Trigeorgis>(bsmProcess,timeSteps)));
-            //std::cout << std::setw(widths[0]) << std::left << method
-            //          << std::fixed
-            //          << std::setw(widths[1]) << std::left << europeanOption.NPV()
-            //          << std::setw(widths[2]) << std::left << bermudanOption.NPV()
-            //          << std::setw(widths[3]) << std::left << americanOption.NPV()
-            //          << std::endl;
+            // Binomial method: Additive equiprobabilities
+            method = "Additive equiprobabilities";
+            europeanOption.setPricingEngine(new BinomialVanillaEngine<AdditiveEQPBinomialTree>(bsmProcess, timeSteps));
+            bermudanOption.setPricingEngine(new BinomialVanillaEngine<AdditiveEQPBinomialTree>(bsmProcess, timeSteps));
+            americanOption.setPricingEngine(new BinomialVanillaEngine<AdditiveEQPBinomialTree>(bsmProcess, timeSteps));
 
-            //// Binomial method: Binomial Tian
-            //method = "Binomial Tian";
-            //europeanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //              new BinomialVanillaEngine<Tian>(bsmProcess,timeSteps)));
-            //bermudanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //              new BinomialVanillaEngine<Tian>(bsmProcess,timeSteps)));
-            //americanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //              new BinomialVanillaEngine<Tian>(bsmProcess,timeSteps)));
-            //std::cout << std::setw(widths[0]) << std::left << method
-            //          << std::fixed
-            //          << std::setw(widths[1]) << std::left << europeanOption.NPV()
-            //          << std::setw(widths[2]) << std::left << bermudanOption.NPV()
-            //          << std::setw(widths[3]) << std::left << americanOption.NPV()
-            //          << std::endl;
+            Console.Write("{0,-" + widths[0] + "}", method);
+            Console.Write("{0,-" + widths[1] + ":0.000000}", europeanOption.NPV());
+            Console.Write("{0,-" + widths[2] + ":0.000000}", bermudanOption.NPV());
+            Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
 
-            //// Binomial method: Binomial Leisen-Reimer
-            //method = "Binomial Leisen-Reimer";
-            //europeanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //      new BinomialVanillaEngine<LeisenReimer>(bsmProcess,timeSteps)));
-            //bermudanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //      new BinomialVanillaEngine<LeisenReimer>(bsmProcess,timeSteps)));
-            //americanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //      new BinomialVanillaEngine<LeisenReimer>(bsmProcess,timeSteps)));
-            //std::cout << std::setw(widths[0]) << std::left << method
-            //          << std::fixed
-            //          << std::setw(widths[1]) << std::left << europeanOption.NPV()
-            //          << std::setw(widths[2]) << std::left << bermudanOption.NPV()
-            //          << std::setw(widths[3]) << std::left << americanOption.NPV()
-            //          << std::endl;
+            // Binomial method: Binomial Trigeorgis
+            method = "Binomial Trigeorgis";
+            europeanOption.setPricingEngine(new BinomialVanillaEngine<Trigeorgis>(bsmProcess,timeSteps));
+            bermudanOption.setPricingEngine(new BinomialVanillaEngine<Trigeorgis>(bsmProcess,timeSteps));
+            americanOption.setPricingEngine(new BinomialVanillaEngine<Trigeorgis>(bsmProcess,timeSteps));
 
-            //// Binomial method: Binomial Joshi
-            //method = "Binomial Joshi";
-            //europeanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //            new BinomialVanillaEngine<Joshi4>(bsmProcess,timeSteps)));
-            //bermudanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //            new BinomialVanillaEngine<Joshi4>(bsmProcess,timeSteps)));
-            //americanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //            new BinomialVanillaEngine<Joshi4>(bsmProcess,timeSteps)));
-            //std::cout << std::setw(widths[0]) << std::left << method
-            //          << std::fixed
-            //          << std::setw(widths[1]) << std::left << europeanOption.NPV()
-            //          << std::setw(widths[2]) << std::left << bermudanOption.NPV()
-            //          << std::setw(widths[3]) << std::left << americanOption.NPV()
-            //          << std::endl;
+            Console.Write("{0,-" + widths[0] + "}", method);
+            Console.Write("{0,-" + widths[1] + ":0.000000}", europeanOption.NPV());
+            Console.Write("{0,-" + widths[2] + ":0.000000}", bermudanOption.NPV());
+            Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
+
+            // Binomial method: Binomial Tian
+            method = "Binomial Tian";
+            europeanOption.setPricingEngine(new BinomialVanillaEngine<Tian>(bsmProcess,timeSteps));
+            bermudanOption.setPricingEngine(new BinomialVanillaEngine<Tian>(bsmProcess,timeSteps));
+            americanOption.setPricingEngine(new BinomialVanillaEngine<Tian>(bsmProcess,timeSteps));
+
+            Console.Write("{0,-" + widths[0] + "}", method);
+            Console.Write("{0,-" + widths[1] + ":0.000000}", europeanOption.NPV());
+            Console.Write("{0,-" + widths[2] + ":0.000000}", bermudanOption.NPV());
+            Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
+
+            // Binomial method: Binomial Leisen-Reimer
+            method = "Binomial Leisen-Reimer";
+            europeanOption.setPricingEngine(new BinomialVanillaEngine<LeisenReimer>(bsmProcess,timeSteps));
+            bermudanOption.setPricingEngine(new BinomialVanillaEngine<LeisenReimer>(bsmProcess,timeSteps));
+            americanOption.setPricingEngine(new BinomialVanillaEngine<LeisenReimer>(bsmProcess,timeSteps));
+
+            Console.Write("{0,-" + widths[0] + "}", method);
+            Console.Write("{0,-" + widths[1] + ":0.000000}", europeanOption.NPV());
+            Console.Write("{0,-" + widths[2] + ":0.000000}", bermudanOption.NPV());
+            Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
+
+            // Binomial method: Binomial Joshi
+            method = "Binomial Joshi";
+            europeanOption.setPricingEngine(new BinomialVanillaEngine<Joshi4>(bsmProcess,timeSteps));
+            bermudanOption.setPricingEngine(new BinomialVanillaEngine<Joshi4>(bsmProcess,timeSteps));
+            americanOption.setPricingEngine(new BinomialVanillaEngine<Joshi4>(bsmProcess,timeSteps));
+
+            Console.Write("{0,-" + widths[0] + "}", method);
+            Console.Write("{0,-" + widths[1] + ":0.000000}", europeanOption.NPV());
+            Console.Write("{0,-" + widths[2] + ":0.000000}", bermudanOption.NPV());
+            Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
 
             //// Monte Carlo Method: MC (crude)
             //timeSteps = 1;

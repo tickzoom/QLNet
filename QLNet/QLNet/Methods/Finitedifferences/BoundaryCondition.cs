@@ -23,7 +23,7 @@ using System.Text;
 
 namespace QLNet {
     //! Abstract boundary condition class for finite difference problems
-    public class BoundaryCondition<Operator>  where Operator : TridiagonalOperator {
+    public class BoundaryCondition<Operator> where Operator : IOperator {
         //! \todo Generalize for n-dimensional conditions
         public enum Side { None, Upper, Lower };
 
@@ -70,7 +70,7 @@ namespace QLNet {
         }
 
         // interface
-        public override void applyBeforeApplying(TridiagonalOperator L)  {
+        public override void applyBeforeApplying(TridiagonalOperator L) {
             switch (side_) {
                 case Side.Lower:
                     L.setFirstRow(-1.0,1.0);

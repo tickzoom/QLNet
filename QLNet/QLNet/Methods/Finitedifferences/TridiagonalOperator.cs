@@ -23,6 +23,20 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
+    public interface IOperator {
+        int size();
+        IOperator identity(int size);
+        Vector applyTo(Vector v);
+        Vector solveFor(Vector rhs);
+
+        IOperator multiply(double a, IOperator D);
+        IOperator add(IOperator A, IOperator B);
+        IOperator subtract(IOperator A, IOperator B);
+
+        bool isTimeDependent();
+        void setTime(double t);
+    }
+
     //! Base implementation for tridiagonal operator
     /*! \warning to use real time-dependant algebra, you must overload
                  the corresponding operators in the inheriting
@@ -30,15 +44,15 @@ namespace QLNet {
 
         \ingroup findiff
     */
-    public class TridiagonalOperator {
+    public class TridiagonalOperator : IOperator {
+        protected TimeSetter timeSetter_;
+
         protected Vector diagonal_, lowerDiagonal_, upperDiagonal_;
         public Vector lowerDiagonal() { return lowerDiagonal_; }
         public Vector diagonal() { return diagonal_; }
         public Vector upperDiagonal() { return upperDiagonal_; }
 
         public int size() { return diagonal_.Count; }
-
-        // protected TimeSetter timeSetter_;
 
         public TridiagonalOperator() : this(0) { }
         public TridiagonalOperator(int size) {
@@ -69,6 +83,37 @@ namespace QLNet {
 
         // TridiagonalOperator(const Disposable<TridiagonalOperator>&);
         // TridiagonalOperator& operator=(const Disposable<TridiagonalOperator>&);
+
+        public IOperator multiply(double a, IOperator o) {
+            TridiagonalOperator D = o as TridiagonalOperator;
+            Vector low = D.lowerDiagonal_*a,
+                   mid = D.diagonal_*a,
+                   high = D.upperDiagonal_*a;
+            TridiagonalOperator result = new TridiagonalOperator(low,mid,high);
+            return result;
+        }
+
+        public IOperator add(IOperator A, IOperator B) {
+            TridiagonalOperator D1 = A as TridiagonalOperator;
+            TridiagonalOperator D2 = B as TridiagonalOperator;
+
+            Vector low = D1.lowerDiagonal_+D2.lowerDiagonal_,
+                   mid = D1.diagonal_+D2.diagonal_,
+                   high = D1.upperDiagonal_+D2.upperDiagonal_;
+            TridiagonalOperator result = new TridiagonalOperator(low,mid,high);
+            return result;
+        }
+
+        public IOperator subtract(IOperator A, IOperator B) {
+            TridiagonalOperator D1 = A as TridiagonalOperator;
+            TridiagonalOperator D2 = B as TridiagonalOperator;
+
+            Vector low = D1.lowerDiagonal_-D2.lowerDiagonal_,
+                   mid = D1.diagonal_-D2.diagonal_,
+                   high = D1.upperDiagonal_-D2.upperDiagonal_;
+            TridiagonalOperator result = new TridiagonalOperator(low,mid,high);
+            return result;
+        }
 
 
         //! apply operator to a given array
@@ -157,13 +202,12 @@ namespace QLNet {
         }
 
         //! identity instance
-        public static TridiagonalOperator identity(int size) {
+        public IOperator identity(int size) {
             TridiagonalOperator I = new TridiagonalOperator(new Vector(size - 1, 0.0),     // lower diagonal
                                                             new Vector(size, 1.0),     // diagonal
                                                             new Vector(size - 1, 0.0));    // upper diagonal
             return I;
         }
-
 
         public void setFirstRow(double valB, double valC) {
             diagonal_[0] = valB;
@@ -188,6 +232,17 @@ namespace QLNet {
         public void setLastRow(double valA, double valB) {
             lowerDiagonal_[size() - 2] = valA;
             diagonal_[size() - 1] = valB;
+        }
+
+        public bool isTimeDependent() { return timeSetter_ != null; }
+        public void setTime(double t) {
+            if (timeSetter_ != null)
+                timeSetter_.setTime(t, this);
+        }
+
+        //! encapsulation of time-setting logic
+        public abstract class TimeSetter {
+            public abstract void setTime(double t, IOperator L);
         }
     }
 }
