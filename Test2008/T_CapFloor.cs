@@ -76,11 +76,11 @@ namespace TestSuite
                 .withFixingDays(fixingDays).value();
          }
 
-         PricingEngine makeEngine(double volatility) 
+         IPricingEngine makeEngine(double volatility) 
          {
             Handle<Quote> vol = new Handle<Quote>(new SimpleQuote(volatility)) ;
 
-            return (PricingEngine) new BlackCapFloorEngine(termStructure, vol);
+            return (IPricingEngine) new BlackCapFloorEngine(termStructure, vol);
         }
       }
 

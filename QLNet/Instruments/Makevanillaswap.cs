@@ -44,7 +44,7 @@ namespace QLNet {
         private double floatSpread_;
         private DayCounter fixedDayCount_, floatDayCount_;
 
-        PricingEngine engine_;
+        IPricingEngine engine_;
 
 
         public MakeVanillaSwap(Period swapTenor, IborIndex index) :

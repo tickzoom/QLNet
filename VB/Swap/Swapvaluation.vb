@@ -300,7 +300,7 @@ Module Swapvaluation
         Dim fairRate As Double
         Dim fairSpread As Double
 
-        Dim swapEngine As PricingEngine = New DiscountingSwapEngine(discountingTermStructure)
+		Dim swapEngine As IPricingEngine = New DiscountingSwapEngine(discountingTermStructure)
 
         spot5YearSwap.setPricingEngine(swapEngine)
         oneYearForward5YearSwap.setPricingEngine(swapEngine)

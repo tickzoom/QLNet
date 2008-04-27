@@ -95,7 +95,7 @@ namespace QLNet {
             return dividendRho_.GetValueOrDefault();
 		}
 
-		public void setupArguments(ref PricingEngine.Arguments args)
+        public void setupArguments(IPricingEngineArguments args)
 		{
 			MultiAssetOption.Arguments arguments = args as MultiAssetOption.Arguments;
 			if (arguments == null)

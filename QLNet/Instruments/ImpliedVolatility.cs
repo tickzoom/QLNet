@@ -26,7 +26,7 @@ namespace QLNet {
     /*! The passed engine must be linked to the passed quote (see,
         e.g., VanillaOption to see how this can be achieved.) */
     public static class ImpliedVolatilityHelper {
-        public static double calculate(Instrument instrument, PricingEngine engine, SimpleQuote volQuote,
+        public static double calculate(Instrument instrument, IPricingEngine engine, SimpleQuote volQuote,
                                        double targetValue, double accuracy, int maxEvaluations, double minVol, double maxVol) {
 
             instrument.setupArguments(engine.getArguments());
@@ -55,12 +55,12 @@ namespace QLNet {
     }
 
     public class PriceError : ISolver1d {
-        private PricingEngine engine_;
+        private IPricingEngine engine_;
         private SimpleQuote vol_;
         private double targetValue_;
         private Instrument.Results results_;
 
-        public PriceError(PricingEngine engine, SimpleQuote vol, double targetValue) {
+        public PriceError(IPricingEngine engine, SimpleQuote vol, double targetValue) {
             engine_ = engine;
             vol_ = vol;
             targetValue_ = targetValue;
