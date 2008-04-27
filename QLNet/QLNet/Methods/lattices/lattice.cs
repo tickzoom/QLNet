@@ -45,7 +45,7 @@ namespace QLNet {
         \ingroup lattices
     */
     public class TreeLattice<T> : Lattice where T : BlackScholesLattice {
-        protected T link_;
+        // this should be overriden in the dering class
         protected virtual T impl() { throw new NotSupportedException(); }
 
         private int n_;

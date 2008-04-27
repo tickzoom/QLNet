@@ -54,9 +54,7 @@ namespace QLNet {
             dt_ = new InitializedList<double>(steps, dt);
         }
 
-        //@}
         //! \name Time grid interface
-        //@{
         //! returns the index i such that grid[i] = t
         public int index(double t) {
             int i = closestIndex(t);
@@ -112,5 +110,7 @@ namespace QLNet {
         public double closestTime(double t) {
             return times_[closestIndex(t)];
         }
+
+        public bool empty() { return times_.Count == 0; }
     }
 }
