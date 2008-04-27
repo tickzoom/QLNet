@@ -59,6 +59,7 @@ namespace QLNet {
     */
     class CrankNicolson<Operator> : MixedScheme<Operator>, ISchemeFactory where Operator : IOperator, new() {
         // constructors
+        public CrankNicolson() { }  // required for generics
         public CrankNicolson(Operator L, List<BoundaryCondition<IOperator>> bcs)
             : base(L, 0.5, bcs) { }
 

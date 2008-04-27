@@ -130,8 +130,7 @@ namespace EquityOption {
             // Finite differences
             int timeSteps = 801;
             method = "Finite differences";
-            //europeanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //             new FDEuropeanEngine(bsmProcess,timeSteps,timeSteps-1)));
+            europeanOption.setPricingEngine(new FDEuropeanEngine(bsmProcess,timeSteps,timeSteps-1));
             //bermudanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
             //             new FDBermudanEngine(bsmProcess,timeSteps,timeSteps-1)));
             //americanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(

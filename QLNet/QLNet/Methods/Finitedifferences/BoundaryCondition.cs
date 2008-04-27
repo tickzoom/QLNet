@@ -31,7 +31,7 @@ namespace QLNet {
         /*! This method modifies an operator \f$ L \f$ before it is
             applied to an array \f$ u \f$ so that \f$ v = Lu \f$ will
             satisfy the given condition. */
-        public virtual void applyBeforeApplying(Operator o) { throw new NotSupportedException(); }
+        public virtual void applyBeforeApplying(IOperator o) { throw new NotSupportedException(); }
 
         /*! This method modifies an array \f$ u \f$ so that it satisfies the given condition. */
         public virtual void applyAfterApplying(Vector v) { throw new NotSupportedException(); }
@@ -39,7 +39,7 @@ namespace QLNet {
         /*! This method modifies an operator \f$ L \f$ before the linear
             system \f$ Lu' = u \f$ is solved so that \f$ u' \f$ will
             satisfy the given condition. */
-        public virtual void applyBeforeSolving(Operator o, Vector v) { throw new NotSupportedException(); }
+        public virtual void applyBeforeSolving(IOperator o, Vector v) { throw new NotSupportedException(); }
 
         /*! This method modifies an array \f$ u \f$ so that it satisfies the given condition. */
         public virtual void applyAfterSolving(Vector v) { throw new NotSupportedException(); }
@@ -60,7 +60,8 @@ namespace QLNet {
 
         \ingroup findiff
     */
-    public class NeumannBC : BoundaryCondition<TridiagonalOperator> {
+    // NeumanBC works on TridiagonalOperator. IOperator here is for type compatobility with options
+    public class NeumannBC : BoundaryCondition<IOperator> {
         private double value_;
         private Side side_;
         
@@ -70,7 +71,8 @@ namespace QLNet {
         }
 
         // interface
-        public override void applyBeforeApplying(TridiagonalOperator L) {
+        public override void applyBeforeApplying(IOperator o) {
+            TridiagonalOperator L = o as TridiagonalOperator;
             switch (side_) {
                 case Side.Lower:
                     L.setFirstRow(-1.0,1.0);
@@ -96,7 +98,8 @@ namespace QLNet {
             }
         }
 
-        public override void applyBeforeSolving(TridiagonalOperator L, Vector rhs) {
+        public override void applyBeforeSolving(IOperator o, Vector rhs) {
+            TridiagonalOperator L = o as TridiagonalOperator;
             switch (side_) {
                 case Side.Lower:
                     L.setFirstRow(-1.0,1.0);

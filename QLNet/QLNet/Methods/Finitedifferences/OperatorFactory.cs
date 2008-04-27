@@ -31,15 +31,19 @@ namespace QLNet {
         public static TridiagonalOperator getOperator(GeneralizedBlackScholesProcess process, Vector grid,
                                                       double residualTime, bool timeDependent) {
             if (timeDependent)
-                throw new NotImplementedException();
-                //return BSMTermOperator(grid, process, residualTime);
+                //! Black-Scholes-Merton differential operator
+                /*! \ingroup findiff
+
+                    \test coefficients are tested against constant BSM operator
+                */
+                return new PdeOperator<PdeBSM>(grid, process, residualTime);
             else
-                throw new NotImplementedException();
-                //return BSMOperator(grid, process, residualTime);
+                return new BSMOperator(grid, process, residualTime);
         }
         public static TridiagonalOperator getOperator(OneFactorModel.ShortRateDynamics process, Vector grid) {
             throw new NotImplementedException();
-            //return OneFactorOperator(grid, process);
+            //! Interest-rate single factor model differential operator
+            //return new PdeOperator<PdeShortRate>(grid, process);
         }
     }
 }

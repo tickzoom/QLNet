@@ -41,7 +41,7 @@ namespace QLNet {
 			public double? barrier;
 			public double? rebate;
 
-			public void validate()
+			public override void validate()
 			{
 				base.validate();
 		

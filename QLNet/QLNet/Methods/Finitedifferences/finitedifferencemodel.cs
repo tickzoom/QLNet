@@ -29,8 +29,8 @@ namespace QLNet {
         private List<double> stoppingTimes_;
 
         // constructors
-        //public FiniteDifferenceModel(Operator L, List<BoundaryCondition<Operator>> bcs,
-        //                      List<double> stoppingTimes = new List<double>())
+        public FiniteDifferenceModel(IOperator L, List<BoundaryCondition<IOperator>> bcs)
+            : this(L, bcs, new List<double>()) { }
         public FiniteDifferenceModel(IOperator L, List<BoundaryCondition<IOperator>> bcs, List<double> stoppingTimes) {
             evolver_ = (Evolver)new Evolver().factory(L, bcs);
             stoppingTimes_ = stoppingTimes;

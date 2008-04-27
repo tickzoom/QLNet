@@ -28,40 +28,65 @@ namespace QLNet {
         \test the correctness of the returned value is tested by
               checking it against analytic results.
     */
-    public class FDEuropeanEngine : OneAssetOption.Engine {
+    public class FDEuropeanEngine : FDVanillaEngine, IGenericEngine<OneAssetOption.Arguments, OneAssetOption.Results> {
         private SampledCurve prices_;
-        private FDVanillaEngine engine_;
 
         //public FDEuropeanEngine(GeneralizedBlackScholesProcess process,
         //                        Size timeSteps=100, Size gridPoints=100, bool timeDependent = false) {
-        public FDEuropeanEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent) {
-            engine_ = new FDVanillaEngine(process, timeSteps, gridPoints, timeDependent);
+        public FDEuropeanEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints)
+            : this(process, timeSteps, gridPoints, false) { }
+        public FDEuropeanEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent)
+            : base(process, timeSteps, gridPoints, timeDependent) {
             prices_ = new SampledCurve(gridPoints);
 
             process.registerWith(update);
         }
 
-        //new private void calculate() {
-        //    setupArguments(arguments_);
-        //    setGridLimits();
-        //    initializeInitialCondition();
-        //    initializeOperator();
-        //    initializeBoundaryConditions();
+        public void calculate() {
+            setupArguments(arguments_);
+            setGridLimits();
+            initializeInitialCondition();
+            initializeOperator();
+            initializeBoundaryConditions();
 
-        //    var model = new FiniteDifferenceModel<CrankNicolson<TridiagonalOperator>>(finiteDifferenceOperator_, BCs_);
+            var model = new FiniteDifferenceModel<CrankNicolson<TridiagonalOperator>>(finiteDifferenceOperator_, BCs_);
 
-        //    prices_ = intrinsicValues_;
+            prices_ = intrinsicValues_;
 
-        //    model.rollback(prices_.values(), getResidualTime(), 0, timeSteps_);
+            model.rollback(prices_.values(), getResidualTime(), 0, timeSteps_);
 
-        //    results_.value = prices_.valueAtCenter();
-        //    results_.delta = prices_.firstDerivativeAtCenter();
-        //    results_.gamma = prices_.secondDerivativeAtCenter();
-        //    results_.theta = Utils.blackScholesTheta(process_,
-        //                                       results_.value,
-        //                                       results_.delta,
-        //                                       results_.gamma);
-        //    results_.additionalResults["priceCurve"] = prices_;
-        //}
+            results_.value = prices_.valueAtCenter();
+            results_.delta = prices_.firstDerivativeAtCenter();
+            results_.gamma = prices_.secondDerivativeAtCenter();
+            results_.theta = Utils.blackScholesTheta(process_,
+                                                     results_.value.GetValueOrDefault(),
+                                                     results_.delta.GetValueOrDefault(),
+                                                     results_.gamma.GetValueOrDefault());
+            results_.additionalResults.Add("priceCurve", prices_);
+        }
+
+        #region IGenericEngine copy-cat
+        protected OneAssetOption.Arguments arguments_ = new OneAssetOption.Arguments();
+        protected OneAssetOption.Results results_ = new OneAssetOption.Results();
+
+        public IPricingEngineArguments getArguments() { return arguments_; }
+        public IPricingEngineResults getResults() { return results_; }
+        public void reset() { results_.reset(); }
+
+        #region Observer & Observable
+        // observable interface
+        public event Callback notifyObserversEvent;
+        public void registerWith(Callback handler) { notifyObserversEvent += handler; }
+        public void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
+        protected void notifyObservers() {
+            Callback handler = notifyObserversEvent;
+            if (handler != null) {
+                handler();
+            }
+        }
+
+        public void update() { notifyObservers(); }
+        #endregion 
+        #endregion
     }
 }

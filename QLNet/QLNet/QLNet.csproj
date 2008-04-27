@@ -158,12 +158,17 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Math\Solvers1d\Secant.cs" />
+    <Compile Include="Math\transformedgrid.cs" />
     <Compile Include="Math\Vector.cs" />
     <Compile Include="Methods\Finitedifferences\BoundaryCondition.cs" />
+    <Compile Include="Methods\Finitedifferences\bsmoperator.cs" />
     <Compile Include="Methods\Finitedifferences\cranknicolson.cs" />
     <Compile Include="Methods\Finitedifferences\finitedifferencemodel.cs" />
     <Compile Include="Methods\Finitedifferences\mixedscheme.cs" />
     <Compile Include="Methods\Finitedifferences\OperatorFactory.cs" />
+    <Compile Include="Methods\Finitedifferences\pde.cs" />
+    <Compile Include="Methods\Finitedifferences\pdebsm.cs" />
+    <Compile Include="Methods\Finitedifferences\pdeshortrate.cs" />
     <Compile Include="Methods\Finitedifferences\StepCondition.cs" />
     <Compile Include="Methods\Finitedifferences\TridiagonalOperator.cs" />
     <Compile Include="Methods\lattices\binominaltree.cs" />
