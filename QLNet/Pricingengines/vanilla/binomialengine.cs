@@ -34,7 +34,7 @@ namespace QLNet {
               one, while the two side points would be used for
               estimating partial derivatives.
     */
-    public class BinomialVanillaEngine<T> : VanillaOption.Engine where T : ITreeFactory<T>, new() {
+    public class BinomialVanillaEngine<T> : VanillaOption.Engine where T : ITreeFactory<T>, ITree, new() {
         private GeneralizedBlackScholesProcess process_;
         private int timeSteps_;
 
@@ -79,7 +79,7 @@ namespace QLNet {
 
             T tree = new T().factory(bs, maturity, timeSteps_, payoff.strike());
 
-            //BlackScholesLattice<T> lattice = new BlackScholesLattice<T>(tree, r, maturity, timeSteps_);
+            BlackScholesLattice<T> lattice = new BlackScholesLattice<T>(tree, r, maturity, timeSteps_);
 
             //DiscretizedVanillaOption option(arguments_, *process_, grid);
 
