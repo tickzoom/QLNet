@@ -160,7 +160,11 @@
     <Compile Include="Math\Solvers1d\Secant.cs" />
     <Compile Include="Math\Vector.cs" />
     <Compile Include="Methods\Finitedifferences\BoundaryCondition.cs" />
+    <Compile Include="Methods\Finitedifferences\cranknicolson.cs" />
+    <Compile Include="Methods\Finitedifferences\finitedifferencemodel.cs" />
+    <Compile Include="Methods\Finitedifferences\mixedscheme.cs" />
     <Compile Include="Methods\Finitedifferences\OperatorFactory.cs" />
+    <Compile Include="Methods\Finitedifferences\StepCondition.cs" />
     <Compile Include="Methods\Finitedifferences\TridiagonalOperator.cs" />
     <Compile Include="Methods\lattices\binominaltree.cs" />
     <Compile Include="Methods\lattices\bsmlattice.cs" />
