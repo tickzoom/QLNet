@@ -163,6 +163,9 @@
     <Compile Include="Methods\Finitedifferences\OperatorFactory.cs" />
     <Compile Include="Methods\Finitedifferences\TridiagonalOperator.cs" />
     <Compile Include="Methods\lattices\binominaltree.cs" />
+    <Compile Include="Methods\lattices\bsmlattice.cs" />
+    <Compile Include="Methods\lattices\lattice.cs" />
+    <Compile Include="Methods\lattices\lattice1d.cs" />
     <Compile Include="Methods\lattices\tree.cs" />
     <Compile Include="Models\CalibrationHelper.cs" />
     <Compile Include="Models\model.cs">
