@@ -94,7 +94,7 @@ namespace TestSuite {
                 calculated[i] = vars.termStructure.discount(today+30+days[i]);
 
             for (int i=0; i<days.Length; i++) {
-                if (!Comparison.close(expected[i], calculated[i]))
+                if (!Utils.close(expected[i], calculated[i]))
                     Console.WriteLine("\n  Discount at " + days[i] + " days:\n"
                                 + "    before date change: " + expected[i] + "\n"
                                 + "    after date change:  " + calculated[i]);

@@ -105,7 +105,7 @@ namespace QLNet {
                 strikeSensitivity_ = itmCashProbability_ = 0.0;
         }
 
-        public override void fetchResults(PricingEngine.Results r) {
+        public override void fetchResults(IPricingEngineResults r) {
             base.fetchResults(r);
 
             Results results = r as Results;

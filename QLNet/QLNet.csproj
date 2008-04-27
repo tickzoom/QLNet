@@ -200,6 +200,7 @@
     <Compile Include="Pricingengines\vanilla\binomialengine.cs" />
     <Compile Include="Pricingengines\vanilla\bjerksundstenslandengine.cs" />
     <Compile Include="Pricingengines\vanilla\discretizedvanillaoption.cs" />
+    <Compile Include="Pricingengines\vanilla\FDEuropeanEngine.cs" />
     <Compile Include="Pricingengines\vanilla\FDVanillaEngine.cs" />
     <Compile Include="Pricingengines\vanilla\Integralengine.cs" />
     <Compile Include="Pricingengines\vanilla\Juquadraticengine.cs" />

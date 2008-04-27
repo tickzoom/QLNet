@@ -130,7 +130,7 @@ namespace QLNet
 
          return true;
       }
-      public override void setupArguments(PricingEngine.Arguments args) 
+      public override void setupArguments(IPricingEngineArguments args) 
       {
          CapFloor.Arguments arguments = args as CapFloor.Arguments;
 

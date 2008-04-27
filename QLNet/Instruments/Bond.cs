@@ -348,7 +348,7 @@ namespace QLNet {
             return CashFlows.previousCouponRate(cashflows_, settlement);
         }
 
-        public override void setupArguments(PricingEngine.Arguments args) {
+        public override void setupArguments(IPricingEngineArguments args) {
             if (!(args is PricingEngine.Arguments))
                 throw new ApplicationException("wrong argument type");
 

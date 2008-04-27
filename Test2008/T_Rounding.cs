@@ -84,7 +84,7 @@ namespace TestSuite
                 ClosestRounding closest = new ClosestRounding(precision);
                 double calculated = closest.Round(testData[i].x);
                 double expected = testData[i].closest;
-                if (!Comparison.close(calculated, expected, 1))
+                if (!Utils.close(calculated, expected, 1))
                     Assert.Fail ("Original number: " + testData[i].x + "Expected: " + expected + "Calculated: " + calculated);
             }
         }
@@ -97,7 +97,7 @@ namespace TestSuite
              UpRounding up = new UpRounding(digits);
              double calculated = up.Round(testData[i].x);
              double expected = testData[i].up;
-             if (!Comparison.close(calculated, expected, 1))
+             if (!Utils.close(calculated, expected, 1))
                 Assert.Fail("Original number: " + testData[i].x + "Expected: " + expected + "Calculated: " + calculated);
           }
        }
@@ -111,7 +111,7 @@ namespace TestSuite
              DownRounding down = new DownRounding(digits);
              double calculated = down.Round(testData[i].x);
              double expected = testData[i].down;
-             if (!Comparison.close(calculated, expected, 1))
+             if (!Utils.close(calculated, expected, 1))
                 Assert.Fail("Original number: " + testData[i].x + "Expected: " + expected + "Calculated: " + calculated);
           }
        }
@@ -125,7 +125,7 @@ namespace TestSuite
              FloorTruncation floor = new FloorTruncation(digits);
              double calculated = floor.Round(testData[i].x);
              double expected = testData[i].floor;
-             if (!Comparison.close(calculated, expected, 1))
+             if (!Utils.close(calculated, expected, 1))
                 Assert.Fail("Original number: " + testData[i].x + "Expected: " + expected + "Calculated: " + calculated);
           }
        }
@@ -139,7 +139,7 @@ namespace TestSuite
              CeilingTruncation ceiling = new CeilingTruncation(digits);
              double calculated = ceiling.Round(testData[i].x);
              double expected = testData[i].ceiling;
-             if (!Comparison.close(calculated, expected, 1))
+             if (!Utils.close(calculated, expected, 1))
                 Assert.Fail("Original number: " + testData[i].x + "Expected: " + expected + "Calculated: " + calculated);
           }
        }
