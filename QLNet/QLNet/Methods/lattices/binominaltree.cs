@@ -22,6 +22,11 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
+    // factory to create exact versions of trees
+    public interface ITreeFactory<T> {
+        T factory(StochasticProcess1D process, double end, int steps, double strike);
+    }
+
     //! Binomial tree base class
     /*! \ingroup lattices */
     public class BinomialTree<T> : Tree<T> {
@@ -72,13 +77,6 @@ namespace QLNet {
         }
         public double probability(int x, int y, int branch) { return (branch == 1 ? pu_ : pd_); }
     }
-
-
-    public interface ITreeFactory<T> {
-        T factory(StochasticProcess1D process, double end, int steps, double strike);
-    }
-
-
 
     //! Jarrow-Rudd (multiplicative) equal probabilities binomial tree
     /*! \ingroup lattices */
