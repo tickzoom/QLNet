@@ -44,6 +44,26 @@ namespace TestSuite {
         public static YieldTermStructure flatRate(Date today, Quote forward, DayCounter dc) {
             return new FlatForward(today, forward, dc);
         }
+
+        public static BlackVolTermStructure flatVol(Date today, double vol, DayCounter dc) {
+            return flatVol(today, new SimpleQuote(vol), dc);
+        }
+
+        public static BlackVolTermStructure flatVol(Date today, Quote vol, DayCounter dc) {
+            return new BlackConstantVol(today, new NullCalendar(), new Handle<Quote>(vol), dc);
+        }
+
+        public static double norm(Vector v, int size, double h) {
+            // squared values
+            List<double> f2 = new InitializedList<double>(size);
+
+            for(int i=0;i<v.Count;i++)
+                f2[i] = v[i] * v[i];
+
+            // numeric integral of f^2
+            double I = h * (f2.Sum() - 0.5*f2.First() - 0.5*f2.Last());
+            return Math.Sqrt(I);
+        }
     }
 
     // this cleans up index-fixing histories when destroyed

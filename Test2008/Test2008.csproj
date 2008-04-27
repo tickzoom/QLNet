@@ -52,6 +52,7 @@
     <Compile Include="T_InterestRate.cs" />
     <Compile Include="T_Interpolatedyieldcurve.cs" />
     <Compile Include="T_Money.cs" />
+    <Compile Include="T_Operators.cs" />
     <Compile Include="T_Rounding.cs" />
     <Compile Include="T_Solvers.cs" />
     <Compile Include="T_Swaps.cs" />
