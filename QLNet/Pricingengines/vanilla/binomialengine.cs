@@ -83,43 +83,43 @@ namespace QLNet {
 
             DiscretizedVanillaOption option = new DiscretizedVanillaOption(arguments_, process_, grid);
 
-            //option.initialize(lattice, maturity);
+            option.initialize(lattice, maturity);
 
-            //// Partial derivatives calculated from various points in the
-            //// binomial tree (Odegaard)
+            // Partial derivatives calculated from various points in the
+            // binomial tree (Odegaard)
 
-            //// Rollback to third-last step, and get underlying price (s2) &
-            //// option values (p2) at this point
-            //option.rollback(grid[2]);
-            //Array va2(option.values());
-            //QL_ENSURE(va2.size() == 3, "Expect 3 nodes in grid at second step");
-            //double p2h = va2[2]; // high-price
-            //double s2 = lattice->underlying(2, 2); // high price
+            // Rollback to third-last step, and get underlying price (s2) &
+            // option values (p2) at this point
+            option.rollback(grid[2]);
+            Vector va2 = new Vector(option.values());
+            if (!(va2.size() == 3)) throw new ApplicationException("Expect 3 nodes in grid at second step");
+            double p2h = va2[2]; // high-price
+            double s2 = lattice.underlying(2, 2); // high price
 
-            //// Rollback to second-last step, and get option value (p1) at
-            //// this point
-            //option.rollback(grid[1]);
-            //Array va(option.values());
-            //QL_ENSURE(va.size() == 2, "Expect 2 nodes in grid at first step");
-            //double p1 = va[1];
+            // Rollback to second-last step, and get option value (p1) at
+            // this point
+            option.rollback(grid[1]);
+            Vector va = new Vector(option.values());
+            if (!(va.size() == 2)) throw new ApplicationException("Expect 2 nodes in grid at first step");
+            double p1 = va[1];
 
-            //// Finally, rollback to t=0
-            //option.rollback(0.0);
-            //double p0 = option.presentValue();
-            //double s1 = lattice->underlying(1, 1);
+            // Finally, rollback to t=0
+            option.rollback(0.0);
+            double p0 = option.presentValue();
+            double s1 = lattice.underlying(1, 1);
 
-            //// Calculate partial derivatives
-            //double delta0 = (p1-p0)/(s1-s0);   // dp/ds
-            //double delta1 = (p2h-p1)/(s2-s1);  // dp/ds
+            // Calculate partial derivatives
+            double delta0 = (p1 - p0) / (s1 - s0);   // dp/ds
+            double delta1 = (p2h - p1) / (s2 - s1);  // dp/ds
 
-            //// Store results
-            //results_.value = p0;
-            //results_.delta = delta0;
-            //results_.gamma = 2.0*(delta1-delta0)/(s2-s0);    //d(delta)/ds
-            //results_.theta = blackScholesTheta(process_,
-            //                                   results_.value,
-            //                                   results_.delta,
-            //                                   results_.gamma);
+            // Store results
+            results_.value = p0;
+            results_.delta = delta0;
+            results_.gamma = 2.0 * (delta1 - delta0) / (s2 - s0);    //d(delta)/ds
+            results_.theta = Utils.blackScholesTheta(process_,
+                                                     results_.value.GetValueOrDefault(),
+                                                     results_.delta.GetValueOrDefault(),
+                                                     results_.gamma.GetValueOrDefault());
         }
     }
 }
