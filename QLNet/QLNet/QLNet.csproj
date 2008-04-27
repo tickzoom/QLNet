@@ -163,6 +163,8 @@
     <Compile Include="Methods\Finitedifferences\BoundaryCondition.cs" />
     <Compile Include="Methods\Finitedifferences\bsmoperator.cs" />
     <Compile Include="Methods\Finitedifferences\cranknicolson.cs" />
+    <Compile Include="Methods\Finitedifferences\DPlusDMinus.cs" />
+    <Compile Include="Methods\Finitedifferences\dzero.cs" />
     <Compile Include="Methods\Finitedifferences\finitedifferencemodel.cs" />
     <Compile Include="Methods\Finitedifferences\mixedscheme.cs" />
     <Compile Include="Methods\Finitedifferences\OperatorFactory.cs" />
