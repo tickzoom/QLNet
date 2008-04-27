@@ -81,7 +81,7 @@ namespace QLNet {
 
             BlackScholesLattice<T> lattice = new BlackScholesLattice<T>(tree, r, maturity, timeSteps_);
 
-            //DiscretizedVanillaOption option(arguments_, *process_, grid);
+            DiscretizedVanillaOption option = new DiscretizedVanillaOption(arguments_, process_, grid);
 
             //option.initialize(lattice, maturity);
 
