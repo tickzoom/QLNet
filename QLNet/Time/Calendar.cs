@@ -185,7 +185,7 @@ namespace QLNet
             {
                 Date d1 = d + new Period(n, unit);
                 if (endOfMonth && (unit == TimeUnit.Months || unit == TimeUnit.Years) && isEndOfMonth(d))
-                    return d1.endOfMonth(d1);
+                    return this.endOfMonth(d1);
                 return adjust(d1, c);
             }
         }
