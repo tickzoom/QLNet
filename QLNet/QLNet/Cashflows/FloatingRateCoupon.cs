@@ -1,6 +1,7 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
-  
+ Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ * 
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -20,7 +21,7 @@ using System;
 
 namespace QLNet {
     public class FloatingRateCoupon : Coupon, IObserver {
-	    protected InterestRateIndex index_;
+        protected InterestRateIndex index_;
         protected DayCounter dayCounter_;
         protected int fixingDays_;
         protected double gearing_;
@@ -28,7 +29,7 @@ namespace QLNet {
         protected bool isInArrears_;
         protected FloatingRateCouponPricer pricer_;
 
-		// constructors
+        // constructors
         //private FloatingRateCoupon() { }
         //public FloatingRateCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays, InterestRateIndex index) :
         //    this(paymentDate, nominal, startDate, endDate, fixingDays, index, 1, 0, null, null, new DayCounter(), false) { }
@@ -46,18 +47,18 @@ namespace QLNet {
         //    this(paymentDate, nominal, startDate, endDate, fixingDays, index, gearing, spread, refPeriodStart, refPeriodEnd, dayCounter, false) {}
         public FloatingRateCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays, InterestRateIndex index,
                                   double gearing, double spread, Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter, bool isInArrears) :
-				base(nominal, paymentDate, startDate, endDate, refPeriodStart, refPeriodEnd) {
-			index_ = index;
-			dayCounter_ = dayCounter;
-			fixingDays_ = fixingDays == default(int) ? index.fixingDays() : fixingDays;
-			gearing_ = gearing;
-			spread_ = spread;
-		    isInArrears_ = isInArrears;
-			
-		    if (gearing_ == 0) throw new ArgumentException("Null gearing not allowed");
+            base(nominal, paymentDate, startDate, endDate, refPeriodStart, refPeriodEnd) {
+            index_ = index;
+            dayCounter_ = dayCounter;
+            fixingDays_ = fixingDays == default(int) ? index.fixingDays() : fixingDays;
+            gearing_ = gearing;
+            spread_ = spread;
+            isInArrears_ = isInArrears;
 
-		    if (dayCounter_ == null)
-		            dayCounter_ = index_.dayCounter();
+            if (gearing_ == 0) throw new ArgumentException("Null gearing not allowed");
+
+            if (dayCounter_ == null)
+                dayCounter_ = index_.dayCounter();
 
             // add as observer
             index_.registerWith(update);
@@ -67,7 +68,7 @@ namespace QLNet {
         // need by CashFlowVectors
         public FloatingRateCoupon() { }
 
-        public void setPricer(FloatingRateCouponPricer pricer) {
+        public virtual void setPricer(FloatingRateCouponPricer pricer) {
             if (pricer_ != null)   // remove from the old observable
                 pricer_.unregisterWith(update);
 
@@ -136,12 +137,12 @@ namespace QLNet {
         // methods
         public double price(YieldTermStructure yts) {
             return amount() * yts.discount(date());
-		}
-		
-		//! convexity adjustment for the given index fixing
+        }
+
+        //! convexity adjustment for the given index fixing
         protected double convexityAdjustmentImpl(double f) {
-			return (gearing() == 0 ? 0 : adjustedFixing-f);
-		}
+            return (gearing() == 0 ? 0 : adjustedFixing - f);
+        }
 
         //! convexity adjustment
         public virtual double convexityAdjustment() {
@@ -156,5 +157,5 @@ namespace QLNet {
             return new FloatingRateCoupon(paymentDate, nominal, startDate, endDate, fixingDays,
                        index, gearing, spread, refPeriodStart, refPeriodEnd, dayCounter, isInArrears);
         }
-	}
+    }
 }

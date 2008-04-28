@@ -1,6 +1,7 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
-  
+ Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -40,8 +41,11 @@ namespace QLNet {
         public Currency currency() { return currency_; }
 
         protected DayCounter dayCounter_;
-        public DayCounter dayCounter() { return dayCounter_; } 
+        public DayCounter dayCounter() { return dayCounter_; }
         #endregion
+
+        // need by CashFlowVectors
+        public InterestRateIndex() { }
 
         public InterestRateIndex(string familyName, Period tenor, int fixingDays, Currency currency,
                                  Calendar fixingCalendar, DayCounter dayCounter) {
@@ -52,18 +56,18 @@ namespace QLNet {
             fixingCalendar_ = fixingCalendar;
             dayCounter_ = dayCounter;
 
-            if (!(fixingDays<3))
+            if (!(fixingDays < 3))
                 throw new ArgumentException("wrong number (" + fixingDays + ") of fixing days");
             tenor_.normalize();
 
             Settings.registerWith(update);
             // recheck
             //IndexManager.notifier(name())
-//            registerWith(IndexManager::instance().notifier(name()));
+            //            registerWith(IndexManager::instance().notifier(name()));
         }
 
         public void update() { notifyObservers(); }
-        
+
         #region Index interface
         public override string name() {
             string res = familyName_;
@@ -106,7 +110,7 @@ namespace QLNet {
             }
             // forecast
             return forecastFixing(fixingDate);
-        } 
+        }
         #endregion
 
         /*! \name Date calculations

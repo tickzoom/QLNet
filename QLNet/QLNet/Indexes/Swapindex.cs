@@ -1,6 +1,7 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
-  
+ Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ * 
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -28,10 +29,12 @@ namespace QLNet {
 
         protected Period fixedLegTenor_;
         public Period fixedLegTenor() { return fixedLegTenor_; }
-        
+
         BusinessDayConvention fixedLegConvention_;
         public BusinessDayConvention fixedLegConvention() { return fixedLegConvention_; }
 
+        // need by CashFlowVectors
+        public SwapIndex() { }
 
         public SwapIndex(string familyName, Period tenor, int settlementDays, Currency currency,
                           Calendar calendar, Period fixedLegTenor, BusinessDayConvention fixedLegConvention,
@@ -45,7 +48,7 @@ namespace QLNet {
             iborIndex_.registerWith(update);
         }
 
-        
+
         /////////////////////////////////////
         //! InterestRateIndex interface
         public override Handle<YieldTermStructure> termStructure() { return iborIndex_.termStructure(); }

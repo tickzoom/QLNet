@@ -1,6 +1,7 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
-  
+ Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ * 
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -81,7 +82,7 @@ namespace QLNet {
                                         .withNotionals(nominal)
                                         .withPaymentDayCounter(floatingDayCount)
                                         .withPaymentAdjustment(paymentConvention)
-                                        //.withFixingDays(iborIndex.fixingDays())
+                //.withFixingDays(iborIndex.fixingDays())
                                         .withSpreads(spread).value();
 
             foreach (var cf in floatingLeg)
@@ -89,12 +90,12 @@ namespace QLNet {
 
             legs_[0] = fixedLeg;
             legs_[1] = floatingLeg;
-            if (type_== Type.Payer) {
-                payer_[0]=-1;
-                payer_[1]=+1;
+            if (type_ == Type.Payer) {
+                payer_[0] = -1;
+                payer_[1] = +1;
             } else {
-                payer_[0]=+1;
-                payer_[1]=-1;
+                payer_[0] = +1;
+                payer_[1] = -1;
             }
         }
 
@@ -140,8 +141,7 @@ namespace QLNet {
                 arguments.floatingSpreads[i] = coupon.spread();
                 try {
                     arguments.floatingCoupons[i] = coupon.amount();
-                }
-                catch {
+                } catch {
                     arguments.floatingCoupons[i] = default(double);
                 }
             }
@@ -185,6 +185,9 @@ namespace QLNet {
         }
 
         // inspectors
+        public Schedule fixedSchedule { get { return fixedSchedule_; } }
+        public Schedule floatingSchedule { get { return floatingSchedule_; } }
+
         public double fixedRate { get { return fixedRate_; } }
         public double spread { get { return spread_; } }
         public double nominal { get { return nominal_; } }
@@ -246,7 +249,7 @@ namespace QLNet {
                 type = Type.Receiver;
                 nominal = default(double);
             }
-            
+
             public override void validate() {
                 base.validate();
 

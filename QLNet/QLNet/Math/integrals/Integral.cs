@@ -24,85 +24,72 @@ using System.Text;
 
 namespace QLNet {
 
-	public abstract class Integrator
-	{
-		private double absoluteAccuracy_;
-		private double absoluteError_;
-		private long maxEvaluations_;
-		private long evaluations_;
+    public abstract class Integrator {
+        private double absoluteAccuracy_;
+        private double absoluteError_;
+        private int maxEvaluations_;
+        private int evaluations_;
 
-		public Integrator(double absoluteAccuracy, long maxEvaluations)
-		{
-			absoluteAccuracy_ = absoluteAccuracy;
-			maxEvaluations_ = maxEvaluations;
-			if (!(absoluteAccuracy > ((Double.Epsilon))))
+        public Integrator(double absoluteAccuracy, int maxEvaluations) {
+            absoluteAccuracy_ = absoluteAccuracy;
+            maxEvaluations_ = maxEvaluations;
+            if (!(absoluteAccuracy > ((Double.Epsilon))))
                 throw new ApplicationException("required tolerance (" + absoluteAccuracy + ") not allowed. It must be > " + Double.Epsilon);
-		}
+        }
 
-		public double value(Func<double, double> f, double a, double b)
-		{
-			evaluations_ = 0;
-			if (a == b)
-				return 0.0;
-			if (b > a)
-				return integrate(f, a, b);
-			else
-				return -integrate(f, b, a);
-		}
+        public double value(Func<double, double> f, double a, double b) {
+            evaluations_ = 0;
+            if (a == b)
+                return 0.0;
+            if (b > a)
+                return integrate(f, a, b);
+            else
+                return -integrate(f, b, a);
+        }
 
-		//! \name Modifiers
-		//@{
-		public void setAbsoluteAccuracy(double accuracy)
-		{
-			absoluteAccuracy_ = accuracy;
-		}
-		public void setMaxEvaluations(long maxEvaluations)
-		{
-			maxEvaluations_ = maxEvaluations;
-		}
-		//@}
+        //! \name Modifiers
+        //@{
+        public void setAbsoluteAccuracy(double accuracy) {
+            absoluteAccuracy_ = accuracy;
+        }
+        public void setMaxEvaluations(int maxEvaluations) {
+            maxEvaluations_ = maxEvaluations;
+        }
+        //@}
 
-		//! \name Inspectors
-		//@{
-		public double absoluteAccuracy()
-		{
-			return absoluteAccuracy_;
-		}
-		public long maxEvaluations()
-		{
-			return maxEvaluations_;
-		}
-		//@}
+        //! \name Inspectors
+        //@{
+        public double absoluteAccuracy() {
+            return absoluteAccuracy_;
+        }
+        public int maxEvaluations() {
+            return maxEvaluations_;
+        }
+        //@}
 
-		public double absoluteError()
-		{
-			return absoluteError_;
-		}
+        public double absoluteError() {
+            return absoluteError_;
+        }
 
-		public long numberOfEvaluations()
-		{
-			return evaluations_;
-		}
+        public int numberOfEvaluations() {
+            return evaluations_;
+        }
 
-		public bool integrationSuccess()
-		{
-			return evaluations_ <= maxEvaluations_ && absoluteError_ <= absoluteAccuracy_;
-		}
+        public bool integrationSuccess() {
+            return evaluations_ <= maxEvaluations_ && absoluteError_ <= absoluteAccuracy_;
+        }
 
         protected abstract double integrate(Func<double, double> f, double a, double b);
 
-		protected void setAbsoluteError(double error)
-		{
-			absoluteError_ = error;
-		}
-		protected void setNumberOfEvaluations(long evaluations)
-		{
-			evaluations_ = evaluations;
-		}
-		protected void increaseNumberOfEvaluations(long increase)
-		{
-			evaluations_ += increase;
-		}
-	}
+        protected void setAbsoluteError(double error) {
+            absoluteError_ = error;
+        }
+        protected void setNumberOfEvaluations(int evaluations) {
+            evaluations_ = evaluations;
+        }
+        protected void increaseNumberOfEvaluations(int increase) {
+            evaluations_ += increase;
+        }
+    }
 
 }
