@@ -44,13 +44,20 @@
   <ItemGroup>
     <Compile Include="Cashflow.cs" />
     <Compile Include="Cashflows\averagebmacoupon.cs" />
+    <Compile Include="Cashflows\CappedFlooredCoupon.cs" />
     <Compile Include="Cashflows\CashFlows.cs" />
     <Compile Include="Cashflows\Cashflowvectors.cs" />
+    <Compile Include="Cashflows\CmsCoupon.cs" />
+    <Compile Include="Cashflows\ConundrumPricer.cs" />
     <Compile Include="Cashflows\Coupon.cs" />
     <Compile Include="Cashflows\CouponPricer.cs" />
+    <Compile Include="Cashflows\DigitalCmsCoupon.cs" />
+    <Compile Include="Cashflows\DigitalCoupon.cs" />
+    <Compile Include="Cashflows\DigitalIborCoupon.cs" />
     <Compile Include="Cashflows\FixedRateCoupon.cs" />
     <Compile Include="Cashflows\FloatingRateCoupon.cs" />
     <Compile Include="Cashflows\Iborcoupon.cs" />
+    <Compile Include="Cashflows\Replication.cs" />
     <Compile Include="Cashflows\SimpleCashFlow.cs" />
     <Compile Include="Currencies\Africa.cs" />
     <Compile Include="Currencies\America.cs" />
@@ -129,6 +136,7 @@
     <Compile Include="Math\Distributions\NormalDistribution.cs" />
     <Compile Include="Math\factorial.cs" />
     <Compile Include="Math\integrals\Integral.cs" />
+    <Compile Include="Math\integrals\Kronrodintegral.cs" />
     <Compile Include="Math\integrals\Segmentintegral.cs" />
     <Compile Include="Math\Interpolations\CubicInterpolation.cs" />
     <Compile Include="Math\Interpolations\Extrapolator.cs" />
@@ -239,6 +247,7 @@
     <Compile Include="Termstructures\Volatility\Optionlet\OptionletVolatilityStructure.cs" />
     <Compile Include="Termstructures\Volatility\Sabr.cs" />
     <Compile Include="Termstructures\Volatility\SmileSection.cs" />
+    <Compile Include="Termstructures\Volatility\swaption\SwaptionVolatilityStructure.cs" />
     <Compile Include="Termstructures\YieldTermStructure.cs" />
     <Compile Include="Termstructures\Yield\Bondhelpers.cs" />
     <Compile Include="Termstructures\Yield\Bootstraptraits.cs" />

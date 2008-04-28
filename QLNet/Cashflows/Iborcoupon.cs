@@ -1,6 +1,7 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
-  
+ Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ * 
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -41,9 +42,9 @@ namespace QLNet {
 
         //! Implemented in order to manage the case of par coupon
         public override double indexFixing() {
-        #if QL_USE_INDEXED_COUPON
+#if QL_USE_INDEXED_COUPON
             return index_->fixing(fixingDate());
-        #else
+#else
             if (isInArrears()) {
                 return index_.fixing(fixingDate());
             } else {
@@ -64,8 +65,7 @@ namespace QLNet {
                         double pastFixing = IndexManager.getHistory(index_.name())[fixing_date];
                         if (pastFixing != default(double))
                             return pastFixing;
-                    }
-                    catch {
+                    } catch {
                         // fall through and forecast
                     }
                 }
@@ -82,7 +82,7 @@ namespace QLNet {
                 // forecast: 4) implied fixing
                 return (startDiscount / endDiscount - 1.0) / spanningTime;
             }
-        #endif
+#endif
         }
 
         // Factory - for Leg generators
@@ -191,7 +191,7 @@ namespace QLNet {
         }
 
         public List<CashFlow> value() {
-            List<CashFlow> cashflows = CashFlowVectors.FloatingLeg<IborCoupon>(
+            List<CashFlow> cashflows = CashFlowVectors.FloatingLeg<IborIndex, IborCoupon, CappedFlooredIborCoupon>(
                                     notionals_, schedule_, index_, paymentDayCounter_,
                                     paymentAdjustment_, fixingDays_, gearings_, spreads_,
                                     caps_, floors_, inArrears_, zeroPayments_);

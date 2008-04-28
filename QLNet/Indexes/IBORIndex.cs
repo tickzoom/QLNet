@@ -1,7 +1,8 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
  Copyright (C) 2008 Andrea Maggiulli
-  
+ Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ * 
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -24,8 +25,7 @@ using System.Text;
 
 namespace QLNet {
     //! base class for Inter-Bank-Offered-Rate indexes (e.g. %Libor, etc.)
-    public class IborIndex : InterestRateIndex 
-    {
+    public class IborIndex : InterestRateIndex {
         protected BusinessDayConvention convention_;
         public BusinessDayConvention businessDayConvention() { return convention_; }
 
@@ -36,15 +36,19 @@ namespace QLNet {
         bool endOfMonth_;
         public bool endOfMonth() { return endOfMonth_; }
 
+        // need by CashFlowVectors
+        public IborIndex() { }
+
         public IborIndex(string familyName, Period tenor, int settlementDays, Currency currency,
                  Calendar fixingCalendar, BusinessDayConvention convention, bool endOfMonth,
-                 DayCounter dayCounter) : this(familyName, tenor, settlementDays, currency,
-                                               fixingCalendar,convention,endOfMonth,
-                                               dayCounter, new Handle<YieldTermStructure>()) {}
+                 DayCounter dayCounter)
+            : this(familyName, tenor, settlementDays, currency,
+                   fixingCalendar, convention, endOfMonth,
+                   dayCounter, new Handle<YieldTermStructure>()) { }
 
-            public IborIndex(string familyName, Period tenor, int settlementDays, Currency currency,
-                         Calendar fixingCalendar, BusinessDayConvention convention, bool endOfMonth,
-                         DayCounter dayCounter, Handle<YieldTermStructure> h) : 
+        public IborIndex(string familyName, Period tenor, int settlementDays, Currency currency,
+                     Calendar fixingCalendar, BusinessDayConvention convention, bool endOfMonth,
+                     DayCounter dayCounter, Handle<YieldTermStructure> h) :
             base(familyName, tenor, settlementDays, currency, fixingCalendar, dayCounter) {
             convention_ = convention;
             termStructure_ = h;
