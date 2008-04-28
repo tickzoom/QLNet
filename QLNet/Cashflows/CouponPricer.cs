@@ -248,34 +248,40 @@ namespace QLNet {
             // nothing to do
         }
         public void visit(IborCoupon c) {
-            if (!(pricer_ is IborCouponPricer))
+            IborCouponPricer pricer = pricer_ as IborCouponPricer;
+            if (pricer == null)
                 throw new ApplicationException("pricer not compatible with Ibor coupon");
-            c.setPricer(pricer_ as IborCouponPricer);
+            c.setPricer(pricer);
         }
         public void visit(CappedFlooredIborCoupon c) {
-            if (!(pricer_ is IborCouponPricer))
+            IborCouponPricer pricer = pricer_ as IborCouponPricer;
+            if (pricer == null)
                 throw new ApplicationException("pricer not compatible with Ibor coupon");
-            c.setPricer(pricer_ as IborCouponPricer);
+            c.setPricer(pricer);
         }
         public void visit(DigitalIborCoupon c) {
-            if (!(pricer_ is IborCouponPricer))
+            IborCouponPricer pricer = pricer_ as IborCouponPricer;
+            if (pricer == null)
                 throw new ApplicationException("pricer not compatible with Ibor coupon");
-            c.setPricer(pricer_ as IborCouponPricer);
+            c.setPricer(pricer);
         }
         public void visit(CmsCoupon c) {
-            if (!(pricer_ is CmsCouponPricer))
+            CmsCouponPricer pricer = pricer_ as CmsCouponPricer;
+            if (pricer == null)
                 throw new ApplicationException("pricer not compatible with CMS coupon");
-            c.setPricer(pricer_ as CmsCouponPricer);
+            c.setPricer(pricer);
         }
         public void visit(CappedFlooredCmsCoupon c) {
-            if (!(pricer_ is CmsCouponPricer))
+            CmsCouponPricer pricer = pricer_ as CmsCouponPricer;
+            if (pricer == null)
                 throw new ApplicationException("pricer not compatible with CMS coupon");
-            c.setPricer(pricer_ as CmsCouponPricer);
+            c.setPricer(pricer);
         }
         public void visit(DigitalCmsCoupon c) {
-            if (!(pricer_ is CmsCouponPricer))
+            CmsCouponPricer pricer = pricer_ as CmsCouponPricer;
+            if (pricer == null)
                 throw new ApplicationException("pricer not compatible with CMS coupon");
-            c.setPricer(pricer_ as CmsCouponPricer);
+            c.setPricer(pricer);
         }
         //public void visit(RangeAccrualFloatersCoupon c)
         //{
