@@ -38,9 +38,15 @@ namespace QLNet {
         private double fixedRate_;
         private double spread_;
         private double nominal_;
+
         private Schedule fixedSchedule_;
+        public Schedule fixedSchedule() { return fixedSchedule_; }
+        
         private DayCounter fixedDayCount_;
+        
         private Schedule floatingSchedule_;
+        public Schedule floatingSchedule() { return floatingSchedule_; }
+
         private IborIndex iborIndex_;
         private DayCounter floatingDayCount_;
         private BusinessDayConvention paymentConvention_;
@@ -183,10 +189,6 @@ namespace QLNet {
             if (legNPV_[1] == null) throw new ArgumentException("result not available");
             return legNPV_[1].GetValueOrDefault();
         }
-
-        // inspectors
-        public Schedule fixedSchedule { get { return fixedSchedule_; } }
-        public Schedule floatingSchedule { get { return floatingSchedule_; } }
 
         public double fixedRate { get { return fixedRate_; } }
         public double spread { get { return spread_; } }
