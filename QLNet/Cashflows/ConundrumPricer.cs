@@ -914,6 +914,8 @@ namespace QLNet {
                         Func<double, double> temp = integrand.value;
                         VariableChange variableChange = new VariableChange(ref temp, a, upperBoundary, k);
 
+                        throw new NotImplementedException();
+
                         f = integrand.value;
 // TODO                 f = boost.bind(variableChange.value, variableChange, _1);
 
