@@ -232,6 +232,8 @@
     <Compile Include="StochasticProcess.cs" />
     <Compile Include="Termstructures\Bootstraperror.cs" />
     <Compile Include="Termstructures\Bootstraphelper.cs" />
+    <Compile Include="Termstructures\DefaultProbabilityTermStructure.cs" />
+    <Compile Include="Termstructures\InflationTermStructure.cs" />
     <Compile Include="Termstructures\Iterativebootstrap.cs" />
     <Compile Include="Termstructures\TermStructure.cs" />
     <Compile Include="Termstructures\VolatilityTermStructure.cs" />

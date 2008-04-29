@@ -1,6 +1,7 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
-  
+ Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ 
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -98,7 +99,7 @@ namespace QLNet {
         };
             return (MonthOffset[m - 1] + ((leapYear && m > 1) ? 1 : 0));
         }
-        public Date endOfMonth(Date d)
+        public static Date endOfMonth(Date d)
         {
             return (d - d.Day + DaysInMonth(d.Year, d.Month));
         }
