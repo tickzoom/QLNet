@@ -62,10 +62,6 @@ namespace QLNet {
 		public SwaptionVolatilityStructure(int settlementDays, Calendar calendar, BusinessDayConvention bdc, DayCounter dc) : base(settlementDays, calendar, bdc, dc)
 		{
 		}
-		//@}
-		public virtual void Dispose()
-		{
-		}
 		//! \name Volatility, variance and smile
 		//@{
 		//! returns the volatility for a given option tenor and swap tenor
