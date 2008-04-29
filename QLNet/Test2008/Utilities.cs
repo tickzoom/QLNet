@@ -64,6 +64,14 @@ namespace TestSuite {
             double I = h * (f2.Sum() - 0.5*f2.First() - 0.5*f2.Last());
             return Math.Sqrt(I);
         }
+
+        public static double relativeError(double x1, double x2, double reference) {
+            if (reference != 0.0)
+                return Math.Abs(x1-x2)/reference;
+            else
+                // fall back to absolute error
+                return Math.Abs(x1 - x2);
+        }
     }
 
     // this cleans up index-fixing histories when destroyed
