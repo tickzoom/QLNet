@@ -350,7 +350,7 @@ namespace Swap {
             double fairRate;
             double fairSpread;
 
-            PricingEngine swapEngine = new DiscountingSwapEngine(discountingTermStructure);
+            IPricingEngine swapEngine = new DiscountingSwapEngine(discountingTermStructure);
 
             spot5YearSwap.setPricingEngine(swapEngine);
             oneYearForward5YearSwap.setPricingEngine(swapEngine);
