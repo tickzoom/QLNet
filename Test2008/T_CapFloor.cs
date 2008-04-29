@@ -162,7 +162,7 @@ namespace TestSuite
                           
                      if (numericalVega>1.0e-4) 
                      {
-                              double analyticalVega = capFloor.result("vega");
+                              double analyticalVega = (double) capFloor.result("vega");
                               double discrepancy = Math.Abs(numericalVega - analyticalVega);
                               discrepancy /= numericalVega;
                               if (discrepancy > tolerance)

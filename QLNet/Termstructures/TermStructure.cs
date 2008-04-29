@@ -106,7 +106,7 @@ namespace QLNet
         }
 
         //! date/time conversion
-        protected double timeFromReference(Date d) { return dayCounter().yearFraction(referenceDate(), d); }
+        public double timeFromReference(Date d) { return dayCounter().yearFraction(referenceDate(), d); }
 
         //! date-range check
         protected void checkRange(Date d, bool extrapolate)

@@ -74,7 +74,7 @@ namespace QLNet
             if (floorRates_.Count == 0)
                throw new ArgumentException("no floor rates given");
 
-            while (floorRates_.Count < floorRates_.Count)
+            while (floorRates_.Count < floatingLeg_.Count)
                floorRates_.Add(floorRates_.Last());
          }
 
@@ -139,16 +139,16 @@ namespace QLNet
 
          int n = floatingLeg_.Count;
 
-         arguments.startDates.Capacity = n;
-         arguments.fixingDates.Capacity = n;
-         arguments.endDates.Capacity = n;
-         arguments.accrualTimes.Capacity = n;
-         arguments.forwards.Capacity = n;
-         arguments.nominals.Capacity = n;
-         arguments.gearings.Capacity = n;
-         arguments.capRates.Capacity = n;
-         arguments.floorRates.Capacity = n;
-         arguments.spreads.Capacity = n;
+         arguments.startDates = new InitializedList<Date>(n) ;
+         arguments.fixingDates = new InitializedList<Date>(n);
+         arguments.endDates = new InitializedList<Date>(n);
+         arguments.accrualTimes = new InitializedList<double>(n);
+         arguments.forwards = new InitializedList<double?>(n);
+         arguments.nominals = new InitializedList<double>(n);
+         arguments.gearings = new InitializedList<double>(n);
+         arguments.capRates = new InitializedList<double?>(n);
+         arguments.floorRates = new InitializedList<double?>(n);
+         arguments.spreads = new InitializedList<double>(n);
 
          arguments.type = type_;
 
