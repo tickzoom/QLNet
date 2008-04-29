@@ -334,7 +334,7 @@ namespace QLNet
    /// Concrete cap class
    /// \ingroup instruments
    /// </summary>
-   class Cap : CapFloor 
+   public class Cap : CapFloor 
    {
       public Cap(List<CashFlow> floatingLeg,List<double> exerciseRates)
          : base(CapFloorType.Cap, floatingLeg, exerciseRates, new List<double>()) {}
@@ -344,7 +344,7 @@ namespace QLNet
    /// Concrete floor class
    /// \ingroup instruments 
    /// </summary>
-    class Floor : CapFloor 
+   public class Floor : CapFloor 
     {
       public Floor(List<CashFlow> floatingLeg,List<double> exerciseRates)
         : base(CapFloorType.Floor, floatingLeg,new List<double>(), exerciseRates) {}
@@ -354,7 +354,7 @@ namespace QLNet
    /// Concrete collar class
    /// \ingroup instruments
    /// </summary>
-    class Collar : CapFloor 
+   public class Collar : CapFloor 
     {
       public Collar(List<CashFlow> floatingLeg,List<double> capRates, List<double> floorRates)
           : base(CapFloorType.Collar, floatingLeg, capRates, floorRates) { }
