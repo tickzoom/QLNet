@@ -39,6 +39,10 @@ namespace QLNet {
         public static double blackFormula(Option.Type optionType, double strike, double forward, double stdDev) {
             return blackFormula(optionType, strike, forward, stdDev, 1.0, 0.0);
         }
+        public static double blackFormula(Option.Type optionType, double strike, double forward, double stdDev, double discount)
+        {
+           return blackFormula(optionType, strike, forward, stdDev, discount, 0.0);
+        }
         public static double blackFormula(Option.Type optionType, double strike, double forward, double stdDev,
                                           double discount, double displacement) {
             checkParameters(strike, forward, displacement);
@@ -71,6 +75,50 @@ namespace QLNet {
                       strike + " strike , " +
                       forward + " forward");
             return result;
+        }
+
+       /// <summary>
+       /// Black 1976 formula for standard deviation derivative
+       /// \warning instead of volatility it uses standard deviation, i.e.
+       /// volatility*sqrt(timeToMaturity), and it returns the
+       /// derivative with respect to the standard deviation.
+       /// If T is the time to maturity Black vega would be
+       /// blackStdDevDerivative(strike, forward, stdDev)*sqrt(T)
+       /// </summary>
+       public static double blackFormulaStdDevDerivative(double strike,double forward,double stdDev)
+       { return blackFormulaStdDevDerivative(strike, forward, stdDev, 1.0, 0.0);}
+       public static double blackFormulaStdDevDerivative(double strike, double forward, double stdDev,double discount)
+       { return blackFormulaStdDevDerivative(strike, forward, stdDev, discount, 0.0); }
+
+
+        public static double blackFormulaStdDevDerivative(double strike,
+                                            double forward,
+                                            double stdDev,
+                                            double discount,
+                                            double displacement)
+        {
+           
+           checkParameters(strike, forward, displacement);
+
+           if (stdDev<0.0)
+              throw new ArgumentException("stdDev (" + stdDev + ") must be non-negative");
+
+           if (discount<=0.0) 
+              throw new ArgumentException("discount (" + discount + ") must be positive");
+
+           forward = forward + displacement;
+           strike = strike + displacement;
+
+           if (stdDev==0.0)
+              if (forward>strike)
+                 return discount * forward;
+              else
+                 return 0.0;
+
+           double d1 = Math.Log(forward/strike)/stdDev + .5*stdDev;
+           CumulativeNormalDistribution phi = new CumulativeNormalDistribution();
+           return discount * forward * phi.derivative(d1);
+
         }
     }
 }

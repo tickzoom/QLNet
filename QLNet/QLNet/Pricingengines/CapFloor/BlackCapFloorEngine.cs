@@ -46,14 +46,14 @@ namespace QLNet
          volatility_.registerWith(update);
       }
 
-      public void calculate() 
+      public override void calculate() 
       {
          double value = 0.0;
          double vega = 0.0;
          int optionlets = arguments_.startDates.Count;
-         List<double> values = new List<double>(optionlets);
-         List<double> vegas = new List<double>(optionlets);
-         List<double> stdDevs = new List<double>(optionlets);
+         List<double> values = new InitializedList<double>(optionlets);
+         List<double> vegas = new InitializedList<double>(optionlets);
+         List<double> stdDevs = new InitializedList<double>(optionlets);
          CapFloorType type = arguments_.type;
          Date today = volatility_.link.referenceDate();
          Date settlement = termStructure_.link.referenceDate();
@@ -81,13 +81,13 @@ namespace QLNet
                   double? strike = arguments_.capRates[i];
                   if (sqrtTime>0.0) 
                   {
-                     stdDevs[i] = Math.Sqrt(volatility_.link.blackVariance(fixingDate, strike));
-                     vegas[i] = blackFormulaStdDevDerivative(strike, forward, stdDevs[i], d) * sqrtTime;
+                     stdDevs[i] = Math.Sqrt(volatility_.link.blackVariance(fixingDate, strike.Value));
+                     vegas[i] = Utils.blackFormulaStdDevDerivative(strike.Value, forward.Value, stdDevs[i], d) * sqrtTime;
                   }
                   // include caplets with past fixing date
-                  values[i] = blackFormula(Option.Type.Call, strike,
-                                             forward, stdDevs[i], d);
-                }
+                  values[i] = Utils.blackFormula(Option.Type.Call, strike.Value,
+                                             forward.Value, stdDevs[i], d);
+               }
                 if (type == CapFloorType.Floor || type == CapFloorType.Collar) 
                 {
                   double? strike = arguments_.floorRates[i];
@@ -95,11 +95,11 @@ namespace QLNet
                     
                   if (sqrtTime>0.0) 
                   {
-                     stdDevs[i] = Math.Sqrt(volatility_.blackVariance(fixingDate, strike));
-                     floorletVega = blackFormulaStdDevDerivative(strike, forward, stdDevs[i], d) * sqrtTime;
+                     stdDevs[i] = Math.Sqrt(volatility_.link.blackVariance(fixingDate, strike.Value));
+                     floorletVega = Utils.blackFormulaStdDevDerivative(strike.Value, forward.Value, stdDevs[i], d) * sqrtTime;
                   }
-                  double floorlet = blackFormula(Option.Type.Put, strike,
-                                                 forward, stdDevs[i], d);
+                  double floorlet = Utils.blackFormula(Option.Type.Put, strike.Value,
+                                                 forward.Value, stdDevs[i], d);
                   if (type == CapFloorType.Floor) 
                   {
                      values[i] = floorlet;
