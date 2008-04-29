@@ -47,6 +47,7 @@ namespace QLNet {
 
         public double gridValue(int i) { return grid_[i]; }
         public double value(int i) { return values_[i]; }
+        public void setValue(int i, double v) { values_[i] = v; }
 
         public int size() { return grid_.Count; }
         public bool empty() { return grid_.Count == 0; }
