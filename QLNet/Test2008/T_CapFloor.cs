@@ -182,5 +182,66 @@ namespace TestSuite
             }
          }
       }
+      
+      [TestMethod()]
+      public void testStrikeDependency() 
+      {
+
+         CommonVars vars = new CommonVars();
+
+         int[] lengths = { 1, 2, 3, 5, 7, 10, 15, 20 };
+         double[] vols = { 0.01, 0.05, 0.10, 0.15, 0.20 };
+         double[] strikes = { 0.03, 0.04, 0.05, 0.06, 0.07 };
+
+         Date startDate = vars.termStructure.link.referenceDate();
+
+         for (int i=0; i<lengths.Length; i++) 
+         {
+            for (int j=0; j<vols.Length; j++) 
+            {
+               // store the results for different strikes...
+               List<double> cap_values = new List<double>(), floor_values = new List<double>();
+
+               for (int k=0; k<strikes.Length; k++) 
+               {
+                   List<CashFlow> leg = vars.makeLeg(startDate,lengths[i]);
+                   Instrument cap = vars.makeCapFloor(CapFloorType.Cap,leg,
+                                         strikes[k],vols[j]);
+                   cap_values.Add(cap.NPV());
+                   Instrument floor = vars.makeCapFloor(CapFloorType.Floor,leg,
+                                         strikes[k],vols[j]);
+                   floor_values.Add(floor.NPV());
+            }
+            // and check that they go the right way
+            for ( int k = 0 ; k < cap_values.Count-1 ; k++ )
+            {
+               if (cap_values[k] < cap_values[k+1])
+                Assert.Fail(
+                    "NPV is increasing with the strike in a cap: \n"
+                    + "    length:     " + lengths[i] + " years\n"
+                    + "    volatility: " + vols[j] + "\n"
+                    + "    value:      " + cap_values[k]
+                    + " at strike: " + strikes[k] + "\n"
+                    + "    value:      " + cap_values[k+1]
+                    + " at strike: " + strikes[k+1]);
+            }
+
+            // same for floors
+            for ( int k = 0 ; k < floor_values.Count-1 ; k++ )
+            {
+               if (floor_values[k] > floor_values[k+1])
+                Assert.Fail(
+                    "NPV is decreasing with the strike in a floor: \n"
+                    + "    length:     " + lengths[i] + " years\n"
+                    + "    volatility: " + vols[j] + "\n"
+                    + "    value:      " + floor_values[k]
+                    + " at strike: " + strikes[k] + "\n"
+                    + "    value:      " + floor_values[k+1]
+                    + " at strike: " + strikes[k+1]);
+            }
+        }
+    }
+}
+
    }
 }
