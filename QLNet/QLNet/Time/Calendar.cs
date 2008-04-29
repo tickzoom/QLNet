@@ -1,7 +1,8 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
  Copyright (C) 2008 Andrea Maggiulli 
-  
+ Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ 
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -106,7 +107,7 @@ namespace QLNet
         /// <summary>
         /// last business day of the month to which the given date belongs
         /// </summary>
-        public Date endOfMonth(Date d) { return adjust(d.endOfMonth(d), BusinessDayConvention.Preceding); }
+        public Date endOfMonth(Date d) { return adjust(Date.endOfMonth(d), BusinessDayConvention.Preceding); }
 
         /// <summary>
         /// Adjusts a non-business day to the appropriate near business day  with respect 
