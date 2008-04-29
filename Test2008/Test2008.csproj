@@ -47,6 +47,7 @@
     <Compile Include="T_CapFloor.cs" />
     <Compile Include="T_Dates.cs" />
     <Compile Include="T_DayCounters.cs" />
+    <Compile Include="T_EuropeanOption.cs" />
     <Compile Include="T_ExchangeRate.cs" />
     <Compile Include="T_Instruments.cs" />
     <Compile Include="T_InterestRate.cs" />
