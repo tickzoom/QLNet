@@ -435,6 +435,14 @@ namespace TestSuite {
             where T : ITraits, new()
             where I : IInterpolationFactory, new() {
 
+            // readjust settlement
+            vars.calendar = new JointCalendar(new BMAIndex().fixingCalendar(),
+                                          new USDLibor(new Period(6, TimeUnit.Months)).fixingCalendar(),
+                                          JointCalendar.JointCalendarRule.JoinHolidays);
+            vars.today = vars.calendar.adjust(Date.Today);
+            Settings.setEvaluationDate(vars.today);
+            vars.settlement = vars.calendar.advance(vars.today,vars.settlementDays, TimeUnit.Days);
+
             Handle<YieldTermStructure> riskFreeCurve = new Handle<YieldTermStructure>(
                                                        new FlatForward(vars.settlement, 0.04, new Actual360()));
 
