@@ -28,7 +28,7 @@ namespace QLNet {
         See <http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1414>.
     */
     public class USDLibor : Libor {
-        // public USDLibor(Period tenor, YieldTermStructure h = YieldTermStructure())
+        public USDLibor(Period tenor) : this(tenor, new Handle<YieldTermStructure>()) { }
         public USDLibor(Period tenor, Handle<YieldTermStructure> h)
             : base("USDLibor", tenor, 2, new USDCurrency(), new UnitedStates(UnitedStates.Market.NYSE), new Actual360(), h) { }
     }

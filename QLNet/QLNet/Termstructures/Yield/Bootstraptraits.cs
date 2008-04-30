@@ -62,7 +62,7 @@ namespace QLNet {
         public double maxValueAfter(int i, List<double> data) { return data[i - 1]; }
         // update with new guess
         public void updateGuess(List<double> data, double discount, int i) { data[i] = discount; }
-        public int maxIterations() { return 300; }   // upper bound for convergence loop
+        public int maxIterations() { return 50; }   // upper bound for convergence loop
 
         public double discountImpl(Interpolation i, double t) { return i.value(t, true); }
         public double zeroYieldImpl(Interpolation i, double t) { throw new NotSupportedException(); }
