@@ -188,7 +188,11 @@ namespace QLNet
 
       public static bool  operator ==(Money m1,Money m2) 
       {
-         if (m1.currency == m2.currency) 
+         if (m1 == null && m2 == null) 
+            return true;
+         else if (m1 == null || m2 == null) 
+            return false;
+         else if (m1.currency == m2.currency) 
          {
             return m1.value == m2.value;
          } 
