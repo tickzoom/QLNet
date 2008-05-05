@@ -1,7 +1,8 @@
 ﻿/*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
  Copyright (C) 2008 Andrea Maggiulli
-  
+ Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ * 
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -95,7 +96,7 @@ namespace QLNet {
         public static Vector operator *(Vector v1, double value) { return operValue(v1, value, (x, y) => x * y); }
         public static Vector operator /(Vector v1, double value) { return operValue(v1, value, (x, y) => x / y); }
 
-        private static Vector operVector(Vector v1, Vector v2, Func<double, double, double> func) {
+        internal static Vector operVector(Vector v1, Vector v2, Func<double, double, double> func) {
             if (v1.Count != v2.Count)
                 throw new ApplicationException("operation on vectors with different sizes (" + v1.Count + ", " + v2.Count);
 
@@ -129,5 +130,11 @@ namespace QLNet {
         public static double DotProduct(Vector v1, Vector  v2) {
             return v1 * v2;
         }
+
+        public static Vector DirectMultiply(Vector v1, Vector v2)
+        {
+            return Vector.operVector(v1, v2, (x, y) => x * y);
+        }
+
     }
 }

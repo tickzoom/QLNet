@@ -1,6 +1,7 @@
 ﻿/*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
-  
+ Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ * 
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -57,7 +58,8 @@ namespace QLNet {
 
         /*! \warning it does not reset the current minumum to any initial value
         */
-        void reset() {
+        public void reset()
+        {
             functionEvaluation_ = gradientEvaluation_ = 0;
             functionValue_ = squaredNorm_ = null;
         }
@@ -92,11 +94,13 @@ namespace QLNet {
             currentValue_=currentValue;
         }
 
-        void setFunctionValue(double functionValue) {
+        public void setFunctionValue(double functionValue)
+        {
             functionValue_=functionValue;
         }
 
-        void setGradientNormValue(double squaredNorm) {
+        public void setGradientNormValue(double squaredNorm)
+        {
             squaredNorm_=squaredNorm;
         }
     }
