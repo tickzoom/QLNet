@@ -270,8 +270,8 @@ namespace QLNet
          //Brent solver;
          NewtonSafe solver = new NewtonSafe();
          solver.setMaxEvaluations(maxEvaluations);
-         //return solver.solve(f, accuracy, guess, minVol, maxVol);
-         return 0;
+         return solver.solve(f, accuracy, guess, minVol, maxVol);
+         //return 0;
       }
 
       #endregion
@@ -376,8 +376,8 @@ namespace QLNet
    //! base class for cap/floor engines
    public abstract class CapFloorEngine 
         : GenericEngine<CapFloor.Arguments, CapFloor.Results> {};
-   
-   public class ImpliedVolHelper 
+
+   public class ImpliedVolHelper : ISolver1d
    {
       private IPricingEngine engine_;
       private Handle<YieldTermStructure> discountCurve_;
@@ -391,6 +391,7 @@ namespace QLNet
          discountCurve_ = discountCurve;
          targetValue_ = targetValue;
 
+         vol_ = new SimpleQuote(-1.0);
          Handle<Quote> h = new Handle<Quote>(vol_);
          engine_ = (IPricingEngine)new BlackCapFloorEngine(discountCurve_, h);
          cap.setupArguments(engine_.getArguments());
@@ -401,18 +402,18 @@ namespace QLNet
       //Real operator()(Volatility x) const;
       //Real derivative(Volatility x) const;
 
+      public override double value(double x)
+      {
+         if (x!=vol_.value()) 
+         {
+            vol_.setValue(x);
+            engine_.calculate();
+         }
 
-      
-      //double ImpliedVolHelper::operator()(Volatility x) const 
-      //{
-      //      if (x!=vol_->value()) {
-      //          vol_->setValue(x);
-      //          engine_->calculate();
-      //      }
-      //      return results_->value-targetValue_;
-      //  }
+         return results_.value.Value -targetValue_;
+      }
 
-      public double derivative(double x) 
+      public override double derivative(double x) 
       {
          if (x!=vol_.value()) 
          {
