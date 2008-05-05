@@ -1,6 +1,7 @@
 ﻿/*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
-  
+ Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ 
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -64,6 +65,58 @@ namespace QLNet {
         }
         public NoConstraint() : base(new Impl()) {}
     };
+
+	//! %Constraint imposing positivity to all arguments
+	public class PositiveConstraint : Constraint
+	{
+        public PositiveConstraint()
+            : base(new PositiveConstraint.Impl())
+        {
+        }
+
+        private class Impl : IConstraint
+		{
+			public bool test(Vector v)
+			{
+				for (int i =0; i<v.Count; ++i)
+				{
+					if (v[i] <= 0.0)
+						return false;
+				}
+				return true;
+			}
+		}
+	}
+
+	//! %Constraint imposing all arguments to be in [low,high]
+	public class BoundaryConstraint : Constraint
+	{
+        public BoundaryConstraint(double low, double high)
+            : base(new BoundaryConstraint.Impl(low, high))
+        {
+        }
+
+        private class Impl : IConstraint
+		{
+            private double low_;
+            private double high_;
+
+            public Impl(double low, double high)
+			{
+				low_ = low;
+				high_ = high;
+			}
+			public bool test(Vector v)
+			{
+                for (int i = 0; i < v.Count; i++)
+				{
+                    if ((v[i] < low_) || (v[i] > high_))
+						return false;
+				}
+				return true;
+			}
+		}
+	}
 
     //! %Constraint enforcing both given sub-constraints
     public class CompositeConstraint : Constraint {
