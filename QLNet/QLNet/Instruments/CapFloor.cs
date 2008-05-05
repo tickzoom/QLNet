@@ -241,25 +241,38 @@ namespace QLNet
          return CashFlows.atmRate(floatingLeg_, discountCurve);
       }
 
-      //public double impliedVolatility(
-      //                        double targetValue,
-      //                        Handle<YieldTermStructure> discountCurve,
-      //                        double guess,
-      //                        double accuracy,
-      //                        int maxEvaluations,
-      //                        double minVol,
-      //                        double maxVol) 
-      //{
-      //   calculate();
-      //   if (isExpired()) 
-      //      throw new ArgumentException("instrument expired");
+      public double impliedVolatility(
+                              double targetValue,
+                              Handle<YieldTermStructure> discountCurve,
+                              double guess,
+                              double accuracy,
+                              int maxEvaluations)
+      {
+         return impliedVolatility(targetValue, discountCurve, guess, accuracy, maxEvaluations,
+                                  1.0e-7, 4.0);
+      }
 
-      //   //ImpliedVolHelper f = new ImpliedVolHelper(this, discountCurve, targetValue);
-      //   //Brent solver;
-      //   NewtonSafe solver;
-      //   solver.setMaxEvaluations(maxEvaluations);
-      //   return solver.solve(f, accuracy, guess, minVol, maxVol);
-      //}
+
+      public double impliedVolatility(
+                              double targetValue,
+                              Handle<YieldTermStructure> discountCurve,
+                              double guess,
+                              double accuracy,
+                              int maxEvaluations,
+                              double minVol,
+                              double maxVol) 
+      {
+         calculate();
+         if (isExpired()) 
+            throw new ArgumentException("instrument expired");
+
+         ImpliedVolHelper f = new ImpliedVolHelper(this, discountCurve, targetValue);
+         //Brent solver;
+         NewtonSafe solver = new NewtonSafe();
+         solver.setMaxEvaluations(maxEvaluations);
+         //return solver.solve(f, accuracy, guess, minVol, maxVol);
+         return 0;
+      }
 
       #endregion
 
@@ -363,4 +376,53 @@ namespace QLNet
    //! base class for cap/floor engines
    public abstract class CapFloorEngine 
         : GenericEngine<CapFloor.Arguments, CapFloor.Results> {};
+   
+   public class ImpliedVolHelper 
+   {
+      private IPricingEngine engine_;
+      private Handle<YieldTermStructure> discountCurve_;
+      private double targetValue_;
+      private SimpleQuote vol_;
+      private Instrument.Results results_;
+
+      public ImpliedVolHelper(CapFloor cap,Handle<YieldTermStructure> discountCurve,
+                              double targetValue)
+      {
+         discountCurve_ = discountCurve;
+         targetValue_ = targetValue;
+
+         Handle<Quote> h = new Handle<Quote>(vol_);
+         engine_ = (IPricingEngine)new BlackCapFloorEngine(discountCurve_, h);
+         cap.setupArguments(engine_.getArguments());
+         results_ = engine_.getResults() as Instrument.Results;
+
+      }
+
+      //Real operator()(Volatility x) const;
+      //Real derivative(Volatility x) const;
+
+
+      
+      //double ImpliedVolHelper::operator()(Volatility x) const 
+      //{
+      //      if (x!=vol_->value()) {
+      //          vol_->setValue(x);
+      //          engine_->calculate();
+      //      }
+      //      return results_->value-targetValue_;
+      //  }
+
+      public double derivative(double x) 
+      {
+         if (x!=vol_.value()) 
+         {
+            vol_.setValue(x);
+            engine_.calculate();
+         }
+         if ( ! results_.additionalResults.Keys.Contains("vega") )
+            throw new Exception("vega not provided");
+
+         return (double) results_.additionalResults["vega"];
+      }
+   }
 }
