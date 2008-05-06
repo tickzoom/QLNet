@@ -42,8 +42,8 @@ namespace QLNet {
 
         /*! \brief creates the array and fills it according to \f$ a_{0} = value, a_{i}=a_{i-1}+increment \f$ */
         public Vector(int size, double value, double increment) : this(size) {
-            for (int i = 0; i < this.Count; i++)
-                this[i] = value += increment;
+            for (int i = 0; i < this.Count; i++, value += increment)
+                this[i] = value;
         }
 
         public Vector(Vector from) : base(from.Count) {
