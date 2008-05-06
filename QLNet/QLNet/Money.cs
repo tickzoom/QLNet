@@ -1,6 +1,7 @@
 /*
  Copyright (C) 2008 Andrea Maggiulli
-  
+ Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ 
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -20,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace QLNet
 {
@@ -51,8 +53,12 @@ namespace QLNet
 
       #region Attributes
 
+      [ThreadStatic]
       public static ConversionType conversionType;
+
+      [ThreadStatic]
       public static Currency baseCurrency;
+
       private double value_;
       private Currency currency_;
 

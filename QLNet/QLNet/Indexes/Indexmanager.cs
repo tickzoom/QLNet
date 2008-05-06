@@ -1,6 +1,7 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
-  
+ Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ * 
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -18,11 +19,13 @@
 */
 using System;
 using System.Collections.Generic;
-using QLNet;
+using System.Threading;
 
 namespace QLNet {
     //! global repository for past index fixings
     public static class IndexManager {
+
+        [ThreadStatic]
         private static Dictionary<string, TimeSeries<double>> data_ = new Dictionary<string, TimeSeries<double>>();
 		
 		//! returns whether historical fixings were stored for the index

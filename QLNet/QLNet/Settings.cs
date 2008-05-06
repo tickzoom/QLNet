@@ -1,6 +1,7 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
-  
+ Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ * 
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -19,13 +20,17 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using QLNet;
+using System.Threading;
 
 namespace QLNet {
     // we need only one instance of the class
     // we can not derive it from IObservable because the class is static
     public static class Settings {
+
+        [ThreadStatic]
         private static Date evaluationDate_ = Date.Today;
+
+        [ThreadStatic]
         private static bool enforcesTodaysHistoricFixings_ = false;
 
         public static Date evaluationDate() { return evaluationDate_; }
@@ -42,6 +47,7 @@ namespace QLNet {
         ////////////////////////////////////////////////////
         // Observable interface
         private static event Callback notifyObserversEvent;
+
         public static void registerWith(Callback handler) { notifyObserversEvent += handler; }
         public static void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
         private static void notifyObservers() {
