@@ -32,11 +32,7 @@ namespace QLNet {
         }
 
         public static Vector BoundedGrid(double xMin, double xMax, int steps) {
-            Vector result = new Vector(steps + 1);
-            double x = xMin, dx = (xMax - xMin) / steps;
-            for (int i = 0; i < steps + 1; i++, x += dx)
-                result[i] = x;
-            return result;
+            return new Vector(steps + 1, xMin, (xMax - xMin) / steps);
         }
 
         public static Vector BoundedLogGrid(double xMin, double xMax, int steps) {

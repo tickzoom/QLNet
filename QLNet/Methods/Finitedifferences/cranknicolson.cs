@@ -27,37 +27,12 @@ namespace QLNet {
         from either TimeConstantOperator or TimeDependentOperator.
         Also, it must implement at least the following interface:
 
-        \code
-        typedef ... array_type;
-
-        // copy constructor/assignment
-        // (these will be provided by the compiler if none is defined)
-        Operator(const Operator&);
-        Operator& operator=(const Operator&);
-
-        // inspectors
-        Size size();
-
-        // modifiers
-        void setTime(Time t);
-
-        // operator interface
-        array_type applyTo(const array_type&);
-        array_type solveFor(const array_type&);
-        static Operator identity(Size size);
-
-        // operator algebra
-        Operator operator*(Real, const Operator&);
-        Operator operator+(const Operator&, const Operator&);
-        Operator operator+(const Operator&, const Operator&);
-        \endcode
-
         \warning The differential operator must be linear for
                  this evolver to work.
 
         \ingroup findiff
     */
-    class CrankNicolson<Operator> : MixedScheme<Operator>, ISchemeFactory where Operator : IOperator, new() {
+    public class CrankNicolson<Operator> : MixedScheme<Operator>, ISchemeFactory where Operator : IOperator {
         // constructors
         public CrankNicolson() { }  // required for generics
         public CrankNicolson(Operator L, List<BoundaryCondition<IOperator>> bcs)
