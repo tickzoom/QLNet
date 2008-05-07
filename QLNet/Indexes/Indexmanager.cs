@@ -26,47 +26,58 @@ namespace QLNet {
     public static class IndexManager {
 
         [ThreadStatic]
-        private static Dictionary<string, TimeSeries<double>> data_ = new Dictionary<string, TimeSeries<double>>();
-		
+        private static Dictionary<string, TimeSeries<double>> data_ = null;
+        public static Dictionary<string, TimeSeries<double>> Data
+        {
+            get
+            {
+                if (data_ == null)
+                {
+                    data_ = new Dictionary<string, TimeSeries<double>>();
+                }
+                return data_;
+            }
+        }
+
 		//! returns whether historical fixings were stored for the index
         public static bool hasHistory(string name) {
-			return data_.ContainsKey(name);
+			return Data.ContainsKey(name);
 		}
 		
         //! returns the (possibly empty) history of the index fixings
         public static TimeSeries<double> getHistory(string name) {
-            return hasHistory(name) ? data_[name] : new TimeSeries<double>();
+            return hasHistory(name) ? Data[name] : new TimeSeries<double>();
 		}
 		
         //! stores the historical fixings of the index
         public static void setHistory(string name, TimeSeries<double> history) {
             if (hasHistory(name))
-                data_[name] = history;
+                Data[name] = history;
             else
-                data_.Add(name, history);
+                Data.Add(name, history);
         }
 
         //! observer notifying of changes in the index fixings
         public static TimeSeries<double> notifier(string name) {
-            return data_[name];
+            return Data[name];
         }
 
         //! returns all names of the indexes for which fixings were stored
         public static List<string> histories() {
             List<string> t = new List<string>();
-            foreach (string s in data_.Keys)
+            foreach (string s in Data.Keys)
                 t.Add(s);
 	        return t;
 	    }
 	
         //! clears the historical fixings of the index
         public static void clearHistory(string name) {
-			data_[name].Clear();
+			Data[name].Clear();
 		}
 
         //! clears all stored fixings
         public static void clearHistories() {
-			data_.Clear();
+			Data.Clear();
 		}
 	}
 }

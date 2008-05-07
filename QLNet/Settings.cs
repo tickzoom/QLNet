@@ -28,12 +28,18 @@ namespace QLNet {
     public static class Settings {
 
         [ThreadStatic]
-        private static Date evaluationDate_ = Date.Today;
+        private static Date evaluationDate_ = null;
 
         [ThreadStatic]
         private static bool enforcesTodaysHistoricFixings_ = false;
 
-        public static Date evaluationDate() { return evaluationDate_; }
+        public static Date evaluationDate() 
+        {
+            if (evaluationDate_ == null)
+                evaluationDate_ = Date.Today;
+            return evaluationDate_; 
+        }
+
         public static void setEvaluationDate(Date d) {
             evaluationDate_ = d;
             notifyObservers();
