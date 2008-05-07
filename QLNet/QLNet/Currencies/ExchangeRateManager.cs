@@ -33,7 +33,20 @@ namespace QLNet
    public class ExchangeRateManager 
    {
       [ThreadStatic]
-      public static readonly ExchangeRateManager Instance = new ExchangeRateManager();
+      private static ExchangeRateManager instance_ = null;
+      public static ExchangeRateManager Instance
+      {
+          get
+          {
+              if (instance_ == null)
+              {
+                  instance_ =
+                     new ExchangeRateManager();
+              }
+              return instance_;
+          }
+      }
+
       private ExchangeRateManager() {
           addKnownRates();
       }
