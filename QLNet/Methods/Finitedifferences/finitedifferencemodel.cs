@@ -29,9 +29,9 @@ namespace QLNet {
         private List<double> stoppingTimes_;
 
         // constructors
-        public FiniteDifferenceModel(IOperator L, List<BoundaryCondition<IOperator>> bcs)
+        public FiniteDifferenceModel(object L, object bcs)
             : this(L, bcs, new List<double>()) { }
-        public FiniteDifferenceModel(IOperator L, List<BoundaryCondition<IOperator>> bcs, List<double> stoppingTimes) {
+        public FiniteDifferenceModel(object L, object bcs, List<double> stoppingTimes) {
             evolver_ = (Evolver)new Evolver().factory(L, bcs);
             stoppingTimes_ = stoppingTimes;
             stoppingTimes_.Sort();
@@ -49,12 +49,12 @@ namespace QLNet {
 
         /*! solves the problem between the given times, applying a condition at every step.
             \warning being this a rollback, <tt>from</tt> must be a later time than <tt>to</tt>. */
-        public void rollback(ref Vector a, double from, double to, int steps) { rollbackImpl(ref a, from, to, steps, null); }
-        public void rollback(ref Vector a, double from, double to, int steps, StepCondition condition) {
+        public void rollback(ref object a, double from, double to, int steps) { rollbackImpl(ref a, from, to, steps, null); }
+        public void rollback(ref object a, double from, double to, int steps, ICondition condition) {
             rollbackImpl(ref a,from,to,steps, condition);
         }
 
-        private void rollbackImpl(ref Vector a, double from, double to, int steps, StepCondition condition) {
+        private void rollbackImpl(ref object a, double from, double to, int steps, ICondition condition) {
 
             if (!(from >= to)) throw new ApplicationException("trying to roll back from " + from + " to " + to);
 
@@ -71,7 +71,7 @@ namespace QLNet {
 
                         // perform a small step to stoppingTimes_[j]...
                         evolver_.setStep(now-stoppingTimes_[j]);
-                        evolver_.step(ref a,now);
+                        evolver_.step(ref a, now);
                         if (condition != null)
                             condition.applyTo(a,stoppingTimes_[j]);
                         // ...and continue the cycle

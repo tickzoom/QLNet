@@ -142,4 +142,16 @@ namespace QLNet {
                                 : minGridPoints);
         }
     }
+
+    //public class FDEngineAdapter<Base, Engine> : Base, Engine {
+    //    public FDEngineAdapter(GeneralizedBlackScholesProcess process, Size timeSteps=100, Size gridPoints=100, bool timeDependent = false)
+    //        : base(process, timeSteps, gridPoints,timeDependent) {
+    //        process.registerWith(update);
+    //    }
+        
+    //    protected override void calculate() {
+    //        setupArguments(&(this->arguments_));
+    //        calculate(&(this->results_));
+    //    }
+    //}
 }

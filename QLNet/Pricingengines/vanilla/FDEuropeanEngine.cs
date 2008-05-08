@@ -55,9 +55,9 @@ namespace QLNet {
 
             // this is a workaround for pointers to avoid unsafe code
             // in the grid calculation Vector temp goes through many operations
-            Vector temp = prices_.values();
+            object temp = prices_.values();
             model.rollback(ref temp, getResidualTime(), 0, timeSteps_);
-            prices_.setValues(temp);
+            prices_.setValues((Vector)temp);
 
             results_.value = prices_.valueAtCenter();
             results_.delta = prices_.firstDerivativeAtCenter();

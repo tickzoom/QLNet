@@ -22,24 +22,16 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    //! Crank-Nicolson scheme for finite difference methods
-    /*! In this implementation, the passed operator must be derived
-        from either TimeConstantOperator or TimeDependentOperator.
-        Also, it must implement at least the following interface:
-
-        \warning The differential operator must be linear for
-                 this evolver to work.
-
-        \ingroup findiff
-    */
-    public class CrankNicolson<Operator> : MixedScheme<Operator>, ISchemeFactory where Operator : IOperator {
-        // constructors
-        public CrankNicolson() { }  // required for generics
-        public CrankNicolson(Operator L, List<BoundaryCondition<IOperator>> bcs)
-            : base(L, 0.5, bcs) { }
-
-        public IMixedScheme factory(object L, object bcs) {
-            return new CrankNicolson<Operator>((Operator)L, (List<BoundaryCondition<IOperator>>)bcs);
-        }
-    }
+    //public class FDAmericanCondition<baseEngine> : FDVanillaEngine where baseEngine : FDVanillaEngine {
+    //    public FDAmericanCondition(GeneralizedBlackScholesProcess process,
+    //         Size timeSteps = 100, Size gridPoints = 100,
+    //         bool timeDependent = false)
+    //    : base(process, timeSteps, gridPoints, timeDependent) {}
+      
+    //    protected void initializeStepCondition() {
+    //        baseEngine::stepCondition_ =
+    //            boost::shared_ptr<StandardStepCondition>(
+    //              new AmericanCondition(baseEngine::intrinsicValues_.values()));
+    //    }
+    //}
 }
