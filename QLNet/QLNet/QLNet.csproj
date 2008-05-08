@@ -186,6 +186,7 @@
     <Compile Include="Methods\Finitedifferences\finitedifferencemodel.cs" />
     <Compile Include="Methods\Finitedifferences\mixedscheme.cs" />
     <Compile Include="Methods\Finitedifferences\OperatorFactory.cs" />
+    <Compile Include="Methods\Finitedifferences\ParallelEvolver.cs" />
     <Compile Include="Methods\Finitedifferences\pde.cs" />
     <Compile Include="Methods\Finitedifferences\pdebsm.cs" />
     <Compile Include="Methods\Finitedifferences\pdeshortrate.cs" />
@@ -225,7 +226,9 @@
     <Compile Include="Pricingengines\vanilla\binomialengine.cs" />
     <Compile Include="Pricingengines\vanilla\bjerksundstenslandengine.cs" />
     <Compile Include="Pricingengines\vanilla\discretizedvanillaoption.cs" />
+    <Compile Include="Pricingengines\vanilla\fdconditions.cs" />
     <Compile Include="Pricingengines\vanilla\FDEuropeanEngine.cs" />
+    <Compile Include="Pricingengines\vanilla\FDStepConditionEngine.cs" />
     <Compile Include="Pricingengines\vanilla\FDVanillaEngine.cs" />
     <Compile Include="Pricingengines\vanilla\Integralengine.cs" />
     <Compile Include="Pricingengines\vanilla\Juquadraticengine.cs" />

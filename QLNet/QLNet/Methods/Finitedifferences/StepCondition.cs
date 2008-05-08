@@ -22,9 +22,19 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
+    public interface ICondition {
+        void applyTo(object o, double t);
+    }
+
     //! condition to be applied at every time step
     /*! \ingroup findiff */
-    public abstract class StepCondition {
-        public abstract void applyTo(Vector a, double t);
+    public abstract class StepCondition<Dummy> : ICondition where Dummy : Vector {
+        public abstract void applyTo(object a, double t);
+    }
+
+    //! %null step condition
+    /*! \ingroup findiff */
+    public class NullCondition<array_type> : StepCondition<array_type> where array_type : Vector {
+        public override void applyTo(object a, double t) { }
     }
 }

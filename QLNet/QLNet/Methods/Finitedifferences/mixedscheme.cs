@@ -23,11 +23,11 @@ using System.Text;
 
 namespace QLNet {
     public interface ISchemeFactory {
-        IMixedScheme factory(IOperator L, List<BoundaryCondition<IOperator>> bcs);
+        IMixedScheme factory(object L, object bcs);
     }
 
     public interface IMixedScheme {
-        void step(ref Vector a, double t);
+        void step(ref object a, double t);
         void setStep(double dt);
     }
 
@@ -57,7 +57,9 @@ namespace QLNet {
             bcs_ = bcs;
         }
 
-        public void step(ref Vector a, double t) {
+        public void step(ref object o, double t) {
+            Vector a = (Vector)o;
+
             int i;
             for (i=0; i<bcs_.Count; i++)
                 bcs_[i].setTime(t);
@@ -83,6 +85,8 @@ namespace QLNet {
                 for (i = 0; i < bcs_.Count; i++)
                     bcs_[i].applyAfterSolving(a);
             }
+
+            o = a;
         }
 
         public void setStep(double dt) {
