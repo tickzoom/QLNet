@@ -31,7 +31,7 @@ namespace EquityOption {
             // set up dates
             Calendar calendar = new TARGET();
             Date todaysDate = new Date(15, Month.May, 1998);
-            Date settlementDate = new Date (17, Month.May, 1998);
+            Date settlementDate = new Date(17, Month.May, 1998);
             Settings.setEvaluationDate(todaysDate);
 
             // our options
@@ -85,6 +85,7 @@ namespace EquityOption {
             VanillaOption europeanOption = new VanillaOption(payoff, europeanExercise);
             VanillaOption bermudanOption = new VanillaOption(payoff, bermudanExercise);
             VanillaOption americanOption = new VanillaOption(payoff, americanExercise);
+
 
             // Analytic formulas:
 

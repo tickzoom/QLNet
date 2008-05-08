@@ -49,12 +49,12 @@ namespace QLNet {
 
         /*! solves the problem between the given times, applying a condition at every step.
             \warning being this a rollback, <tt>from</tt> must be a later time than <tt>to</tt>. */
-        public void rollback(Vector a, double from, double to, int steps) { rollbackImpl(a, from, to, steps, null); }
-        public void rollback(Vector a, double from, double to, int steps, StepCondition condition) {
-            rollbackImpl(a,from,to,steps, condition);
+        public void rollback(ref Vector a, double from, double to, int steps) { rollbackImpl(ref a, from, to, steps, null); }
+        public void rollback(ref Vector a, double from, double to, int steps, StepCondition condition) {
+            rollbackImpl(ref a,from,to,steps, condition);
         }
 
-        private void rollbackImpl(Vector a, double from, double to, int steps, StepCondition condition) {
+        private void rollbackImpl(ref Vector a, double from, double to, int steps, StepCondition condition) {
 
             if (!(from >= to)) throw new ApplicationException("trying to roll back from " + from + " to " + to);
 
@@ -71,7 +71,7 @@ namespace QLNet {
 
                         // perform a small step to stoppingTimes_[j]...
                         evolver_.setStep(now-stoppingTimes_[j]);
-                        evolver_.step(a,now);
+                        evolver_.step(ref a,now);
                         if (condition != null)
                             condition.applyTo(a,stoppingTimes_[j]);
                         // ...and continue the cycle
@@ -84,7 +84,7 @@ namespace QLNet {
                     // complete the big one...
                     if (now > next) {
                         evolver_.setStep(now - next);
-                        evolver_.step(a,now);
+                        evolver_.step(ref a,now);
                         if (condition != null)
                             condition.applyTo(a,next);
                     }
@@ -94,7 +94,7 @@ namespace QLNet {
                 } else {
                     // if we didn't, the evolver is already set to the
                     // default step, which is ok for us.
-                    evolver_.step(a,now);
+                    evolver_.step(ref a,now);
                     if (condition != null)
                         condition.applyTo(a, next);
                 }

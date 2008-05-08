@@ -38,7 +38,7 @@ namespace QLNet {
         }
 
         public SampledCurve(Vector grid) {
-            grid_ = grid;
+            grid_ = (Vector)grid.Clone();
             values_ = new Vector(grid.Count);
         }
 
@@ -54,7 +54,7 @@ namespace QLNet {
 
         //! \name modifiers
         public void setGrid(Vector g) { grid_ = (Vector)g.Clone(); }
-        public void setValues(Array g) { values_ = (Vector)g.Clone(); }
+        public void setValues(Vector g) { values_ = (Vector)g.Clone(); }
 
         public void sample(Func<double, double> f) {
             for (int i = 0; i < grid_.Count; i++)

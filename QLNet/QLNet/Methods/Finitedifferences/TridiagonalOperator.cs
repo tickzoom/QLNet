@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    public interface IOperator {
+    public interface IOperator : ICloneable {
         int size();
         IOperator identity(int size);
         Vector applyTo(Vector v);
@@ -83,6 +83,7 @@ namespace QLNet {
 
         // TridiagonalOperator(const Disposable<TridiagonalOperator>&);
         // TridiagonalOperator& operator=(const Disposable<TridiagonalOperator>&);
+        public object Clone() { return this.MemberwiseClone(); }
 
         public IOperator multiply(double a, IOperator o) {
             TridiagonalOperator D = o as TridiagonalOperator;
@@ -125,8 +126,7 @@ namespace QLNet {
 
             // transform(InputIterator1 start1, InputIterator1 finish1, InputIterator2 start2, OutputIterator result,
             // BinaryOperation binary_op)
-            for (int i = 0; i < diagonal_.Count; i++)
-                result[i] = diagonal_[i] * v[i];
+            result = Utils.DirectMultiply(diagonal_, v);
 
             // matricial product
             result[0] += upperDiagonal_[0] * v[1];
