@@ -39,8 +39,7 @@ namespace QLNet {
         public BSMOperator(Vector grid, GeneralizedBlackScholesProcess process, double residualTime) : base(grid.size()) {
             //PdeBSM::grid_type  logGrid(grid);
             LogGrid logGrid = new LogGrid(grid);
-            PdeConstantCoeff<PdeBSM> cc = 
-                new PdeConstantCoeff<PdeBSM>(process, residualTime, process.stateVariable().link.value());
+            var cc = new PdeConstantCoeff<PdeBSM>(process, residualTime, process.stateVariable().link.value());
             cc.generateOperator(residualTime, logGrid, this);
         }
     }

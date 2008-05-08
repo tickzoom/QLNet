@@ -51,9 +51,13 @@ namespace QLNet {
 
             var model = new FiniteDifferenceModel<CrankNicolson<TridiagonalOperator>>(finiteDifferenceOperator_, BCs_);
 
-            prices_ = intrinsicValues_;
+            prices_ = (SampledCurve)intrinsicValues_.Clone();
 
-            model.rollback(prices_.values(), getResidualTime(), 0, timeSteps_);
+            // this is a workaround for pointers to avoid unsafe code
+            // in the grid calculation Vector temp goes through many operations
+            Vector temp = prices_.values();
+            model.rollback(ref temp, getResidualTime(), 0, timeSteps_);
+            prices_.setValues(temp);
 
             results_.value = prices_.valueAtCenter();
             results_.delta = prices_.firstDerivativeAtCenter();

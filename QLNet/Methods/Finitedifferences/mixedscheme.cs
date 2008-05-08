@@ -27,7 +27,7 @@ namespace QLNet {
     }
 
     public interface IMixedScheme {
-        void step(Vector a, double t);
+        void step(ref Vector a, double t);
         void setStep(double dt);
     }
 
@@ -39,38 +39,9 @@ namespace QLNet {
         \code
         typedef ... array_type;
 
-        // copy constructor/assignment
-        // (these will be provided by the compiler if none is defined)
-        Operator(const Operator&);
-        Operator& operator=(const Operator&);
-
-        // inspectors
-        Size size();
-
-        // modifiers
-        void setTime(Time t);
-
-        // operator interface
-        array_type applyTo(const array_type&);
-        array_type solveFor(const array_type&);
-        static Operator identity(Size size);
-
-        // operator algebra
-        Operator operator*(Real, const Operator&);
-        Operator operator+(const Operator&, const Operator&);
-        Operator operator+(const Operator&, const Operator&);
-        \endcode
-
-        \warning The differential operator must be linear for
-                 this evolver to work.
-
-        \todo
-        - derive variable theta schemes
-        - introduce multi time-level schemes.
-
         \ingroup findiff
     */
-    public class MixedScheme<Operator> : IMixedScheme where Operator : IOperator, new() {
+    public class MixedScheme<Operator> : IMixedScheme where Operator : IOperator {
         protected Operator L_, I_, explicitPart_, implicitPart_;
         protected double dt_;
         protected double theta_;
@@ -79,21 +50,21 @@ namespace QLNet {
         // constructors
         public MixedScheme() { }  // required for generics
         public MixedScheme(Operator L, double theta, List<BoundaryCondition<IOperator>> bcs) {
-            L_ = L;
-            I_ = (Operator)(new Operator().identity(L.size()));
+            L_ = (Operator)L.Clone();
+            I_ = (Operator)L.identity(L.size());
             dt_ = 0.0;
             theta_ = theta;
             bcs_ = bcs;
         }
 
-        public void step(Vector a, double t) {
+        public void step(ref Vector a, double t) {
             int i;
             for (i=0; i<bcs_.Count; i++)
                 bcs_[i].setTime(t);
             if (theta_!=1.0) { // there is an explicit part
                 if (L_.isTimeDependent()) {
                     L_.setTime(t);
-                    explicitPart_ = (Operator)new Operator().subtract(I_, new Operator().multiply((1.0 - theta_) * dt_, L_));
+                    explicitPart_ = (Operator)L_.subtract(I_, L_.multiply((1.0 - theta_) * dt_, L_));
                 }
                 for (i = 0; i < bcs_.Count; i++)
                     bcs_[i].applyBeforeApplying(explicitPart_);
@@ -104,7 +75,7 @@ namespace QLNet {
             if (theta_!=0.0) { // there is an implicit part
                 if (L_.isTimeDependent()) {
                     L_.setTime(t-dt_);
-                    implicitPart_ = (Operator)new Operator().add(I_, new Operator().multiply(theta_ * dt_, L_));
+                    implicitPart_ = (Operator)L_.add(I_, L_.multiply(theta_ * dt_, L_));
                 }
                 for (i = 0; i < bcs_.Count; i++)
                     bcs_[i].applyBeforeSolving(implicitPart_,a);
@@ -117,9 +88,9 @@ namespace QLNet {
         public void setStep(double dt) {
             dt_ = dt;
             if (theta_!=1.0) // there is an explicit part
-                explicitPart_ = (Operator)new Operator().subtract(I_, new Operator().multiply((1.0 - theta_) * dt_, L_));
+                explicitPart_ = (Operator)L_.subtract(I_, L_.multiply((1.0 - theta_) * dt_, L_));
             if (theta_!=0.0) // there is an implicit part
-                implicitPart_ = (Operator)new Operator().add(I_, new Operator().multiply(theta_ * dt_, L_));
+                implicitPart_ = (Operator)L_.add(I_, L_.multiply(theta_ * dt_, L_));
         }
     }
 }
