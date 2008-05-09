@@ -66,7 +66,7 @@ namespace QLNet {
             ensureStrikeInGrid();
         }
 
-        protected void setupArguments(IPricingEngineArguments a) {
+        protected virtual void setupArguments(IPricingEngineArguments a) {
             OneAssetOption.Arguments args = a as OneAssetOption.Arguments;
             if (args == null) throw new ApplicationException("incorrect argument type");
 
@@ -143,15 +143,19 @@ namespace QLNet {
         }
     }
 
-    //public class FDEngineAdapter<Base, Engine> : Base, Engine {
-    //    public FDEngineAdapter(GeneralizedBlackScholesProcess process, Size timeSteps=100, Size gridPoints=100, bool timeDependent = false)
-    //        : base(process, timeSteps, gridPoints,timeDependent) {
-    //        process.registerWith(update);
-    //    }
-        
-    //    protected override void calculate() {
-    //        setupArguments(&(this->arguments_));
-    //        calculate(&(this->results_));
-    //    }
-    //}
+
+    public class FDEngineAdapter<Base, Engine> {
+        //Base optionBase;
+
+        ////public FDEngineAdapter(GeneralizedBlackScholesProcess process, Size timeSteps=100, Size gridPoints=100, bool timeDependent = false)
+        //public FDEngineAdapter(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent)
+        //    : base(process, timeSteps, gridPoints, timeDependent) {
+        //    process.registerWith(update);
+        //}
+
+        //protected void calculate() {
+        //    optionBase.setupArguments(arguments_);
+        //    optionBase.calculate(results_);
+        //}
+    }
 }

@@ -55,6 +55,7 @@
     <Compile Include="Cashflows\DigitalCmsCoupon.cs" />
     <Compile Include="Cashflows\DigitalCoupon.cs" />
     <Compile Include="Cashflows\DigitalIborCoupon.cs" />
+    <Compile Include="Cashflows\Dividend.cs" />
     <Compile Include="Cashflows\FixedRateCoupon.cs" />
     <Compile Include="Cashflows\FloatingRateCoupon.cs" />
     <Compile Include="Cashflows\Iborcoupon.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Instruments\Bonds\FloatingRateBond.cs" />
     <Compile Include="Instruments\Bonds\Zerocouponbond.cs" />
     <Compile Include="Instruments\CapFloor.cs" />
+    <Compile Include="Instruments\DividendVanillaOption.cs" />
     <Compile Include="Instruments\EuropeanOption.cs" />
     <Compile Include="Instruments\fixedratebondforward.cs" />
     <Compile Include="Instruments\forward.cs" />
@@ -178,6 +180,7 @@
     <Compile Include="Math\Solvers1d\Secant.cs" />
     <Compile Include="Math\transformedgrid.cs" />
     <Compile Include="Math\Vector.cs" />
+    <Compile Include="Methods\Finitedifferences\AmericanCondition.cs" />
     <Compile Include="Methods\Finitedifferences\BoundaryCondition.cs" />
     <Compile Include="Methods\Finitedifferences\bsmoperator.cs" />
     <Compile Include="Methods\Finitedifferences\cranknicolson.cs" />
@@ -226,8 +229,11 @@
     <Compile Include="Pricingengines\vanilla\binomialengine.cs" />
     <Compile Include="Pricingengines\vanilla\bjerksundstenslandengine.cs" />
     <Compile Include="Pricingengines\vanilla\discretizedvanillaoption.cs" />
+    <Compile Include="Pricingengines\vanilla\FDAmericanEngine.cs" />
     <Compile Include="Pricingengines\vanilla\fdconditions.cs" />
+    <Compile Include="Pricingengines\vanilla\fddividendengine.cs" />
     <Compile Include="Pricingengines\vanilla\FDEuropeanEngine.cs" />
+    <Compile Include="Pricingengines\vanilla\FDMultiPeriodEngine.cs" />
     <Compile Include="Pricingengines\vanilla\FDStepConditionEngine.cs" />
     <Compile Include="Pricingengines\vanilla\FDVanillaEngine.cs" />
     <Compile Include="Pricingengines\vanilla\Integralengine.cs" />
