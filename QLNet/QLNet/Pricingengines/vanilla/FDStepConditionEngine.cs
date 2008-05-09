@@ -24,7 +24,7 @@ using System.Text;
 namespace QLNet {
     //! Finite-differences pricing engine for American-style vanilla options
     public class FDStepConditionEngine : FDVanillaEngine {
-        protected StepCondition<Vector> stepCondition_;
+        protected IStepCondition<Vector> stepCondition_;
         protected SampledCurve prices_;
         protected TridiagonalOperator controlOperator_;
         protected List<BoundaryCondition<IOperator>> controlBCs_;

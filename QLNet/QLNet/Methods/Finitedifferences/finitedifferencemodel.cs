@@ -50,11 +50,11 @@ namespace QLNet {
         /*! solves the problem between the given times, applying a condition at every step.
             \warning being this a rollback, <tt>from</tt> must be a later time than <tt>to</tt>. */
         public void rollback(ref object a, double from, double to, int steps) { rollbackImpl(ref a, from, to, steps, null); }
-        public void rollback(ref object a, double from, double to, int steps, ICondition condition) {
+        public void rollback(ref object a, double from, double to, int steps, IStepCondition<Vector> condition) {
             rollbackImpl(ref a,from,to,steps, condition);
         }
 
-        private void rollbackImpl(ref object a, double from, double to, int steps, ICondition condition) {
+        private void rollbackImpl(ref object a, double from, double to, int steps, IStepCondition<Vector> condition) {
 
             if (!(from >= to)) throw new ApplicationException("trying to roll back from " + from + " to " + to);
 

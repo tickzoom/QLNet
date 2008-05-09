@@ -25,9 +25,10 @@ namespace QLNet {
     //! Parallel evolver for multiple arrays
     /*! \ingroup findiff */
 
-    public class StepConditionSet<array_type> : List<StepCondition<array_type>>, ICondition where array_type : Vector {
+    public class StepConditionSet<array_type> : List<IStepCondition<array_type>>, IStepCondition<array_type>
+        where array_type : Vector {
         public void applyTo(object o, double t) {
-            List<StepCondition<array_type>> a = o as List<StepCondition<array_type>>;
+            List<IStepCondition<array_type>> a = o as List<IStepCondition<array_type>>;
             for (int i=0; i < Count; i++) {
                 this[i].applyTo(a[i], t);
             }

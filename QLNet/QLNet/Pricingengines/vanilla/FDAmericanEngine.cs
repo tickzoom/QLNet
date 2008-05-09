@@ -22,14 +22,13 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    public class FDAmericanCondition<baseEngine> : FDVanillaEngine where baseEngine : FDVanillaEngine {
-        //public FDAmericanCondition(GeneralizedBlackScholesProcess process,
-        //     int timeSteps = 100, int gridPoints = 100, bool timeDependent = false)
-        public FDAmericanCondition(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent)
-            : base(process, timeSteps, gridPoints, timeDependent) { }
-      
-        protected void initializeStepCondition() {
-            // baseEngine::stepCondition_ = new AmericanCondition(baseEngine::intrinsicValues_.values());
-        }
+    //! Finite-differences pricing engine for American one asset options
+    /*! \ingroup vanillaengines
+
+        \test
+        - the correctness of the returned value is tested by reproducing results available in literature.
+        - the correctness of the returned greeks is tested by reproducing numerical derivatives.
+    */
+    public class FDAmericanEngine : FDEngineAdapter<FDAmericanCondition<FDStepConditionEngine>, OneAssetOption.Engine> {
     }
 }

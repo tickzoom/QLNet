@@ -22,14 +22,15 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    public class FDAmericanCondition<baseEngine> : FDVanillaEngine where baseEngine : FDVanillaEngine {
-        //public FDAmericanCondition(GeneralizedBlackScholesProcess process,
-        //     int timeSteps = 100, int gridPoints = 100, bool timeDependent = false)
-        public FDAmericanCondition(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent)
-            : base(process, timeSteps, gridPoints, timeDependent) { }
-      
-        protected void initializeStepCondition() {
-            // baseEngine::stepCondition_ = new AmericanCondition(baseEngine::intrinsicValues_.values());
+    //! American exercise condition.
+    /*! \todo unify the intrinsicValues/Payoff thing */
+    public class AmericanCondition : CurveDependentStepCondition<Vector> {
+        public AmericanCondition(Option.Type type, double strike) : base(type, strike) { }
+
+        public AmericanCondition(Vector intrinsicValues) : base(intrinsicValues) { }
+
+        protected override double applyToValue(double current, double intrinsic) {
+            return Math.Max(current, intrinsic);
         }
     }
 }
