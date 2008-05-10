@@ -30,6 +30,11 @@ namespace QLNet {
 
         // required for generics
         public FDStepConditionEngine() { }
+        // required for template inheritance
+        public override FDVanillaEngine factory(GeneralizedBlackScholesProcess process,
+                                                int timeSteps, int gridPoints, bool timeDependent) {
+            return new FDStepConditionEngine(process, timeSteps, gridPoints, timeDependent);
+        }
 
         //public FDStepConditionEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints,
         //     bool timeDependent = false)

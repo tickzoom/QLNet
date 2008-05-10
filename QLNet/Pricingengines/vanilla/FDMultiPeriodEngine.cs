@@ -28,7 +28,8 @@ namespace QLNet {
         protected int timeStepPerPeriod_;
         protected FiniteDifferenceModel<CrankNicolson<TridiagonalOperator>> model_;
 
-        public FDMultiPeriodEngine() { }    // required for generics
+        // required for generics
+        public FDMultiPeriodEngine() { }
 
         //protected FDMultiPeriodEngine(GeneralizedBlackScholesProcess process,
         //     int gridPoints = 100, int timeSteps = 100, bool timeDependent = false)    
