@@ -24,8 +24,7 @@ using System.Text;
 namespace QLNet {
     //! Abstract base class for dividend engines
     /*! \todo The dividend class really needs to be made more
-              sophisticated to distinguish between fixed dividends and
-              fractional dividends
+              sophisticated to distinguish between fixed dividends and fractional dividends
     */
     public abstract class FDDividendEngineBase : FDMultiPeriodEngine {
         //public FDDividendEngineBase(GeneralizedBlackScholesProcess process,

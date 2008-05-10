@@ -48,6 +48,7 @@ namespace QLNet {
 
         // required for generics and template iheritance
         public FDVanillaEngine() { }
+        // this should be overridden in each deriving class using template iheritance in order to return a proper class to wrap
         public virtual FDVanillaEngine factory(GeneralizedBlackScholesProcess process,
                                                int timeSteps, int gridPoints, bool timeDependent) {
             return new FDVanillaEngine(process, timeSteps, gridPoints, timeDependent);
@@ -151,7 +152,8 @@ namespace QLNet {
     }
 
 
-    public class FDEngineAdapter<Base, Engine, ArgumentsType, ResultsType> : FDVanillaEngine
+    public class FDEngineAdapter<Base, Engine, ArgumentsType, ResultsType>
+        : FDVanillaEngine, IGenericEngine<ArgumentsType, ResultsType>
         where Base : FDVanillaEngine, new()
         where Engine : IGenericEngine<ArgumentsType, ResultsType>
         where ArgumentsType : IPricingEngineArguments, new()
@@ -166,7 +168,7 @@ namespace QLNet {
             process.registerWith(update);
         }
 
-        protected void calculate() {
+        public void calculate() {
             optionBase.setupArguments(arguments_);
             optionBase.calculate(results_);
         }
