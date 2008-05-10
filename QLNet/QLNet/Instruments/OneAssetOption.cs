@@ -157,6 +157,7 @@ namespace QLNet {
             }
         }
 
-        public class Engine : GenericEngine<OneAssetOption.Arguments, OneAssetOption.Results> {}
+        public class Engine : GenericEngine<OneAssetOption.Arguments, OneAssetOption.Results> {
+        }
     }
 }

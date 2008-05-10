@@ -22,14 +22,32 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    public class FDAmericanCondition<baseEngine> : FDVanillaEngine where baseEngine : FDVanillaEngine {
+    public class FDAmericanCondition<baseEngine> : FDVanillaEngine, IOptionPricingEngine 
+            where baseEngine : IOptionPricingEngine, new() {
+        baseEngine engine_;
+
+        // required for generics
+        public FDAmericanCondition() { }
+        public override IOptionPricingEngine factory(GeneralizedBlackScholesProcess process,
+                                            int timeSteps, int gridPoints, bool timeDependent) {
+            engine_ = (baseEngine)new baseEngine().factory(process, timeSteps, gridPoints, timeDependent);
+            return engine_;
+        }
+
         //public FDAmericanCondition(GeneralizedBlackScholesProcess process,
         //     int timeSteps = 100, int gridPoints = 100, bool timeDependent = false)
-        public FDAmericanCondition(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent)
-            : base(process, timeSteps, gridPoints, timeDependent) { }
-      
+        public FDAmericanCondition(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent) {
+        }
+
         protected void initializeStepCondition() {
-            // baseEngine::stepCondition_ = new AmericanCondition(baseEngine::intrinsicValues_.values());
+            // stepCondition_ = new AmericanCondition(intrinsicValues_.values());
+        }
+
+        public override void setupArguments(IPricingEngineArguments a) {
+            engine_.setupArguments(a);
+        }
+        public override void calculate(IPricingEngineResults r) {
+            engine_.calculate(r);
         }
     }
 }
