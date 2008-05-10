@@ -23,12 +23,11 @@ using System.Text;
 
 namespace QLNet {
     //! Finite-differences pricing engine for BSM one asset options
-    /*! The name is a misnomer as this is a base class for any finite
-        difference scheme.  Its main job is to handle grid layout.
+    /*! The name is a misnomer as this is a base class for any finite difference scheme.  Its main job is to handle grid layout.
 
         \ingroup vanillaengines
     */
-    public class FDVanillaEngine : IOptionPricingEngine {
+    public class FDVanillaEngine {
         protected GeneralizedBlackScholesProcess process_;
         protected int timeSteps_, gridPoints_;
         protected bool timeDependent_;
@@ -47,10 +46,10 @@ namespace QLNet {
         private double gridLogSpacing_;
         const double safetyZoneFactor_ = 1.1;
 
-        // required for generics
+        // required for generics and template iheritance
         public FDVanillaEngine() { }
-        public virtual IOptionPricingEngine factory(GeneralizedBlackScholesProcess process,
-                                                    int timeSteps, int gridPoints, bool timeDependent) {
+        public virtual FDVanillaEngine factory(GeneralizedBlackScholesProcess process,
+                                               int timeSteps, int gridPoints, bool timeDependent) {
             return new FDVanillaEngine(process, timeSteps, gridPoints, timeDependent);
         }
 
@@ -140,7 +139,6 @@ namespace QLNet {
                                 : minGridPoints);
         }
 
-        #region IOptionPricingEngine
         public virtual void setupArguments(IPricingEngineArguments a) {
             OneAssetOption.Arguments args = a as OneAssetOption.Arguments;
             if (args == null) throw new ApplicationException("incorrect argument type");
@@ -150,22 +148,16 @@ namespace QLNet {
             requiredGridValue_ = ((StrikedTypePayoff)payoff_).strike();
         }
         public virtual void calculate(IPricingEngineResults r) { throw new NotSupportedException(); }
-        #endregion
     }
 
-
-    public interface IOptionPricingEngine {
-        void calculate(IPricingEngineResults r);
-        void setupArguments(IPricingEngineArguments a);
-        IOptionPricingEngine factory(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent);
-    }
 
     public class FDEngineAdapter<Base, Engine, ArgumentsType, ResultsType> : FDVanillaEngine
-        where Base : IOptionPricingEngine, new()
+        where Base : FDVanillaEngine, new()
         where Engine : IGenericEngine<ArgumentsType, ResultsType>
         where ArgumentsType : IPricingEngineArguments, new()
         where ResultsType : IPricingEngineResults, new() {
 
+        // a wrap-up of base engine
         Base optionBase;
 
         //public FDEngineAdapter(GeneralizedBlackScholesProcess process, Size timeSteps=100, Size gridPoints=100, bool timeDependent = false)
