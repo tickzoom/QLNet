@@ -28,7 +28,7 @@ namespace QLNet {
 
         \ingroup vanillaengines
     */
-    public class FDVanillaEngine {
+    public class FDVanillaEngine : IOptionPricingEngine {
         protected GeneralizedBlackScholesProcess process_;
         protected int timeSteps_, gridPoints_;
         protected bool timeDependent_;
@@ -47,6 +47,12 @@ namespace QLNet {
         private double gridLogSpacing_;
         const double safetyZoneFactor_ = 1.1;
 
+        // required for generics
+        public FDVanillaEngine() { }
+        public virtual IOptionPricingEngine factory(GeneralizedBlackScholesProcess process,
+                                                    int timeSteps, int gridPoints, bool timeDependent) {
+            return new FDVanillaEngine(process, timeSteps, gridPoints, timeDependent);
+        }
 
         //public FDVanillaEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints,
         //                       bool timeDependent = false)
@@ -59,20 +65,12 @@ namespace QLNet {
             BCs_ = new InitializedList<BoundaryCondition<IOperator>>(2);
         }
 
+
         public Vector grid() { return intrinsicValues_.grid(); }
 
-        protected void setGridLimits() {
+        protected virtual void setGridLimits() {
             setGridLimits(process_.stateVariable().link.value(), getResidualTime());
             ensureStrikeInGrid();
-        }
-
-        protected virtual void setupArguments(IPricingEngineArguments a) {
-            OneAssetOption.Arguments args = a as OneAssetOption.Arguments;
-            if (args == null) throw new ApplicationException("incorrect argument type");
-
-            exerciseDate_ = args.exercise.lastDate();
-            payoff_ = args.payoff;
-            requiredGridValue_ = ((StrikedTypePayoff)payoff_).strike();
         }
 
         protected void setGridLimits(double center, double t) {
@@ -141,21 +139,68 @@ namespace QLNet {
                                 (int)(minGridPoints + (residualTime-1.0) * minGridPointsPerYear)
                                 : minGridPoints);
         }
+
+        #region IOptionPricingEngine
+        public virtual void setupArguments(IPricingEngineArguments a) {
+            OneAssetOption.Arguments args = a as OneAssetOption.Arguments;
+            if (args == null) throw new ApplicationException("incorrect argument type");
+
+            exerciseDate_ = args.exercise.lastDate();
+            payoff_ = args.payoff;
+            requiredGridValue_ = ((StrikedTypePayoff)payoff_).strike();
+        }
+        public virtual void calculate(IPricingEngineResults r) { throw new NotSupportedException(); }
+        #endregion
     }
 
 
-    public class FDEngineAdapter<Base, Engine> {
-        //Base optionBase;
+    public interface IOptionPricingEngine {
+        void calculate(IPricingEngineResults r);
+        void setupArguments(IPricingEngineArguments a);
+        IOptionPricingEngine factory(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent);
+    }
 
-        ////public FDEngineAdapter(GeneralizedBlackScholesProcess process, Size timeSteps=100, Size gridPoints=100, bool timeDependent = false)
-        //public FDEngineAdapter(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent)
-        //    : base(process, timeSteps, gridPoints, timeDependent) {
-        //    process.registerWith(update);
-        //}
+    public class FDEngineAdapter<Base, Engine, ArgumentsType, ResultsType> : FDVanillaEngine
+        where Base : IOptionPricingEngine, new()
+        where Engine : IGenericEngine<ArgumentsType, ResultsType>
+        where ArgumentsType : IPricingEngineArguments, new()
+        where ResultsType : IPricingEngineResults, new() {
 
-        //protected void calculate() {
-        //    optionBase.setupArguments(arguments_);
-        //    optionBase.calculate(results_);
-        //}
+        Base optionBase;
+
+        //public FDEngineAdapter(GeneralizedBlackScholesProcess process, Size timeSteps=100, Size gridPoints=100, bool timeDependent = false)
+        public FDEngineAdapter(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent) {
+            optionBase = (Base)new Base().factory(process, timeSteps, gridPoints, timeDependent);
+            process.registerWith(update);
+        }
+
+        protected void calculate() {
+            optionBase.setupArguments(arguments_);
+            optionBase.calculate(results_);
+        }
+
+        #region IGenericEngine copy-cat
+        protected IPricingEngineArguments arguments_ = new ArgumentsType();
+        protected IPricingEngineResults results_ = new ResultsType();
+
+        public IPricingEngineArguments getArguments() { return arguments_; }
+        public IPricingEngineResults getResults() { return results_; }
+        public void reset() { results_.reset(); }
+
+        #region Observer & Observable
+        // observable interface
+        public event Callback notifyObserversEvent;
+        public void registerWith(Callback handler) { notifyObserversEvent += handler; }
+        public void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
+        protected void notifyObservers() {
+            Callback handler = notifyObserversEvent;
+            if (handler != null) {
+                handler();
+            }
+        }
+
+        public void update() { notifyObservers(); }
+        #endregion
+        #endregion
     }
 }

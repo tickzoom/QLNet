@@ -30,6 +30,14 @@ namespace QLNet {
         protected List<BoundaryCondition<IOperator>> controlBCs_;
         protected SampledCurve controlPrices_;
 
+        // required for generics
+        public FDStepConditionEngine() { }
+        public override IOptionPricingEngine factory(GeneralizedBlackScholesProcess process,
+                                                     int timeSteps, int gridPoints, bool timeDependent) {
+            return new FDStepConditionEngine(process, timeSteps, gridPoints, timeDependent);
+        }
+
+
         //public FDStepConditionEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints,
         //     bool timeDependent = false)
         public FDStepConditionEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent)
@@ -40,7 +48,7 @@ namespace QLNet {
         
         protected virtual void initializeStepCondition() { }
 
-        protected virtual void calculate(IPricingEngineResults r) {
+        public override void calculate(IPricingEngineResults r) {
             OneAssetOption.Results results = r as OneAssetOption.Results;
             setGridLimits();
             initializeInitialCondition();

@@ -29,6 +29,9 @@ namespace QLNet {
         - the correctness of the returned value is tested by reproducing results available in literature.
         - the correctness of the returned greeks is tested by reproducing numerical derivatives.
     */
-    public class FDAmericanEngine : FDEngineAdapter<FDAmericanCondition<FDStepConditionEngine>, OneAssetOption.Engine> {
+    public class FDAmericanEngine : FDEngineAdapter<FDAmericanCondition<FDStepConditionEngine>, OneAssetOption.Engine, 
+                                                    OneAssetOption.Arguments, OneAssetOption.Results> {
+        public FDAmericanEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent) 
+            : base(process, timeSteps, gridPoints, timeDependent) { }
     }
 }
