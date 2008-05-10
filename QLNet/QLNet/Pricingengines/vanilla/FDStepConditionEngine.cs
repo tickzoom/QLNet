@@ -23,20 +23,13 @@ using System.Text;
 
 namespace QLNet {
     //! Finite-differences pricing engine for American-style vanilla options
-    public class FDStepConditionEngine : FDVanillaEngine {
-        protected IStepCondition<Vector> stepCondition_;
-        protected SampledCurve prices_;
+    public class FDStepConditionEngine : FDConditionEngineTemplate {
         protected TridiagonalOperator controlOperator_;
         protected List<BoundaryCondition<IOperator>> controlBCs_;
         protected SampledCurve controlPrices_;
 
         // required for generics
         public FDStepConditionEngine() { }
-        public override IOptionPricingEngine factory(GeneralizedBlackScholesProcess process,
-                                                     int timeSteps, int gridPoints, bool timeDependent) {
-            return new FDStepConditionEngine(process, timeSteps, gridPoints, timeDependent);
-        }
-
 
         //public FDStepConditionEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints,
         //     bool timeDependent = false)
@@ -45,8 +38,6 @@ namespace QLNet {
             controlBCs_ = new InitializedList<BoundaryCondition<IOperator>>(2);
             controlPrices_ = new SampledCurve(gridPoints);
         }
-        
-        protected virtual void initializeStepCondition() { }
 
         public override void calculate(IPricingEngineResults r) {
             OneAssetOption.Results results = r as OneAssetOption.Results;
@@ -113,7 +104,6 @@ namespace QLNet {
                 - controlPrices_.secondDerivativeAtCenter()
                 + black.gamma(spot);
             results.additionalResults.Add("priceCurve", prices_);
-        }
-
+        } 
     }
 }

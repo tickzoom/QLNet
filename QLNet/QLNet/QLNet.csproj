@@ -193,6 +193,7 @@
     <Compile Include="Methods\Finitedifferences\pde.cs" />
     <Compile Include="Methods\Finitedifferences\pdebsm.cs" />
     <Compile Include="Methods\Finitedifferences\pdeshortrate.cs" />
+    <Compile Include="Methods\Finitedifferences\ShoutCondition.cs" />
     <Compile Include="Methods\Finitedifferences\StepCondition.cs" />
     <Compile Include="Methods\Finitedifferences\TridiagonalOperator.cs" />
     <Compile Include="Methods\lattices\binominaltree.cs" />

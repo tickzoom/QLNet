@@ -22,20 +22,13 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    public class FDMultiPeriodEngine : FDVanillaEngine {
+    public class FDMultiPeriodEngine : FDConditionEngineTemplate {
         protected List<Event> events_;
         protected List<double> stoppingTimes_;
         protected int timeStepPerPeriod_;
-        protected SampledCurve prices_;
-
-        protected IStepCondition<Vector> stepCondition_;
         protected FiniteDifferenceModel<CrankNicolson<TridiagonalOperator>> model_;
 
         public FDMultiPeriodEngine() { }    // required for generics
-        public override IOptionPricingEngine factory(GeneralizedBlackScholesProcess process,
-                                                    int timeSteps, int gridPoints, bool timeDependent) {
-            return new FDMultiPeriodEngine(process, timeSteps, gridPoints, timeDependent);
-        }
 
         //protected FDMultiPeriodEngine(GeneralizedBlackScholesProcess process,
         //     int gridPoints = 100, int timeSteps = 100, bool timeDependent = false)    
@@ -56,7 +49,7 @@ namespace QLNet {
 
         protected virtual void executeIntermediateStep(int step) { throw new NotSupportedException(); }
 
-        protected virtual void initializeStepCondition() {
+        protected override void initializeStepCondition() {
             stepCondition_ = new NullCondition<Vector>();
         }
 
@@ -68,7 +61,6 @@ namespace QLNet {
             return stoppingTimes_[i];
         }
 
-        #region IOptionPricingEngine
         public override void setupArguments(IPricingEngineArguments a) {
             base.setupArguments(a);
             OneAssetOption.Arguments args = a as OneAssetOption.Arguments;
@@ -172,7 +164,5 @@ namespace QLNet {
             results.gamma = prices_.secondDerivativeAtCenter();
             results.additionalResults.Add("priceCurve", prices_);
         }
-
-        #endregion
     }
 }
