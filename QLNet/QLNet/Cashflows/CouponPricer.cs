@@ -160,11 +160,11 @@ namespace QLNet {
             }
         }
 
-        private double adjustedFixing() {
+        protected double adjustedFixing() { return adjustedFixing(null);  }
+        protected virtual double adjustedFixing(double? fixing_) {
 
             double adjustement = 0.0;
-
-            double fixing = coupon_.indexFixing();
+            double fixing = (fixing_ == null) ? coupon_.indexFixing() : fixing_.GetValueOrDefault();
 
             if (!coupon_.isInArrears()) {
                 adjustement = 0.0;
