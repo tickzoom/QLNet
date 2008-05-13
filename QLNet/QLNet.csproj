@@ -235,6 +235,7 @@
     <Compile Include="Pricingengines\vanilla\fddividendengine.cs" />
     <Compile Include="Pricingengines\vanilla\FDEuropeanEngine.cs" />
     <Compile Include="Pricingengines\vanilla\FDMultiPeriodEngine.cs" />
+    <Compile Include="Pricingengines\vanilla\FDShoutEngine.cs" />
     <Compile Include="Pricingengines\vanilla\FDStepConditionEngine.cs" />
     <Compile Include="Pricingengines\vanilla\FDVanillaEngine.cs" />
     <Compile Include="Pricingengines\vanilla\Integralengine.cs" />

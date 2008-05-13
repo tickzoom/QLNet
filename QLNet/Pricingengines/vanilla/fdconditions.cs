@@ -46,7 +46,6 @@ namespace QLNet {
 
         public FDConditionEngineTemplate(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent)
             : base(process, timeSteps, gridPoints, timeDependent) { }
-
     }
 
     // this is template version to serve as base for FDAmericanCondition and FDShoutCondition
@@ -104,15 +103,17 @@ namespace QLNet {
         // required for generics
         public FDShoutCondition() { }
         // required for template inheritance
-        new public FDVanillaEngine factory(GeneralizedBlackScholesProcess process,
-                                           int timeSteps, int gridPoints, bool timeDependent) {
+        public override FDVanillaEngine factory(GeneralizedBlackScholesProcess process,
+                                                int timeSteps, int gridPoints, bool timeDependent) {
             return new FDShoutCondition<baseEngine>(process, timeSteps, gridPoints, timeDependent);
         }
 
         //public FDShoutCondition(GeneralizedBlackScholesProcess process,
         //        Size timeSteps = 100, Size gridPoints = 100, bool timeDependent = false)
         public FDShoutCondition(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent)
-            : base(process, timeSteps, gridPoints, timeDependent) { }
+            : base(process, timeSteps, gridPoints, timeDependent) {
+            engine_.setStepCondition(initializeStepConditionImpl);
+        }
 
         //protected override void initializeStepCondition() {
         //    double residualTime = getResidualTime();
@@ -120,11 +121,13 @@ namespace QLNet {
         //    stepCondition_ = new ShoutCondition(intrinsicValues_.values(), residualTime, riskFreeRate);
         //}
         protected IStepCondition<Vector> initializeStepConditionImpl() {
-            double residualTime = getResidualTime();
+            // the following to rely on process_ which is the same for engine and here
+            // therefore wrapping is not requried
+            double residualTime = engine_.getResidualTime();
             double riskFreeRate = process_.riskFreeRate().link.zeroRate(residualTime, Compounding.Continuous).rate();
 
             //stepCondition_ = new ShoutCondition(intrinsicValues_.values(), residualTime, riskFreeRate);
-            return new ShoutCondition(intrinsicValues_.values(), residualTime, riskFreeRate);
+            return new ShoutCondition(engine_.intrinsicValues_.values(), residualTime, riskFreeRate);
         }
     }
 }
