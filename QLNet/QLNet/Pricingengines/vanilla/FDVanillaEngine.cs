@@ -35,7 +35,7 @@ namespace QLNet {
         protected Date exerciseDate_;
         protected Payoff payoff_;
         protected TridiagonalOperator finiteDifferenceOperator_;
-        protected SampledCurve intrinsicValues_;
+        public SampledCurve intrinsicValues_;
 
         // typedef BoundaryCondition<TridiagonalOperator> bc_type;
         protected List<BoundaryCondition<IOperator>> BCs_;
@@ -48,9 +48,10 @@ namespace QLNet {
 
         // required for generics and template iheritance
         public FDVanillaEngine() { }
-        // this should be overridden in each deriving class using template iheritance in order to return a proper class to wrap
+        // this should be defined as new in each deriving class which use template iheritance 
+        // in order to return a proper class to wrap
         public virtual FDVanillaEngine factory(GeneralizedBlackScholesProcess process,
-                                               int timeSteps, int gridPoints, bool timeDependent) {
+                                       int timeSteps, int gridPoints, bool timeDependent) {
             return new FDVanillaEngine(process, timeSteps, gridPoints, timeDependent);
         }
 
@@ -154,7 +155,7 @@ namespace QLNet {
 
     public class FDEngineAdapter<Base, Engine, ArgumentsType, ResultsType>
         : FDVanillaEngine, IGenericEngine<ArgumentsType, ResultsType>
-        where Base : FDVanillaEngine, new()
+        where Base : FDConditionEngineTemplate, new()
         where Engine : IGenericEngine<ArgumentsType, ResultsType>
         where ArgumentsType : IPricingEngineArguments, new()
         where ResultsType : IPricingEngineResults, new() {

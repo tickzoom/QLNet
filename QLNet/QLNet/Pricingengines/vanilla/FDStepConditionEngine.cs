@@ -84,7 +84,7 @@ namespace QLNet {
             model.rollback(ref temp, getResidualTime(), 0.0, timeSteps_, conditionSet);
             arraySet = (List<Vector>)temp;
 
-            prices_.setGrid(arraySet[0]);
+            prices_.setValues(arraySet[0]);
             controlPrices_.setValues(arraySet[1]);
 
             StrikedTypePayoff striked_payoff = payoff_ as StrikedTypePayoff;

@@ -50,7 +50,7 @@ namespace QLNet {
 
         protected virtual void executeIntermediateStep(int step) { throw new NotSupportedException(); }
 
-        protected override void initializeStepCondition() {
+        protected void initializeStepConditionImpl() {
             stepCondition_ = new NullCondition<Vector>();
         }
 

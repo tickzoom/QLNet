@@ -22,13 +22,22 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    //! Parallel evolver for multiple arrays
+    /*! \brief Parallel evolver for multiple arrays
+
+        This class takes the evolver class and creates a new class which evolves
+        each of the evolvers in parallel.  Part of what this does is to take the 
+        types for each evolver class and then wrapper them so that they create
+        new types which are sets of the old types.
+
+        This class is intended to be run in situations where there are parallel
+        differential equations such as with some convertible bond models.
+    */
     /*! \ingroup findiff */
 
     public class StepConditionSet<array_type> : List<IStepCondition<array_type>>, IStepCondition<array_type>
         where array_type : Vector {
         public void applyTo(object o, double t) {
-            List<IStepCondition<array_type>> a = o as List<IStepCondition<array_type>>;
+            List<array_type> a = (List<array_type>)o;
             for (int i=0; i < Count; i++) {
                 this[i].applyTo(a[i], t);
             }
@@ -50,7 +59,7 @@ namespace QLNet {
         }
 
         public void step(ref object o, double t) {
-            List<Vector> a = o as List<Vector>;
+            List<Vector> a = (List<Vector>)o;
             for (int i=0; i < evolvers_.Count; i++) {
                 object temp = a[i];
                 evolvers_[i].step(ref temp, t);
