@@ -27,7 +27,18 @@ namespace QLNet {
         #region Common definitions for deriving classes
         protected IStepCondition<Vector> stepCondition_;
         protected SampledCurve prices_;
-        protected virtual void initializeStepCondition() { throw new NotSupportedException(); }
+        protected void initializeStepCondition() {
+            if (stepConditionImpl_ == null)
+                throw new NotSupportedException();
+            else
+                stepCondition_ = stepConditionImpl_();
+        }
+
+        public delegate IStepCondition<Vector> stepConditionImpl();
+        protected stepConditionImpl stepConditionImpl_;
+        public void setStepCondition(stepConditionImpl impl) {
+            stepConditionImpl_ = impl;
+        }
         #endregion
 
         // required for generics
@@ -35,17 +46,14 @@ namespace QLNet {
 
         public FDConditionEngineTemplate(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent)
             : base(process, timeSteps, gridPoints, timeDependent) { }
+
     }
 
     // this is template version to serve as base for FDAmericanCondition and FDShoutCondition
-    public class FDConditionTemplate<baseEngine> : FDConditionEngineTemplate where baseEngine : FDVanillaEngine, new() {
+    public class FDConditionTemplate<baseEngine> : FDConditionEngineTemplate
+            where baseEngine : FDConditionEngineTemplate, new() {
         #region Common definitions for deriving classes
         protected baseEngine engine_;
-        public override FDVanillaEngine factory(GeneralizedBlackScholesProcess process,
-                                            int timeSteps, int gridPoints, bool timeDependent) {
-            engine_ = (baseEngine)new baseEngine().factory(process, timeSteps, gridPoints, timeDependent);
-            return engine_;
-        }
 
         // below is a wrap-up of baseEngine instead of c++ template inheritance
         public override void setupArguments(IPricingEngineArguments a) { engine_.setupArguments(a); }
@@ -58,44 +66,65 @@ namespace QLNet {
         public FDConditionTemplate(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent)
             : base(process, timeSteps, gridPoints, timeDependent) {
             // init engine
-            factory(process, timeSteps, gridPoints, timeDependent);
+            engine_ = (baseEngine)new baseEngine().factory(process, timeSteps, gridPoints, timeDependent);
         }
     }
 
 
     public class FDAmericanCondition<baseEngine> : FDConditionTemplate<baseEngine>
-            where baseEngine : FDVanillaEngine, new() {
+            where baseEngine : FDConditionEngineTemplate, new() {
 
         // required for generics
         public FDAmericanCondition() { }
+        // required for template inheritance
+        public override FDVanillaEngine factory(GeneralizedBlackScholesProcess process,
+                                                int timeSteps, int gridPoints, bool timeDependent) {
+            return new FDAmericanCondition<baseEngine>(process, timeSteps, gridPoints, timeDependent);
+        }
 
         //public FDAmericanCondition(GeneralizedBlackScholesProcess process,
         //     int timeSteps = 100, int gridPoints = 100, bool timeDependent = false)
         public FDAmericanCondition(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent)
-            : base(process, timeSteps, gridPoints, timeDependent) { }
+            : base(process, timeSteps, gridPoints, timeDependent) {
+            engine_.setStepCondition(initializeStepConditionImpl);
+        }
 
-        protected override void initializeStepCondition() {
-            stepCondition_ = new AmericanCondition(intrinsicValues_.values());
+        //protected override void initializeStepCondition() {
+        //    stepCondition_ = new AmericanCondition(intrinsicValues_.values());
+        //}
+        protected IStepCondition<Vector> initializeStepConditionImpl() {
+            return new AmericanCondition(engine_.intrinsicValues_.values());
         }
     }
 
 
     public class FDShoutCondition<baseEngine> : FDConditionTemplate<baseEngine>
-            where baseEngine : FDVanillaEngine, new() {
+            where baseEngine : FDConditionEngineTemplate, new() {
 
         // required for generics
         public FDShoutCondition() { }
+        // required for template inheritance
+        new public FDVanillaEngine factory(GeneralizedBlackScholesProcess process,
+                                           int timeSteps, int gridPoints, bool timeDependent) {
+            return new FDShoutCondition<baseEngine>(process, timeSteps, gridPoints, timeDependent);
+        }
 
         //public FDShoutCondition(GeneralizedBlackScholesProcess process,
         //        Size timeSteps = 100, Size gridPoints = 100, bool timeDependent = false)
         public FDShoutCondition(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent)
             : base(process, timeSteps, gridPoints, timeDependent) { }
-        
-        protected override void initializeStepCondition() {
+
+        //protected override void initializeStepCondition() {
+        //    double residualTime = getResidualTime();
+        //    double riskFreeRate = process_.riskFreeRate().link.zeroRate(residualTime, Compounding.Continuous).rate();
+        //    stepCondition_ = new ShoutCondition(intrinsicValues_.values(), residualTime, riskFreeRate);
+        //}
+        protected IStepCondition<Vector> initializeStepConditionImpl() {
             double residualTime = getResidualTime();
             double riskFreeRate = process_.riskFreeRate().link.zeroRate(residualTime, Compounding.Continuous).rate();
 
-            stepCondition_ = new ShoutCondition(intrinsicValues_.values(), residualTime, riskFreeRate);
+            //stepCondition_ = new ShoutCondition(intrinsicValues_.values(), residualTime, riskFreeRate);
+            return new ShoutCondition(intrinsicValues_.values(), residualTime, riskFreeRate);
         }
     }
 }

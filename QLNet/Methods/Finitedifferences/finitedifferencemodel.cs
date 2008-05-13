@@ -54,7 +54,7 @@ namespace QLNet {
             rollbackImpl(ref a,from,to,steps, condition);
         }
 
-        private void rollbackImpl(ref object a, double from, double to, int steps, IStepCondition<Vector> condition) {
+        private void rollbackImpl(ref object o, double from, double to, int steps, IStepCondition<Vector> condition) {
 
             if (!(from >= to)) throw new ApplicationException("trying to roll back from " + from + " to " + to);
 
@@ -71,9 +71,9 @@ namespace QLNet {
 
                         // perform a small step to stoppingTimes_[j]...
                         evolver_.setStep(now-stoppingTimes_[j]);
-                        evolver_.step(ref a, now);
+                        evolver_.step(ref o, now);
                         if (condition != null)
-                            condition.applyTo(a,stoppingTimes_[j]);
+                            condition.applyTo(o,stoppingTimes_[j]);
                         // ...and continue the cycle
                         now = stoppingTimes_[j];
                     }
@@ -84,9 +84,9 @@ namespace QLNet {
                     // complete the big one...
                     if (now > next) {
                         evolver_.setStep(now - next);
-                        evolver_.step(ref a,now);
+                        evolver_.step(ref o,now);
                         if (condition != null)
-                            condition.applyTo(a,next);
+                            condition.applyTo(o,next);
                     }
                     // ...and in any case, we have to reset the
                     // evolver to the default step.
@@ -94,9 +94,9 @@ namespace QLNet {
                 } else {
                     // if we didn't, the evolver is already set to the
                     // default step, which is ok for us.
-                    evolver_.step(ref a,now);
+                    evolver_.step(ref o,now);
                     if (condition != null)
-                        condition.applyTo(a, next);
+                        condition.applyTo(o, next);
                 }
             }
         }
