@@ -231,6 +231,7 @@
     <Compile Include="Pricingengines\vanilla\bjerksundstenslandengine.cs" />
     <Compile Include="Pricingengines\vanilla\discretizedvanillaoption.cs" />
     <Compile Include="Pricingengines\vanilla\FDAmericanEngine.cs" />
+    <Compile Include="Pricingengines\vanilla\fdbermudanengine.cs" />
     <Compile Include="Pricingengines\vanilla\fdconditions.cs" />
     <Compile Include="Pricingengines\vanilla\fddividendengine.cs" />
     <Compile Include="Pricingengines\vanilla\FDEuropeanEngine.cs" />

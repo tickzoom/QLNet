@@ -27,7 +27,7 @@ namespace QLNet {
         #region Common definitions for deriving classes
         protected IStepCondition<Vector> stepCondition_;
         protected SampledCurve prices_;
-        protected void initializeStepCondition() {
+        protected virtual void initializeStepCondition() {
             if (stepConditionImpl_ == null)
                 throw new NotSupportedException();
             else
