@@ -132,7 +132,7 @@ namespace EquityOption {
             int timeSteps = 801;
             method = "Finite differences";
             europeanOption.setPricingEngine(new FDEuropeanEngine(bsmProcess,timeSteps,timeSteps-1));
-            //bermudanOption.setPricingEngine(new FDBermudanEngine(bsmProcess,timeSteps,timeSteps-1)));
+            bermudanOption.setPricingEngine(new FDBermudanEngine(bsmProcess,timeSteps,timeSteps-1));
             americanOption.setPricingEngine(new FDAmericanEngine(bsmProcess,timeSteps,timeSteps-1));
 
             Console.Write("{0,-" + widths[0] + "}", method);

@@ -23,7 +23,7 @@ using System.Text;
 
 namespace QLNet {
     public class FDMultiPeriodEngine : FDConditionEngineTemplate {
-        protected List<Event> events_;
+        protected List<Event> events_ = new List<Event>();
         protected List<double> stoppingTimes_;
         protected int timeStepPerPeriod_;
         protected FiniteDifferenceModel<CrankNicolson<TridiagonalOperator>> model_;
@@ -36,16 +36,6 @@ namespace QLNet {
         protected FDMultiPeriodEngine(GeneralizedBlackScholesProcess process, int gridPoints, int timeSteps, bool timeDependent)    
             : base(process, gridPoints, timeSteps, timeDependent) {
             timeStepPerPeriod_ = timeSteps;
-        }
-
-        protected virtual void setupArguments(IPricingEngineArguments args, List<Event> schedule) {
-            base.setupArguments(args);
-            events_ = schedule;
-            stoppingTimes_.Clear();
-            int n = schedule.Count;
-            stoppingTimes_ = new List<double>(n);
-            for (int i=0; i<n; ++i)
-                stoppingTimes_.Add(process_.time(events_[i].date()));
         }
 
         protected virtual void executeIntermediateStep(int step) { throw new NotSupportedException(); }
@@ -62,6 +52,16 @@ namespace QLNet {
             return stoppingTimes_[i];
         }
 
+        protected virtual void setupArguments(IPricingEngineArguments args, List<Event> schedule) {
+            base.setupArguments(args);
+            events_ = schedule;
+            stoppingTimes_.Clear();
+            int n = schedule.Count;
+            stoppingTimes_ = new List<double>(n);
+            for (int i = 0; i < n; ++i)
+                stoppingTimes_.Add(process_.time(events_[i].date()));
+        }
+
         public override void setupArguments(IPricingEngineArguments a) {
             base.setupArguments(a);
             OneAssetOption.Arguments args = a as OneAssetOption.Arguments;
@@ -69,7 +69,7 @@ namespace QLNet {
             events_.Clear();
 
             int n = args.exercise.dates().Count;
-            stoppingTimes_ = new List<double>(n);
+            stoppingTimes_ = new InitializedList<double>(n);
             for (int i = 0; i < n; ++i)
                 stoppingTimes_[i] = process_.time(args.exercise.date(i));
         }
@@ -128,7 +128,7 @@ namespace QLNet {
             initializeModel();
             initializeStepCondition();
 
-            prices_ = intrinsicValues_;
+            prices_ = (SampledCurve)intrinsicValues_.Clone();
             if (lastDateIsResTime)
                 executeIntermediateStep(dateNumber - 1);
 
