@@ -437,7 +437,7 @@ namespace TestSuite {
 
             // readjust settlement
             vars.calendar = new JointCalendar(new BMAIndex().fixingCalendar(),
-                                          new USDLibor(new Period(6, TimeUnit.Months)).fixingCalendar(),
+                                          new USDLibor(new Period(3, TimeUnit.Months)).fixingCalendar(),
                                           JointCalendar.JointCalendarRule.JoinHolidays);
             vars.today = vars.calendar.adjust(Date.Today);
             Settings.setEvaluationDate(vars.today);
@@ -447,12 +447,12 @@ namespace TestSuite {
                                                        new FlatForward(vars.settlement, 0.04, new Actual360()));
 
             BMAIndex bmaIndex = new BMAIndex();
-            IborIndex liborIndex = new USDLibor(new Period(6, TimeUnit.Months),riskFreeCurve);
+            IborIndex liborIndex = new USDLibor(new Period(3, TimeUnit.Months),riskFreeCurve);
             for (int i=0; i<vars.bmas; ++i) {
                 Handle<Quote> f = new Handle<Quote>(vars.fractions[i]);
                 vars.bmaHelpers.Add(new BMASwapRateHelper(f, new Period(vars.bmaData[i].n, vars.bmaData[i].units),
                                                 vars.settlementDays,
-                                                bmaIndex.fixingCalendar(),
+                                                vars.calendar,
                                                 new Period(vars.bmaFrequency),
                                                 vars.bmaConvention,
                                                 vars.bmaDayCounter,
@@ -473,7 +473,7 @@ namespace TestSuite {
 
             // check BMA swaps
             BMAIndex bma = new BMAIndex(curveHandle);
-            IborIndex libor6m = new USDLibor(new Period(6, TimeUnit.Months), riskFreeCurve);
+            IborIndex libor3m = new USDLibor(new Period(3, TimeUnit.Months), riskFreeCurve);
             for (int i=0; i<vars.bmas; i++) {
                 Period tenor = new Period(vars.bmaData[i].n, vars.bmaData[i].units);
 
@@ -484,16 +484,16 @@ namespace TestSuite {
                                                     vars.bmaConvention).backwards().value();
                 Schedule liborSchedule = new MakeSchedule(vars.settlement,
                                                       vars.settlement+tenor,
-                                                      libor6m.tenor(),
-                                                      libor6m.fixingCalendar(),
-                                                      libor6m.businessDayConvention())
-                                        .endOfMonth(libor6m.endOfMonth())
+                                                      libor3m.tenor(),
+                                                      libor3m.fixingCalendar(),
+                                                      libor3m.businessDayConvention())
+                                        .endOfMonth(libor3m.endOfMonth())
                                         .backwards().value();
 
 
                 BMASwap swap = new BMASwap(BMASwap.Type.Payer, 100.0, liborSchedule, 0.75, 0.0,
-                                           libor6m, libor6m.dayCounter(), bmaSchedule, bma, vars.bmaDayCounter);
-                swap.setPricingEngine(new DiscountingSwapEngine(libor6m.termStructure()));
+                                           libor3m, libor3m.dayCounter(), bmaSchedule, bma, vars.bmaDayCounter);
+                swap.setPricingEngine(new DiscountingSwapEngine(libor3m.termStructure()));
 
                 double expectedFraction = vars.bmaData[i].rate / 100,
                      estimatedFraction = swap.fairLiborFraction();
