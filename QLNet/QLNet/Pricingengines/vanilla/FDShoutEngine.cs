@@ -22,26 +22,25 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    //! Finite-differences pricing engine for American one asset options
+    //! Finite-differences pricing engine for shout vanilla options
     /*! \ingroup vanillaengines
 
-        \test
-        - the correctness of the returned value is tested by reproducing results available in literature.
-        - the correctness of the returned greeks is tested by reproducing numerical derivatives.
+        \test the correctness of the returned greeks is tested by
+              reproducing numerical derivatives.
     */
-    public class FDAmericanEngine : FDEngineAdapter<FDAmericanCondition<FDStepConditionEngine>, OneAssetOption.Engine,
-                                                    OneAssetOption.Arguments, OneAssetOption.Results>, 
-                                    IFDEngine {
+    public class FDShoutEngine : FDEngineAdapter<FDShoutCondition<FDStepConditionEngine>, VanillaOption.Engine,
+                                                 OneAssetOption.Arguments, OneAssetOption.Results>,
+                                 IFDEngine {
         // required for generics
-        public FDAmericanEngine() { }
+        public FDShoutEngine() { }
 
-        public FDAmericanEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints)
+        public FDShoutEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints)
             : this(process, timeSteps, gridPoints, false) { }
-        public FDAmericanEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent) 
+        public FDShoutEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent)
             : base(process, timeSteps, gridPoints, timeDependent) { }
 
         public IFDEngine factory(GeneralizedBlackScholesProcess process) {
-            return new FDAmericanEngine(process, 100, 100, false);
+            return new FDShoutEngine(process, 100, 100, false);
         }
     }
 }

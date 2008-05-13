@@ -132,13 +132,12 @@ namespace EquityOption {
             int timeSteps = 801;
             method = "Finite differences";
             europeanOption.setPricingEngine(new FDEuropeanEngine(bsmProcess,timeSteps,timeSteps-1));
-            //bermudanOption.setPricingEngine(boost::shared_ptr<PricingEngine>(
-            //             new FDBermudanEngine(bsmProcess,timeSteps,timeSteps-1)));
+            //bermudanOption.setPricingEngine(new FDBermudanEngine(bsmProcess,timeSteps,timeSteps-1)));
             americanOption.setPricingEngine(new FDAmericanEngine(bsmProcess,timeSteps,timeSteps-1));
 
             Console.Write("{0,-" + widths[0] + "}", method);
             Console.Write("{0,-" + widths[1] + ":0.000000}", europeanOption.NPV());
-            //Console.Write("{0,-" + widths[2] + ":0.000000}", bermudanOption.NPV());
+            Console.Write("{0,-" + widths[2] + ":0.000000}", bermudanOption.NPV());
             Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
 
             // Binomial method: Jarrow-Rudd

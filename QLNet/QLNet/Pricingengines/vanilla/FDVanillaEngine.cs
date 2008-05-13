@@ -127,7 +127,7 @@ namespace QLNet {
                                     NeumannBC.Side.Upper);
         }
 
-        protected double getResidualTime() {
+        public double getResidualTime() {
             return process_.time(exerciseDate_);
         }
 
@@ -153,6 +153,12 @@ namespace QLNet {
     }
 
 
+    // this is the interface to allow generic use of FDAmericanEngine and FDShoutEngine
+    // those engines are shortcuts to FDEngineAdapter
+    public interface IFDEngine : IPricingEngine {
+        IFDEngine factory(GeneralizedBlackScholesProcess process);
+    }
+
     public class FDEngineAdapter<Base, Engine, ArgumentsType, ResultsType>
         : FDVanillaEngine, IGenericEngine<ArgumentsType, ResultsType>
         where Base : FDConditionEngineTemplate, new()
@@ -162,6 +168,9 @@ namespace QLNet {
 
         // a wrap-up of base engine
         Base optionBase;
+
+        // required for generics
+        public FDEngineAdapter() { }
 
         //public FDEngineAdapter(GeneralizedBlackScholesProcess process, Size timeSteps=100, Size gridPoints=100, bool timeDependent = false)
         public FDEngineAdapter(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, bool timeDependent) {
