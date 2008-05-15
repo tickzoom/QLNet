@@ -29,20 +29,21 @@ namespace QLNet {
         <ul>
         <li>Saturdays</li>
         <li>Sundays</li>
-        <li>Good Friday</li>
         <li>New Year's Day, January 1st</li>
+        <li>Good Friday</li>
         <li>Ascension of Jesus Christ</li>
         <li>Independence Day, August 17th</li>
         <li>Christmas, December 25th</li>
         </ul>
 
         Other holidays for which no rule is given
-        (data available for 2005-2007 only:)
+        (data available for 2005-2008 only:)
         <ul>
         <li>Idul Adha</li>
         <li>Ied Adha</li>
         <li>Imlek</li>
         <li>Moslem's New Year Day</li>
+        <li>Chinese New Year</li>
         <li>Nyepi (Saka's New Year)</li>
         <li>Birthday of Prophet Muhammad SAW</li>
         <li>Waisak</li>
@@ -151,6 +152,33 @@ namespace QLNet {
                         || (d == 18 && m == Month.May)
                         || ((d == 12 || d == 15 || d == 16) && m == Month.October)
                         || ((d == 21 || d == 24) && m == Month.October)
+                        )
+                        return false;
+                }
+                if (y == 2007) {
+                    if (// Islamic New Year
+                        ((d == 10 || d == 11) && m == Month.January)
+                        // Chinese New Year
+                        || ((d == 7 || d == 8) && m == Month.February)
+                        // Saka's New Year
+                        || (d == 7 && m == Month.March)
+                        // Birthday of the prophet Muhammad SAW
+                        || (d == 20 && m == Month.March)
+                        // Vesak Day
+                        || (d == 20 && m == Month.May)
+                        // Isra' Mi'raj of the prophet Muhammad SAW
+                        || (d == 30 && m == Month.July)
+                        // Ied Fitr
+                        || (d == 30 && m == Month.September)
+                        || ((d == 1 || d == 2 || d == 3) && m == Month.October)
+                        // Ied Adha
+                        || (d == 8 && m == Month.December)
+                        // Islamic New Year
+                        || (d == 29 && m == Month.December)
+                        // New Year's Eve
+                        || (d == 31 && m == Month.December)
+                        // National leave
+                        || (d == 18 && m == Month.August)
                         )
                         return false;
                 }

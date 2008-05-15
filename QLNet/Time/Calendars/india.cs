@@ -38,7 +38,7 @@ namespace QLNet {
         </ul>
 
         Other holidays for which no rule is given (data available for
-        2005-2007 only:)
+        2005-2008 only:)
         <ul>
         <li>Bakri Id</li>
         <li>Moharram</li>
@@ -144,6 +144,34 @@ namespace QLNet {
                         || (d == 9 && m == Month.November)
                         // Bakri Id (again)
                         || (d == 21 && m == Month.December)
+                        )
+                        return false;
+                }
+                if (y == 2008) {
+                    if (// Mahashivratri
+                        (d == 6 && m == Month.March)
+                        // Id-E-Milad
+                        || (d == 20 && m == Month.March)
+                        // Mahavir Jayanti
+                        || (d == 18 && m == Month.April)
+                        // Maharashtra Day
+                        || (d == 1 && m == Month.May)
+                        // Buddha Pournima
+                        || (d == 19 && m == Month.May)
+                        // Ganesh Chaturthi
+                        || (d == 3 && m == Month.September)
+                        // Ramzan Id
+                        || (d == 2 && m == Month.October)
+                        // Dasara
+                        || (d == 9 && m == Month.October)
+                        // Laxmi Puja
+                        || (d == 28 && m == Month.October)
+                        // Bhau bhij
+                        || (d == 30 && m == Month.October)
+                        // Gurunanak Jayanti
+                        || (d == 13 && m == Month.November)
+                        // Bakri Id
+                        || (d == 9 && m == Month.December)
                         )
                         return false;
                 }

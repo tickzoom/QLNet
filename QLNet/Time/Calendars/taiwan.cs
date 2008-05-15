@@ -36,7 +36,7 @@ namespace QLNet {
         </ul>
 
         Other holidays for which no rule is given
-        (data available for 2002-2007 only:)
+        (data available for 2002-2008 only:)
         <ul>
         <li>Chinese Lunar New Year</li>
         <li>Tomb Sweeping Day</li>
@@ -144,6 +144,14 @@ namespace QLNet {
                         || (d == 24 && m == Month.September)
                         // Moon Festival
                         || (d == 25 && m == Month.September)
+                        )
+                        return false;
+                }
+                if (y == 2008) {
+                    if (// Chinese Lunar New Year
+                        (d >= 4 && d <= 11 && m == Month.February)
+                        // Tomb Sweeping Day
+                        || (d == 4 && m == Month.April)
                         )
                         return false;
                 }

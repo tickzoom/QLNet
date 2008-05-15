@@ -35,9 +35,9 @@ namespace QLNet {
             ts_ = ts as PiecewiseYieldCurve<Traits, Interpolator>;
 
             int n = ts_.instruments_.Count;
-            if (n < ts_.interpolator_.requiredPoints)
+            if (!(n+1 >= ts_.interpolator_.requiredPoints))
                 throw new ArgumentException("not enough instruments: " + n + " provided, " +
-                       ts_.interpolator_.requiredPoints + " required");
+                       (ts_.interpolator_.requiredPoints-1) + " required");
 
             for (int i = 0; i < n; ++i) {
                 ts_.instruments_[i].registerWith(ts_.update);
