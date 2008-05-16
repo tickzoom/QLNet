@@ -160,6 +160,8 @@
     <Compile Include="Math\Optimization\ProjectedCostFunction.cs" />
     <Compile Include="Math\Optimization\Simplex.cs" />
     <Compile Include="Math\Optimization\SteepestDescent.cs" />
+    <Compile Include="Math\randomnumbers\mt19937uniformrng.cs" />
+    <Compile Include="Math\randomnumbers\seedgenerator.cs" />
     <Compile Include="Math\SampledCurve.cs" />
     <Compile Include="Math\Solver1d.cs" />
     <Compile Include="Math\Rounding.cs" />
@@ -201,6 +203,7 @@
     <Compile Include="Methods\lattices\lattice.cs" />
     <Compile Include="Methods\lattices\lattice1d.cs" />
     <Compile Include="Methods\lattices\tree.cs" />
+    <Compile Include="Methods\montecarlo\sample.cs" />
     <Compile Include="Models\CalibrationHelper.cs" />
     <Compile Include="Models\model.cs">
       <SubType>Code</SubType>
