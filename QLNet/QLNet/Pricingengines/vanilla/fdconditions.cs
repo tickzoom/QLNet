@@ -34,9 +34,8 @@ namespace QLNet {
                 stepCondition_ = stepConditionImpl_();
         }
 
-        public delegate IStepCondition<Vector> stepConditionImpl();
-        protected stepConditionImpl stepConditionImpl_;
-        public void setStepCondition(stepConditionImpl impl) {
+        protected Func<IStepCondition<Vector>> stepConditionImpl_;
+        public void setStepCondition(Func<IStepCondition<Vector>> impl) {
             stepConditionImpl_ = impl;
         }
         #endregion
