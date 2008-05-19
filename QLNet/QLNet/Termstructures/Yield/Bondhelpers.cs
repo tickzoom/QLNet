@@ -53,8 +53,15 @@ namespace QLNet {
             bond_.setPricingEngine(bondEngine);
         }
 
+        /*! \warning Setting a pricing engine to the passed bond from
+             external code will cause the bootstrap to fail or
+             to give wrong results. It is advised to discard
+             the bond after creating the helper, so that the
+             helper has sole ownership of it.
+        */
         public FixedRateBondHelper(Handle<Quote> cleanPrice, FixedRateBond bond)
                 : base(cleanPrice) {
+            bond_ = bond;
             latestDate_ = bond_.maturityDate();
 
             Settings.registerWith(update);
