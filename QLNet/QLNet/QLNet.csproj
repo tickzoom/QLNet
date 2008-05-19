@@ -161,6 +161,8 @@
     <Compile Include="Math\Optimization\Simplex.cs" />
     <Compile Include="Math\Optimization\SteepestDescent.cs" />
     <Compile Include="Math\randomnumbers\mt19937uniformrng.cs" />
+    <Compile Include="Math\randomnumbers\randomsequencegenerator.cs" />
+    <Compile Include="Math\randomnumbers\rngtraits.cs" />
     <Compile Include="Math\randomnumbers\seedgenerator.cs" />
     <Compile Include="Math\SampledCurve.cs" />
     <Compile Include="Math\Solver1d.cs" />
@@ -180,6 +182,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Math\Solvers1d\Secant.cs" />
+    <Compile Include="Math\statistics\generalstatistics.cs" />
     <Compile Include="Math\transformedgrid.cs" />
     <Compile Include="Math\Vector.cs" />
     <Compile Include="Methods\Finitedifferences\AmericanCondition.cs" />
@@ -336,7 +339,6 @@
     <Compile Include="Time\Schedule.cs" />
     <Compile Include="Types.cs" />
     <Compile Include="Utils.cs" />
-    <Compile Include="Util\make_pair.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

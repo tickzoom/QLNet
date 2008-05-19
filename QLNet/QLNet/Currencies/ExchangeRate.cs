@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Andrea Maggiulli
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com) 
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -21,20 +22,18 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace QLNet
-{
+namespace QLNet {
    /// <summary>
    /// Exchange rate between two currencies
    /// application of direct and derived exchange rate is
    /// tested against calculations.
    /// </summary>
-   public class ExchangeRate
-   {
+   public class ExchangeRate {
       private Currency source_;
       private Currency target_;
       private Nullable<double> rate_;
       private Type type_;
-      private Pair<ExchangeRate, ExchangeRate> rateChain_;
+      private KeyValuePair<ExchangeRate, ExchangeRate> rateChain_;
 
       /// <summary>
       /// the source currency.
@@ -129,10 +128,10 @@ namespace QLNet
                   throw new Exception ("exchange rate not applicable");
 
             case Type.Derived:
-               if (amount.currency == rateChain_.first.source || amount.currency == rateChain_.first.target)
-                  return rateChain_.second.exchange(rateChain_.first.exchange(amount));
-               else if (amount.currency == rateChain_.second.source || amount.currency == rateChain_.second.target)
-                  return rateChain_.first.exchange(rateChain_.second.exchange(amount));
+               if (amount.currency == rateChain_.Key.source || amount.currency == rateChain_.Key.target)
+                   return rateChain_.Value.exchange(rateChain_.Key.exchange(amount));
+               else if (amount.currency == rateChain_.Value.source || amount.currency == rateChain_.Value.target)
+                   return rateChain_.Key.exchange(rateChain_.Value.exchange(amount));
                else
                   throw new Exception("exchange rate not applicable");
             default:
@@ -150,7 +149,7 @@ namespace QLNet
         {
             ExchangeRate result = new ExchangeRate();
             result.type_ = Type.Derived;
-            result.rateChain_ = new Pair<ExchangeRate,ExchangeRate>(r1,r2);
+            result.rateChain_ = new KeyValuePair<ExchangeRate,ExchangeRate>(r1,r2);
             if (r1.source_ == r2.source_) 
             {
                result.source_ = r1.target_;
@@ -179,11 +178,7 @@ namespace QLNet
             {
                 throw new Exception ("exchange rates not chainable");
             }
-            
             return result;
         }
-
-
    }
-
 }

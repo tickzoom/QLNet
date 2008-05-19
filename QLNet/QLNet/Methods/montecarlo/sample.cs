@@ -25,11 +25,11 @@ namespace QLNet {
     //! weighted sample
     /*! \ingroup mcarlo */
     public struct Sample<T> {
-        public Sample(T value, double weight) {
-            value_ = value;
-            weight_ = weight;
+        public Sample(T value_, double weight_) {
+            value = value_;
+            weight = weight_;
         }
-        T value_;
-        double weight_;
+        public T value;
+        public double weight;
     }
 }
