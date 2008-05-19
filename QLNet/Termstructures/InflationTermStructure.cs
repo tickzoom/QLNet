@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -21,15 +22,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace QLNet
-{
-
-    public static partial class Utils
-    {
+namespace QLNet {
+    public static partial class Utils {
         //! utility function giving the inflation period for a given date
-        public static Pair<Date, Date> inflationPeriod(Date d, Frequency frequency)
-        {
-
+        public static KeyValuePair<Date, Date> inflationPeriod(Date d, Frequency frequency) {
             Month month = (Month)d.Month;
             int year = d.Year;
 
@@ -59,7 +55,7 @@ namespace QLNet
             Date startDate = new Date(1, startMonth, year);
             Date endDate = Date.endOfMonth(new Date(1, endMonth, year));
 
-            return new Pair<Date, Date>(startDate, endDate);
+            return new KeyValuePair<Date, Date>(startDate, endDate);
         }
     }
 

@@ -30,7 +30,9 @@ namespace QLNet {
         \test the correctness of the returned values is tested by
               checking them against known good results.
     */
-    public class MersenneTwisterUniformRng {
+    public class MersenneTwisterUniformRng : IRNGTraits {
+        //typedef Sample<Real> sample_type;
+
         /*! if the given seed is 0, a random seed will be chosen based on clock() */
         public MersenneTwisterUniformRng() : this(0) { }
         public MersenneTwisterUniformRng(ulong seed) {
@@ -59,6 +61,9 @@ namespace QLNet {
 
             mt[0] = 0x80000000UL; /*MSB is 1; assuring non-zero initial array*/
         }
+
+        public IRNGTraits factory(ulong seed) { return new MersenneTwisterUniformRng(seed); }
+
 
         /*! returns a sample with weight 1.0 containing a random number on (0.0, 1.0)-real-interval  */
         public Sample<double> next() {
