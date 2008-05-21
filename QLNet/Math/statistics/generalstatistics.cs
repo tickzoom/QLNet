@@ -22,6 +22,16 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
+    public interface IGeneralStatistics {
+        int samples();
+        double mean();
+        double standardDeviation();
+        double percentile(double percent);
+
+        KeyValuePair<double, int> expectationValue(Func<KeyValuePair<double, double>, double> f,
+                                           Func<KeyValuePair<double, double>, bool> inRange);
+    }
+
     //! Statistics tool
     /*! This class accumulates a set of data and returns their
         statistics (e.g: mean, variance, skewness, kurtosis,
@@ -32,7 +42,7 @@ namespace QLNet {
         IncrementalStatistics. The downside is that it stores all
         samples, thus increasing the memory requirements.
     */
-    public class GeneralStatistics {
+    public class GeneralStatistics : IGeneralStatistics {
         private List<KeyValuePair<double,double>> samples_;
         //! number of samples collected
         public int samples() { return samples_.Count; }
@@ -42,14 +52,8 @@ namespace QLNet {
         private bool sorted_;
 
 
-        public GeneralStatistics() {
-            reset();
-        }
+        public GeneralStatistics() { reset(); }
 
-
-        /*! returns the standard deviation \f$ \sigma \f$, defined as the
-            square root of the variance. */
-        public double standardDeviation() { return Math.Sqrt(variance()); }
 
         /*! returns the error estimate on the mean value, defined as
             \f$ \epsilon = \sigma/\sqrt{N}. \f$ */
@@ -106,6 +110,10 @@ namespace QLNet {
             // eat our own dog food
             return expectationValue(x => x.Key * x.Value, x => true).Key;
         }
+
+        /*! returns the standard deviation \f$ \sigma \f$, defined as the
+        square root of the variance. */
+        public double standardDeviation() { return Math.Sqrt(variance()); }
 
         /*! returns the variance, defined as
             \f[ \sigma^2 = \frac{N}{N-1} \left\langle \left(
@@ -188,27 +196,20 @@ namespace QLNet {
 
             \pre \f$ y \f$ must be in the range \f$ (0-1]. \f$
         */
-        //public double percentile(double percent) {
+        public double percentile(double percent) {
 
-        //    if (!(percent > 0.0 && percent <= 1.0))
-        //        throw new ApplicationException("percentile (" + percent + ") must be in (0.0, 1.0]");
+            if (!(percent > 0.0 && percent <= 1.0))
+                throw new ApplicationException("percentile (" + percent + ") must be in (0.0, 1.0]");
 
-        //    double sampleWeight = weightSum();
-        //    if (!(sampleWeight > 0)) throw new ApplicationException("empty sample set");
+            double sampleWeight = weightSum();
+            if (!(sampleWeight > 0)) throw new ApplicationException("empty sample set");
 
-        //    sort();
+            sort();
 
-        //    List<KeyValuePair<double, double>>::iterator k, l;
-        //    k = samples_.begin();
-        //    l = samples_.end()-1;
-        //    /* the sum of weight is non null, therefore there's at least one sample */
-        //    double integral = k->second, target = percent*sampleWeight;
-        //    while (integral < target && k != l) {
-        //        k++;
-        //        integral += k->second;
-        //    }
-        //    return k->first;
-        //}
+            double integral = 0, target = percent*sampleWeight;
+            int pos = samples_.Count<KeyValuePair<double, double>>(x => { integral += x.Value; return integral < target; } );
+            return samples_[pos].Key;
+        }
 
         /*! \f$ y \f$-th top percentile, defined as the value
             \f$ \bar{x} \f$ such that
@@ -217,28 +218,19 @@ namespace QLNet {
 
             \pre \f$ y \f$ must be in the range \f$ (0-1]. \f$
         */
-        //public double topPercentile(double y) {
+        public double topPercentile(double percent) {
+            if (!(percent > 0.0 && percent <= 1.0))
+                throw new ApplicationException("percentile (" + percent + ") must be in (0.0, 1.0]");
 
-        //    QL_REQUIRE(percent > 0.0 && percent <= 1.0,
-        //               "percentile (" << percent << ") must be in (0.0, 1.0]");
+            double sampleWeight = weightSum();
+            if (!(sampleWeight > 0)) throw new ApplicationException("empty sample set");
 
-        //    double sampleWeight = weightSum();
-        //    if (!(sampleWeight > 0)) throw new ApplicationException("empty sample set");
+            sort();
 
-        //    sort();
-
-        //    std::vector<std::pair<Real,Real> >::reverse_iterator k, l;
-        //    k = samples_.rbegin();
-        //    l = samples_.rend()-1;
-        //    /* the sum of weight is non null, therefore there's
-        //       at least one sample */
-        //    double integral = k->second, target = percent*sampleWeight;
-        //    while (integral < target && k != l) {
-        //        k++;
-        //        integral += k->second;
-        //    }
-        //    return k->first;
-        //}
+            double integral = 0, target = 1 - percent*sampleWeight;
+            int pos = samples_.Count<KeyValuePair<double, double>>(x => { integral += x.Value; return integral < target; } );
+            return samples_[pos].Key;
+        }
 
         ////! adds a sequence of data to the set, with default weight
         //template <class DataIterator>
