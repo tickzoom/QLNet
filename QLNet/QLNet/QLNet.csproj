@@ -265,6 +265,8 @@
     <Compile Include="Termstructures\Iterativebootstrap.cs" />
     <Compile Include="Termstructures\TermStructure.cs" />
     <Compile Include="Termstructures\VolatilityTermStructure.cs" />
+    <Compile Include="Termstructures\Volatility\CapFloor\CapFloorTermVolatilityStructure.cs" />
+    <Compile Include="Termstructures\Volatility\CapFloor\ConstantCapFloorTermVolatility.cs" />
     <Compile Include="Termstructures\Volatility\equityfx\BlackConstantVol.cs" />
     <Compile Include="Termstructures\Volatility\equityfx\BlackVarianceCurve.cs" />
     <Compile Include="Termstructures\Volatility\equityfx\BlackVolTermStructure.cs" />
