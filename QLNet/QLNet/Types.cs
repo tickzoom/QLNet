@@ -25,6 +25,8 @@ namespace QLNet {
 
         public const double M_SQRT_2 = 0.7071067811865475244008443621048490392848359376887;
         public const double M_1_SQRTPI = 0.564189583547756286948;
+
+        public const double M_LN2 = 0.693147180559945309417;
     }
 
     public class TimeSeries<T> : Dictionary<Date, T> {

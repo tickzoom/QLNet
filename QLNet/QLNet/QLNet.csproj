@@ -161,9 +161,12 @@
     <Compile Include="Math\Optimization\Simplex.cs" />
     <Compile Include="Math\Optimization\SteepestDescent.cs" />
     <Compile Include="Math\randomnumbers\mt19937uniformrng.cs" />
+    <Compile Include="Math\randomnumbers\primitivepolynomials.cs" />
     <Compile Include="Math\randomnumbers\randomsequencegenerator.cs" />
     <Compile Include="Math\randomnumbers\rngtraits.cs" />
     <Compile Include="Math\randomnumbers\seedgenerator.cs" />
+    <Compile Include="Math\randomnumbers\sobolrsg.cs" />
+    <Compile Include="Math\randomnumbers\sobolrsg2.cs" />
     <Compile Include="Math\SampledCurve.cs" />
     <Compile Include="Math\Solver1d.cs" />
     <Compile Include="Math\Rounding.cs" />
@@ -182,7 +185,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Math\Solvers1d\Secant.cs" />
+    <Compile Include="Math\statistics\gaussianstatistics.cs" />
     <Compile Include="Math\statistics\generalstatistics.cs" />
+    <Compile Include="Math\statistics\incrementalstatistics.cs" />
+    <Compile Include="Math\statistics\riskstatistics.cs" />
     <Compile Include="Math\transformedgrid.cs" />
     <Compile Include="Math\Vector.cs" />
     <Compile Include="Methods\Finitedifferences\AmericanCondition.cs" />
