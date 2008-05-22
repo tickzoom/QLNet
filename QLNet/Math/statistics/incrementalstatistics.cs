@@ -176,7 +176,7 @@ namespace QLNet {
         //@{
         //! adds a datum to the set, possibly with a weight
         /*! \pre weight must be positive or null */
-        //void add(Real value, Real weight = 1.0);
+        public void add(double value) { add(value, 1); }
         public void add(double value, double weight) {
             if (!(weight>=0.0)) throw new ApplicationException("negative weight (" + weight + ") not allowed");
 
@@ -222,19 +222,16 @@ namespace QLNet {
             fourthPowerSum_ = 0.0;
         }
 
-        ////! adds a sequence of data to the set, with default weight
-        //template <class DataIterator>
-        //void addSequence(DataIterator begin, DataIterator end) {
-        //    for (;begin!=end;++begin)
-        //        add(*begin);
-        //}
-        ////! adds a sequence of data to the set, each with its weight
-        ///*! \pre weights must be positive or null */
-        //template <class DataIterator, class WeightIterator>
-        //void addSequence(DataIterator begin, DataIterator end,
-        //                 WeightIterator wbegin) {
-        //    for (;begin!=end;++begin,++wbegin)
-        //        add(*begin, *wbegin);
-        //}
+        //! adds a sequence of data to the set, with default weight
+        public void addSequence(List<double> list) {
+            foreach (double v in list)
+                add(v, 1);
+        }
+        //! adds a sequence of data to the set, each with its weight
+        /*! \pre weights must be positive or null */
+        public void addSequence(List<double> data, List<double> weight) {
+            for (int i = 0; i < data.Count; i++)
+                add(data[i], weight[i]);
+        }
     }
 }

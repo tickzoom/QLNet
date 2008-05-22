@@ -32,15 +32,26 @@ namespace QLNet {
         //public typedef typename Stat::value_type value_type;
 
         public GenericGaussianStatistics() { }
-        // public GenericGaussianStatistics(Stat s) : base(s) { }
+        public GenericGaussianStatistics(Stat s) {
+            impl_ = s;
+        }
 
         #region wrap-up Stat
-        Stat impl_ = new Stat();
+        protected Stat impl_ = new Stat();
 
         public int samples() { return impl_.samples(); }
         public double mean() { return impl_.mean(); }
+        public double min() { return impl_.min(); }
+        public double max() { return impl_.max(); }
         public double standardDeviation() { return impl_.standardDeviation(); }
+        public double variance() { return impl_.variance(); }
+        public double skewness() { return impl_.skewness(); }
+        public double kurtosis() { return impl_.kurtosis(); }
         public double percentile(double percent) { return impl_.percentile(percent); }
+        public double weightSum() { return impl_.weightSum(); }
+
+        public void reset() { impl_.reset(); }
+        public void addSequence(List<double> data, List<double> weight) { impl_.addSequence(data, weight); }
 
         public KeyValuePair<double, int> expectationValue(Func<KeyValuePair<double, double>, double> f,
                                                           Func<KeyValuePair<double, double>, bool> inRange) {
@@ -167,4 +178,36 @@ namespace QLNet {
     //typedef GenericGaussianStatistics<GeneralStatistics> GaussianStatistics;
     public class GaussianStatistics : GenericGaussianStatistics<GeneralStatistics> { }
 
+    
+    //! Helper class for precomputed distributions
+    public class StatsHolder : IGeneralStatistics {
+        private double mean_, standardDeviation_;
+        public double mean() { return mean_; }
+        public double standardDeviation() { return standardDeviation_; }
+
+        public StatsHolder() { } // required for generics
+        public StatsHolder(double mean, double standardDeviation) {
+            mean_ = mean;
+            standardDeviation_ = standardDeviation;
+        }
+
+        #region IGeneralStatistics
+        public int samples() { throw new NotSupportedException(); }
+        public double min() { throw new NotSupportedException(); }
+        public double max() { throw new NotSupportedException(); }
+        public double variance() { throw new NotSupportedException(); }
+        public double skewness() { throw new NotSupportedException(); }
+        public double kurtosis() { throw new NotSupportedException(); }
+        public double percentile(double percent) { throw new NotSupportedException(); }
+        public double weightSum() { throw new NotSupportedException(); }
+
+        public void reset() { throw new NotSupportedException(); }
+        public void addSequence(List<double> data, List<double> weight) { throw new NotSupportedException(); }
+
+        public KeyValuePair<double, int> expectationValue(Func<KeyValuePair<double, double>, double> f,
+                                                          Func<KeyValuePair<double, double>, bool> inRange) {
+            throw new NotSupportedException();
+        }
+        #endregion
+    }
 }

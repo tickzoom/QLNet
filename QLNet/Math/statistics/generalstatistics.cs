@@ -25,8 +25,17 @@ namespace QLNet {
     public interface IGeneralStatistics {
         int samples();
         double mean();
+        double min();
+        double max();
         double standardDeviation();
+        double variance();
+        double skewness();
+        double kurtosis();
         double percentile(double percent);
+        double weightSum();
+
+        void reset();
+        void addSequence(List<double> data, List<double> weight);
 
         KeyValuePair<double, int> expectationValue(Func<KeyValuePair<double, double>, double> f,
                                            Func<KeyValuePair<double, double>, bool> inRange);
@@ -50,6 +59,7 @@ namespace QLNet {
         public List<KeyValuePair<double,double>> data() { return samples_; }
 
         private bool sorted_;
+        private double? mean_ = null, weightSum_ = null, variance_ = null, skewness_ = null, kurtosis_ = null;
 
 
         public GeneralStatistics() { reset(); }
@@ -73,23 +83,27 @@ namespace QLNet {
         
 
         //! adds a datum to the set, possibly with a weight
-        //public void add(double value, double weight = 1.0) {
+        public void add(double value) { add(value, 1); }
         public void add(double value, double weight) {
             if (!(weight>=0.0)) throw new ApplicationException("negative weight not allowed");
             samples_.Add(new KeyValuePair<double,double>(value,weight));
+            
             sorted_ = false;
+            mean_ = weightSum_ = variance_ = skewness_ = kurtosis_ = null;
         }
 
         //! resets the data to a null set
         public void reset(){
             samples_ = new List<KeyValuePair<double,double>>();
+
             sorted_ = true;
+            mean_ = weightSum_ = variance_ = skewness_ = kurtosis_ = null;
         }
 
         //! sort the data set in increasing order
         public void sort()  {
             if (!sorted_) {
-                samples_.Sort();
+                samples_.Sort((x, y) => x.Key.CompareTo(y.Key));
                 sorted_ = true;
             }
         }
@@ -97,18 +111,21 @@ namespace QLNet {
 
         //! sum of data weights
         public double weightSum() {
-            double result = 0.0;
-            result = samples_.Sum<KeyValuePair<double, double>>(x => x.Value);
-            return result;
+            if (weightSum_ == null)
+                weightSum_ = samples_.Sum<KeyValuePair<double, double>>(x => x.Value);
+            return weightSum_.GetValueOrDefault();
         }
 
         /*! returns the mean, defined as
             \f[ \langle x \rangle = \frac{\sum w_i x_i}{\sum w_i}. \f] */
         public double mean() {
-            int N = samples();
-            if (!(samples() > 0)) throw new ApplicationException("empty sample set");
-            // eat our own dog food
-            return expectationValue(x => x.Key * x.Value, x => true).Key;
+            if (mean_ == null) {
+                int N = samples();
+                if (!(samples() > 0)) throw new ApplicationException("empty sample set");
+                // eat our own dog food
+                mean_ = expectationValue(x => x.Key * x.Value, x => true).Key;
+            }
+            return mean_.GetValueOrDefault();
         }
 
         /*! returns the standard deviation \f$ \sigma \f$, defined as the
@@ -119,14 +136,17 @@ namespace QLNet {
             \f[ \sigma^2 = \frac{N}{N-1} \left\langle \left(
                 x-\langle x \rangle \right)^2 \right\rangle. \f] */
         public double variance()  {
-            int N = samples();
-            if (!(N > 1)) throw new ApplicationException("sample number <=1, unsufficient");
-            // Subtract the mean and square. Repeat on the whole range.
-            // Hopefully, the whole thing will be inlined in a single loop.
-            double s2 = expectationValue(x => Math.Pow(x.Key * x.Value - mean(), 2), x => true).Key;
+            if (variance_ == null) {
+                int N = samples();
+                if (!(N > 1)) throw new ApplicationException("sample number <=1, unsufficient");
+                // Subtract the mean and square. Repeat on the whole range.
+                // Hopefully, the whole thing will be inlined in a single loop.
+                double s2 = expectationValue(x => Math.Pow(x.Key * x.Value - mean(), 2), x => true).Key;
 
                 //compose(square<Real>(), std::bind2nd(std::minus<Real>(), mean())), () => true).Key;
-            return s2*N/(N-1.0);
+                variance_ = s2 * N / (N - 1.0);
+            }
+            return variance_.GetValueOrDefault();
         }
 
         /*! returns the skewness, defined as
@@ -135,13 +155,16 @@ namespace QLNet {
             The above evaluates to 0 for a Gaussian distribution.
         */
         public double skewness() {
-            int N = samples();
-            if (!(N > 2)) throw new ApplicationException("sample number <=2, unsufficient");
+            if (skewness_ == null) {
+                int N = samples();
+                if (!(N > 2)) throw new ApplicationException("sample number <=2, unsufficient");
 
-            double x = expectationValue(y => Math.Pow(y.Key * y.Value - mean(), 3), y => true).Key;
-            double sigma = standardDeviation();
+                double x = expectationValue(y => Math.Pow(y.Key * y.Value - mean(), 3), y => true).Key;
+                double sigma = standardDeviation();
 
-            return (x/(sigma*sigma*sigma))*(N/(N-1.0))*(N/(N-2.0));
+                skewness_ = (x / Math.Pow(sigma, 3)) * (N / (N - 1.0)) * (N / (N - 2.0));
+            }
+            return skewness_.GetValueOrDefault();
         }
 
         /*! returns the excess kurtosis, defined as
@@ -151,16 +174,19 @@ namespace QLNet {
             The above evaluates to 0 for a Gaussian distribution.
         */
         public double kurtosis() {
-            int N = samples();
-            if (!(N > 3)) throw new ApplicationException("sample number <=3, unsufficient");
+            if (kurtosis_ == null) {
+                int N = samples();
+                if (!(N > 3)) throw new ApplicationException("sample number <=3, unsufficient");
 
-            double x = expectationValue(y => Math.Pow(y.Key * y.Value - mean(), 4), y => true).Key;
-            double sigma2 = variance();
+                double x = expectationValue(y => Math.Pow(y.Key * y.Value - mean(), 4), y => true).Key;
+                double sigma2 = variance();
 
-            double c1 = (N/(N-1.0)) * (N/(N-2.0)) * ((N+1.0)/(N-3.0));
-            double c2 = 3.0 * ((N-1.0)/(N-2.0)) * ((N-1.0)/(N-3.0));
+                double c1 = (N / (N - 1.0)) * (N / (N - 2.0)) * ((N + 1.0) / (N - 3.0));
+                double c2 = 3.0 * ((N - 1.0) / (N - 2.0)) * ((N - 1.0) / (N - 3.0));
 
-            return c1*(x/(sigma2*sigma2))-c2;
+                kurtosis_ = c1 * (x / (sigma2 * sigma2)) - c2;
+            }
+            return kurtosis_.GetValueOrDefault();
         }
 
         /*! Expectation value of a function \f$ f \f$ on a given range \f$ \mathcal{R} \f$, i.e.,
@@ -177,12 +203,10 @@ namespace QLNet {
             double num = 0.0, den = 0.0;
             int N = 0;
 
-            foreach(KeyValuePair<double,double> x in samples_) {
-                if (inRange(x)) {
-                    num += f(x)*x.Value;
-                    den += x.Value;
-                    N += 1;                
-                }
+            foreach(KeyValuePair<double,double> x in samples_.Where<KeyValuePair<double,double>>(x => inRange(x))) {
+                num += f(x)*x.Value;
+                den += x.Value;
+                N += 1;                
             }
 
             if (N == 0) return new KeyValuePair<double,int>(0,0);
@@ -232,18 +256,15 @@ namespace QLNet {
             return samples_[pos].Key;
         }
 
-        ////! adds a sequence of data to the set, with default weight
-        //template <class DataIterator>
-        //void addSequence(DataIterator begin, DataIterator end) {
-        //    for (;begin!=end;++begin)
-        //        add(*begin);
-        //}
-        ////! adds a sequence of data to the set, each with its weight
-        //template <class DataIterator, class WeightIterator>
-        //void addSequence(DataIterator begin, DataIterator end,
-        //                 WeightIterator wbegin) {
-        //    for (;begin!=end;++begin,++wbegin)
-        //        add(*begin, *wbegin);
-        //}
+        //! adds a sequence of data to the set, with default weight
+        public void addSequence(List<double> list) {
+            foreach(double v in list) 
+                add(v);
+        }
+        //! adds a sequence of data to the set, each with its weight
+        public void addSequence(List<double> data, List<double> weight) {
+            for(int i=0; i< data.Count; i++)
+                add(data[i], weight[i]);
+        }
     }
 }
