@@ -35,6 +35,7 @@ namespace QLNet {
         public bool empty() { return rows_ == 0 || columns_ == 0; }
 
         private double[,] data_;
+        public double this[int i, int j] { get { return data_[i, j]; } set { data_[i, j] = value; } }
         public Vector row(int r) {
             Vector result = new Vector(rows_);
             for (int i = 0; i < rows_; i++)
@@ -46,7 +47,14 @@ namespace QLNet {
             for (int i = 0; i < columns_; i++)
                 result[i] = data_[i, c];
             return result;
-        } 
+        }
+        public Vector diagonal() {
+            int arraySize = Math.Min(rows(), columns());
+            Vector tmp = new Vector(arraySize);
+            for(int i = 0; i < arraySize; i++)
+                tmp[i] = data_[i,i];
+            return tmp;
+        }
         #endregion
 
         #region Constructors
@@ -89,6 +97,8 @@ namespace QLNet {
         //@{
         public static Matrix operator +(Matrix m1, Matrix m2) { return operMatrix(ref m1, ref m2, (x, y) => x + y); }
         public static Matrix operator -(Matrix m1, Matrix m2) { return operMatrix(ref m1, ref m2, (x, y) => x - y); }
+        public static Matrix operator *(double value, Matrix m1) { return operValue(ref m1, value, (x, y) => x * y); }
+        public static Matrix operator /(double value, Matrix m1) { return operValue(ref m1, value, (x, y) => x / y); }
         public static Matrix operator *(Matrix m1, double value) { return operValue(ref m1, value, (x, y) => x * y); }
         public static Matrix operator /(Matrix m1, double value) { return operValue(ref m1, value, (x, y) => x / y); }
         private static Matrix operMatrix(ref Matrix m1, ref Matrix m2, Func<double, double, double> func) {
@@ -147,6 +157,22 @@ namespace QLNet {
             for (int i=0; i<m.rows(); i++)
                 for (int j=0; j<m.columns();j++)
                     result.data_[j,i] = m.data_[j,i];
+            return result;
+        }
+
+        public static Matrix outerProduct(List<double> v1begin, List<double> v2begin) {
+
+            int size1 = v1begin.Count;
+            if (!(size1>0)) throw new ApplicationException("null first vector");
+
+            int size2 = v2begin.Count;
+            if(!(size2>0)) throw new ApplicationException("null second vector");
+
+            Matrix result = new Matrix(size1, size2);
+
+            for (int i=0; i<v1begin.Count; i++)
+                for(int j=0; j<v2begin.Count; j++)
+                    result[i,j] = v1begin[i] * v2begin[j];
             return result;
         }
     }

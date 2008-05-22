@@ -55,6 +55,7 @@ namespace QLNet {
     public class ConvergenceStatistics<T> : ConvergenceStatistics<T, DoublingConvergenceSteps> 
             where T : IGeneralStatistics, new() {
         public ConvergenceStatistics(T stats, DoublingConvergenceSteps rule) : base(stats, rule) { }
+        public ConvergenceStatistics() : base(new DoublingConvergenceSteps()) { }
         public ConvergenceStatistics(DoublingConvergenceSteps rule) : base(rule) { }
     }
 
@@ -76,7 +77,7 @@ namespace QLNet {
             reset();
         }
 
-        //public ConvergenceStatistics(U rule = U()) {
+        public ConvergenceStatistics() : this(new U()) { }
         public ConvergenceStatistics(U rule) {
             samplingRule_ = rule;
             reset();
@@ -88,7 +89,7 @@ namespace QLNet {
             table_.Clear();
         }
 
-        //void add(const value_type& value, Real weight = 1.0);
+        public void add(double value) { add(value, 1); }
         public void add(double value, double weight) {
             impl_.add(value, weight);
             if (samples() == nextSampleSize_) {
