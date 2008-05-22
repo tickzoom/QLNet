@@ -58,6 +58,7 @@
     <Compile Include="T_Rounding.cs" />
     <Compile Include="T_SampledCurve.cs" />
     <Compile Include="T_Solvers.cs" />
+    <Compile Include="T_Stats.cs" />
     <Compile Include="T_Swaps.cs" />
     <Compile Include="T_TermStructures.cs" />
     <Compile Include="Utilities.cs" />

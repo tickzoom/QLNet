@@ -190,6 +190,7 @@
     <Compile Include="Math\statistics\generalstatistics.cs" />
     <Compile Include="Math\statistics\incrementalstatistics.cs" />
     <Compile Include="Math\statistics\riskstatistics.cs" />
+    <Compile Include="Math\statistics\sequencestatistics.cs" />
     <Compile Include="Math\transformedgrid.cs" />
     <Compile Include="Math\Vector.cs" />
     <Compile Include="Methods\Finitedifferences\AmericanCondition.cs" />
