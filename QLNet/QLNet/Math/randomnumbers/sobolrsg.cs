@@ -115,6 +115,7 @@ namespace QLNet {
 
         /*! \pre dimensionality must be <= PPMT_MAX_DIM */
         //public SobolRsg(int dimensionality, ulong seed = 0, DirectionIntegers directionIntegers = Jaeckel);
+        public SobolRsg(int dimensionality) : this(dimensionality, 0, DirectionIntegers.Jaeckel) { }
         public SobolRsg(int dimensionality, ulong seed, DirectionIntegers directionIntegers) {
             dimensionality_ = dimensionality;
             sequenceCounter_ = 0;

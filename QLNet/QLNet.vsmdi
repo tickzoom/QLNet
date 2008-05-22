@@ -4,8 +4,8 @@
     <TestLinks>
       <TestLink id="bbe2d937-bb70-a666-a879-b3063800a42e" name="testFairSpread" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
       <TestLink id="25b4118b-8066-f12f-3687-a5ef1886eb1c" name="testInArrears" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
-      <TestLink id="27ded393-6046-4057-bd65-31f629c9bf55" name="testFairRate" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
       <TestLink id="0ee842b0-6275-252f-a1d0-000b0a6a4c52" name="testCachedValue" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="27ded393-6046-4057-bd65-31f629c9bf55" name="testFairRate" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
       <TestLink id="3b1816a9-7785-f64f-bc52-7014af11e8e5" name="testSpreadDependency" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
       <TestLink id="2b04fe68-610a-b2de-e241-ef9a50fdb3fb" name="testRateDependency" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
     </TestLinks>
@@ -41,6 +41,11 @@
       <TestLink id="d6bc7241-f63e-62c4-b65c-9d2b11e788ed" name="testOperatorConsistency" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
     </TestLinks>
   </TestList>
+  <TestList name="Risk Stats" id="a33eb53e-6299-480c-8958-5bcb922a4801" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
+    <TestLinks>
+      <TestLink id="b87fb037-4727-72de-6cc9-162a99e11210" name="RiskStatisticsTest" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+    </TestLinks>
+  </TestList>
   <TestList name="SampledCurve" id="a6f5cea2-0706-4e42-a89c-afd9f63d2645" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
     <TestLinks>
       <TestLink id="4cdec0b6-cb8a-7760-86dc-9812b4a118bd" name="testConstruction" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
@@ -48,12 +53,12 @@
   </TestList>
   <TestList name="American Option" id="da9a808d-acf7-4baf-9dfb-e4b091d30fef" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
     <TestLinks>
-      <TestLink id="33c4d801-48ac-44c4-329e-d6fe84f5e034" name="testJuValues" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="2bbf531b-68cb-84c0-a06f-6bedfb89f20f" name="testBaroneAdesiWhaleyValues" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
       <TestLink id="3be50179-04ee-902d-73d8-3c94e9305a67" name="testFdShoutGreeks" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
       <TestLink id="783f96db-cce8-bf61-b280-f5010f7d7eb3" name="testFdValues" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
       <TestLink id="1e42c90a-8e82-1369-9ed9-52b036b1c07e" name="testBjerksundStenslandValues" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
       <TestLink id="9f4ff6f8-9938-8ecb-5608-7dbc928cbda3" name="testFdAmericanGreeks" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
-      <TestLink id="2bbf531b-68cb-84c0-a06f-6bedfb89f20f" name="testBaroneAdesiWhaleyValues" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="33c4d801-48ac-44c4-329e-d6fe84f5e034" name="testJuValues" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
     </TestLinks>
   </TestList>
   <TestList name="PiecewiseYieldCurve" id="db6f77ff-70a4-4779-821e-8f5548c91d54" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">

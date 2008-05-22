@@ -34,12 +34,21 @@ namespace QLNet {
         //typedef typename S::value_type value_type;
 
         #region wrap-up Stat
-        Stat impl_ = new Stat();
+        protected Stat impl_ = new Stat();
 
         public int samples() { return impl_.samples(); }
         public double mean() { return impl_.mean(); }
+        public double min() { return impl_.min(); }
+        public double max() { return impl_.max(); }
         public double standardDeviation() { return impl_.standardDeviation(); }
+        public double variance() { return impl_.variance(); }
+        public double skewness() { return impl_.skewness(); }
+        public double kurtosis() { return impl_.kurtosis(); }
         public double percentile(double percent) { return impl_.percentile(percent); }
+        public double weightSum() { return impl_.weightSum(); }
+
+        public void reset() { impl_.reset(); }
+        public void addSequence(List<double> data, List<double> weight) { impl_.addSequence(data, weight); }
 
         public KeyValuePair<double, int> expectationValue(Func<KeyValuePair<double, double>, double> f,
                                                           Func<KeyValuePair<double, double>, bool> inRange) {
@@ -78,8 +87,8 @@ namespace QLNet {
         */
         public double regret(double target) {
             // average over the range below the target
-            KeyValuePair<double, int> result = expectationValue(z => Math.Pow(z.Key * z.Value - mean(), 2),
-                                                                z => z.Value < target);
+            KeyValuePair<double, int> result = expectationValue(z => Math.Pow(z.Key - target, 2),
+                                                                z => z.Key < target);
             double x = result.Key;
             int N = result.Value;
             if (!(N > 1)) throw new ApplicationException("samples under target <= 1, unsufficient");
@@ -152,7 +161,7 @@ namespace QLNet {
             \f[ \mathrm{E}\left[ t-x \;|\; x<t \right] \f]
         */
         public double averageShortfall(double target) {
-            KeyValuePair<double, int> result = expectationValue(z => z.Key - target, z => z.Key < target);
+            KeyValuePair<double, int> result = expectationValue(z => target - z.Key, z => z.Key < target);
             double x = result.Key;
             int N = result.Value;
             if (N == 0) throw new ApplicationException("no data below the target");
@@ -163,5 +172,30 @@ namespace QLNet {
     //! default risk measures tool
     /*! \test the correctness of the returned values is tested by checking them against numerical calculations. */
     //typedef GenericRiskStatistics<GaussianStatistics> RiskStatistics;
-    public class RiskStatistics : GenericRiskStatistics<GaussianStatistics> { }
+    public class RiskStatistics : GenericRiskStatistics<GaussianStatistics> {
+        public double gaussianPercentile(double value) {
+            return ((GaussianStatistics)impl_).gaussianPercentile(value);
+        }
+        public double gaussianPotentialUpside(double value) {
+            return ((GaussianStatistics)impl_).gaussianPotentialUpside(value);
+        }
+        public double gaussianValueAtRisk(double value) {
+            return ((GaussianStatistics)impl_).gaussianValueAtRisk(value);
+        }
+        public double gaussianExpectedShortfall(double value) {
+            return ((GaussianStatistics)impl_).gaussianExpectedShortfall(value);
+        }
+        public double gaussianShortfall(double value) {
+            return ((GaussianStatistics)impl_).gaussianShortfall(value);
+        }
+        public double gaussianAverageShortfall(double value) {
+            return ((GaussianStatistics)impl_).gaussianAverageShortfall(value);
+        }
+        public double gaussianRegret(double value) {
+            return ((GaussianStatistics)impl_).gaussianRegret(value);
+        }
+        public double gaussianDownsideVariance() {
+            return ((GaussianStatistics)impl_).gaussianDownsideVariance();
+        }
+    }
 }

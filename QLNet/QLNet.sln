@@ -1,13 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A1B2F21C-BD08-4751-9FBE-6DD0405E3DBC}"
-	ProjectSection(SolutionItems) = preProject
-		localtestrun.testrunconfig = localtestrun.testrunconfig
-		QLNet.vsmdi = QLNet.vsmdi
-		QLNet1.vsmdi = QLNet1.vsmdi
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QLNet", "QLNet\QLNet.csproj", "{F6E762BD-DCDF-4CA0-ABAD-CB21C7D03BEC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test2008", "Test2008\Test2008.csproj", "{2EF8B45B-940A-4B77-8776-E8CE0036961E}"
@@ -26,9 +19,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VisualBasic", "VisualBasic"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Swap", "VB\Swap\Swap.vbproj", "{5724FF23-DB57-4D10-B88E-B1DFF1249C88}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0A13061B-C0D9-4D34-981A-E506240D6A75}"
+	ProjectSection(SolutionItems) = preProject
+		QLNet.vsmdi = QLNet.vsmdi
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = QLNet1.vsmdi
+		CategoryFile = QLNet.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
