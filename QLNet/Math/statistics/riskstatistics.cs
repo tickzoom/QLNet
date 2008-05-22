@@ -48,6 +48,7 @@ namespace QLNet {
         public double weightSum() { return impl_.weightSum(); }
 
         public void reset() { impl_.reset(); }
+        public void add(double value, double weight) { impl_.add(value, weight); }
         public void addSequence(List<double> data, List<double> weight) { impl_.addSequence(data, weight); }
 
         public KeyValuePair<double, int> expectationValue(Func<KeyValuePair<double, double>, double> f,
