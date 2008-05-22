@@ -30,9 +30,11 @@ namespace QLNet {
     }
 
     // random number traits
-    public class GenericPseudoRandom<URNG, IC> where URNG : IRNGTraits, new() {
+    public class GenericPseudoRandom<URNG, IC>
+        where URNG : IRNGTraits, new()
+        where IC : IValue, new() {
         // data
-        static IC icInstance;
+        public static IC icInstance;
 
         //// typedefs
         //typedef URNG urng_type;
@@ -44,14 +46,22 @@ namespace QLNet {
         //enum { allowsErrorEstimate = 1 };
 
         // factory
-        //static InverseCumulativeRsg<RandomSequenceGenerator<URNG>,IC> make_sequence_generator(int dimension, Int64 seed) {
-        //    RandomSequenceGenerator<URNG> g(dimension, seed);
-        //    return (icInstance ? rsg_type(g, *icInstance) : rsg_type(g));
-        //}
+        public static InverseCumulativeRsg<RandomSequenceGenerator<URNG>,IC> make_sequence_generator(int dimension, ulong seed) {
+            RandomSequenceGenerator<URNG> g = new RandomSequenceGenerator<URNG>(dimension, seed);
+            return (icInstance != null ? new InverseCumulativeRsg<RandomSequenceGenerator<URNG>, IC>(g, icInstance)
+                                       : new InverseCumulativeRsg<RandomSequenceGenerator<URNG>, IC>(g));
+        }
     }
 
     //! default traits for pseudo-random number generation
     /*! \test a sequence generator is generated and tested by comparing samples against known good values. */
     // typedef GenericPseudoRandom<MersenneTwisterUniformRng, InverseCumulativeNormal> PseudoRandom;
     public class PseudoRandom : GenericPseudoRandom<MersenneTwisterUniformRng, InverseCumulativeNormal> { }
+
+    //! traits for Poisson-distributed pseudo-random number generation
+    /*! \test sequence generators are generated and tested by comparing
+              samples against known good values.
+    */
+    // typedef GenericPseudoRandom<MersenneTwisterUniformRng, InverseCumulativePoisson> PoissonPseudoRandom;
+    public class PoissonPseudoRandom : GenericPseudoRandom<MersenneTwisterUniformRng, InverseCumulativePoisson> { }
 }

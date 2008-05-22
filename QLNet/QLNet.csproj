@@ -138,6 +138,7 @@
     <Compile Include="Math\Distributions\binomialdistribution.cs" />
     <Compile Include="Math\Distributions\GammaDistribution.cs" />
     <Compile Include="Math\Distributions\NormalDistribution.cs" />
+    <Compile Include="Math\Distributions\poissondistribution.cs" />
     <Compile Include="Math\factorial.cs" />
     <Compile Include="Math\integrals\Integral.cs" />
     <Compile Include="Math\integrals\Kronrodintegral.cs" />
@@ -160,6 +161,8 @@
     <Compile Include="Math\Optimization\ProjectedCostFunction.cs" />
     <Compile Include="Math\Optimization\Simplex.cs" />
     <Compile Include="Math\Optimization\SteepestDescent.cs" />
+    <Compile Include="Math\randomnumbers\inversecumulativerng.cs" />
+    <Compile Include="Math\randomnumbers\inversecumulativersg.cs" />
     <Compile Include="Math\randomnumbers\mt19937uniformrng.cs" />
     <Compile Include="Math\randomnumbers\primitivepolynomials.cs" />
     <Compile Include="Math\randomnumbers\randomsequencegenerator.cs" />
