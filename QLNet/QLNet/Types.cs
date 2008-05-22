@@ -20,6 +20,11 @@ using System;
 using System.Collections.Generic;
 
 namespace QLNet {
+    // interface for all value methods
+    public interface IValue {
+        double value(double v);
+    }
+
     public struct Const {
         public const double QL_Epsilon = 2.2204460492503131e-016;
 

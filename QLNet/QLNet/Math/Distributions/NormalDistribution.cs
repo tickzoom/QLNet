@@ -32,7 +32,7 @@ namespace QLNet {
               CumulativeNormalDistribution and InverseCumulativeNormal
               classes.
     */
-    public class NormalDistribution {
+    public class NormalDistribution : IValue {
         private double average_, sigma_, normalizationFactor_, denominator_, derNormalizationFactor_;
 
         public NormalDistribution() : this(0.0, 1.0) { }
@@ -72,7 +72,7 @@ namespace QLNet {
         Handbook of Mathematical Functions,
         Dover Publications, New York (1972)
     */
-    public class CumulativeNormalDistribution {
+    public class CumulativeNormalDistribution : IValue {
         private double average_, sigma_;
         private NormalDistribution gaussian_ = new NormalDistribution();
         
@@ -358,7 +358,7 @@ namespace QLNet {
       variants would not preserve the sequence's low-discrepancy.
 
     */
-    public class InverseCumulativeNormal {
+    public class InverseCumulativeNormal : IValue {
         double average_, sigma_;
 
         // Coefficients for the rational approximation.
@@ -392,7 +392,7 @@ namespace QLNet {
         const double x_high_= 1.0 - x_low_;
 
         
-        //public InverseCumulativeNormal(double average = 0.0, double sigma   = 1.0);
+        public InverseCumulativeNormal() : this(0.0, 1.0) { }
         public InverseCumulativeNormal(double average, double sigma) {
             average_ = average;
             sigma_ = sigma;
@@ -464,7 +464,7 @@ namespace QLNet {
         Peter J. Acklam's approximation is better and is available
         as QuantLib::InverseCumulativeNormal
     */
-    public class MoroInverseCumulativeNormal {
+    public class MoroInverseCumulativeNormal : IValue {
         private double average_, sigma_;
 
         const double a0_ =  2.50662823884;

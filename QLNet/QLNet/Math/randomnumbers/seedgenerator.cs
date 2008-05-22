@@ -27,14 +27,17 @@ namespace QLNet {
     public class SeedGenerator {
         private static MersenneTwisterUniformRng rng_;
 
+        private static readonly SeedGenerator instance_ = new SeedGenerator();
         private SeedGenerator() {
             rng_ = new MersenneTwisterUniformRng(42UL);
             initialize();
         }
 
-        public static ulong get() {
+        public ulong get() {
             return rng_.nextInt32();
         }
+
+        public static SeedGenerator instance() { return instance_; }
 
         private void initialize() {
             // firstSeed is chosen based on clock() and used for the first rng

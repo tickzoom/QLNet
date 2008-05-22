@@ -22,6 +22,11 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
+    public interface IRNG {
+        int dimension();
+        Sample<List<double>> nextSequence();
+    }
+
     /*! Random sequence generator based on a pseudo-random number generator RNG.
 
         Class RNG must implement the following interface:
@@ -31,7 +36,7 @@ namespace QLNet {
 
         \warning do not use with low-discrepancy sequence generator.
     */
-    public class RandomSequenceGenerator<RNG> where RNG : IRNGTraits, new() {
+    public class RandomSequenceGenerator<RNG> : IRNG where RNG : IRNGTraits, new() {
         // typedef Sample<std::vector<Real> > sample_type;
         private int dimensionality_;
         public int dimension() { return dimensionality_; }

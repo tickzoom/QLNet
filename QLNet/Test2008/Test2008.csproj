@@ -7,7 +7,7 @@
     <ProjectGuid>{2EF8B45B-940A-4B77-8776-E8CE0036961E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Test2008</RootNamespace>
+    <RootNamespace>TestSuite</RootNamespace>
     <AssemblyName>Test2008</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -55,6 +55,7 @@
     <Compile Include="T_Money.cs" />
     <Compile Include="T_Operators.cs" />
     <Compile Include="T_RiskStats.cs" />
+    <Compile Include="T_RNGTraits.cs" />
     <Compile Include="T_Rounding.cs" />
     <Compile Include="T_SampledCurve.cs" />
     <Compile Include="T_Solvers.cs" />

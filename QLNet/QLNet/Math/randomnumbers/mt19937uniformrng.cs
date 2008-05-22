@@ -108,7 +108,7 @@ namespace QLNet {
 
         private void seedInitialization(ulong seed) {
             /* initializes mt with a seed */
-            ulong s = (seed != 0 ? seed : SeedGenerator.get());
+            ulong s = (seed != 0 ? seed : SeedGenerator.instance().get());
             mt[0]= s & 0xffffffffUL;
             for (mti=1; mti<N; mti++) {
                 mt[mti] = (1812433253UL * (mt[mti - 1] ^ (mt[mti - 1] >> 30)) + (ulong)mti);

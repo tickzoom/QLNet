@@ -27,7 +27,7 @@ namespace QLNet {
               checking it against numerical calculations.
     */
     public static class Factorial {
-        public static double get(int i) {
+        public static double get(uint i) {
             if (i<=tabulated) {
                 return firstFactorials[i];
             } else {
