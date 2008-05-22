@@ -35,6 +35,7 @@ namespace QLNet {
         double weightSum();
 
         void reset();
+        void add(double value, double weight);
         void addSequence(List<double> data, List<double> weight);
 
         KeyValuePair<double, int> expectationValue(Func<KeyValuePair<double, double>, double> f,
@@ -259,7 +260,7 @@ namespace QLNet {
         //! adds a sequence of data to the set, with default weight
         public void addSequence(List<double> list) {
             foreach(double v in list) 
-                add(v);
+                add(v, 1);
         }
         //! adds a sequence of data to the set, each with its weight
         public void addSequence(List<double> data, List<double> weight) {

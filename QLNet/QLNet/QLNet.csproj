@@ -185,6 +185,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Math\Solvers1d\Secant.cs" />
+    <Compile Include="Math\statistics\convergencestatistics.cs" />
     <Compile Include="Math\statistics\gaussianstatistics.cs" />
     <Compile Include="Math\statistics\generalstatistics.cs" />
     <Compile Include="Math\statistics\incrementalstatistics.cs" />
