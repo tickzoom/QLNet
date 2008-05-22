@@ -148,7 +148,7 @@ namespace QLNet
         }
         public InterestRate forwardRate(Date d, Period p, DayCounter resultDayCounter, Compounding comp, Frequency freq, bool extrapolate)
         {
-            return forwardRate(d, d + p, dayCounter(), comp, freq, extrapolate);
+            return forwardRate(d, d + p, resultDayCounter, comp, freq, extrapolate);
         }
 
         // The resulting interest rate has the same day-counting rule used by the term structure. The same rule should be used for the calculating the passed times t1 and t2.
