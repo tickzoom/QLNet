@@ -30,6 +30,29 @@ namespace Test2008 {
         double[] data =    { 3.0, 4.0, 5.0, 2.0, 3.0, 4.0, 5.0, 6.0, 4.0, 7.0 };
         double[] weights = { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
 
+        [TestMethod()]
+        public void testStatistics() {
+            check<IncrementalStatistics>("IncrementalStatistics");
+            check<RiskStatistics>("Statistics");
+        }
+
+        [TestMethod()]
+        public void testSequenceStatistics() {
+            //("Testing sequence statistics...");
+
+            checkSequence<IncrementalStatistics>("IncrementalStatistics", 5);
+            checkSequence<RiskStatistics>("Statistics", 5);
+        }
+
+        [TestMethod()]
+        public void testConvergenceStatistics() {
+
+            //("Testing convergence statistics...");
+
+            checkConvergence<IncrementalStatistics>("IncrementalStatistics");
+            checkConvergence<RiskStatistics>("Statistics");
+        }
+
         void check<S>(string name) where S : IGeneralStatistics, new() {
             S s = new S();
 
@@ -269,8 +292,5 @@ namespace Test2008 {
                            + "\n    calculated: " + calculatedSamples
                            + "\n    expected:   " + expectedSampleSize2);
         }
-
-
-        //[TestMethod()]
     }
 }
