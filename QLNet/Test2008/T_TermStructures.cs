@@ -53,17 +53,17 @@ namespace TestSuite {
                 int deposits = depositData.Length,
                     swaps = swapData.Length;
 
-                List<BootstrapHelper<YieldTermStructure>> instruments = new InitializedList<BootstrapHelper<YieldTermStructure>>(deposits+swaps);
+                var instruments = new List<BootstrapHelper<YieldTermStructure>>(deposits+swaps);
                 for (int i=0; i<deposits; i++) {
-                    instruments[i] = new DepositRateHelper(depositData[i].rate/100, new Period(depositData[i].n, depositData[i].units),
-                                          settlementDays, calendar, BusinessDayConvention.ModifiedFollowing, true, new Actual360());
+                    instruments.Add(new DepositRateHelper(depositData[i].rate/100, new Period(depositData[i].n, depositData[i].units),
+                                    settlementDays, calendar, BusinessDayConvention.ModifiedFollowing, true, new Actual360()));
                 }
                 
                 IborIndex index = new IborIndex("dummy", new Period(6, TimeUnit.Months), settlementDays, new Currency(),
                                                 calendar, BusinessDayConvention.ModifiedFollowing, false, new Actual360());
                 for (int i=0; i<swaps; ++i) {
-                    instruments[i+deposits] = new SwapRateHelper(swapData[i].rate/100, new Period(swapData[i].n, swapData[i].units),
-                                            calendar, Frequency.Annual, BusinessDayConvention.Unadjusted, new Thirty360(), index);
+                    instruments.Add(new SwapRateHelper(swapData[i].rate/100, new Period(swapData[i].n, swapData[i].units),
+                                    calendar, Frequency.Annual, BusinessDayConvention.Unadjusted, new Thirty360(), index));
                 }
                 termStructure = new PiecewiseYieldCurve<Discount,LogLinear>(settlement, instruments, new Actual360());
                 dummyTermStructure = new PiecewiseYieldCurve<Discount,LogLinear>(settlement, instruments, new Actual360());
