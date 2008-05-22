@@ -126,13 +126,13 @@ namespace QLNet
                 double t1 = timeFromReference(d1);
                 double t2 = t1 + 0.0001;
                 double compound = discount(t1, extrapolate) / discount(t2, extrapolate);
-                return InterestRate.impliedRate(compound, t2 - t1, dayCounter(), comp, freq);
+                return InterestRate.impliedRate(compound, t2 - t1, resultDayCounter, comp, freq);
             }
             else
             {
                 if (!(d1 < d2)) throw new ArgumentException(d1 + " later than " + d2);
                 double compound = discount(d1, extrapolate) / discount(d2, extrapolate);
-                return InterestRate.impliedRate(compound, d1, d2, dayCounter(), comp, freq);
+                return InterestRate.impliedRate(compound, d1, d2, resultDayCounter, comp, freq);
             }
         }
 

@@ -24,8 +24,10 @@ using QLNet;
 
 namespace TestSuite {
     [TestClass()]
-    public class InterpolatedYieldCurveTest {
-        public class CommonVars {
+   public class T_Piecewiseyieldcurve
+   {
+        public class CommonVars 
+        {
             #region Values
             public struct Datum {
                 public int n;
@@ -124,7 +126,8 @@ namespace TestSuite {
             // IndexHistoryCleaner cleaner;
 
             // setup
-            public CommonVars() {
+            public CommonVars() 
+            {
 
                 //cleaner = new IndexHistoryCleaner();
                 ////GC.Collect();
@@ -318,6 +321,26 @@ namespace TestSuite {
                 Assert.Fail("Observer was not notified of date change");
         }
 
+        [TestMethod()]
+        public void testForwardRateDayCounter()
+        {
+
+           CommonVars vars = new CommonVars();
+           DayCounter d = new ActualActual();
+           DayCounter d1 = new Actual360();
+
+           vars.termStructure = new PiecewiseYieldCurve<Discount, LogLinear>(vars.settlementDays,
+                                                          vars.calendar, vars.instruments, d);
+
+           InterestRate ir = vars.termStructure.forwardRate(vars.settlement,vars.settlement+30, d1, Compounding.Simple);
+
+           if (ir.dayCounter().name() != d1.name())
+              Assert.Fail("PiecewiseYieldCurve forwardRate dayCounter error" +
+                          " Actual daycounter : " + vars.termStructure.dayCounter().name() +
+                          " Expetced DayCounter : " + d1.name());
+   
+
+        }
 
         public void testCurveConsistency<T, I>(CommonVars vars)
             where T : ITraits, new()
