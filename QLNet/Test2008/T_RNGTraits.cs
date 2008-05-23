@@ -23,67 +23,72 @@ using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QLNet;
 
-namespace TestSuite {
-    [TestClass()]
-    public class T_RNGTraits {
-        [TestMethod()]
-        public void testGaussian() {
-            //("Testing Gaussian pseudo-random number generation...");
+namespace TestSuite
+{
+   [TestClass()]
+   public class T_RNGTraits
+   {
+      [TestMethod()]
+      public void testGaussian()
+      {
+         //("Testing Gaussian pseudo-random number generation...");
 
-            InverseCumulativeRsg<RandomSequenceGenerator<MersenneTwisterUniformRng>,InverseCumulativeNormal> rsg = 
-                PseudoRandom.make_sequence_generator(100, 1234);
+         InverseCumulativeRsg<RandomSequenceGenerator<MersenneTwisterUniformRng>, InverseCumulativeNormal> rsg =
+             PseudoRandom.make_sequence_generator(100, 1234);
 
-            List<double> values = rsg.nextSequence().value;
-            double sum = 0.0;
-            for (int i=0; i<values.Count; i++)
-                sum += values[i];
+         List<double> values = rsg.nextSequence().value;
+         double sum = 0.0;
+         for (int i = 0; i < values.Count; i++)
+            sum += values[i];
 
-            double stored = 4.09916;
-            double tolerance = 1.0e-5;
-            if (Math.Abs(sum - stored) > tolerance)
-                Assert.Fail("the sum of the samples does not match the stored value\n"
-                           + "    calculated: " + sum + "\n"
-                           + "    expected:   " + stored);
-        }
+         double stored = 4.09916;
+         double tolerance = 1.0e-5;
+         if (Math.Abs(sum - stored) > tolerance)
+            Assert.Fail("the sum of the samples does not match the stored value\n"
+                       + "    calculated: " + sum + "\n"
+                       + "    expected:   " + stored);
+      }
 
-        [TestMethod()]
-        public void testDefaultPoisson() {
+      [TestMethod()]
+      public void testDefaultPoisson()
+      {
 
-            //("Testing Poisson pseudo-random number generation...");
+         //("Testing Poisson pseudo-random number generation...");
 
-            PoissonPseudoRandom.icInstance = new InverseCumulativePoisson();
-            var rsg = PoissonPseudoRandom.make_sequence_generator(100, 1234);
+         PoissonPseudoRandom.icInstance = new InverseCumulativePoisson();
+         var rsg = PoissonPseudoRandom.make_sequence_generator(100, 1234);
 
-            List<double> values = rsg.nextSequence().value;
-            double sum = 0.0;
-            for (int i=0; i<values.Count; i++)
-                sum += values[i];
+         List<double> values = rsg.nextSequence().value;
+         double sum = 0.0;
+         for (int i = 0; i < values.Count; i++)
+            sum += values[i];
 
-            double stored = 108.0;
-            if (!Utils.close(sum, stored))
-                Assert.Fail("the sum of the samples does not match the stored value\n"
-                           + "    calculated: " + sum + "\n"
-                           + "    expected:   " + stored);
-        }
+         double stored = 108.0;
+         if (!Utils.close(sum, stored))
+            Assert.Fail("the sum of the samples does not match the stored value\n"
+                       + "    calculated: " + sum + "\n"
+                       + "    expected:   " + stored);
+      }
 
-        [TestMethod()]
-        public void testCustomPoisson() {
+      [TestMethod()]
+      public void testCustomPoisson()
+      {
 
-            //("Testing custom Poisson pseudo-random number generation...");
+         //("Testing custom Poisson pseudo-random number generation...");
 
-            PoissonPseudoRandom.icInstance = new InverseCumulativePoisson(4.0);
-            var rsg = PoissonPseudoRandom.make_sequence_generator(100, 1234);
+         PoissonPseudoRandom.icInstance = new InverseCumulativePoisson(4.0);
+         var rsg = PoissonPseudoRandom.make_sequence_generator(100, 1234);
 
-            List<double> values = rsg.nextSequence().value;
-            double sum = 0.0;
-            for (int i=0; i<values.Count; i++)
-                sum += values[i];
+         List<double> values = rsg.nextSequence().value;
+         double sum = 0.0;
+         for (int i = 0; i < values.Count; i++)
+            sum += values[i];
 
-            double stored = 409.0;
-            if (!Utils.close(sum, stored))
-                Assert.Fail("the sum of the samples does not match the stored value\n"
-                           + "    calculated: " + sum + "\n"
-                           + "    expected:   " + stored);
-        }
-    }
+         double stored = 409.0;
+         if (!Utils.close(sum, stored))
+            Assert.Fail("the sum of the samples does not match the stored value\n"
+                       + "    calculated: " + sum + "\n"
+                       + "    expected:   " + stored);
+      }
+   }
 }

@@ -26,33 +26,33 @@ using System.Diagnostics;
 
 namespace TestSuite
 {
-    [TestClass()]
-    public class T_Rounding
-    {
-        public struct TestCase
-        {
-            public double x;
-            public int precision;
-            public double closest;
-            public double up;
-            public double down;
-            public double floor;
-            public double ceiling;
+   [TestClass()]
+   public class T_Rounding
+   {
+      public struct TestCase
+      {
+         public double x;
+         public int precision;
+         public double closest;
+         public double up;
+         public double down;
+         public double floor;
+         public double ceiling;
 
-            public TestCase(double x, int precision, double closest, double up, double down, double floor, double ceiling)
-            {
-                this.x = x ;
-                this.precision = precision ;
-                this.closest = closest ;
-                this.up = up;
-                this.down=down;
-                this.floor=floor;
-                this.ceiling=ceiling;
-            }
+         public TestCase(double x, int precision, double closest, double up, double down, double floor, double ceiling)
+         {
+            this.x = x;
+            this.precision = precision;
+            this.closest = closest;
+            this.up = up;
+            this.down = down;
+            this.floor = floor;
+            this.ceiling = ceiling;
+         }
 
-        }
+      }
 
-        public static TestCase[] testData = { 
+      public static TestCase[] testData = { 
            new TestCase( 0.86313513, 5, 0.86314, 0.86314, 0.86313, 0.86314, 0.86313 ), 
            new TestCase( -7.64555346, 1, -7.6, -7.7, -7.6, -7.6, -7.6 ), 
            new TestCase(0.13961605, 2, 0.14, 0.14, 0.13, 0.14, 0.13 ), 
@@ -75,74 +75,74 @@ namespace TestSuite
            new TestCase(7.89428221, 2, 7.89, 7.90, 7.89, 7.89, 7.89 ) 
         };
 
-        [TestMethod()]
-        public void testClosest()
-        {
-            for (int i = 0; i < testData.Length; i++)
-            {
-                int precision = testData[i].precision;
-                ClosestRounding closest = new ClosestRounding(precision);
-                double calculated = closest.Round(testData[i].x);
-                double expected = testData[i].closest;
-                if (!Utils.close(calculated, expected, 1))
-                    Assert.Fail ("Original number: " + testData[i].x + "Expected: " + expected + "Calculated: " + calculated);
-            }
-        }
-       [TestMethod()]
-       public void testUp()
-       {
-          for (int i = 0; i < testData.Length; i++)
-          {
-             int digits = testData[i].precision;
-             UpRounding up = new UpRounding(digits);
-             double calculated = up.Round(testData[i].x);
-             double expected = testData[i].up;
-             if (!Utils.close(calculated, expected, 1))
-                Assert.Fail("Original number: " + testData[i].x + "Expected: " + expected + "Calculated: " + calculated);
-          }
-       }
+      [TestMethod()]
+      public void testClosest()
+      {
+         for (int i = 0; i < testData.Length; i++)
+         {
+            int precision = testData[i].precision;
+            ClosestRounding closest = new ClosestRounding(precision);
+            double calculated = closest.Round(testData[i].x);
+            double expected = testData[i].closest;
+            if (!Utils.close(calculated, expected, 1))
+               Assert.Fail("Original number: " + testData[i].x + "Expected: " + expected + "Calculated: " + calculated);
+         }
+      }
+      [TestMethod()]
+      public void testUp()
+      {
+         for (int i = 0; i < testData.Length; i++)
+         {
+            int digits = testData[i].precision;
+            UpRounding up = new UpRounding(digits);
+            double calculated = up.Round(testData[i].x);
+            double expected = testData[i].up;
+            if (!Utils.close(calculated, expected, 1))
+               Assert.Fail("Original number: " + testData[i].x + "Expected: " + expected + "Calculated: " + calculated);
+         }
+      }
 
-       [TestMethod()]
-       public void testDown()
-       {
-          for (int i = 0; i < testData.Length; i++)
-          {
-             int digits = testData[i].precision;
-             DownRounding down = new DownRounding(digits);
-             double calculated = down.Round(testData[i].x);
-             double expected = testData[i].down;
-             if (!Utils.close(calculated, expected, 1))
-                Assert.Fail("Original number: " + testData[i].x + "Expected: " + expected + "Calculated: " + calculated);
-          }
-       }
+      [TestMethod()]
+      public void testDown()
+      {
+         for (int i = 0; i < testData.Length; i++)
+         {
+            int digits = testData[i].precision;
+            DownRounding down = new DownRounding(digits);
+            double calculated = down.Round(testData[i].x);
+            double expected = testData[i].down;
+            if (!Utils.close(calculated, expected, 1))
+               Assert.Fail("Original number: " + testData[i].x + "Expected: " + expected + "Calculated: " + calculated);
+         }
+      }
 
-       [TestMethod()]
-       public void testFloor()
-       {
-          for (int i = 0; i < testData.Length; i++)
-          {
-             int digits = testData[i].precision;
-             FloorTruncation floor = new FloorTruncation(digits);
-             double calculated = floor.Round(testData[i].x);
-             double expected = testData[i].floor;
-             if (!Utils.close(calculated, expected, 1))
-                Assert.Fail("Original number: " + testData[i].x + "Expected: " + expected + "Calculated: " + calculated);
-          }
-       }
+      [TestMethod()]
+      public void testFloor()
+      {
+         for (int i = 0; i < testData.Length; i++)
+         {
+            int digits = testData[i].precision;
+            FloorTruncation floor = new FloorTruncation(digits);
+            double calculated = floor.Round(testData[i].x);
+            double expected = testData[i].floor;
+            if (!Utils.close(calculated, expected, 1))
+               Assert.Fail("Original number: " + testData[i].x + "Expected: " + expected + "Calculated: " + calculated);
+         }
+      }
 
-       [TestMethod()]
-       public void testCeiling()
-       {
-          for (int i = 0; i < testData.Length; i++)
-          {
-             int digits = testData[i].precision;
-             CeilingTruncation ceiling = new CeilingTruncation(digits);
-             double calculated = ceiling.Round(testData[i].x);
-             double expected = testData[i].ceiling;
-             if (!Utils.close(calculated, expected, 1))
-                Assert.Fail("Original number: " + testData[i].x + "Expected: " + expected + "Calculated: " + calculated);
-          }
-       }
+      [TestMethod()]
+      public void testCeiling()
+      {
+         for (int i = 0; i < testData.Length; i++)
+         {
+            int digits = testData[i].precision;
+            CeilingTruncation ceiling = new CeilingTruncation(digits);
+            double calculated = ceiling.Round(testData[i].x);
+            double expected = testData[i].ceiling;
+            if (!Utils.close(calculated, expected, 1))
+               Assert.Fail("Original number: " + testData[i].x + "Expected: " + expected + "Calculated: " + calculated);
+         }
+      }
 
-    }
+   }
 }

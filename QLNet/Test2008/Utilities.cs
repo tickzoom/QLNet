@@ -23,59 +23,70 @@ using System.Linq;
 using System.Text;
 using QLNet;
 
-namespace TestSuite {
-    public class Flag : IObserver {
-        private bool up_;
+namespace TestSuite
+{
+   public class Flag : IObserver
+   {
+      private bool up_;
 
-        public Flag() {
-            up_ = false;
-        }
+      public Flag()
+      {
+         up_ = false;
+      }
 
-        public void raise() { up_ = true; }
-        public void lower() { up_ = false; }
-        public bool isUp() { return up_; }
-        public void update() { raise(); }
-    };
+      public void raise() { up_ = true; }
+      public void lower() { up_ = false; }
+      public bool isUp() { return up_; }
+      public void update() { raise(); }
+   };
 
-    public static class Utilities {
-        public static YieldTermStructure flatRate(Date today, double forward, DayCounter dc) {
-            return new FlatForward(today, new SimpleQuote(forward), dc);
-        }
-        public static YieldTermStructure flatRate(Date today, Quote forward, DayCounter dc) {
-            return new FlatForward(today, forward, dc);
-        }
+   public static class Utilities
+   {
+      public static YieldTermStructure flatRate(Date today, double forward, DayCounter dc)
+      {
+         return new FlatForward(today, new SimpleQuote(forward), dc);
+      }
+      public static YieldTermStructure flatRate(Date today, Quote forward, DayCounter dc)
+      {
+         return new FlatForward(today, forward, dc);
+      }
 
-        public static BlackVolTermStructure flatVol(Date today, double vol, DayCounter dc) {
-            return flatVol(today, new SimpleQuote(vol), dc);
-        }
+      public static BlackVolTermStructure flatVol(Date today, double vol, DayCounter dc)
+      {
+         return flatVol(today, new SimpleQuote(vol), dc);
+      }
 
-        public static BlackVolTermStructure flatVol(Date today, Quote vol, DayCounter dc) {
-            return new BlackConstantVol(today, new NullCalendar(), new Handle<Quote>(vol), dc);
-        }
+      public static BlackVolTermStructure flatVol(Date today, Quote vol, DayCounter dc)
+      {
+         return new BlackConstantVol(today, new NullCalendar(), new Handle<Quote>(vol), dc);
+      }
 
-        public static double norm(Vector v, int size, double h) {
-            // squared values
-            List<double> f2 = new InitializedList<double>(size);
+      public static double norm(Vector v, int size, double h)
+      {
+         // squared values
+         List<double> f2 = new InitializedList<double>(size);
 
-            for(int i=0;i<v.Count;i++)
-                f2[i] = v[i] * v[i];
+         for (int i = 0; i < v.Count; i++)
+            f2[i] = v[i] * v[i];
 
-            // numeric integral of f^2
-            double I = h * (f2.Sum() - 0.5*f2.First() - 0.5*f2.Last());
-            return Math.Sqrt(I);
-        }
+         // numeric integral of f^2
+         double I = h * (f2.Sum() - 0.5 * f2.First() - 0.5 * f2.Last());
+         return Math.Sqrt(I);
+      }
 
-        public static double relativeError(double x1, double x2, double reference) {
-            if (reference != 0.0)
-                return Math.Abs(x1-x2)/reference;
-            else
-                // fall back to absolute error
-                return Math.Abs(x1 - x2);
-        }
-    }
+      public static double relativeError(double x1, double x2, double reference)
+      {
+         if (reference != 0.0)
+            return Math.Abs(x1 - x2) / reference;
+         else
+            // fall back to absolute error
+            return Math.Abs(x1 - x2);
+      }
+   }
 
-    // this cleans up index-fixing histories when destroyed
-    public class IndexHistoryCleaner {
-        ~IndexHistoryCleaner() { IndexManager.clearHistories(); }
-    };
+   // this cleans up index-fixing histories when destroyed
+   public class IndexHistoryCleaner
+   {
+      ~IndexHistoryCleaner() { IndexManager.clearHistories(); }
+   };
 }
