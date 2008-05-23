@@ -101,7 +101,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\QLNet\QLNet.csproj">
+    <ProjectReference Include="..\..\..\QLNet\QLNet.csproj">
       <Project>{F6E762BD-DCDF-4CA0-ABAD-CB21C7D03BEC}</Project>
       <Name>QLNet</Name>
     </ProjectReference>
