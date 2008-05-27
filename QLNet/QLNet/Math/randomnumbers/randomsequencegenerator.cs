@@ -25,6 +25,7 @@ namespace QLNet {
     public interface IRNG {
         int dimension();
         Sample<List<double>> nextSequence();
+        Sample<List<double>> lastSequence();
     }
 
     /*! Random sequence generator based on a pseudo-random number generator RNG.

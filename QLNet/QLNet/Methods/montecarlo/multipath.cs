@@ -22,16 +22,30 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    //! weighted sample
-    /*! \ingroup mcarlo */
-    public struct Sample<T> : ICloneable {
-        public Sample(T value_, double weight_) {
-            value = value_;
-            weight = weight_;
-        }
-        public T value;
-        public double weight;
+    //! Correlated multiple asset paths
+    /*! MultiPath contains the list of paths for each asset, i.e.,
+        multipath[j] is the path followed by the j-th asset.
 
-        public object Clone() { return this.MemberwiseClone(); }
+        \ingroup mcarlo
+    */
+    public class MultiPath {
+        private List<Path> multiPath_;
+        
+        public MultiPath() {}
+        public MultiPath(int nAsset, TimeGrid timeGrid) {
+            multiPath_ = new InitializedList<Path>(nAsset, new Path(timeGrid));
+            if (!(nAsset > 0)) throw new ApplicationException("number of asset must be positive");
+        }
+
+        public MultiPath(List<Path> multiPath) {
+            multiPath_ = multiPath;
+        }
+
+        //! \name inspectors
+        public int assetNumber() { return multiPath_.Count; }
+        public int pathSize() { return multiPath_[0].length(); }
+
+        //! \name read/write access to components
+        public Path this[int j] { get { return multiPath_[j]; } set { multiPath_[j] = value; } }
     }
 }

@@ -217,6 +217,11 @@
     <Compile Include="Methods\lattices\lattice.cs" />
     <Compile Include="Methods\lattices\lattice1d.cs" />
     <Compile Include="Methods\lattices\tree.cs" />
+    <Compile Include="Methods\montecarlo\brownianbridge.cs" />
+    <Compile Include="Methods\montecarlo\multipath.cs" />
+    <Compile Include="Methods\montecarlo\multipathgenerator.cs" />
+    <Compile Include="Methods\montecarlo\path.cs" />
+    <Compile Include="Methods\montecarlo\pathgenerator.cs" />
     <Compile Include="Methods\montecarlo\sample.cs" />
     <Compile Include="Models\CalibrationHelper.cs" />
     <Compile Include="Models\model.cs">

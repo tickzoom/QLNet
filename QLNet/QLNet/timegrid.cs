@@ -112,5 +112,6 @@ namespace QLNet {
         }
 
         public bool empty() { return times_.Count == 0; }
+        public int size() { return times_.Count; }
     }
 }
