@@ -49,6 +49,7 @@ namespace QLNet {
         public double kurtosis() { return impl_.kurtosis(); }
         public double percentile(double percent) { return impl_.percentile(percent); }
         public double weightSum() { return impl_.weightSum(); }
+        public double errorEstimate() { return impl_.errorEstimate(); }
 
         public void reset() { impl_.reset(); }
         public void add(double value, double weight) { impl_.add(value, weight); }
@@ -201,6 +202,7 @@ namespace QLNet {
         public double kurtosis() { throw new NotSupportedException(); }
         public double percentile(double percent) { throw new NotSupportedException(); }
         public double weightSum() { throw new NotSupportedException(); }
+        public double errorEstimate() { throw new NotSupportedException(); }
 
         public void reset() { throw new NotSupportedException(); }
         public void add(double value, double weight) { throw new NotSupportedException(); }

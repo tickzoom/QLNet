@@ -43,7 +43,7 @@ namespace QLNet {
         //typedef InverseCumulativeRsg<ursg_type,IC> rsg_type;
 
         // more traits
-        //enum { allowsErrorEstimate = 1 };
+        public const int allowsErrorEstimate = 1;
 
         // factory
         public static InverseCumulativeRsg<RandomSequenceGenerator<URNG>,IC> make_sequence_generator(int dimension, ulong seed) {

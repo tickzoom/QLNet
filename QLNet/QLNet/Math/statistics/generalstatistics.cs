@@ -33,13 +33,14 @@ namespace QLNet {
         double kurtosis();
         double percentile(double percent);
         double weightSum();
+        double errorEstimate();
 
         void reset();
         void add(double value, double weight);
         void addSequence(List<double> data, List<double> weight);
 
         KeyValuePair<double, int> expectationValue(Func<KeyValuePair<double, double>, double> f,
-                                           Func<KeyValuePair<double, double>, bool> inRange);
+                                                   Func<KeyValuePair<double, double>, bool> inRange);
     }
 
     //! Statistics tool

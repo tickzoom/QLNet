@@ -122,6 +122,7 @@ namespace QLNet {
         public double kurtosis() { return impl_.kurtosis(); }
         public double percentile(double percent) { return impl_.percentile(percent); }
         public double weightSum() { return impl_.weightSum(); }
+        public double errorEstimate() { return impl_.errorEstimate(); }
 
         public KeyValuePair<double, int> expectationValue(Func<KeyValuePair<double, double>, double> f,
                                                           Func<KeyValuePair<double, double>, bool> inRange) {

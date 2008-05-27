@@ -27,7 +27,7 @@ namespace QLNet {
 
         \ingroup mcarlo
     */
-    public interface IPathPricer<PathType> {
-        double value(PathType pt);
+    public class PathPricer<PathType> {
+        public virtual double value(PathType pt) { throw new NotSupportedException(); }
     }
 }
