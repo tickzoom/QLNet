@@ -217,23 +217,21 @@ namespace EquityOption {
             Console.Write("{0,-" + widths[2] + ":0.000000}", bermudanOption.NPV());
             Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
 
-            //// Monte Carlo Method: MC (crude)
-            //timeSteps = 1;
-            //method = "MC (crude)";
-            //Size mcSeed = 42;
-            //boost::shared_ptr<PricingEngine> mcengine1;
-            //mcengine1 = MakeMCEuropeanEngine<PseudoRandom>(bsmProcess)
-            //    .withSteps(timeSteps)
-            //    .withTolerance(0.02)
-            //    .withSeed(mcSeed);
-            //europeanOption.setPricingEngine(mcengine1);
-            //// Real errorEstimate = europeanOption.errorEstimate();
-            //std::cout << std::setw(widths[0]) << std::left << method
-            //          << std::fixed
-            //          << std::setw(widths[1]) << std::left << europeanOption.NPV()
-            //          << std::setw(widths[2]) << std::left << "N/A"
-            //          << std::setw(widths[3]) << std::left << "N/A"
-            //          << std::endl;
+            // Monte Carlo Method: MC (crude)
+            timeSteps = 1;
+            method = "MC (crude)";
+            int mcSeed = 42;
+            IPricingEngine mcengine1 = new MakeMCEuropeanEngine<PseudoRandom>(bsmProcess)
+                                            .withSteps(timeSteps)
+                                            .withTolerance(0.02)
+                                            .withSeed((ulong)mcSeed)
+                                            .value();
+            europeanOption.setPricingEngine(mcengine1);
+            // Real errorEstimate = europeanOption.errorEstimate();
+            Console.Write("{0,-" + widths[0] + "}", method);
+            Console.Write("{0,-" + widths[1] + ":0.000000}", europeanOption.NPV());
+            Console.Write("{0,-" + widths[2] + ":0.000000}", "N/A");
+            Console.WriteLine("{0,-" + widths[3] + ":0.000000}", "N/A");
 
             //// Monte Carlo Method: QMC (Sobol)
             //method = "QMC (Sobol)";
