@@ -52,6 +52,84 @@ namespace QLNet {
         }
     }
 
+
+    //! Monte Carlo European engine factory
+    // template <class RNG = PseudoRandom, class S = Statistics>
+    public class MakeMCEuropeanEngine<RNG> : MakeMCEuropeanEngine<RNG, Statistics> {
+        public MakeMCEuropeanEngine(GeneralizedBlackScholesProcess process) : base(process) { }
+    }
+
+    public class MakeMCEuropeanEngine<RNG, S> where S : IGeneralStatistics, new() {
+        private GeneralizedBlackScholesProcess process_;
+        private bool antithetic_, controlVariate_;
+        private int steps_, stepsPerYear_, samples_, maxSamples_;
+        private double tolerance_;
+        private bool brownianBridge_;
+        private ulong seed_;
+
+        public MakeMCEuropeanEngine(GeneralizedBlackScholesProcess process) {
+            process_ = process;
+        }
+
+        // named parameters
+        public MakeMCEuropeanEngine<RNG, S> withSteps(int steps) {
+            steps_ = steps;
+            return this;
+        }
+        public MakeMCEuropeanEngine<RNG, S> withStepsPerYear(int steps) {
+            stepsPerYear_ = steps;
+            return this;
+        }
+        //public MakeMCEuropeanEngine withBrownianBridge(bool b = true);
+        public MakeMCEuropeanEngine<RNG, S> withBrownianBridge(bool brownianBridge) {
+            brownianBridge_ = brownianBridge;
+            return this;
+        }
+        public MakeMCEuropeanEngine<RNG, S> withSamples(int samples) {
+            if(tolerance_ != 0)
+                throw new ApplicationException("tolerance already set");
+            samples_ = samples;
+            return this;
+        }
+        public MakeMCEuropeanEngine<RNG, S> withTolerance(double tolerance) {
+            if(samples_ != 0)
+                throw new ApplicationException("number of samples already set");
+            if (PseudoRandom.allowsErrorEstimate != 0)
+                throw new ApplicationException("chosen random generator policy does not allow an error estimate");
+            tolerance_ = tolerance;
+            return this;
+        }
+        public MakeMCEuropeanEngine<RNG, S> withMaxSamples(int samples) {
+            maxSamples_ = samples;
+            return this;
+        }
+        public MakeMCEuropeanEngine<RNG, S> withSeed(ulong seed) {
+            seed_ = seed;
+            return this;
+        }
+        //public MakeMCEuropeanEngine withAntitheticVariate(bool b = true)
+        public MakeMCEuropeanEngine<RNG, S> withAntitheticVariate(bool b) {
+            antithetic_ = b;
+            return this;
+        }
+        //public MakeMCEuropeanEngine withControlVariate(bool b = true)
+        public MakeMCEuropeanEngine<RNG, S> withControlVariate(bool b) {
+            controlVariate_ = b;
+            return this;
+        }
+
+        // conversion to pricing engine
+        public IPricingEngine value() {
+            if (steps_ == 0 && stepsPerYear_ == 0)
+                throw new ApplicationException("number of steps not given");
+            if (!(steps_ == 0 || stepsPerYear_ == 0))
+                throw new ApplicationException("number of steps overspecified");
+            return new MCEuropeanEngine<RNG,S>(process_, steps_, stepsPerYear_, brownianBridge_, antithetic_,
+                                               controlVariate_, samples_, tolerance_, maxSamples_, seed_);
+        }
+    }
+
+
     public class EuropeanPathPricer : PathPricer<Path> {
         private PlainVanillaPayoff payoff_;
         private double discount_;

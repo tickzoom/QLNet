@@ -200,4 +200,8 @@ namespace QLNet {
             return ((GaussianStatistics)impl_).gaussianDownsideVariance();
         }
     }
+
+    //! default statistics tool
+    /*! \test the correctness of the returned values is tested by checking them against numerical calculations. */
+    public class Statistics : RiskStatistics { }
 }
