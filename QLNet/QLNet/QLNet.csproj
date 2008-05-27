@@ -218,10 +218,12 @@
     <Compile Include="Methods\lattices\lattice1d.cs" />
     <Compile Include="Methods\lattices\tree.cs" />
     <Compile Include="Methods\montecarlo\brownianbridge.cs" />
+    <Compile Include="Methods\montecarlo\montecarlomodel.cs" />
     <Compile Include="Methods\montecarlo\multipath.cs" />
     <Compile Include="Methods\montecarlo\multipathgenerator.cs" />
     <Compile Include="Methods\montecarlo\path.cs" />
     <Compile Include="Methods\montecarlo\pathgenerator.cs" />
+    <Compile Include="Methods\montecarlo\pathpricer.cs" />
     <Compile Include="Methods\montecarlo\sample.cs" />
     <Compile Include="Models\CalibrationHelper.cs" />
     <Compile Include="Models\model.cs">
@@ -246,6 +248,7 @@
     <Compile Include="Pricingengines\Bond\Discountingbondengine.cs" />
     <Compile Include="Pricingengines\CapFloor\BlackCapFloorEngine.cs" />
     <Compile Include="Pricingengines\Greeks.cs" />
+    <Compile Include="Pricingengines\mcsimulation.cs" />
     <Compile Include="Pricingengines\Swap\Discountingswapengine.cs" />
     <Compile Include="Pricingengines\vanilla\AnalyticEuropeanEngine.cs" />
     <Compile Include="Pricingengines\vanilla\baroneadesiwhaleyengine.cs" />
