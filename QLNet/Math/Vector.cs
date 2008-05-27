@@ -77,6 +77,7 @@ namespace QLNet {
         public override int GetHashCode() { return 0; }
 
         public int size() { return this.Count; }
+        public bool empty() { return this.Count == 0; }
 
         #region Vector algebra
         //    <tt>v += x</tt> and similar operation involving a scalar value

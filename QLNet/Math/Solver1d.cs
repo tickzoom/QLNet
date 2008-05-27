@@ -25,7 +25,7 @@ namespace QLNet {
 
     // it is an abstract class for solver evaluations
     // it should be an interface but to avoid optional derivate method, it is made as abstract class
-    public abstract class ISolver1d {
+    public abstract class ISolver1d : IValue {
         public abstract double value(double v);
         public virtual double derivative(double x) { return 0; }
     }
