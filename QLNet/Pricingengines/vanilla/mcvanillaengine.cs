@@ -61,9 +61,9 @@ namespace QLNet {
             brownianBridge_ = brownianBridge;
             seed_ = seed;
 
-            if (!(timeSteps>0))
+            if (timeSteps < 0)
                 throw new ApplicationException("timeSteps must be positive, " + timeSteps + " not allowed");
-            if (!(timeStepsPerYear>0))
+            if (timeStepsPerYear < 0)
                 throw new ApplicationException("timeStepsPerYear must be positive, " + timeStepsPerYear + " not allowed");
 
             process_.registerWith(update);

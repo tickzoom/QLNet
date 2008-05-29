@@ -94,7 +94,7 @@ namespace QLNet {
         public MakeMCEuropeanEngine<RNG, S> withTolerance(double tolerance) {
             if(samples_ != 0)
                 throw new ApplicationException("number of samples already set");
-            if (PseudoRandom.allowsErrorEstimate != 0)
+            if (PseudoRandom.allowsErrorEstimate == 0)
                 throw new ApplicationException("chosen random generator policy does not allow an error estimate");
             tolerance_ = tolerance;
             return this;
