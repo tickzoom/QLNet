@@ -251,22 +251,20 @@ namespace EquityOption {
 
             //// Monte Carlo Method: MC (Longstaff Schwartz)
             //method = "MC (Longstaff Schwartz)";
-            //boost::shared_ptr<PricingEngine> mcengine3;
-            //mcengine3 = MakeMCAmericanEngine<PseudoRandom>(bsmProcess)
-            //    .withSteps(100)
-            //    .withAntitheticVariate()
-            //    .withCalibrationSamples(4096)
-            //    .withTolerance(0.02)
-            //    .withSeed(mcSeed);
+            //IPricingEngine mcengine3 = new MakeMCAmericanEngine<PseudoRandom>(bsmProcess)
+            //                            .withSteps(100)
+            //                            .withAntitheticVariate()
+            //                            .withCalibrationSamples(4096)
+            //                            .withTolerance(0.02)
+            //                            .withSeed(mcSeed)
+            //                            .value();
             //americanOption.setPricingEngine(mcengine3);
-            //std::cout << std::setw(widths[0]) << std::left << method
-            //          << std::fixed
-            //          << std::setw(widths[1]) << std::left << "N/A"
-            //          << std::setw(widths[2]) << std::left << "N/A"
-            //          << std::setw(widths[3]) << std::left << americanOption.NPV()
-            //          << std::endl;
+            //Console.Write("{0,-" + widths[0] + "}", method);
+            //Console.Write("{0,-" + widths[1] + ":0.000000}", "N/A");
+            //Console.Write("{0,-" + widths[2] + ":0.000000}", "N/A");
+            //Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
 
-            //// End test
+            // End test
 
             Console.WriteLine(" \nRun completed in {0}", DateTime.Now - timer);
             Console.WriteLine();
