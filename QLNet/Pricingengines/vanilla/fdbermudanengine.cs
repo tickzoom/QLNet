@@ -24,7 +24,7 @@ using System.Text;
 namespace QLNet {
     //! Finite-differences Bermudan engine
     /*! \ingroup vanillaengines */
-    public class FDBermudanEngine : FDMultiPeriodEngine, IGenericEngine<OneAssetOption.Arguments, OneAssetOption.Results> {
+    public class FDBermudanEngine : FDMultiPeriodEngine, IGenericEngine {
         protected double extraTermInBermudan;
 
         // constructor

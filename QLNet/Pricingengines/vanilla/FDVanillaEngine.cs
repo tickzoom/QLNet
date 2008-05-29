@@ -159,10 +159,9 @@ namespace QLNet {
         IFDEngine factory(GeneralizedBlackScholesProcess process);
     }
 
-    public class FDEngineAdapter<Base, Engine, ArgumentsType, ResultsType>
-        : FDVanillaEngine, IGenericEngine<ArgumentsType, ResultsType>
+    public class FDEngineAdapter<Base, Engine, ArgumentsType, ResultsType> : FDVanillaEngine, IGenericEngine
         where Base : FDConditionEngineTemplate, new()
-        where Engine : IGenericEngine<ArgumentsType, ResultsType>
+        where Engine : IGenericEngine
         where ArgumentsType : IPricingEngineArguments, new()
         where ResultsType : IPricingEngineResults, new() {
 
