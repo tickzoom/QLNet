@@ -25,6 +25,7 @@ namespace QLNet {
     //! Pricing engine for vanilla options using Monte Carlo simulation
     /*! \ingroup vanillaengines */
     public abstract class MCVanillaEngine<MC, RNG, S> : MCVanillaEngine<MC, RNG, S, VanillaOption>
+            where RNG : IRSG, new()
             where S : IGeneralStatistics, new() {
         protected MCVanillaEngine(StochasticProcess process, int timeSteps, int timeStepsPerYear, bool brownianBridge,
                                   bool antitheticVariate, bool controlVariate, int requiredSamples, double requiredTolerance,
@@ -35,7 +36,7 @@ namespace QLNet {
 
     public abstract class MCVanillaEngine<MC, RNG, S, Inst> : McSimulation<MC, RNG, S>,
             IGenericEngine<OneAssetOption.Arguments, OneAssetOption.Results>
-            where S : IGeneralStatistics, new() {
+            where RNG : IRSG, new() where S : IGeneralStatistics, new() {
         //typedef typename McSimulation<MC,RNG,S>::path_generator_type path_generator_type;
         //typedef typename McSimulation<MC,RNG,S>::path_pricer_type path_pricer_type;
         //typedef typename McSimulation<MC,RNG,S>::stats_type stats_type;
@@ -73,7 +74,7 @@ namespace QLNet {
         public void calculate() {
             base.calculate(requiredTolerance_, requiredSamples_, maxSamples_);
             results_.value = mcModel_.sampleAccumulator().mean();
-            if (PseudoRandom.allowsErrorEstimate != 0)
+            if (new RNG().allowsErrorEstimate != 0)
                 results_.errorEstimate = mcModel_.sampleAccumulator().errorEstimate();
         }
 
@@ -94,7 +95,7 @@ namespace QLNet {
         protected override PathGenerator<IRNG> pathGenerator() {
             int dimensions = process_.factors();
             TimeGrid grid = timeGrid();
-            var generator = PseudoRandom.make_sequence_generator(dimensions * (grid.size() - 1), seed_);
+            IRNG generator = (IRNG)new RNG().make_sequence_generator(dimensions * (grid.size() - 1), seed_);
             return new PathGenerator<IRNG>(process_, grid, generator, brownianBridge_);
         }
 

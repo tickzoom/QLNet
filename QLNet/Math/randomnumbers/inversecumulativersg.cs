@@ -44,13 +44,13 @@ namespace QLNet {
             Real IC::operator() const;
         \endcode
     */
-    public class InverseCumulativeRsg<USG, IC> : IRNG where USG : IRNG where IC : IValue, new() {
+    public class InverseCumulativeRsg<USG, IC> : IRNG where USG : IRNG where IC : IValue {
         //typedef Sample<std::vector<Real> > sample_type;
 
         private USG uniformSequenceGenerator_;
         private int dimension_;
         private Sample<List<double>> x_;
-        private IC ICD_ = new IC();
+        private IC ICD_;
 
         public InverseCumulativeRsg(USG uniformSequenceGenerator) {
             uniformSequenceGenerator_ = uniformSequenceGenerator;
@@ -62,6 +62,8 @@ namespace QLNet {
             ICD_ = inverseCumulative;
         }
 
+
+        #region IRNG interface
         //! returns next sample from the Gaussian distribution
         public Sample<List<double>> nextSequence() {
             Sample<List<double>> sample = uniformSequenceGenerator_.nextSequence();
@@ -74,5 +76,8 @@ namespace QLNet {
 
         public Sample<List<double>> lastSequence() { return x_; }
         public int dimension() { return dimension_; }
+
+        public IRNG factory(int dimensionality, ulong seed) { throw new NotSupportedException(); } 
+        #endregion
     }
 }

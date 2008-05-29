@@ -26,6 +26,8 @@ namespace QLNet {
         int dimension();
         Sample<List<double>> nextSequence();
         Sample<List<double>> lastSequence();
+
+        IRNG factory(int dimensionality, ulong seed);
     }
 
     /*! Random sequence generator based on a pseudo-random number generator RNG.
@@ -40,7 +42,6 @@ namespace QLNet {
     public class RandomSequenceGenerator<RNG> : IRNG where RNG : IRNGTraits, new() {
         // typedef Sample<std::vector<Real> > sample_type;
         private int dimensionality_;
-        public int dimension() { return dimensionality_; }
 
         private RNG rng_;
         private Sample<List<double>> sequence_;
@@ -63,24 +64,31 @@ namespace QLNet {
             int32Sequence_ = new InitializedList<ulong>(dimensionality);
         }
 
-        public Sample<List<double>> nextSequence() {
-            sequence_.weight = 1.0;
-            for (int i=0; i<dimensionality_; i++) {
-                Sample<double> x = rng_.next();  // typename RNG::sample_type x(rng_.next());
-                sequence_.value[i] = x.value;
-                sequence_.weight  *= x.weight;
-            }
-            return sequence_;
-        }
-
         public List<ulong> nextInt32Sequence() {
-            for (int i=0; i<dimensionality_; i++) {
+            for (int i = 0; i < dimensionality_; i++) {
                 int32Sequence_[i] = rng_.nextInt32();
             }
             return int32Sequence_;
         }
-        public Sample<List<double>> lastSequence() {
+
+        #region IRGN interface
+        public Sample<List<double>> nextSequence() {
+            sequence_.weight = 1.0;
+            for (int i = 0; i < dimensionality_; i++) {
+                Sample<double> x = rng_.next();  // typename RNG::sample_type x(rng_.next());
+                sequence_.value[i] = x.value;
+                sequence_.weight *= x.weight;
+            }
             return sequence_;
         }
+
+        public Sample<List<double>> lastSequence() { return sequence_; }
+
+        public int dimension() { return dimensionality_; }
+
+        public IRNG factory(int dimensionality, ulong seed) {
+            return new RandomSequenceGenerator<RNG>(dimensionality, seed);
+        }
+        #endregion
     }
 }

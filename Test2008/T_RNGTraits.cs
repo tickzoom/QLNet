@@ -33,8 +33,8 @@ namespace TestSuite
       {
          //("Testing Gaussian pseudo-random number generation...");
 
-         InverseCumulativeRsg<RandomSequenceGenerator<MersenneTwisterUniformRng>, InverseCumulativeNormal> rsg =
-             PseudoRandom.make_sequence_generator(100, 1234);
+         var rsg = (InverseCumulativeRsg<RandomSequenceGenerator<MersenneTwisterUniformRng>, InverseCumulativeNormal>)
+             new PseudoRandom().make_sequence_generator(100, 1234);
 
          List<double> values = rsg.nextSequence().value;
          double sum = 0.0;
@@ -56,7 +56,7 @@ namespace TestSuite
          //("Testing Poisson pseudo-random number generation...");
 
          PoissonPseudoRandom.icInstance = new InverseCumulativePoisson();
-         var rsg = PoissonPseudoRandom.make_sequence_generator(100, 1234);
+         IRNG rsg = (IRNG)new PoissonPseudoRandom().make_sequence_generator(100, 1234);
 
          List<double> values = rsg.nextSequence().value;
          double sum = 0.0;
@@ -77,7 +77,7 @@ namespace TestSuite
          //("Testing custom Poisson pseudo-random number generation...");
 
          PoissonPseudoRandom.icInstance = new InverseCumulativePoisson(4.0);
-         var rsg = PoissonPseudoRandom.make_sequence_generator(100, 1234);
+         IRNG rsg = (IRNG)new PoissonPseudoRandom().make_sequence_generator(100, 1234);
 
          List<double> values = rsg.nextSequence().value;
          double sum = 0.0;

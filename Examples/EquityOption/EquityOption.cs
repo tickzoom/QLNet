@@ -217,6 +217,7 @@ namespace EquityOption {
             Console.Write("{0,-" + widths[2] + ":0.000000}", bermudanOption.NPV());
             Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
 
+
             // Monte Carlo Method: MC (crude)
             timeSteps = 1;
             method = "MC (crude)";
@@ -233,21 +234,20 @@ namespace EquityOption {
             Console.Write("{0,-" + widths[2] + ":0.000000}", "N/A");
             Console.WriteLine("{0,-" + widths[3] + ":0.000000}", "N/A");
 
-            //// Monte Carlo Method: QMC (Sobol)
-            //method = "QMC (Sobol)";
-            //Size nSamples = 32768;  // 2^15
 
-            //boost::shared_ptr<PricingEngine> mcengine2;
-            //mcengine2 = MakeMCEuropeanEngine<LowDiscrepancy>(bsmProcess)
-            //    .withSteps(timeSteps)
-            //    .withSamples(nSamples);
-            //europeanOption.setPricingEngine(mcengine2);
-            //std::cout << std::setw(widths[0]) << std::left << method
-            //          << std::fixed
-            //          << std::setw(widths[1]) << std::left << europeanOption.NPV()
-            //          << std::setw(widths[2]) << std::left << "N/A"
-            //          << std::setw(widths[3]) << std::left << "N/A"
-            //          << std::endl;
+            // Monte Carlo Method: QMC (Sobol)
+            method = "QMC (Sobol)";
+            int nSamples = 32768;  // 2^15
+
+            IPricingEngine mcengine2 = new MakeMCEuropeanEngine<LowDiscrepancy>(bsmProcess)
+                                            .withSteps(timeSteps)
+                                            .withSamples(nSamples)
+                                            .value();
+            europeanOption.setPricingEngine(mcengine2);
+            Console.Write("{0,-" + widths[0] + "}", method);
+            Console.Write("{0,-" + widths[1] + ":0.000000}", europeanOption.NPV());
+            Console.Write("{0,-" + widths[2] + ":0.000000}", "N/A");
+            Console.WriteLine("{0,-" + widths[3] + ":0.000000}", "N/A");
 
             //// Monte Carlo Method: MC (Longstaff Schwartz)
             //method = "MC (Longstaff Schwartz)";
