@@ -34,8 +34,7 @@ namespace QLNet {
                    requiredTolerance, maxSamples, seed) { }
     }
 
-    public abstract class MCVanillaEngine<MC, RNG, S, Inst> : McSimulation<MC, RNG, S>,
-            IGenericEngine<OneAssetOption.Arguments, OneAssetOption.Results>
+    public abstract class MCVanillaEngine<MC, RNG, S, Inst> : McSimulation<MC, RNG, S>, IGenericEngine
             where RNG : IRSG, new() where S : IGeneralStatistics, new() {
         //typedef typename McSimulation<MC,RNG,S>::path_generator_type path_generator_type;
         //typedef typename McSimulation<MC,RNG,S>::path_pricer_type path_pricer_type;

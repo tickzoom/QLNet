@@ -28,7 +28,7 @@ namespace QLNet {
         \test the correctness of the returned value is tested by
               checking it against analytic results.
     */
-    public class FDEuropeanEngine : FDVanillaEngine, IGenericEngine<OneAssetOption.Arguments, OneAssetOption.Results> {
+    public class FDEuropeanEngine : FDVanillaEngine, IGenericEngine {
         private SampledCurve prices_;
 
         //public FDEuropeanEngine(GeneralizedBlackScholesProcess process,
