@@ -94,7 +94,7 @@ namespace QLNet {
         - the correctness of the returned values is tested by checking
           their discrepancy against known good values.
     */
-    public partial class SobolRsg {
+    public partial class SobolRsg : IRNG {
         //typedef Sample<List<double>> sample_type;
 
         const int bits_ = 8 * sizeof(ulong);
@@ -113,9 +113,12 @@ namespace QLNet {
             JoeKuoD5, JoeKuoD6, JoeKuoD7,
             Kuo, Kuo2, Kuo3 };
 
+        // required for generics
+        public SobolRsg() { }
+
         /*! \pre dimensionality must be <= PPMT_MAX_DIM */
-        //public SobolRsg(int dimensionality, ulong seed = 0, DirectionIntegers directionIntegers = Jaeckel);
         public SobolRsg(int dimensionality) : this(dimensionality, 0, DirectionIntegers.Jaeckel) { }
+        public SobolRsg(int dimensionality, ulong seed) : this(dimensionality, seed, DirectionIntegers.Jaeckel) { }
         public SobolRsg(int dimensionality, ulong seed, DirectionIntegers directionIntegers) {
             dimensionality_ = dimensionality;
             sequenceCounter_ = 0;
@@ -450,16 +453,22 @@ namespace QLNet {
             return integerSequence_;
         }
 
+        #region IRNG interface
         public Sample<List<double>> nextSequence() {
             List<ulong> v = nextInt32Sequence();
             // normalize to get a double in (0,1)
-            for (int k=0; k<dimensionality_; ++k)
+            for (int k = 0; k < dimensionality_; ++k)
                 sequence_.value[k] = v[k] * normalizationFactor_;
             return sequence_;
         }
 
         public Sample<List<double>> lastSequence() { return sequence_; }
-        
+
         public int dimension() { return dimensionality_; }
+
+        public IRNG factory(int dimensionality, ulong seed) {
+            return new SobolRsg(dimensionality, seed);
+        } 
+        #endregion
     }
 }

@@ -28,7 +28,8 @@ namespace QLNet {
         \test the correctness of the returned value is tested by
               checking it against analytic results.
     */
-    public class MCEuropeanEngine<RNG, S> : MCVanillaEngine<SingleVariate, RNG, S> 
+    public class MCEuropeanEngine<RNG, S> : MCVanillaEngine<SingleVariate, RNG, S>
+        where RNG : IRSG, new() 
         where S : IGeneralStatistics, new() {
 
         // constructor
@@ -55,11 +56,11 @@ namespace QLNet {
 
     //! Monte Carlo European engine factory
     // template <class RNG = PseudoRandom, class S = Statistics>
-    public class MakeMCEuropeanEngine<RNG> : MakeMCEuropeanEngine<RNG, Statistics> {
+    public class MakeMCEuropeanEngine<RNG> : MakeMCEuropeanEngine<RNG, Statistics> where RNG : IRSG, new() {
         public MakeMCEuropeanEngine(GeneralizedBlackScholesProcess process) : base(process) { }
     }
 
-    public class MakeMCEuropeanEngine<RNG, S> where S : IGeneralStatistics, new() {
+    public class MakeMCEuropeanEngine<RNG, S> where RNG : IRSG, new() where S : IGeneralStatistics, new() {
         private GeneralizedBlackScholesProcess process_;
         private bool antithetic_, controlVariate_;
         private int steps_, stepsPerYear_, samples_, maxSamples_;
@@ -94,7 +95,7 @@ namespace QLNet {
         public MakeMCEuropeanEngine<RNG, S> withTolerance(double tolerance) {
             if(samples_ != 0)
                 throw new ApplicationException("number of samples already set");
-            if (PseudoRandom.allowsErrorEstimate == 0)
+            if (new RNG().allowsErrorEstimate == 0)
                 throw new ApplicationException("chosen random generator policy does not allow an error estimate");
             tolerance_ = tolerance;
             return this;

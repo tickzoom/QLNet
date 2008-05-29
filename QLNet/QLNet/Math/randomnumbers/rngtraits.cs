@@ -29,12 +29,15 @@ namespace QLNet {
         IRNGTraits factory(ulong seed);
     }
 
+    public interface IRSG {
+        int allowsErrorEstimate { get; }
+        object make_sequence_generator(int dimension, ulong seed);
+    }
+
     // random number traits
-    public class GenericPseudoRandom<URNG, IC>
-        where URNG : IRNGTraits, new()
-        where IC : IValue, new() {
+    public class GenericPseudoRandom<URNG, IC> : IRSG where URNG : IRNGTraits, new() where IC : IValue, new() {
         // data
-        public static IC icInstance;
+        public static IC icInstance = new IC();
 
         //// typedefs
         //typedef URNG urng_type;
@@ -43,10 +46,10 @@ namespace QLNet {
         //typedef InverseCumulativeRsg<ursg_type,IC> rsg_type;
 
         // more traits
-        public const int allowsErrorEstimate = 1;
+        public int allowsErrorEstimate { get { return 1; } }
 
         // factory
-        public static InverseCumulativeRsg<RandomSequenceGenerator<URNG>,IC> make_sequence_generator(int dimension, ulong seed) {
+        public object make_sequence_generator(int dimension, ulong seed) {
             RandomSequenceGenerator<URNG> g = new RandomSequenceGenerator<URNG>(dimension, seed);
             return (icInstance != null ? new InverseCumulativeRsg<RandomSequenceGenerator<URNG>, IC>(g, icInstance)
                                        : new InverseCumulativeRsg<RandomSequenceGenerator<URNG>, IC>(g));
@@ -64,4 +67,28 @@ namespace QLNet {
     */
     // typedef GenericPseudoRandom<MersenneTwisterUniformRng, InverseCumulativePoisson> PoissonPseudoRandom;
     public class PoissonPseudoRandom : GenericPseudoRandom<MersenneTwisterUniformRng, InverseCumulativePoisson> { }
+
+
+    public class GenericLowDiscrepancy<URSG, IC> : IRSG where URSG : IRNG, new() where IC : IValue, new() {
+        // typedefs
+        //typedef URSG ursg_type;
+        //typedef InverseCumulativeRsg<ursg_type,IC> rsg_type;
+
+        // data
+        public static IC icInstance = new IC();
+
+        // more traits
+        public int allowsErrorEstimate { get { return 0; } }
+
+        // factory
+        public object make_sequence_generator(int dimension, ulong seed) {
+            URSG g = (URSG)new URSG().factory(dimension, seed);
+            return (icInstance != null ? new InverseCumulativeRsg<URSG, IC>(g, icInstance)
+                                       : new InverseCumulativeRsg<URSG, IC>(g));
+        }
+    }
+
+    //! default traits for low-discrepancy sequence generation
+    //typedef GenericLowDiscrepancy<SobolRsg, InverseCumulativeNormal> LowDiscrepancy;
+    public class LowDiscrepancy : GenericLowDiscrepancy<SobolRsg, InverseCumulativeNormal> { }
 }
