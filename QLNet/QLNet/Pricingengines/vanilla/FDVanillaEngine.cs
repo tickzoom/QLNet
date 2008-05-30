@@ -159,11 +159,9 @@ namespace QLNet {
         IFDEngine factory(GeneralizedBlackScholesProcess process);
     }
 
-    public class FDEngineAdapter<Base, Engine, ArgumentsType, ResultsType> : FDVanillaEngine, IGenericEngine
+    public class FDEngineAdapter<Base, Engine> : FDVanillaEngine, IGenericEngine
         where Base : FDConditionEngineTemplate, new()
-        where Engine : IGenericEngine
-        where ArgumentsType : IPricingEngineArguments, new()
-        where ResultsType : IPricingEngineResults, new() {
+        where Engine : IGenericEngine, new() {
 
         // a wrap-up of base engine
         Base optionBase;
@@ -178,17 +176,19 @@ namespace QLNet {
         }
 
         public void calculate() {
-            optionBase.setupArguments(arguments_);
-            optionBase.calculate(results_);
+            optionBase.setupArguments(getArguments());
+            optionBase.calculate(getResults());
         }
 
-        #region IGenericEngine copy-cat
-        protected IPricingEngineArguments arguments_ = new ArgumentsType();
-        protected IPricingEngineResults results_ = new ResultsType();
 
-        public IPricingEngineArguments getArguments() { return arguments_; }
-        public IPricingEngineResults getResults() { return results_; }
-        public void reset() { results_.reset(); }
+        #region IGenericEngine wrap-up
+        // we do not need to register with the wrapped engine because all we need is containers for parameters and results
+        protected IGenericEngine engine_ = new Engine();    
+
+        public IPricingEngineArguments getArguments() { return engine_.getArguments(); }
+        public IPricingEngineResults getResults() { return engine_.getResults(); }
+        public void reset() { engine_.reset(); }
+        #endregion
 
         #region Observer & Observable
         // observable interface
@@ -203,7 +203,6 @@ namespace QLNet {
         }
 
         public void update() { notifyObservers(); }
-        #endregion
         #endregion
     }
 }

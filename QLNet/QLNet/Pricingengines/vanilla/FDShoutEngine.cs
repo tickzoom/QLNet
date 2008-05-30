@@ -28,8 +28,7 @@ namespace QLNet {
         \test the correctness of the returned greeks is tested by
               reproducing numerical derivatives.
     */
-    public class FDShoutEngine : FDEngineAdapter<FDShoutCondition<FDStepConditionEngine>, VanillaOption.Engine,
-                                                 OneAssetOption.Arguments, OneAssetOption.Results>,
+    public class FDShoutEngine : FDEngineAdapter<FDShoutCondition<FDStepConditionEngine>, VanillaOption.Engine>,
                                  IFDEngine {
         // required for generics
         public FDShoutEngine() { }
