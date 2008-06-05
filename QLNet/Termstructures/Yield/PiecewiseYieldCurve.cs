@@ -23,7 +23,7 @@ using System.Text;
 
 namespace QLNet {
     public class PiecewiseYieldCurve<Traits, Interpolator>
-        : PiecewiseYieldCurve<Traits, Interpolator, IterativeBootstrap<Traits, Interpolator>>
+        : PiecewiseYieldCurve<Traits, Interpolator, IterativeBootstrap>
         where Traits : ITraits, new()
         where Interpolator : IInterpolationFactory, new() {
 
@@ -70,7 +70,7 @@ namespace QLNet {
         public Interpolation interpolation_;
         public Interpolator interpolator_;
 
-        protected BootStrap bootstrap_ = new BootStrap();
+        protected BootStrap bootstrap_;
         #endregion
 
         #region Traits wrapper
@@ -111,24 +111,29 @@ namespace QLNet {
 
         #region Constructors
         public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments, DayCounter dayCounter)
-            : this(referenceDate, instruments, dayCounter, new Handle<Quote>(), 1.0e-12, new Interpolator()) { }
+            : this(referenceDate, instruments, dayCounter, new Handle<Quote>(), 1.0e-12, new Interpolator(), new BootStrap()) { }
         public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
                                    DayCounter dayCounter, Handle<Quote> turnOfYearEffect)
-            : this(referenceDate, instruments, dayCounter, turnOfYearEffect, 1.0e-12, new Interpolator()) { }
+            : this(referenceDate, instruments, dayCounter, turnOfYearEffect, 1.0e-12, new Interpolator(), new BootStrap()) { }
         public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
                                    DayCounter dayCounter, Handle<Quote> turnOfYearEffect, double accuracy)
-            : this(referenceDate, instruments, dayCounter, turnOfYearEffect, accuracy, new Interpolator()) { }
+            : this(referenceDate, instruments, dayCounter, turnOfYearEffect, accuracy, new Interpolator(), new BootStrap()) { }
         public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
                                    DayCounter dayCounter, Handle<Quote> turnOfYearEffect, double accuracy, Interpolator i)
+            : this(referenceDate, instruments, dayCounter, turnOfYearEffect, accuracy, i, new BootStrap()) { }
+        public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
+                                   DayCounter dayCounter, Handle<Quote> turnOfYearEffect, double accuracy,
+                                   Interpolator i, BootStrap bootstrap)
             : base(referenceDate, new Calendar(), dayCounter) {
             instruments_ = instruments;
             turnOfYearEffect_ = turnOfYearEffect;
             accuracy_ = accuracy;
             interpolator_ = i;
+            bootstrap_ = bootstrap;
 
             setTurnOfYear();
             turnOfYearEffect_.registerWith(update);
-            bootstrap_.setup(this);
+            bootstrap_.setup<Traits, Interpolator, BootStrap>(this);
         }
 
         //public InterpolatedYieldCurve(int settlementDays, Calendar calendar, List<BootstrapHelper<YieldTermStructure>> instruments,
@@ -139,18 +144,21 @@ namespace QLNet {
         //    this(settlementDays, calendar, instruments, dayCounter, turnOfYearEffect, 1.0e-12) { }
         public PiecewiseYieldCurve(int settlementDays, Calendar calendar, List<BootstrapHelper<YieldTermStructure>> instruments,
                                    DayCounter dayCounter, Handle<Quote> turnOfYearEffect, double accuracy)
-            : this(settlementDays, calendar, instruments, dayCounter, turnOfYearEffect, accuracy, new Interpolator()) { }
+            : this(settlementDays, calendar, instruments, dayCounter, turnOfYearEffect, accuracy, 
+                   new Interpolator(), new BootStrap()) { }
         public PiecewiseYieldCurve(int settlementDays, Calendar calendar, List<BootstrapHelper<YieldTermStructure>> instruments,
-                                   DayCounter dayCounter, Handle<Quote> turnOfYearEffect, double accuracy, Interpolator i)
+                                   DayCounter dayCounter, Handle<Quote> turnOfYearEffect, double accuracy,
+                                   Interpolator i, BootStrap bootstrap)
             : base(settlementDays, calendar, dayCounter) {
             instruments_ = instruments;
             turnOfYearEffect_ = turnOfYearEffect;
             accuracy_ = accuracy;
             interpolator_ = i;
+            bootstrap_ = bootstrap;
 
             setTurnOfYear();
             turnOfYearEffect_.registerWith(update);
-            bootstrap_.setup(this);
+            bootstrap_.setup<Traits, Interpolator, BootStrap>(this);
         } 
         #endregion
 
@@ -184,47 +192,8 @@ namespace QLNet {
         }
 
         protected override void performCalculations() {
-            // this code was origionally in IterativeBootStrap but it does not make sense to have it there
-            // because it relies too much on this class
-
-            //prepare instruments
-            int n = instruments_.Count;
-
-            // ensure rate helpers are sorted
-            instruments_.Sort((x, y) => x.latestDate().CompareTo(y.latestDate()));
-
-            // check that there is no instruments with the same maturity
-            for (int i = 1; i < n; ++i) {
-                Date m1 = instruments_[i - 1].latestDate(),
-                     m2 = instruments_[i].latestDate();
-                if (m1 == m2) throw new ArgumentException("two instruments have the same maturity (" + m1 + ")");
-            }
-
-            // check that there is no instruments with invalid quote
-            for (int i = 0; i < n; ++i)
-                if (!instruments_[i].quoteIsValid())
-                    throw new ArgumentException("instrument " + i + " (maturity: " + instruments_[i].latestDate() +
-                           ") has an invalid quote");
-
-            // setup instruments and register with them
-            for (int i = 0; i < n; ++i) {
-                // There is a significant interaction with observability.
-                instruments_[i].setTermStructure(this);
-            }
-
-            // calculate dates and times
-            dates_ = new InitializedList<Date>(n + 1);
-            times_ = new InitializedList<double>(n + 1);
-            dates_[0] = initialDate(this);
-            times_[0] = timeFromReference(dates_[0]);
-            for (int i = 0; i < n; ++i) {
-                dates_[i + 1] = instruments_[i].latestDate();
-                times_[i + 1] = timeFromReference(dates_[i + 1]);
-            }
-
-            // now comes the bootstrapping
             // just delegate to the bootstrapper
-            bootstrap_.calculate();
+            bootstrap_.calculate<Traits, Interpolator, BootStrap>();
         }
     }
 }
