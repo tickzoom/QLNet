@@ -62,7 +62,7 @@ namespace QLNet {
 
         \test to be adapted from old ones.
     */
-    public class CubicInterpolation : Interpolation {
+    public class CubicInterpolation : Interpolation, IValue {
         #region enums
         public enum DerivativeApprox {
             /*! Spline approximation (non-local, non-monotone, linear[?]).
@@ -127,9 +127,9 @@ namespace QLNet {
         }
 
         //public List<double> primitiveConstants() { return coeffs_.primitiveConst_; }
-        //public List<double> aCoefficients() { return coeffs_.a_; }
-        //public List<double> bCoefficients() { return coeffs_.b_; }
-        //public List<double> cCoefficients() { return coeffs_.c_; }
+        public List<double> aCoefficients() { return ((CubicInterpolationImpl)impl_).a_; }
+        public List<double> bCoefficients() { return ((CubicInterpolationImpl)impl_).b_; }
+        public List<double> cCoefficients() { return ((CubicInterpolationImpl)impl_).c_; }
         //public List<bool> monotonicityAdjustments() { return coeffs_.monotonicityAdjustments_; }
     }
 
@@ -172,7 +172,7 @@ namespace QLNet {
         //           a[i]*(x-x[i]) +
         //           b[i]*(x-x[i])^2 +
         //           c[i]*(x-x[i])^3
-        InitializedList<double> primitiveConst_, a_, b_, c_;
+        public InitializedList<double> primitiveConst_, a_, b_, c_;
         InitializedList<bool> monotonicityAdjustments_;
 
 

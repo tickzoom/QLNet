@@ -23,16 +23,18 @@ using System.Text;
 
 namespace QLNet {
     //! Universal piecewise-term-structure boostrapper.
-    public class IterativeBootstrap<Traits, Interpolator> : IBootStrap 
-            where Traits : ITraits, new()
-        where Interpolator : IInterpolationFactory, new() {
+    public class IterativeBootstrap : IBootStrap {
         
         private bool validCurve_ = false;
-        // define as whatever, actual genrics are not important
-        private PiecewiseYieldCurve<Traits, Interpolator> ts_;
+        private object tsContainer_; // yes, it is a workaround
 
-        public void setup(YieldTermStructure ts) {
-            ts_ = ts as PiecewiseYieldCurve<Traits, Interpolator>;
+        public void setup<T, I, B>(PiecewiseYieldCurve<T, I, B> ts)
+            where T : ITraits, new()
+            where I : IInterpolationFactory, new()
+            where B : IBootStrap, new() {
+
+            tsContainer_ = ts;
+            PiecewiseYieldCurve<T, I, B> ts_ = tsContainer_ as PiecewiseYieldCurve<T, I, B>;
 
             int n = ts_.instruments_.Count;
             if (!(n+1 >= ts_.interpolator_.requiredPoints))
@@ -44,8 +46,47 @@ namespace QLNet {
             }
         }
 
-        public void calculate() {
+        public void calculate<T, I, B>()             
+            where T : ITraits, new()
+            where I : IInterpolationFactory, new()
+            where B : IBootStrap, new() {
+
+            PiecewiseYieldCurve<T, I, B> ts_ = tsContainer_ as PiecewiseYieldCurve<T, I, B>;
+
+            //prepare instruments
             int n = ts_.instruments_.Count;
+
+            // ensure rate helpers are sorted
+            ts_.instruments_.Sort((x, y) => x.latestDate().CompareTo(y.latestDate()));
+
+            // check that there is no instruments with the same maturity
+            for (int i = 1; i < n; ++i) {
+                Date m1 = ts_.instruments_[i - 1].latestDate(),
+                     m2 = ts_.instruments_[i].latestDate();
+                if (m1 == m2) throw new ArgumentException("two instruments have the same maturity (" + m1 + ")");
+            }
+
+            // check that there is no instruments with invalid quote
+            for (int i = 0; i < n; ++i)
+                if (!ts_.instruments_[i].quoteIsValid())
+                    throw new ArgumentException("instrument " + i + " (maturity: " + ts_.instruments_[i].latestDate() +
+                           ") has an invalid quote");
+
+            // setup instruments and register with them
+            for (int i = 0; i < n; ++i) {
+                // There is a significant interaction with observability.
+                ts_.instruments_[i].setTermStructure(ts_);
+            }
+
+            // calculate dates and times
+            ts_.dates_ = new InitializedList<Date>(n + 1);
+            ts_.times_ = new InitializedList<double>(n + 1);
+            ts_.dates_[0] = ts_.initialDate(ts_);
+            ts_.times_[0] = ts_.timeFromReference(ts_.dates_[0]);
+            for (int i = 0; i < n; ++i) {
+                ts_.dates_[i + 1] = ts_.instruments_[i].latestDate();
+                ts_.times_[i + 1] = ts_.timeFromReference(ts_.dates_[i + 1]);
+            }
 
             // set initial guess only if the current curve cannot be used as guess
             if (validCurve_) {
@@ -99,14 +140,14 @@ namespace QLNet {
                     // is it really required?
                     ts_.interpolation_.update();
 
-                     try {
-                        var error = new BootstrapError<Traits, Interpolator>(ts_, instrument, i);
+                    try {
+                        var error = new BootstrapError<T, I, B>(ts_, instrument, i);
                         double r = solver.solve(error, ts_.accuracy_, guess, min, max);
                         // redundant assignment (as it has been already performed by BootstrapError in solve procedure), but safe
                         ts_.data_[i] = r;
                     } catch (Exception e) {
                         validCurve_ = false;
-                        throw new ArgumentException(" iteration: " + iteration+1 +
+                        throw new ArgumentException(" iteration: " + iteration + 1 +
                                 "could not bootstrap the " + i + " instrument, maturity " + ts_.dates_[i] +
                                 ": " + e.Message);
                     }

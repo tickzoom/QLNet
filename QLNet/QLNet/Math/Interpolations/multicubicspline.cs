@@ -1,4 +1,4 @@
-/*
+﻿/*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
@@ -22,26 +22,10 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    //! bootstrap error
-    public class BootstrapError<T, I, B> : ISolver1d
-            where T : ITraits, new()
-            where I : IInterpolationFactory, new()
-            where B : IBootStrap, new() {
 
-        private PiecewiseYieldCurve<T, I, B> curve_;
-        private BootstrapHelper<YieldTermStructure> helper_;
-        private int segment_;
+    // data structures
 
-        public BootstrapError(PiecewiseYieldCurve<T, I, B> curve, BootstrapHelper<YieldTermStructure> helper, int segment) {
-            curve_ = curve;
-            helper_ = helper;
-            segment_ = segment; 
-        }
-
-        public override double value(double guess) {
-            curve_.updateGuess(curve_.data(), guess, segment_);
-            curve_.interpolation_.update();
-            return helper_.quoteError();
-        }
-    }
+    // Multi-cubic spline
+    // typedef std::vector<std::vector<Real> > SplineGrid;
+    public class SplineGrid : InitializedList<List<double>> { }
 }

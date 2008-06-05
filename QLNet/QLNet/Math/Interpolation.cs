@@ -33,7 +33,7 @@ namespace QLNet {
         int requiredPoints { get; }
     }
 
-    public abstract class Interpolation : Extrapolator {
+    public abstract class Interpolation : Extrapolator, IValue {
         protected Impl impl_;
 
         public bool empty() { return impl_ == null; }
@@ -53,7 +53,7 @@ namespace QLNet {
         public double secondDerivative(double x) { return secondDerivative(x, false); }
         public double secondDerivative(double x, bool allowExtrapolation) {
             checkRange(x,allowExtrapolation);
-            return impl_.derivative(x);
+            return impl_.secondDerivative(x);
         }
 
         public double xMin() {
@@ -84,7 +84,7 @@ namespace QLNet {
 
 
         // abstract base class interface for interpolation implementations
-        protected interface Impl {
+        protected interface Impl : IValue {
             void update();
             double xMin();
             double xMax();
