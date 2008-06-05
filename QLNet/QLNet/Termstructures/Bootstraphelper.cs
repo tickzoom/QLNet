@@ -38,11 +38,12 @@ namespace QLNet {
        It is advised that a bootstrap helper for an instrument contains an instance of the actual instrument 
      * class to ensure consistancy between the algorithms used during bootstrapping
        and later instrument pricing. This is not yet fully enforced in the available rate helpers. */
-    public abstract class BootstrapHelper<TS> : IObservable, IObserver 
-            where TS : YieldTermStructure {
+    public class BootstrapHelper<TS> : IObservable, IObserver where TS : YieldTermStructure {
         protected Handle<Quote> quote_;
         protected TS termStructure_;
         protected Date earliestDate_, latestDate_;
+
+        public BootstrapHelper() { } // required for generics
 
         public BootstrapHelper(Handle<Quote> quote) {
             quote_ = quote;
@@ -57,7 +58,7 @@ namespace QLNet {
         public double quoteError() { return quote_.link.value() - impliedQuote(); }
         public double quoteValue() { return quote_.link.value(); }
         public bool quoteIsValid() { return quote_.link.isValid(); }
-        public abstract double impliedQuote();
+        public virtual double impliedQuote() { throw new NotSupportedException(); }
 
 
         //! sets the term structure to be used for pricing

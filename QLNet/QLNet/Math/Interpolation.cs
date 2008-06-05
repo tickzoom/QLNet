@@ -91,7 +91,6 @@ namespace QLNet {
             List<double> xValues();
             List<double> yValues();
             bool isInRange(double d);
-            double value(double d);
             double primitive(double d);
             double derivative(double d);
             double secondDerivative(double d);

@@ -43,10 +43,10 @@ namespace QLNet {
         public abstract double fixing(Date fixingDate, bool forecastTodaysFixing);
 
         //! returns the fixing TimeSeries
-        public TimeSeries<double> timeSeries() { return IndexManager.getHistory(name()); }
+        public ObservableValue<TimeSeries<double>> timeSeries() { return IndexManager.instance().getHistory(name()); }
 
         //! clears all stored historical fixings
-        public void clearFixings() { IndexManager.clearHistory(name()); }
+        public void clearFixings() { IndexManager.instance().clearHistory(name()); }
 
         // stores the historical fixing at the given date
         public void addFixing(Date d, double v) { addFixing(d, v, false); }
@@ -69,22 +69,22 @@ namespace QLNet {
         // stores historical fixings from a TimeSeries
         public void addFixings(TimeSeries<double> source) { addFixings(source, false); }
         public void addFixings(TimeSeries<double> source, bool forceOverwrite) {
-            TimeSeries<double> target = IndexManager.getHistory(name());
+            ObservableValue<TimeSeries<double>> target = IndexManager.instance().getHistory(name());
             foreach (Date d in source.Keys) {
                 if (isValidFixingDate(d))
-                    if (!target.ContainsKey(d))
-                        target.Add(d, source[d]);
+                    if (!target.value().ContainsKey(d))
+                        target.value().Add(d, source[d]);
                     else
                         if (forceOverwrite)
-                            target[d] = source[d];
+                            target.value()[d] = source[d];
                         else
                             throw new ArgumentException("Duplicated fixing provided: " + d + ", " + source[d] + 
-                                                        " while " + target[d] + " value is already present");
+                                                        " while " + target.value()[d] + " value is already present");
                 else
                     throw new ArgumentException("Invalid fixing provided: " + d.DayOfWeek + " " + d + ", " + source[d]);
             }
 
-            IndexManager.setHistory(name(), target);
+            IndexManager.instance().setHistory(name(), target);
         }
 
 
