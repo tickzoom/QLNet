@@ -23,61 +23,57 @@ using System.Threading;
 
 namespace QLNet {
     //! global repository for past index fixings
-    public static class IndexManager {
+    public class IndexManager {
+        private static Dictionary<string, ObservableValue<TimeSeries<double>>> data_ =
+            new Dictionary<string, ObservableValue<TimeSeries<double>>>();
 
-        [ThreadStatic]
-        private static Dictionary<string, TimeSeries<double>> data_ = null;
-        public static Dictionary<string, TimeSeries<double>> Data
-        {
-            get
-            {
-                if (data_ == null)
-                {
-                    data_ = new Dictionary<string, TimeSeries<double>>();
-                }
-                return data_;
-            }
+        private static readonly IndexManager instance_ = new IndexManager();
+        public static IndexManager instance() { return instance_; }
+        private IndexManager() { }
+
+        //! returns whether historical fixings were stored for the index
+        public bool hasHistory(string name) {
+            return data_.ContainsKey(name);
         }
 
-		//! returns whether historical fixings were stored for the index
-        public static bool hasHistory(string name) {
-			return Data.ContainsKey(name);
-		}
-		
         //! returns the (possibly empty) history of the index fixings
-        public static TimeSeries<double> getHistory(string name) {
-            return hasHistory(name) ? Data[name] : new TimeSeries<double>();
-		}
-		
+        public ObservableValue<TimeSeries<double>> getHistory(string name) {
+            if (!hasHistory(name))
+                data_.Add(name, new ObservableValue<TimeSeries<double>>());
+            return data_[name];
+        }
+
         //! stores the historical fixings of the index
-        public static void setHistory(string name, TimeSeries<double> history) {
-            if (hasHistory(name))
-                Data[name] = history;
-            else
-                Data.Add(name, history);
+        public void setHistory(string name, ObservableValue<TimeSeries<double>> history) {
+            if (!hasHistory(name))
+                data_.Add(name, null);
+            data_[name].Assign(history);
         }
 
         //! observer notifying of changes in the index fixings
-        public static TimeSeries<double> notifier(string name) {
-            return Data[name];
+        public ObservableValue<TimeSeries<double>> notifier(string name) {
+            if (!hasHistory(name))
+                data_.Add(name, new ObservableValue<TimeSeries<double>>());
+            return data_[name];
         }
 
         //! returns all names of the indexes for which fixings were stored
-        public static List<string> histories() {
+        public List<string> histories() {
             List<string> t = new List<string>();
-            foreach (string s in Data.Keys)
+            foreach (string s in data_.Keys)
                 t.Add(s);
-	        return t;
-	    }
-	
+            return t;
+        }
+
         //! clears the historical fixings of the index
-        public static void clearHistory(string name) {
-			Data[name].Clear();
-		}
+        public void clearHistory(string name) {
+            data_[name].Assign(new TimeSeries<double>());
+        }
 
         //! clears all stored fixings
-        public static void clearHistories() {
-			Data.Clear();
-		}
-	}
+        public void clearHistories() {
+            foreach (string s in data_.Keys)
+                clearHistory(s);
+        }
+    }
 }

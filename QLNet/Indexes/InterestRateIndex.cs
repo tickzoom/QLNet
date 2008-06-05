@@ -62,8 +62,7 @@ namespace QLNet {
 
             Settings.registerWith(update);
             // recheck
-            //IndexManager.notifier(name())
-            //            registerWith(IndexManager::instance().notifier(name()));
+            IndexManager.instance().notifier(name()).registerWith(update);
         }
 
         public void update() { notifyObservers(); }
@@ -92,24 +91,23 @@ namespace QLNet {
                 throw new ArgumentException("Fixing date " + fixingDate + " is not valid");
 
             Date today = Settings.evaluationDate();
-            if (fixingDate < today ||
-                (fixingDate == today && !forecastTodaysFixing && Settings.enforcesTodaysHistoricFixings)) {
-                // must have been fixed
-                try {
-                    return IndexManager.getHistory(name())[fixingDate];
-                } catch (KeyNotFoundException) {
+
+            var fixings = IndexManager.instance().getHistory(name()).value();
+            if (fixings.ContainsKey(fixingDate)) {
+                return fixings[fixingDate];
+            } else {
+                if (fixingDate < today ||
+                    (fixingDate == today && !forecastTodaysFixing && Settings.enforcesTodaysHistoricFixings)) {
+                    // must have been fixed
                     throw new ArgumentException("Missing " + name() + " fixing for " + fixingDate);
                 }
+                if ((fixingDate == today) && !forecastTodaysFixing) {
+                    // might have been fixed but forecast since it does not exist
+                    // so fall through and forecast
+                }
+                // forecast
+                return forecastFixing(fixingDate);
             }
-
-            if ((fixingDate == today) && !forecastTodaysFixing) {
-                // might have been fixed
-                try {
-                    return IndexManager.getHistory(name())[fixingDate];
-                } catch (KeyNotFoundException) { } // fall through and forecast
-            }
-            // forecast
-            return forecastFixing(fixingDate);
         }
         #endregion
 

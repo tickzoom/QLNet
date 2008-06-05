@@ -42,36 +42,33 @@ namespace QLNet {
 
         //! Implemented in order to manage the case of par coupon
         public override double indexFixing() {
-#if QL_USE_INDEXED_COUPON
-            return index_->fixing(fixingDate());
-#else
+            #if QL_USE_INDEXED_COUPON
+                return index_.fixing(fixingDate());
+            #else
             if (isInArrears()) {
                 return index_.fixing(fixingDate());
             } else {
                 Handle<YieldTermStructure> termStructure = index_.termStructure();
                 if (termStructure.empty()) throw new ArgumentException("null term structure set to par coupon");
                 Date today = Settings.evaluationDate();
-                Date fixing_date = fixingDate();
-                if (fixing_date < today) {
-                    // must have been fixed
-                    double pastFixing = IndexManager.getHistory(index_.name())[fixing_date];
-                    if (pastFixing == default(double)) throw new ArgumentException("Missing " + index_.name()
-                               + " fixing for " + fixing_date);
-                    return pastFixing;
-                }
-                if (fixing_date == today) {
-                    // might have been fixed
-                    try {
-                        double pastFixing = IndexManager.getHistory(index_.name())[fixing_date];
-                        if (pastFixing != default(double))
-                            return pastFixing;
-                    } catch {
+                Date fixingDate = this.fixingDate();
+
+                var fixings = IndexManager.instance().getHistory(index_.name()).value();
+                if (fixings.ContainsKey(fixingDate)) {
+                    return fixings[fixingDate];
+                } else {
+                    if (fixingDate < today) {
+                        // must have been fixed
+                        throw new ArgumentException("Missing " + index_.name() + " fixing for " + fixingDate);
+                    }
+                    if (fixingDate == today) {
+                        // might have been fixed
                         // fall through and forecast
                     }
                 }
 
                 // forecast: 1) startDiscount
-                Date fixingValueDate = index_.fixingCalendar().advance(fixing_date, index_.fixingDays(), TimeUnit.Days);
+                Date fixingValueDate = index_.fixingCalendar().advance(fixingDate, index_.fixingDays(), TimeUnit.Days);
                 double startDiscount = termStructure.link.discount(fixingValueDate);
                 // forecast: 2) endDiscount
                 Date nextFixingDate = index_.fixingCalendar().advance(accrualEndDate_, -fixingDays, TimeUnit.Days);
@@ -82,7 +79,7 @@ namespace QLNet {
                 // forecast: 4) implied fixing
                 return (startDiscount / endDiscount - 1.0) / spanningTime;
             }
-#endif
+            #endif
         }
 
         // Factory - for Leg generators
@@ -201,6 +198,5 @@ namespace QLNet {
             }
             return cashflows;
         }
-
-    };
+    }
 }

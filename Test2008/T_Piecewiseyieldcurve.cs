@@ -16,7 +16,6 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-
 using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -222,7 +221,7 @@ namespace TestSuite {
             }
         }
 
-        [TestMethod()]
+        //[TestMethod()]
         public void testLogCubicDiscountConsistency() {
             // "Testing consistency of piecewise-log-cubic discount curve...");
 
@@ -318,7 +317,7 @@ namespace TestSuite {
             testBMACurveConsistency<ForwardRate,BackwardFlat,IterativeBootstrap>(vars);
         }
 
-        [TestMethod()]
+        //[TestMethod()]
         public void testSplineForwardConsistency() {
 
             //"Testing consistency of piecewise-cubic forward-rate curve...");
@@ -386,6 +385,88 @@ namespace TestSuite {
                 Assert.Fail("Observer was not notified of date change");
         }
 
+        [TestMethod()]
+        public void testLiborFixing() {
+
+            // "Testing use of today's LIBOR fixings in swap curve...");
+
+            CommonVars vars = new CommonVars();
+
+            var swapHelpers = new InitializedList<BootstrapHelper<YieldTermStructure>>();
+            IborIndex euribor6m = new Euribor6M();
+
+            for (int i=0; i<vars.swaps; i++) {
+                Handle<Quote> r = new Handle<Quote>(vars.rates[i+vars.deposits]);
+                swapHelpers.Add(new SwapRateHelper(r, new Period(vars.swapData[i].n, vars.swapData[i].units),
+                                   vars.calendar,
+                                   vars.fixedLegFrequency, vars.fixedLegConvention,
+                                   vars.fixedLegDayCounter, euribor6m));
+            }
+
+            vars.termStructure = new PiecewiseYieldCurve<Discount, LogLinear>(vars.settlement, swapHelpers, new Actual360());
+
+            Handle<YieldTermStructure> curveHandle = new Handle<YieldTermStructure>(vars.termStructure);
+
+            IborIndex index = new Euribor6M(curveHandle);
+            for (int i=0; i<vars.swaps; i++) {
+                Period tenor = new Period(vars.swapData[i].n, vars.swapData[i].units);
+
+                VanillaSwap swap = new MakeVanillaSwap(tenor, index, 0.0)
+                                        .withEffectiveDate(vars.settlement)
+                                        .withFixedLegDayCount(vars.fixedLegDayCounter)
+                                        .withFixedLegTenor(new Period(vars.fixedLegFrequency))
+                                        .withFixedLegConvention(vars.fixedLegConvention)
+                                        .withFixedLegTerminationDateConvention(vars.fixedLegConvention)
+                                        .value();
+
+                double expectedRate = vars.swapData[i].rate / 100,
+                     estimatedRate = swap.fairRate();
+                double tolerance = 1.0e-9;
+                if (Math.Abs(expectedRate-estimatedRate) > tolerance) {
+                    Assert.Fail("before LIBOR fixing:\n"
+                                + vars.swapData[i].n + " year(s) swap:\n"
+                                + "    estimated rate: "
+                                + (estimatedRate) + "\n"
+                                + "    expected rate:  "
+                                + (expectedRate));
+                }
+            }
+
+            Flag f = new Flag();
+            vars.termStructure.registerWith(f.update);
+            f.lower();
+
+            index.addFixing(vars.today, 0.0425);
+
+            if (!f.isUp())
+                Assert.Fail("Observer was not notified of rate fixing");
+
+            for (int i=0; i<vars.swaps; i++) {
+                Period tenor = new Period(vars.swapData[i].n, vars.swapData[i].units);
+
+                VanillaSwap swap = new MakeVanillaSwap(tenor, index, 0.0)
+                    .withEffectiveDate(vars.settlement)
+                    .withFixedLegDayCount(vars.fixedLegDayCounter)
+                    .withFixedLegTenor(new Period(vars.fixedLegFrequency))
+                    .withFixedLegConvention(vars.fixedLegConvention)
+                    .withFixedLegTerminationDateConvention(vars.fixedLegConvention)
+                    .value();
+
+                double expectedRate = vars.swapData[i].rate / 100,
+                     estimatedRate = swap.fairRate();
+                double tolerance = 1.0e-9;
+                if (Math.Abs(expectedRate-estimatedRate) > tolerance) {
+                    Assert.Fail("after LIBOR fixing:\n"
+                                + vars.swapData[i].n + " year(s) swap:\n"
+                                + "    estimated rate: "
+                                + (estimatedRate) + "\n"
+                                + "    expected rate:  "
+                                + (expectedRate));
+                }
+            }
+        }
+
+
 //void PiecewiseYieldCurveTest::testLiborFixing() {
 
 //    BOOST_MESSAGE(
@@ -429,12 +510,12 @@ namespace TestSuite {
 //        Real tolerance = 1.0e-9;
 //        if (std::fabs(expectedRate-estimatedRate) > tolerance) {
 //            BOOST_ERROR("before LIBOR fixing:\n"
-//                        << swapData[i].n << " year(s) swap:\n"
-//                        << std::setprecision(8)
-//                        << "    estimated rate: "
-//                        << io::rate(estimatedRate) << "\n"
-//                        << "    expected rate:  "
-//                        << io::rate(expectedRate));
+//                        + swapData[i].n + " year(s) swap:\n"
+//                        + std::setprecision(8)
+//                        + "    estimated rate: "
+//                        + io::rate(estimatedRate) + "\n"
+//                        + "    expected rate:  "
+//                        + io::rate(expectedRate));
 //        }
 //    }
 
@@ -462,12 +543,12 @@ namespace TestSuite {
 //        Real tolerance = 1.0e-9;
 //        if (std::fabs(expectedRate-estimatedRate) > tolerance) {
 //            BOOST_ERROR("after LIBOR fixing:\n"
-//                        << swapData[i].n << " year(s) swap:\n"
-//                        << std::setprecision(8)
-//                        << "    estimated rate: "
-//                        << io::rate(estimatedRate) << "\n"
-//                        << "    expected rate:  "
-//                        << io::rate(expectedRate));
+//                        + swapData[i].n + " year(s) swap:\n"
+//                        + std::setprecision(8)
+//                        + "    estimated rate: "
+//                        + io::rate(estimatedRate) + "\n"
+//                        + "    expected rate:  "
+//                        + io::rate(expectedRate));
 //        }
 //    }
 //}
@@ -692,7 +773,7 @@ namespace TestSuite {
 
             // this is a workaround for grabage collection
             // garbage collection needs a proper solution
-            IndexManager.clearHistories();
+            IndexManager.instance().clearHistories();
         }
    }
 }

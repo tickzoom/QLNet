@@ -73,35 +73,35 @@ namespace QLNet {
 		//! \name Constructors
 		//@{
 		//! general constructor
-		public DigitalCoupon(FloatingRateCoupon underlying, double? callStrike, Position.Type callPosition, bool isCallATMIncluded, double? callDigitalPayoff, double? putStrike, Position.Type putPosition, bool isPutATMIncluded, double? putDigitalPayoff) : this(underlying, callStrike, callPosition, isCallATMIncluded, callDigitalPayoff, putStrike, putPosition, isPutATMIncluded, putDigitalPayoff, new DigitalReplication())
-		{
-		}
-		public DigitalCoupon(FloatingRateCoupon underlying, double? callStrike, Position.Type callPosition, bool isCallATMIncluded, double? callDigitalPayoff, double? putStrike, Position.Type putPosition, bool isPutATMIncluded) : this(underlying, callStrike, callPosition, isCallATMIncluded, callDigitalPayoff, putStrike, putPosition, isPutATMIncluded, null, new DigitalReplication())
-		{
-		}
-		public DigitalCoupon(FloatingRateCoupon underlying, double? callStrike, Position.Type callPosition, bool isCallATMIncluded, double? callDigitalPayoff, double? putStrike, Position.Type putPosition) : this(underlying, callStrike, callPosition, isCallATMIncluded, callDigitalPayoff, putStrike, putPosition, false, null, new DigitalReplication())
-		{
-		}
-		public DigitalCoupon(FloatingRateCoupon underlying, double? callStrike, Position.Type callPosition, bool isCallATMIncluded, double? callDigitalPayoff, double? putStrike) : this(underlying, callStrike, callPosition, isCallATMIncluded, callDigitalPayoff, putStrike, Position.Type.Long, false, null, new DigitalReplication())
-		{
-		}
-		public DigitalCoupon(FloatingRateCoupon underlying, double? callStrike, Position.Type callPosition, bool isCallATMIncluded, double callDigitalPayoff) : this(underlying, callStrike, callPosition, isCallATMIncluded, callDigitalPayoff, null, Position.Type.Long, false, null, new DigitalReplication())
-		{
-		}
-		public DigitalCoupon(FloatingRateCoupon underlying, double? callStrike, Position.Type callPosition, bool isCallATMIncluded) : this(underlying, callStrike, callPosition, isCallATMIncluded, null, null, Position.Type.Long, false, null, new DigitalReplication())
-		{
-		}
-		public DigitalCoupon(FloatingRateCoupon underlying, double? callStrike, Position.Type callPosition) : this(underlying, callStrike, callPosition, false, null, null, Position.Type.Long, false, null, new DigitalReplication())
-		{
-		}
-		public DigitalCoupon(FloatingRateCoupon underlying, double? callStrike) : this(underlying, callStrike, Position.Type.Long, false, null, null, Position.Type.Long, false, null, new DigitalReplication())
-		{
-		}
-		public DigitalCoupon(FloatingRateCoupon underlying) : this(underlying, null, Position.Type.Long, false, null, null, Position.Type.Long, false, null, new DigitalReplication())
-		{
-		}
-		public DigitalCoupon(FloatingRateCoupon underlying, double? callStrike, Position.Type callPosition, bool isCallATMIncluded, double? callDigitalPayoff, double? putStrike, Position.Type putPosition, bool isPutATMIncluded, double? putDigitalPayoff, DigitalReplication replication) : base(underlying.date(), underlying.nominal(), underlying.accrualStartDate(), underlying.accrualEndDate(), underlying.fixingDays, underlying.index(), underlying.gearing(), underlying.spread(), underlying.refPeriodStart, underlying.refPeriodEnd, underlying.dayCounter(), underlying.isInArrears())
-		{
+        public DigitalCoupon(FloatingRateCoupon underlying, double? callStrike, Position.Type callPosition, bool isCallATMIncluded, double? callDigitalPayoff, double? putStrike, Position.Type putPosition, bool isPutATMIncluded, double? putDigitalPayoff)
+            : this(underlying, callStrike, callPosition, isCallATMIncluded, callDigitalPayoff, putStrike, putPosition, isPutATMIncluded, putDigitalPayoff, new DigitalReplication()) {
+        }
+        public DigitalCoupon(FloatingRateCoupon underlying, double? callStrike, Position.Type callPosition, bool isCallATMIncluded, double? callDigitalPayoff, double? putStrike, Position.Type putPosition, bool isPutATMIncluded)
+            : this(underlying, callStrike, callPosition, isCallATMIncluded, callDigitalPayoff, putStrike, putPosition, isPutATMIncluded, null, new DigitalReplication()) {
+        }
+        public DigitalCoupon(FloatingRateCoupon underlying, double? callStrike, Position.Type callPosition, bool isCallATMIncluded, double? callDigitalPayoff, double? putStrike, Position.Type putPosition)
+            : this(underlying, callStrike, callPosition, isCallATMIncluded, callDigitalPayoff, putStrike, putPosition, false, null, new DigitalReplication()) {
+        }
+        public DigitalCoupon(FloatingRateCoupon underlying, double? callStrike, Position.Type callPosition, bool isCallATMIncluded, double? callDigitalPayoff, double? putStrike)
+            : this(underlying, callStrike, callPosition, isCallATMIncluded, callDigitalPayoff, putStrike, Position.Type.Long, false, null, new DigitalReplication()) {
+        }
+        public DigitalCoupon(FloatingRateCoupon underlying, double? callStrike, Position.Type callPosition, bool isCallATMIncluded, double callDigitalPayoff)
+            : this(underlying, callStrike, callPosition, isCallATMIncluded, callDigitalPayoff, null, Position.Type.Long, false, null, new DigitalReplication()) {
+        }
+        public DigitalCoupon(FloatingRateCoupon underlying, double? callStrike, Position.Type callPosition, bool isCallATMIncluded)
+            : this(underlying, callStrike, callPosition, isCallATMIncluded, null, null, Position.Type.Long, false, null, new DigitalReplication()) {
+        }
+        public DigitalCoupon(FloatingRateCoupon underlying, double? callStrike, Position.Type callPosition)
+            : this(underlying, callStrike, callPosition, false, null, null, Position.Type.Long, false, null, new DigitalReplication()) {
+        }
+        public DigitalCoupon(FloatingRateCoupon underlying, double? callStrike)
+            : this(underlying, callStrike, Position.Type.Long, false, null, null, Position.Type.Long, false, null, new DigitalReplication()) {
+        }
+        public DigitalCoupon(FloatingRateCoupon underlying)
+            : this(underlying, null, Position.Type.Long, false, null, null, Position.Type.Long, false, null, new DigitalReplication()) {
+        }
+        public DigitalCoupon(FloatingRateCoupon underlying, double? callStrike, Position.Type callPosition, bool isCallATMIncluded, double? callDigitalPayoff, double? putStrike, Position.Type putPosition, bool isPutATMIncluded, double? putDigitalPayoff, DigitalReplication replication)
+            : base(underlying.date(), underlying.nominal(), underlying.accrualStartDate(), underlying.accrualEndDate(), underlying.fixingDays, underlying.index(), underlying.gearing(), underlying.spread(), underlying.refPeriodStart, underlying.refPeriodEnd, underlying.dayCounter(), underlying.isInArrears()) {
 			underlying_ = underlying;
 			callCsi_ = 0.0;
 			putCsi_ = 0.0;
@@ -280,7 +280,7 @@ namespace QLNet {
 			if (fixingDate == today)
 			{
 				// might have been fixed
-				double pastFixing = IndexManager.getHistory((underlying_.index()).name())[fixingDate];
+				double pastFixing = IndexManager.instance().getHistory((underlying_.index()).name()).value()[fixingDate];
                 if (pastFixing != default(double))
 				{
 					return underlyingRate + callCsi_ * callPayoff() + putCsi_ * putPayoff();
