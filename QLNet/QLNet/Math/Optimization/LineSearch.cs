@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
  * 
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -21,17 +22,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace QLNet
-{
+namespace QLNet {
 
     //! Base class for line search
-    public abstract class LineSearch
-    {
+    public abstract class LineSearch {
         //! current values of the search direction
         protected Vector searchDirection_;
         //! new x and its gradient
         protected Vector xtd_;
-        protected Vector gradient_;
+        protected Vector gradient_ = new Vector();
         //! cost function value and gradient norm corresponding to xtd_
         protected double qt_;
         protected double qpt_;
@@ -39,54 +38,33 @@ namespace QLNet
         protected bool succeed_;
 
         //! Default constructor
-        public LineSearch()
-            : this(0.0)
-        {
-        }
-        public LineSearch(double UnnamedParameter1)
-        {
+        public LineSearch() : this(0.0) { }
+        public LineSearch(double UnnamedParameter1) {
             qt_ = 0.0;
             qpt_ = 0.0;
             succeed_ = true;
         }
 
         //! return last x value
-        public Vector lastX()
-        {
-            return xtd_;
-        }
+        public Vector lastX() { return xtd_; }
         //! return last cost function value
-        public double lastFunctionValue()
-        {
-            return qt_;
-        }
+        public double lastFunctionValue() { return qt_; }
         //! return last gradient
-        public Vector lastGradient()
-        {
-            return gradient_;
-        }
+        public Vector lastGradient() { return gradient_; }
         //! return square norm of last gradient
-        public double lastGradientNorm2()
-        {
-            return qpt_;
-        }
+        public double lastGradientNorm2() { return qpt_; }
 
-        public bool succeed()
-        {
-            return succeed_;
-        }
+        public bool succeed() { return succeed_; }
 
         //! Perform line search
         public abstract double value(Problem P, ref EndCriteria.Type ecType, EndCriteria NamelessParameter3, double t_ini); // initial value of line-search step
-        public double update(Vector data, Vector direction, double beta, Constraint constraint)
-        {
+        public double update(ref Vector data, Vector direction, double beta, Constraint constraint) {
 
             double diff = beta;
             Vector newParams = data + diff * direction;
             bool valid = constraint.test(newParams);
             int icount = 0;
-            while (!valid)
-            {
+            while (!valid) {
                 if (icount > 200)
                     throw new ApplicationException("can't update linesearch");
                 diff *= 0.5;
@@ -99,8 +77,7 @@ namespace QLNet
         }
 
         //! current value of the search direction
-        public Vector searchDirection
-        {
+        public Vector searchDirection {
             get { return searchDirection_; }
             set { searchDirection_ = value; }
         }

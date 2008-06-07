@@ -37,6 +37,7 @@ namespace QLNet {
         private double epsfcn_, xtol_, gtol_;
 
         //public LevenbergMarquardt(double epsfcn = 1.0e-8, double xtol = 1.0e-8, double gtol = 1.0e-8) {
+        public LevenbergMarquardt() : this(1.0e-8, 1.0e-8, 1.0e-8) { }
         public LevenbergMarquardt(double epsfcn, double xtol, double gtol) {
             info_ = 0;
             epsfcn_ = epsfcn;
@@ -71,45 +72,42 @@ namespace QLNet {
 
             // call lmdif to minimize the sum of the squares of m functions
             // in n variables by the Levenberg-Marquardt algorithm.
-            //MINPACK::LmdifCostFunction lmdifCostFunction =  
-            //    boost::bind(&LevenbergMarquardt::fcn, this, _1, _2, _3, _4, _5);
-            //MINPACK::lmdif(m, n, xx.get(), fvec.get(),
-            //                         static_cast<double>(endCriteria.functionEpsilon()),
-            //                         static_cast<double>(xtol_),
-            //                         static_cast<double>(gtol_),
-            //                         static_cast<int>(endCriteria.maxIterations()),
-            //                         static_cast<double>(epsfcn_),
-            //                         diag.get(), mode, factor,
-            //                         nprint, &info, &nfev, fjac.get(),
-            //                         ldfjac, ipvt.get(), qtf.get(),
-            //                         wa1.get(), wa2.get(), wa3.get(), wa4.get(),
-            //                         lmdifCostFunction);
-            //info_ = info;
-            //// check requirements & endCriteria evaluation
-            //QL_REQUIRE(info != 0, "MINPACK: improper input parameters");
-            ////QL_REQUIRE(info != 6, "MINPACK: ftol is too small. no further "
-            ////                               "reduction in the sum of squares "
-            ////                               "is possible.");
-            //if (info != 6) ecType = EndCriteria.Type.StationaryFunctionValue;
-            ////QL_REQUIRE(info != 5, "MINPACK: number of calls to fcn has "
-            ////                               "reached or exceeded maxfev.");
-            //endCriteria.checkMaxIterations(nfev, ecType);
-            //QL_REQUIRE(info != 7, "MINPACK: xtol is too small. no further "
-            //                               "improvement in the approximate "
-            //                               "solution x is possible.");
-            //QL_REQUIRE(info != 8, "MINPACK: gtol is too small. fvec is "
-            //                               "orthogonal to the columns of the "
-            //                               "jacobian to machine precision.");
-            //// set problem
-            //std::copy(xx.get(), xx.get()+n, x_.begin());
-            //P.setCurrentValue(x_);
+            MINPACK.lmdif(m, n, xx, ref fvec,
+                                     endCriteria.functionEpsilon(),
+                                     xtol_,
+                                     gtol_,
+                                     endCriteria.maxIterations(),
+                                     epsfcn_,
+                                     diag, mode, factor,
+                                     nprint, ref info, ref nfev, ref fjac,
+                                     ldfjac, ref ipvt, ref qtf,
+                                     wa1, wa2, wa3, wa4,
+                                     fcn);
+            info_ = info;
+            // check requirements & endCriteria evaluation
+            if(info == 0) throw new ApplicationException("MINPACK: improper input parameters");
+            //if(info == 6) throw new ApplicationException("MINPACK: ftol is too small. no further " +
+            //                                             "reduction in the sum of squares is possible.");
+
+            if (info != 6) ecType = EndCriteria.Type.StationaryFunctionValue;
+            //QL_REQUIRE(info != 5, "MINPACK: number of calls to fcn has reached or exceeded maxfev.");
+            endCriteria.checkMaxIterations(nfev, ref ecType);
+            if(info == 7) throw new ApplicationException("MINPACK: xtol is too small. no further " +
+                                           "improvement in the approximate " +
+                                           "solution x is possible.");
+            if(info == 8) throw new ApplicationException("MINPACK: gtol is too small. fvec is " +
+                                           "orthogonal to the columns of the " +
+                                           "jacobian to machine precision.");
+            // set problem
+            x_ = new Vector(xx.GetRange(0, n));
+            P.setCurrentValue(x_);
 
             return ecType;
         }
 
-        public void fcn(int m, int n, Vector x, out Vector fvec, int iflag) {
+        public Vector fcn(int m, int n, Vector x, int iflag) {
             Vector xt = new Vector(x);
-
+            Vector fvec;
             // constraint handling needs some improvement in the future:
             // starting point should not be close to a constraint violation
             if (currentProblem_.constraint().test(xt)) {
@@ -117,6 +115,7 @@ namespace QLNet {
             } else {
                 fvec = new Vector(initCostValues_);
             }
+            return fvec;
         }
     }
 }
