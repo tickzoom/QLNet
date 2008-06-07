@@ -164,6 +164,7 @@
     <Compile Include="Math\Optimization\levenbergmarquardt.cs" />
     <Compile Include="Math\Optimization\LineSearch.cs" />
     <Compile Include="Math\Optimization\LineSearchBasedMethod.cs" />
+    <Compile Include="Math\Optimization\lmdif.cs" />
     <Compile Include="Math\Optimization\method.cs" />
     <Compile Include="Math\Optimization\problem.cs" />
     <Compile Include="Math\Optimization\ProjectedCostFunction.cs" />

@@ -53,13 +53,12 @@ namespace QLNet {
         public Problem(CostFunction costFunction, Constraint constraint, Vector initialValue) {
             costFunction_ = costFunction;
             constraint_ = constraint;
-            currentValue_ = initialValue;
+            currentValue_ = (Vector)initialValue.Clone();
         }
 
         /*! \warning it does not reset the current minumum to any initial value
         */
-        public void reset()
-        {
+        public void reset() {
             functionEvaluation_ = gradientEvaluation_ = 0;
             functionValue_ = squaredNorm_ = null;
         }
@@ -91,17 +90,15 @@ namespace QLNet {
         }
 
         public void setCurrentValue(Vector currentValue) {
-            currentValue_=currentValue;
+            currentValue_ = (Vector)currentValue.Clone();
         }
 
-        public void setFunctionValue(double functionValue)
-        {
-            functionValue_=functionValue;
+        public void setFunctionValue(double functionValue) {
+            functionValue_ = functionValue;
         }
 
-        public void setGradientNormValue(double squaredNorm)
-        {
-            squaredNorm_=squaredNorm;
+        public void setGradientNormValue(double squaredNorm) {
+            squaredNorm_ = squaredNorm;
         }
     }
 }

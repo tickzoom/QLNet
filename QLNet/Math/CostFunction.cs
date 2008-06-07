@@ -29,14 +29,11 @@ namespace QLNet {
         //! method to overload to compute the cost function values in x
         public abstract Vector values(Vector x);
 
-        //! method to overload to compute the cost function values in x
-        //virtual Disposable<Array> values(const Array& x) const =0;
-
         //! method to overload to compute grad_f, the first derivative of
         //  the cost function with respect to x
         public virtual void gradient(Vector grad, Vector x) {
             double eps = finiteDifferenceEpsilon(), fp, fm;
-            Vector xx = (Vector)x.Clone();
+            Vector xx = new Vector(x);
             for (int i=0; i<x.Count; i++) {
                 xx[i] += eps;
                 fp = value(xx);

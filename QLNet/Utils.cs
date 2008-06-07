@@ -34,8 +34,8 @@ namespace QLNet {
             double result = Get(spreads, i);
             double floor = Get(floors, i);
             double cap = Get(caps, i);
-            if (floor != default(double)) result = System.Math.Max(floor, result);
-            if (cap != default(double)) result = System.Math.Min(cap, result);
+            if (floor != default(double)) result = Math.Max(floor, result);
+            if (cap != default(double)) result = Math.Min(cap, result);
             return result;
         }
 
@@ -47,6 +47,16 @@ namespace QLNet {
             T t = a2;
             a2 = a1;
             a1 = t;
+        }
+
+        // this is the overload for Pow with int power: much faster and more precise
+        public static double Pow(double x, int y) {
+            int n = Math.Abs(y);
+            double retval = 1;
+            for (; ; x *= x) {
+                if ((n & 1) != 0) retval *= x;
+                if ((n >>= 1) == 0) return y < 0 ? 1 / retval : retval;
+            }
         }
     }
 
