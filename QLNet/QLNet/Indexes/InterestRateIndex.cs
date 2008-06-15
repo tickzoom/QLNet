@@ -56,8 +56,6 @@ namespace QLNet {
             fixingCalendar_ = fixingCalendar;
             dayCounter_ = dayCounter;
 
-            if (!(fixingDays < 3))
-                throw new ArgumentException("wrong number (" + fixingDays + ") of fixing days");
             tenor_.normalize();
 
             Settings.registerWith(update);
@@ -70,13 +68,15 @@ namespace QLNet {
         #region Index interface
         public override string name() {
             string res = familyName_;
-            if (tenor_.units() == TimeUnit.Days) {
+            if (tenor_ == new Period(1, TimeUnit.Days)) {
                 if (fixingDays_ == 0)
                     res += "ON";
+                else if (fixingDays_ == 1)
+                    res += "TN";
                 else if (fixingDays_ == 2)
                     res += "SN";
                 else
-                    res += "TN";
+                    res += tenor_.ToShortString();
             } else
                 res += tenor_.ToShortString();
             res = res + " " + dayCounter_.name();
