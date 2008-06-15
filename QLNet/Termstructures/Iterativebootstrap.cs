@@ -41,9 +41,7 @@ namespace QLNet {
                 throw new ArgumentException("not enough instruments: " + n + " provided, " +
                        (ts_.interpolator_.requiredPoints-1) + " required");
 
-            for (int i = 0; i < n; ++i) {
-                ts_.instruments_[i].registerWith(ts_.update);
-            }
+            ts_.instruments_.ForEach(x => x.registerWith(ts_.update));
         }
 
         public void calculate<T, I, B>()             
@@ -54,36 +52,33 @@ namespace QLNet {
             PiecewiseYieldCurve<T, I, B> ts_ = tsContainer_ as PiecewiseYieldCurve<T, I, B>;
 
             //prepare instruments
-            int n = ts_.instruments_.Count;
+            int n = ts_.instruments_.Count, i;
 
             // ensure rate helpers are sorted
             ts_.instruments_.Sort((x, y) => x.latestDate().CompareTo(y.latestDate()));
 
             // check that there is no instruments with the same maturity
-            for (int i = 1; i < n; ++i) {
+            for (i = 1; i < n; ++i) {
                 Date m1 = ts_.instruments_[i - 1].latestDate(),
                      m2 = ts_.instruments_[i].latestDate();
                 if (m1 == m2) throw new ArgumentException("two instruments have the same maturity (" + m1 + ")");
             }
 
             // check that there is no instruments with invalid quote
-            for (int i = 0; i < n; ++i)
-                if (!ts_.instruments_[i].quoteIsValid())
-                    throw new ArgumentException("instrument " + i + " (maturity: " + ts_.instruments_[i].latestDate() +
-                           ") has an invalid quote");
+            i = ts_.instruments_.FindIndex(x => !x.quoteIsValid());
+            if (i != -1)
+                throw new ArgumentException("instrument " + i + " (maturity: " + ts_.instruments_[i].latestDate() +
+                       ") has an invalid quote");
 
             // setup instruments and register with them
-            for (int i = 0; i < n; ++i) {
-                // There is a significant interaction with observability.
-                ts_.instruments_[i].setTermStructure(ts_);
-            }
+            ts_.instruments_.ForEach(x => x.setTermStructure(ts_));
 
             // calculate dates and times
             ts_.dates_ = new InitializedList<Date>(n + 1);
             ts_.times_ = new InitializedList<double>(n + 1);
             ts_.dates_[0] = ts_.initialDate(ts_);
             ts_.times_[0] = ts_.timeFromReference(ts_.dates_[0]);
-            for (int i = 0; i < n; ++i) {
+            for (i = 0; i < n; ++i) {
                 ts_.dates_[i + 1] = ts_.instruments_[i].latestDate();
                 ts_.times_[i + 1] = ts_.timeFromReference(ts_.dates_[i + 1]);
             }
@@ -106,7 +101,7 @@ namespace QLNet {
                 if (validCurve_) {
                     ts_.interpolation_ = ts_.interpolator_.interpolate(ts_.times_, ts_.times_.Count, ts_.data_);
                 }
-                for (int i=1; i<n+1; ++i) {
+                for (i=1; i<n+1; ++i) {
                     // calculate guess before extending interpolation to ensure that any extrapolation is performed
                     // using the curve bootstrapped so far and no more
                     BootstrapHelper<YieldTermStructure> instrument = ts_.instruments_[i-1];
@@ -164,7 +159,7 @@ namespace QLNet {
 
                 // exit conditions
                 double improvement = 0.0;
-                for (int i=1; i<n+1; ++i)
+                for (i=1; i<n+1; ++i)
                     improvement = Math.Max(improvement, Math.Abs(ts_.data_[i]-previousData[i]));
                 if (improvement<=ts_.accuracy_)  // convergence reached
                     break;
