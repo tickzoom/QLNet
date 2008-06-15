@@ -48,6 +48,7 @@ namespace QLNet {
             return (quadraticity_ * quadraticHelper_.value(x) + (1.0 - quadraticity_) * convMonoHelper_.value(x));
         }
         public double primitive(double x) {
+            double result = (quadraticity_ * quadraticHelper_.primitive(x) + (1.0 - quadraticity_) * convMonoHelper_.primitive(x));
             return (quadraticity_ * quadraticHelper_.primitive(x) + (1.0 - quadraticity_) * convMonoHelper_.primitive(x));
         }
         public double fNext() {
@@ -617,14 +618,30 @@ namespace QLNet {
             if (x >= xBegin_.Last()) {
                 return extrapolationHelper_.value(x);
             }
-            return sectionHelpers_[sectionHelpers_.Keys.First(y => x < y)].value(x);
+
+            double i;
+            if (x > sectionHelpers_.Keys.Last())
+                i = sectionHelpers_.Keys.Last();
+            else if (x < sectionHelpers_.Keys.First())
+                i = sectionHelpers_.Keys.First();
+            else
+                i = sectionHelpers_.Keys.First(y => x < y);
+            return sectionHelpers_[i].value(x);
         }
 
         public override double primitive(double x) {
             if (x >= xBegin_.Last()) {
                 return extrapolationHelper_.primitive(x);
             }
-            return sectionHelpers_[sectionHelpers_.Keys.First(y => x < y)].primitive(x);
+
+            double i;
+            if (x >= sectionHelpers_.Keys.Last())
+                i = sectionHelpers_.Keys.Last();
+            else if (x <= sectionHelpers_.Keys.First())
+                i = sectionHelpers_.Keys.First();
+            else
+                i = sectionHelpers_.Keys.First(y => x < y);
+            return sectionHelpers_[i].primitive(x);
         }
 
         public override double derivative(double x) {
@@ -717,7 +734,6 @@ namespace QLNet {
         
         public bool global { get { return true; } }
         public int requiredPoints { get { return 2; } }
-
-        const int dataSizeAdjustment = 1;
+        public int dataSizeAdjustment { get { return 1; } }
     }
 }
