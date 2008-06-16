@@ -26,10 +26,20 @@ namespace QLNet {
     public abstract class IPiecewiseYieldCurve : YieldTermStructure, ITraits {
         #region Properties
         public List<double> data_;
+        public List<double> data() { calculate(); return data_; }
+
+        public List<Date> dates_;
+        public List<Date> dates() { calculate(); return dates_; }
+        
+        public List<double> times_ = new List<double>();
+        public List<double> times() { calculate(); return times_; }
+
+        public double accuracy_;
 
         public List<BootstrapHelper<YieldTermStructure>> instruments_;
 
         public Interpolation interpolation_;
+        public IInterpolationFactory interpolator_;
         #endregion
 
         // two constructors to forward down the ctor chain
@@ -94,20 +104,14 @@ namespace QLNet {
         where BootStrap : IBootStrap, new() {
 
         #region Properties
-        public List<Date> dates_;
-        public List<double> times_ = new List<double>();
-
         private List<Handle<Quote>> jumps_;
         private List<Date> jumpDates_;
         private List<double> jumpTimes_;
         private int nJumps_;
 
-        public double accuracy_;
         protected Date latestReference_;
 
-        public Interpolator interpolator_;
-
-        protected BootStrap bootstrap_;
+        protected IBootStrap bootstrap_;
         #endregion
 
         #region Traits wrapper
@@ -182,7 +186,7 @@ namespace QLNet {
             setJumps();
             jumps.ForEach(x => x.registerWith(update));
 
-            bootstrap_.setup<Traits, Interpolator, BootStrap>(this);
+            bootstrap_.setup(this);
         }
 
         //public InterpolatedYieldCurve(int settlementDays, Calendar calendar, List<BootstrapHelper<YieldTermStructure>> instruments,
@@ -215,15 +219,12 @@ namespace QLNet {
             setJumps();
             jumps.ForEach(x => x.registerWith(update));
 
-            bootstrap_.setup<Traits, Interpolator, BootStrap>(this);
+            bootstrap_.setup(this);
         } 
         #endregion
 
         // here we do not refer to the base curve as in QL because our base curve is YieldTermStructure and not Traits::base_curve
         public override Date maxDate() { calculate(); return dates_.Last(); }
-        public List<Date> dates() { calculate(); return dates_; }
-        public List<double> times() { calculate(); return times_; }
-        public List<double> data() { calculate(); return data_; }
 
         public Dictionary<Date, double> nodes() {
             calculate();
@@ -271,7 +272,7 @@ namespace QLNet {
 
         protected override void performCalculations() {
             // just delegate to the bootstrapper
-            bootstrap_.calculate<Traits, Interpolator, BootStrap>();
+            bootstrap_.calculate();
         }
     }
 }
