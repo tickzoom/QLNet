@@ -22,6 +22,66 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
+    // penalty function class for solving using a multi-dimensional solver
+    public class PenaltyFunction<Curve> : CostFunction where Curve : IPiecewiseYieldCurve {
+        //typedef typename Curve::traits_type Traits;
+        //typedef typename Traits::helper helper;
+        //typedef typename std::vector< boost::shared_ptr<helper> >::const_iterator helper_iterator;
+
+        private Curve curve_;
+        private int initialIndex_;
+        private int localisation_, start_, end_;
+        private List<BootstrapHelper<YieldTermStructure>> rateHelpers_;
+
+        public PenaltyFunction(Curve curve, int initialIndex, List<BootstrapHelper<YieldTermStructure>> rateHelpers, int start, int end) {
+            curve_ = curve;
+            initialIndex_ = initialIndex;
+            rateHelpers_ = rateHelpers;
+            start_ = start;
+            end_ = end;
+            localisation_ = end - start;
+        }
+
+        public override double value(Vector x) {
+            int i = initialIndex_;
+            x.ForEach(z => {
+                curve_.updateGuess(curve_.data_, z, i);
+                ++i;
+            });
+
+            curve_.interpolation_.update();
+
+            double penalty = 0.0;
+            for(int j = start_; j < end_; j++) {
+                double quoteError = rateHelpers_[j].quoteError();
+                penalty += Math.Abs(quoteError);
+            }
+            return penalty;
+        }
+
+        public override Vector values(Vector x) {
+            int i = initialIndex_;
+            x.ForEach(z => { 
+                curve_.updateGuess(curve_.data_, z, i);
+                ++i; 
+            });
+
+            curve_.interpolation_.update();
+
+            Vector penalties = new Vector(localisation_);
+            var instIt = start_;
+            int penIt = 0;
+            while (instIt != end_) {
+                double quoteError = rateHelpers_[instIt].quoteError();
+                penalties[penIt] = Math.Abs(quoteError);
+                ++instIt;
+                ++penIt;
+            }
+            return penalties;
+        }
+    }
+
+
     //! Localised-term-structure bootstrapper for most curve types.
     /*! This algorithm enables a localised fitting for non-local
         interpolation methods.
@@ -82,112 +142,94 @@ namespace QLNet {
             PiecewiseYieldCurve<T, I, B> ts_ = tsContainer_ as PiecewiseYieldCurve<T, I, B>;
 
             validCurve_ = false;
-            int n = ts_.instruments_.Count;
+            int nInsts = ts_.instruments_.Count;
 
             // ensure rate helpers are sorted
             ts_.instruments_.Sort((x, y) => x.latestDate().CompareTo(y.latestDate()));
 
             // check that there is no instruments with the same maturity
-            for (int i = 1; i < n; ++i) {
+            for (int i = 1; i < nInsts; ++i) {
                 Date m1 = ts_.instruments_[i - 1].latestDate(),
                      m2 = ts_.instruments_[i].latestDate();
                 if (m1 == m2) throw new ArgumentException("two instruments have the same maturity (" + m1 + ")");
             }
 
             // check that there is no instruments with invalid quote
-            for (int i = 0; i < n; ++i)
+            for (int i = 0; i < nInsts; ++i)
                 if (!ts_.instruments_[i].quoteIsValid())
                     throw new ArgumentException("instrument " + i + " (maturity: " + ts_.instruments_[i].latestDate() +
                            ") has an invalid quote");
 
             // setup instruments and register with them
-            for (int i = 0; i < n; ++i) {
-                // There is a significant interaction with observability.
-                ts_.instruments_[i].setTermStructure(ts_);
+            ts_.instruments_.ForEach(i => i.setTermStructure(ts_));
+
+            // set initial guess only if the current curve cannot be used as guess
+            if (validCurve_) {
+                if (ts_.data_.Count != nInsts + 1)
+                    throw new ArgumentException("dimension mismatch: expected " + nInsts + 1 + ", actual " + ts_.data_.Count);
+            } else {
+                ts_.data_ = new InitializedList<double>(nInsts + 1);
+                ts_.data_[0] = ts_.initialValue(ts_);
             }
 
             // calculate dates and times
-            ts_.dates_ = new InitializedList<Date>(n + 1);
-            ts_.times_ = new InitializedList<double>(n + 1);
+            ts_.dates_ = new InitializedList<Date>(nInsts + 1);
+            ts_.times_ = new InitializedList<double>(nInsts + 1);
             ts_.dates_[0] = ts_.initialDate(ts_);
             ts_.times_[0] = ts_.timeFromReference(ts_.dates_[0]);
-            for (int i = 0; i < n; ++i) {
+            for (int i = 0; i < nInsts; ++i) {
                 ts_.dates_[i + 1] = ts_.instruments_[i].latestDate();
                 ts_.times_[i + 1] = ts_.timeFromReference(ts_.dates_[i + 1]);
                 if (!validCurve_)
                     ts_.data_[i+1] = ts_.data_[i];
             }
 
-            // set initial guess only if the current curve cannot be used as guess
-            if (validCurve_) {
-                if (ts_.data_.Count != n + 1)
-                    throw new ArgumentException("dimension mismatch: expected " + n + 1 + ", actual " + ts_.data_.Count);
-            } else {
-                ts_.data_ = new InitializedList<double>(n + 1);
-                ts_.data_[0] = ts_.initialValue(ts_);
-            }
-
-            throw new NotImplementedException();
-
             LevenbergMarquardt solver = new LevenbergMarquardt(ts_.accuracy_, ts_.accuracy_, ts_.accuracy_);
             EndCriteria endCriteria = new EndCriteria(100, 10, 0.00, ts_.accuracy_, 0.00);
-            //PositiveConstraint posConstraint;
-            //NoConstraint noConstraint;
-            //Constraint& solverConstraint = forcePositive_ ?
-            //    static_cast<Constraint&>(posConstraint) :
-            //    static_cast<Constraint&>(noConstraint);
+            PositiveConstraint posConstraint = new PositiveConstraint();
+            NoConstraint noConstraint = new NoConstraint();
+            Constraint solverConstraint = forcePositive_ ? (Constraint)posConstraint : (Constraint)noConstraint;
 
-            //// now start the bootstrapping.
-            //Size iInst = localisation_-1;
+            // now start the bootstrapping.
+            int iInst = localisation_ - 1;
 
-            //Size dataAdjust = Curve::interpolator_type::dataSizeAdjustment;
+            int dataAdjust = (ts_.interpolator_ as ConvexMonotone).dataSizeAdjustment;
 
-            //do {
-            //    Size initialDataPt = iInst+1-localisation_+dataAdjust;
-            //    Array startArray(localisation_+1-dataAdjust);
-            //    for (Size j = 0; j < startArray.size()-1; ++j)
-            //        startArray[j] = ts_->data_[initialDataPt+j];
+            do {
+                int initialDataPt = iInst+1-localisation_+dataAdjust;
+                Vector startArray = new Vector(localisation_+1-dataAdjust);
+                for (int j = 0; j < startArray.size()-1; ++j)
+                    startArray[j] = ts_.data_[initialDataPt+j];
 
-            //    // here we are extending the interpolation a point at a
-            //    // time... but the local interpolator can make an
-            //    // approximation for the final localisation period.
-            //    // e.g. if the localisation is 2, then the first section
-            //    // of the curve will be solved using the first 2
-            //    // instruments... with the local interpolator making
-            //    // suitable boundary conditions.
-            //    ts_->interpolation_ =
-            //        ts_->interpolator_.localInterpolate(
-            //                                      ts_->times_.begin(),
-            //                                      ts_->times_.begin()+(iInst + 2),
-            //                                      ts_->data_.begin(),
-            //                                      localisation_,
-            //                                      ts_->interpolation_,
-            //                                      nInsts+1);
+                // here we are extending the interpolation a point at a
+                // time... but the local interpolator can make an
+                // approximation for the final localisation period.
+                // e.g. if the localisation is 2, then the first section
+                // of the curve will be solved using the first 2
+                // instruments... with the local interpolator making
+                // suitable boundary conditions.
+                ts_.interpolation_ = (ts_.interpolator_ as ConvexMonotone).localInterpolate(ts_.times_, iInst + 2, ts_.data_, 
+                                                localisation_, ts_.interpolation_ as ConvexMonotoneInterpolation, nInsts + 1);
 
-            //    if (iInst >= localisation_) {
-            //        startArray[localisation_-dataAdjust] =
-            //            Traits::guess(ts_, ts_->dates_[iInst]);
-            //    } else {
-            //        startArray[localisation_-dataAdjust] = ts_->data_[0];
-            //    }
+                if (iInst >= localisation_) {
+                    startArray[localisation_-dataAdjust] = ts_.guess(ts_, ts_.dates_[iInst]);
+                } else {
+                    startArray[localisation_-dataAdjust] = ts_.data_[0];
+                }
 
-            //    PenaltyFunction<Curve> currentCost(
-            //                ts_,
-            //                initialDataPt,
-            //                ts_->instruments_.begin() + (iInst - localisation_+1),
-            //                ts_->instruments_.begin() + (iInst+1));
+                var currentCost = new PenaltyFunction<PiecewiseYieldCurve<T, I, B>>(ts_, initialDataPt, ts_.instruments_, 
+                                                                                    iInst - localisation_ + 1, iInst + 1);
+                Problem toSolve = new Problem(currentCost, solverConstraint, startArray);
+                EndCriteria.Type endType = solver.minimize(toSolve, endCriteria);
 
-            //    Problem toSolve(currentCost, solverConstraint, startArray);
+                // check the end criteria
+                if (!(endType == EndCriteria.Type.StationaryFunctionAccuracy ||
+                           endType == EndCriteria.Type.StationaryFunctionValue))
+                    throw new ApplicationException("Unable to strip yieldcurve to required accuracy ");
+                ++iInst;
+            } while (iInst < nInsts);
 
-            //    EndCriteria::Type endType = solver.minimize(toSolve, endCriteria);
-
-            //    // check the end criteria
-            //    QL_REQUIRE(endType == EndCriteria::StationaryFunctionAccuracy ||
-            //               endType == EndCriteria::StationaryFunctionValue,
-            //               "Unable to strip yieldcurve to required accuracy " );
-            //    ++iInst;
-            //} while ( iInst < nInsts );
-            //validCurve_ = true;
+            validCurve_ = true;
         }
     }
 }

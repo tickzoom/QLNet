@@ -113,10 +113,12 @@ namespace QLNet {
 
     //! Forward-curve traits
     public class ForwardRate : ITraits {
+        const double avgRate = 0.05;
+
         public Date initialDate(YieldTermStructure c) { return c.referenceDate(); }   // start of curve data
-        public double initialValue(YieldTermStructure c) { return 0.02; } // dummy value at reference date
+        public double initialValue(YieldTermStructure c) { return avgRate; } // dummy value at reference date
         public bool dummyInitialValue() { return true; }    // true if the initialValue is just a dummy value
-        public double initialGuess() { return 0.02; } // initial guess
+        public double initialGuess() { return avgRate; } // initial guess
         // further guesses
         public double guess(YieldTermStructure c, Date d) {
             return c.forwardRate(d, d, c.dayCounter(), Compounding.Continuous, Frequency.Annual, true).rate();

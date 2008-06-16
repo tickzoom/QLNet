@@ -48,7 +48,6 @@ namespace QLNet {
             return (quadraticity_ * quadraticHelper_.value(x) + (1.0 - quadraticity_) * convMonoHelper_.value(x));
         }
         public double primitive(double x) {
-            double result = (quadraticity_ * quadraticHelper_.primitive(x) + (1.0 - quadraticity_) * convMonoHelper_.primitive(x));
             return (quadraticity_ * quadraticHelper_.primitive(x) + (1.0 - quadraticity_) * convMonoHelper_.primitive(x));
         }
         public double fNext() {
@@ -720,7 +719,7 @@ namespace QLNet {
 
         public Interpolation localInterpolate(List<double> xBegin, int size, List<double> yBegin, int localisation,
                                               ConvexMonotoneInterpolation prevInterpolation, int finalSize) {
-            int length = xBegin.Count;
+            int length = size;
             if (length - localisation == 1) { // the first time this
                                               // function is called
                 return new ConvexMonotoneInterpolation(xBegin, size, yBegin, quadraticity_, monotonicity_, forcePositive_,
