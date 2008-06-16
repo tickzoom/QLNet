@@ -23,14 +23,8 @@ using System.Text;
 
 namespace QLNet {
     public interface IBootStrap {
-        void setup<T, I, B>(PiecewiseYieldCurve<T, I, B> ts)
-            where T : ITraits, new()
-            where I : IInterpolationFactory, new()
-            where B : IBootStrap, new();
-        void calculate<T, I, B>()
-            where T : ITraits, new()
-            where I : IInterpolationFactory, new()
-            where B : IBootStrap, new();
+        void setup(IPiecewiseYieldCurve ts);
+        void calculate();
     }
 
     // Base helper class for bootstrapping

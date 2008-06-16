@@ -23,16 +23,13 @@ using System.Text;
 
 namespace QLNet {
     //! bootstrap error
-    public class BootstrapError<T, I, B> : ISolver1d
-            where T : ITraits, new()
-            where I : IInterpolationFactory, new()
-            where B : IBootStrap, new() {
+    public class BootstrapError : ISolver1d {
 
-        private PiecewiseYieldCurve<T, I, B> curve_;
+        private IPiecewiseYieldCurve curve_;
         private BootstrapHelper<YieldTermStructure> helper_;
         private int segment_;
 
-        public BootstrapError(PiecewiseYieldCurve<T, I, B> curve, BootstrapHelper<YieldTermStructure> helper, int segment) {
+        public BootstrapError(IPiecewiseYieldCurve curve, BootstrapHelper<YieldTermStructure> helper, int segment) {
             curve_ = curve;
             helper_ = helper;
             segment_ = segment; 

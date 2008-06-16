@@ -26,15 +26,10 @@ namespace QLNet {
     public class IterativeBootstrap : IBootStrap {
         
         private bool validCurve_ = false;
-        private object tsContainer_; // yes, it is a workaround
+        private IPiecewiseYieldCurve ts_; // yes, it is a workaround
 
-        public void setup<T, I, B>(PiecewiseYieldCurve<T, I, B> ts)
-            where T : ITraits, new()
-            where I : IInterpolationFactory, new()
-            where B : IBootStrap, new() {
-
-            tsContainer_ = ts;
-            PiecewiseYieldCurve<T, I, B> ts_ = tsContainer_ as PiecewiseYieldCurve<T, I, B>;
+        public void setup(IPiecewiseYieldCurve ts) {
+            ts_ = ts;
 
             int n = ts_.instruments_.Count;
             if (!(n+1 >= ts_.interpolator_.requiredPoints))
@@ -44,12 +39,7 @@ namespace QLNet {
             ts_.instruments_.ForEach(x => x.registerWith(ts_.update));
         }
 
-        public void calculate<T, I, B>()             
-            where T : ITraits, new()
-            where I : IInterpolationFactory, new()
-            where B : IBootStrap, new() {
-
-            PiecewiseYieldCurve<T, I, B> ts_ = tsContainer_ as PiecewiseYieldCurve<T, I, B>;
+        public void calculate() {
 
             //prepare instruments
             int n = ts_.instruments_.Count, i;
@@ -136,7 +126,7 @@ namespace QLNet {
                     ts_.interpolation_.update();
 
                     try {
-                        var error = new BootstrapError<T, I, B>(ts_, instrument, i);
+                        var error = new BootstrapError(ts_, instrument, i);
                         double r = solver.solve(error, ts_.accuracy_, guess, min, max);
                         // redundant assignment (as it has been already performed by BootstrapError in solve procedure), but safe
                         ts_.data_[i] = r;

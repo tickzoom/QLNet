@@ -104,7 +104,7 @@ namespace QLNet {
         //typedef typename Curve::interpolator_type Interpolator;
       
         private bool validCurve_;
-        private object tsContainer_; // yes, it is a workaround
+        private IPiecewiseYieldCurve ts_; // yes, it is a workaround
         int localisation_;
         bool forcePositive_;
         
@@ -115,13 +115,8 @@ namespace QLNet {
             forcePositive_ = forcePositive;
         }
 
-        public void setup<T, I, B>(PiecewiseYieldCurve<T, I, B> ts)
-            where T : ITraits, new()
-            where I : IInterpolationFactory, new()
-            where B : IBootStrap, new() {
-            
-            tsContainer_ = ts;
-            PiecewiseYieldCurve<T, I, B> ts_ = tsContainer_ as PiecewiseYieldCurve<T, I, B>;
+        public void setup(IPiecewiseYieldCurve ts) {
+            ts_ = ts;
 
             int n = ts_.instruments_.Count;
             if (!(n >= ts_.interpolator_.requiredPoints))
@@ -134,12 +129,7 @@ namespace QLNet {
             ts_.instruments_.ForEach(i => i.registerWith(ts_.update));
         }
 
-        public void calculate<T, I, B>()
-            where T : ITraits, new()
-            where I : IInterpolationFactory, new()
-            where B : IBootStrap, new() {
-
-            PiecewiseYieldCurve<T, I, B> ts_ = tsContainer_ as PiecewiseYieldCurve<T, I, B>;
+        public void calculate() {
 
             validCurve_ = false;
             int nInsts = ts_.instruments_.Count;
@@ -217,8 +207,8 @@ namespace QLNet {
                     startArray[localisation_-dataAdjust] = ts_.data_[0];
                 }
 
-                var currentCost = new PenaltyFunction<PiecewiseYieldCurve<T, I, B>>(ts_, initialDataPt, ts_.instruments_, 
-                                                                                    iInst - localisation_ + 1, iInst + 1);
+                var currentCost = new PenaltyFunction<IPiecewiseYieldCurve>(ts_, initialDataPt, ts_.instruments_, 
+                                                                            iInst - localisation_ + 1, iInst + 1);
                 Problem toSolve = new Problem(currentCost, solverConstraint, startArray);
                 EndCriteria.Type endType = solver.minimize(toSolve, endCriteria);
 
