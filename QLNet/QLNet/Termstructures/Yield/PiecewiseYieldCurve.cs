@@ -22,6 +22,43 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
+    // this is the abstract class to give access to all properties and methods of PiecewiseYieldCurve and avoiding generics
+    public abstract class IPiecewiseYieldCurve : YieldTermStructure, ITraits {
+        #region Properties
+        public List<double> data_;
+
+        public List<BootstrapHelper<YieldTermStructure>> instruments_;
+
+        public Interpolation interpolation_;
+        #endregion
+
+        // two constructors to forward down the ctor chain
+        public IPiecewiseYieldCurve(Date referenceDate, Calendar cal, DayCounter dc) : base(referenceDate, cal, dc) { }
+        public IPiecewiseYieldCurve(int settlementDays, Calendar cal, DayCounter dc) : base(settlementDays, cal, dc) { }
+
+        #region Traits wrapper
+        public abstract Date initialDate(YieldTermStructure c);
+        public abstract double initialValue(YieldTermStructure c);
+        public abstract bool dummyInitialValue();
+        public abstract double initialGuess();
+        public abstract double guess(YieldTermStructure c, Date d);
+        public abstract double minValueAfter(int s, List<double> l);
+        public abstract double maxValueAfter(int s, List<double> l);
+        public abstract void updateGuess(List<double> data, double discount, int i);
+        public abstract int maxIterations();
+
+        protected abstract override double discountImpl(double t);
+        protected abstract double zeroYieldImpl(double t);
+        protected abstract double forwardImpl(double t);
+
+        // these are dummy methods (for the sake of ITraits and should not be called directly
+        public abstract double discountImpl(Interpolation i, double t);
+        public abstract double zeroYieldImpl(Interpolation i, double t);
+        public abstract double forwardImpl(Interpolation i, double t);
+        #endregion
+    }
+
+
     public class PiecewiseYieldCurve<Traits, Interpolator>
         : PiecewiseYieldCurve<Traits, Interpolator, IterativeBootstrap>
         where Traits : ITraits, new()
@@ -50,7 +87,8 @@ namespace QLNet {
             : base(settlementDays, calendar, instruments, dayCounter, turnOfYearEffect, accuracy) { }
     }
 
-    public class PiecewiseYieldCurve<Traits, Interpolator, BootStrap> : YieldTermStructure // , ITraits
+
+    public class PiecewiseYieldCurve<Traits, Interpolator, BootStrap> : IPiecewiseYieldCurve, ITraits
         where Traits : ITraits, new()
         where Interpolator : IInterpolationFactory, new()
         where BootStrap : IBootStrap, new() {
@@ -58,16 +96,12 @@ namespace QLNet {
         #region Properties
         public List<Date> dates_;
         public List<double> times_ = new List<double>();
-        public List<double> data_;
 
         protected Handle<Quote> turnOfYearEffect_;
         public double accuracy_;
         protected Date latestReference_;
         protected double turnOfYear_;
 
-        public List<BootstrapHelper<YieldTermStructure>> instruments_;
-
-        public Interpolation interpolation_;
         public Interpolator interpolator_;
 
         protected BootStrap bootstrap_;
@@ -75,15 +109,15 @@ namespace QLNet {
 
         #region Traits wrapper
         protected ITraits traits_ = new Traits();
-        public Date initialDate(YieldTermStructure c) { return traits_.initialDate(c); }
-        public double initialValue(YieldTermStructure c) { return traits_.initialValue(c); }
-        public bool dummyInitialValue() { return traits_.dummyInitialValue(); }
-        public double initialGuess() { return traits_.initialGuess(); }
-        public double guess(YieldTermStructure c, Date d) { return traits_.guess(c, d); }
-        public double minValueAfter(int s, List<double> l) { return traits_.minValueAfter(s, l); }
-        public double maxValueAfter(int s, List<double> l) { return traits_.maxValueAfter(s, l); }
-        public void updateGuess(List<double> data, double discount, int i) { traits_.updateGuess(data, discount, i); }
-        public int maxIterations() { return traits_.maxIterations(); }
+        public override Date initialDate(YieldTermStructure c) { return traits_.initialDate(c); }
+        public override double initialValue(YieldTermStructure c) { return traits_.initialValue(c); }
+        public override bool dummyInitialValue() { return traits_.dummyInitialValue(); }
+        public override double initialGuess() { return traits_.initialGuess(); }
+        public override double guess(YieldTermStructure c, Date d) { return traits_.guess(c, d); }
+        public override double minValueAfter(int s, List<double> l) { return traits_.minValueAfter(s, l); }
+        public override double maxValueAfter(int s, List<double> l) { return traits_.maxValueAfter(s, l); }
+        public override void updateGuess(List<double> data, double discount, int i) { traits_.updateGuess(data, discount, i); }
+        public override int maxIterations() { return traits_.maxIterations(); }
 
         protected override double discountImpl(double t) {
             // recheck
@@ -100,13 +134,13 @@ namespace QLNet {
             //}
             return traits_.discountImpl(interpolation_, t);
         }
-        protected double zeroYieldImpl(double t) { return traits_.zeroYieldImpl(interpolation_, t); }
-        protected double forwardImpl(double t) { return traits_.forwardImpl(interpolation_, t); }
+        protected override double zeroYieldImpl(double t) { return traits_.zeroYieldImpl(interpolation_, t); }
+        protected override double forwardImpl(double t) { return traits_.forwardImpl(interpolation_, t); }
 
         // these are dummy methods (for the sake of ITraits and should not be called directly
-        // public double discountImpl(Interpolation i, double t) { throw new NotSupportedException(); }
-        // public double zeroYieldImpl(Interpolation i, double t) { throw new NotSupportedException(); }
-        // public double forwardImpl(Interpolation i, double t) { throw new NotSupportedException(); }
+        public override double discountImpl(Interpolation i, double t) { throw new NotSupportedException(); }
+        public override double zeroYieldImpl(Interpolation i, double t) { throw new NotSupportedException(); }
+        public override double forwardImpl(Interpolation i, double t) { throw new NotSupportedException(); }
         #endregion
 
         #region Constructors
