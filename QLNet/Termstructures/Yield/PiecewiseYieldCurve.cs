@@ -123,20 +123,23 @@ namespace QLNet {
         public override int maxIterations() { return traits_.maxIterations(); }
 
         protected override double discountImpl(double t) {
-            // recheck
             calculate();
 
-            //    if (!turnOfYearEffect_.empty() && t > turnOfYear_) {
-            //        if (!turnOfYearEffect_.link.isValid())
-            //            throw new ArgumentException("invalid turnOfYearEffect quote");
-            //        double turnOfYearEffect = turnOfYearEffect_.link.value();
-            //        if (!(turnOfYearEffect > 0.0 && turnOfYearEffect <= 1.0))
-            //            throw new ArgumentException("invalid turnOfYearEffect value: " + turnOfYearEffect);
-            //        return turnOfYearEffect;
-            //    }
-            //}
+            if (jumps_.Count != 0) {
+                double jumpEffect = 1.0;
+                for (int i=0; i<nJumps_ && jumpTimes_[i]<t; ++i) {
+                    if (!(jumps_[i].link.isValid()))
+                        throw new ApplicationException("invalid " + (i+1) + " jump quote");
+                    double thisJump = jumps_[i].link.value();
+                    if (!(thisJump > 0.0 && thisJump <= 1.0))
+                        throw new ApplicationException("invalid " + (i+1) + " jump value: " + thisJump);
+                    jumpEffect *= thisJump;
+                }
+                return jumpEffect * traits_.discountImpl(interpolation_, t);
+            }
             return traits_.discountImpl(interpolation_, t);
         }
+
         protected override double zeroYieldImpl(double t) { return traits_.zeroYieldImpl(interpolation_, t); }
         protected override double forwardImpl(double t) { return traits_.forwardImpl(interpolation_, t); }
 
