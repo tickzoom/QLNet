@@ -501,7 +501,7 @@ namespace TestSuite {
             where B : IBootStrap, new() {
 
             vars.termStructure = new PiecewiseYieldCurve<T, I, B>(vars.settlement, vars.instruments,
-                                    new Actual360(), new Handle<Quote>(), 1.0e-12, interpolator);
+                                    new Actual360(), new List<Handle<Quote>>(), new List<Date>(), 1.0e-12, interpolator);
 
             RelinkableHandle<YieldTermStructure> curveHandle = new RelinkableHandle<YieldTermStructure>();
             curveHandle.linkTo(vars.termStructure);
@@ -546,7 +546,7 @@ namespace TestSuite {
 
             // check bonds
             vars.termStructure = new PiecewiseYieldCurve<T, I, B>(vars.settlement, vars.bondHelpers,
-                                     new Actual360(), new Handle<Quote>(), 1.0e-12, interpolator);
+                                     new Actual360(), new List<Handle<Quote>>(), new List<Date>(), 1.0e-12, interpolator);
             curveHandle.linkTo(vars.termStructure);
 
             for (int i = 0; i < vars.bonds; i++) {
@@ -573,7 +573,7 @@ namespace TestSuite {
 
             // check FRA
             vars.termStructure = new PiecewiseYieldCurve<T, I, B>(vars.settlement, vars.fraHelpers,
-                                        new Actual360(), new Handle<Quote>(), 1.0e-12, interpolator);
+                                        new Actual360(), new List<Handle<Quote>>(), new List<Date>(), 1.0e-12, interpolator);
             curveHandle.linkTo(vars.termStructure);
 
             IborIndex euribor3m = new Euribor3M(curveHandle);
@@ -643,7 +643,7 @@ namespace TestSuite {
             bmaIndex.addFixing(lastFixing, 0.03);
 
             vars.termStructure = new PiecewiseYieldCurve<T, I, B>(vars.settlement, vars.bmaHelpers,
-                                     new Actual360(), new Handle<Quote>(), 1.0e-12, interpolator);
+                                     new Actual360(), new List<Handle<Quote>>(), new List<Date>(), 1.0e-12, interpolator);
 
             RelinkableHandle<YieldTermStructure> curveHandle = new RelinkableHandle<YieldTermStructure>();
             curveHandle.linkTo(vars.termStructure);

@@ -67,24 +67,24 @@ namespace QLNet {
         public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments, DayCounter dayCounter)
             : base(referenceDate, instruments, dayCounter) { }
         public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
-                                   DayCounter dayCounter, Handle<Quote> turnOfYearEffect)
-            : base(referenceDate, instruments, dayCounter, turnOfYearEffect) { }
+                                   DayCounter dayCounter, List<Handle<Quote>> jumps, List<Date> jumpDates)
+            : base(referenceDate, instruments, dayCounter, jumps, jumpDates) { }
         public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
-                                   DayCounter dayCounter, Handle<Quote> turnOfYearEffect, double accuracy)
-            : base(referenceDate, instruments, dayCounter, turnOfYearEffect, accuracy) { }
+                                   DayCounter dayCounter, List<Handle<Quote>> jumps, List<Date> jumpDates, double accuracy)
+            : base(referenceDate, instruments, dayCounter, jumps, jumpDates, accuracy) { }
         public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
-                                   DayCounter dayCounter, Handle<Quote> turnOfYearEffect, double accuracy, Interpolator i)
-            : base(referenceDate, instruments, dayCounter, turnOfYearEffect, accuracy, i) { }
+                                   DayCounter dayCounter, List<Handle<Quote>> jumps, List<Date> jumpDates, double accuracy, Interpolator i)
+            : base(referenceDate, instruments, dayCounter, jumps, jumpDates, accuracy, i) { }
 
         public PiecewiseYieldCurve(int settlementDays, Calendar calendar, List<BootstrapHelper<YieldTermStructure>> instruments,
                                    DayCounter dayCounter)
-            : this(settlementDays, calendar, instruments, dayCounter, new Handle<Quote>(), 1.0e-12) { }
+            : this(settlementDays, calendar, instruments, dayCounter, new List<Handle<Quote>>(), new List<Date>(), 1.0e-12) { }
         //public InterpolatedYieldCurve(int settlementDays, Calendar calendar, List<BootstrapHelper<YieldTermStructure>> instruments,
         //                              DayCounter dayCounter, Quote turnOfYearEffect) :
         //    this(settlementDays, calendar, instruments, dayCounter, turnOfYearEffect, 1.0e-12) { }
         public PiecewiseYieldCurve(int settlementDays, Calendar calendar, List<BootstrapHelper<YieldTermStructure>> instruments,
-                                      DayCounter dayCounter, Handle<Quote> turnOfYearEffect, double accuracy)
-            : base(settlementDays, calendar, instruments, dayCounter, turnOfYearEffect, accuracy) { }
+                                      DayCounter dayCounter, List<Handle<Quote>> jumps, List<Date> jumpDates, double accuracy)
+            : base(settlementDays, calendar, instruments, dayCounter, jumps, jumpDates, accuracy) { }
     }
 
 
@@ -97,10 +97,13 @@ namespace QLNet {
         public List<Date> dates_;
         public List<double> times_ = new List<double>();
 
-        protected Handle<Quote> turnOfYearEffect_;
+        private List<Handle<Quote>> jumps_;
+        private List<Date> jumpDates_;
+        private List<double> jumpTimes_;
+        private int nJumps_;
+
         public double accuracy_;
         protected Date latestReference_;
-        protected double turnOfYear_;
 
         public Interpolator interpolator_;
 
@@ -145,28 +148,37 @@ namespace QLNet {
 
         #region Constructors
         public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments, DayCounter dayCounter)
-            : this(referenceDate, instruments, dayCounter, new Handle<Quote>(), 1.0e-12, new Interpolator(), new BootStrap()) { }
+            : this(referenceDate, instruments, dayCounter, new List<Handle<Quote>>(), new List<Date>(), 
+                   1.0e-12, new Interpolator(), new BootStrap()) { }
         public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
-                                   DayCounter dayCounter, Handle<Quote> turnOfYearEffect)
-            : this(referenceDate, instruments, dayCounter, turnOfYearEffect, 1.0e-12, new Interpolator(), new BootStrap()) { }
+                                   DayCounter dayCounter, List<Handle<Quote>> jumps, List<Date> jumpDates)
+            : this(referenceDate, instruments, dayCounter, jumps, jumpDates, 1.0e-12, new Interpolator(), new BootStrap()) { }
         public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
-                                   DayCounter dayCounter, Handle<Quote> turnOfYearEffect, double accuracy)
-            : this(referenceDate, instruments, dayCounter, turnOfYearEffect, accuracy, new Interpolator(), new BootStrap()) { }
+                                   DayCounter dayCounter, List<Handle<Quote>> jumps,
+                                   List<Date> jumpDates, double accuracy)
+            : this(referenceDate, instruments, dayCounter, jumps, jumpDates, accuracy, new Interpolator(), new BootStrap()) { }
         public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
-                                   DayCounter dayCounter, Handle<Quote> turnOfYearEffect, double accuracy, Interpolator i)
-            : this(referenceDate, instruments, dayCounter, turnOfYearEffect, accuracy, i, new BootStrap()) { }
+                                   DayCounter dayCounter, List<Handle<Quote>> jumps,
+                                   List<Date> jumpDates, double accuracy, Interpolator i)
+            : this(referenceDate, instruments, dayCounter, jumps, jumpDates, accuracy, i, new BootStrap()) { }
         public PiecewiseYieldCurve(Date referenceDate, List<BootstrapHelper<YieldTermStructure>> instruments,
-                                   DayCounter dayCounter, Handle<Quote> turnOfYearEffect, double accuracy,
-                                   Interpolator i, BootStrap bootstrap)
+                                   DayCounter dayCounter, List<Handle<Quote>> jumps, List<Date> jumpDates,
+                                   double accuracy, Interpolator i, BootStrap bootstrap)
             : base(referenceDate, new Calendar(), dayCounter) {
             instruments_ = instruments;
-            turnOfYearEffect_ = turnOfYearEffect;
+
+            jumps_ = jumps;
+            jumpDates_ = jumpDates;
+            jumpTimes_ = new InitializedList<double>(jumpDates.Count);
+            nJumps_ = jumps_.Count;
+
             accuracy_ = accuracy;
             interpolator_ = i;
             bootstrap_ = bootstrap;
 
-            setTurnOfYear();
-            turnOfYearEffect_.registerWith(update);
+            setJumps();
+            jumps.ForEach(x => x.registerWith(update));
+
             bootstrap_.setup<Traits, Interpolator, BootStrap>(this);
         }
 
@@ -176,22 +188,30 @@ namespace QLNet {
         //public InterpolatedYieldCurve(int settlementDays, Calendar calendar, List<BootstrapHelper<YieldTermStructure>> instruments,
         //                              DayCounter dayCounter, Quote turnOfYearEffect) :
         //    this(settlementDays, calendar, instruments, dayCounter, turnOfYearEffect, 1.0e-12) { }
+                                   //List<Handle<Quote>> jumps = std::vector<Handle<Quote> >(),
+                                   //List<Date> jumpDates = std::vector<Date>(),
         public PiecewiseYieldCurve(int settlementDays, Calendar calendar, List<BootstrapHelper<YieldTermStructure>> instruments,
-                                   DayCounter dayCounter, Handle<Quote> turnOfYearEffect, double accuracy)
-            : this(settlementDays, calendar, instruments, dayCounter, turnOfYearEffect, accuracy, 
+                                   DayCounter dayCounter, List<Handle<Quote>> jumps, List<Date> jumpDates, double accuracy)
+            : this(settlementDays, calendar, instruments, dayCounter, jumps, jumpDates, accuracy, 
                    new Interpolator(), new BootStrap()) { }
         public PiecewiseYieldCurve(int settlementDays, Calendar calendar, List<BootstrapHelper<YieldTermStructure>> instruments,
-                                   DayCounter dayCounter, Handle<Quote> turnOfYearEffect, double accuracy,
+                                   DayCounter dayCounter,  List<Handle<Quote>> jumps, List<Date> jumpDates, double accuracy,
                                    Interpolator i, BootStrap bootstrap)
             : base(settlementDays, calendar, dayCounter) {
             instruments_ = instruments;
-            turnOfYearEffect_ = turnOfYearEffect;
+
+            jumps_ = jumps;
+            jumpDates_ = jumpDates;
+            jumpTimes_ = new InitializedList<double>(jumpDates.Count);
+            nJumps_ = jumps_.Count;
+
             accuracy_ = accuracy;
             interpolator_ = i;
             bootstrap_ = bootstrap;
 
-            setTurnOfYear();
-            turnOfYearEffect_.registerWith(update);
+            setJumps();
+            jumps.ForEach(x => x.registerWith(update));
+
             bootstrap_.setup<Traits, Interpolator, BootStrap>(this);
         } 
         #endregion
@@ -215,14 +235,35 @@ namespace QLNet {
             base.update();
             // LazyObject::update();        // we do it in the TermStructure 
             if (referenceDate() != latestReference_)
-                setTurnOfYear();
+                setJumps();
         }
 
-        private void setTurnOfYear() {
+        private void setJumps() {
             Date refDate = referenceDate();
-            Date turnOfYear = new Date(31, Month.December, refDate.Year);
-            turnOfYear_ = timeFromReference(turnOfYear);
+
+            if (jumpDates_.Count != 0 && jumps_.Count != 0) { // turn of year dates
+                jumpDates_ = new InitializedList<Date>(nJumps_);
+                jumpTimes_ = new InitializedList<double>(nJumps_);
+                for (int i=0; i<nJumps_; ++i)
+                    jumpDates_[i] = new Date(31, Month.December, refDate.Year + i);
+            } else { // fixed dats
+                if (!(jumpDates_.Count == nJumps_))
+                    throw new ApplicationException("mismatch between number of jumps (" + nJumps_ +
+                           ") and jump dates (" + jumpDates_.Count + ")");
+            }
+            for (int i=0; i<nJumps_; ++i)
+                jumpTimes_[i] = timeFromReference(jumpDates_[i]);
             latestReference_ = refDate;
+        }
+
+        public List<Date> jumpDates() {
+            calculate();
+            return jumpDates_;
+        }
+
+        public List<double> jumpTimes() {
+            calculate();
+            return jumpTimes_;
         }
 
         protected override void performCalculations() {
