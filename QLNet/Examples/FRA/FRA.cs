@@ -132,7 +132,7 @@ namespace FRA {
 
             YieldTermStructure fraTermStructure = new PiecewiseYieldCurve<Discount,LogLinear>(
                                              settlementDate, fraInstruments, termStructureDayCounter,
-                                             new Handle<Quote>(), tolerance);
+                                             new List<Handle<Quote>>(), new List<Date>(), tolerance);
 
 
             // Term structures used for pricing/discounting
