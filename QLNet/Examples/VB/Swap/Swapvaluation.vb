@@ -181,7 +181,8 @@ Module Swapvaluation
         depoSwapInstruments.Add(s10y)
         depoSwapInstruments.Add(s15y)
         Dim depoSwapTermStructure As YieldTermStructure = New PiecewiseYieldCurve(Of Discount, LogLinear)( _
-                    settlementDate, depoSwapInstruments, termStructureDayCounter, New Handle(Of Quote)(), tolerance)
+                    settlementDate, depoSwapInstruments, termStructureDayCounter, _
+                    New List(Of Handle(Of Quote))(), New List(Of [Date])(), tolerance)
 
         ' A depo-futures-swap curve
         Dim depoFutSwapInstruments As List(Of BootstrapHelper(Of YieldTermStructure)) = New List(Of BootstrapHelper(Of YieldTermStructure))()
@@ -200,7 +201,7 @@ Module Swapvaluation
         depoFutSwapInstruments.Add(s10y)
         depoFutSwapInstruments.Add(s15y)
         Dim depoFutSwapTermStructure As YieldTermStructure = New PiecewiseYieldCurve(Of Discount, LogLinear)( _
-                settlementDate, depoFutSwapInstruments, termStructureDayCounter, New Handle(Of Quote)(), tolerance)
+                settlementDate, depoFutSwapInstruments, termStructureDayCounter, New List(Of Handle(Of Quote))(), New List(Of [Date])(), tolerance)
 
         ' A depo-FRA-swap curve
         Dim depoFRASwapInstruments As List(Of BootstrapHelper(Of YieldTermStructure)) = New List(Of BootstrapHelper(Of YieldTermStructure))()
@@ -216,7 +217,7 @@ Module Swapvaluation
         depoFRASwapInstruments.Add(s10y)
         depoFRASwapInstruments.Add(s15y)
         Dim depoFRASwapTermStructure As YieldTermStructure = New PiecewiseYieldCurve(Of Discount, LogLinear)( _
-                      settlementDate, depoFRASwapInstruments, termStructureDayCounter, New Handle(Of Quote)(), tolerance)
+                      settlementDate, depoFRASwapInstruments, termStructureDayCounter, New List(Of Handle(Of Quote))(), New List(Of [Date])(), tolerance)
 
         ' Term structures that will be used for pricing:
         ' the one used for discounting cash flows
