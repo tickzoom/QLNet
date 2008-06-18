@@ -52,12 +52,7 @@ namespace QLNet {
         // since it is in periods, its size is 1 element less than the dates size, see isRegular
         private List<bool> isRegular_ = new List<bool>();
 
-        public List<Date> dates() {
-            List<Date> result = new List<Date>();
-            foreach(Date d in adjustedDates_)
-                result.Add(d);
-            return result;
-        }
+        public List<Date> dates() { return new List<Date>(adjustedDates_); }
         public int Count { get { return adjustedDates_.Count; } }
 
         public Date date(int i) { return this[i]; }
@@ -86,183 +81,197 @@ namespace QLNet {
         public Date endDate() { return adjustedDates_.Last(); }
         #endregion
 
-		// constructors
+        #region Constructors
         public Schedule() { }
-		public Schedule(List<Date> dates__, Calendar calendar__, BusinessDayConvention convention__) {
-			fullInterface_ = false;
-		    tenor_ = new Period();
-			calendar_ = calendar__;
-		    convention_ = convention__;
-		    terminationDateConvention_ = convention__;
-		    rule_ = DateGeneration.Rule.Forward;
-			endOfMonth_ = false;
+        public Schedule(List<Date> dates__, Calendar calendar__, BusinessDayConvention convention__) {
+            fullInterface_ = false;
+            tenor_ = new Period();
+            calendar_ = calendar__;
+            convention_ = convention__;
+            terminationDateConvention_ = convention__;
+            rule_ = DateGeneration.Rule.Forward;
+            endOfMonth_ = false;
             adjustedDates_ = dates__;
-		}
+        }
         public Schedule(Date effectiveDate__, Date terminationDate__, Period tenor__, Calendar calendar__,
                  BusinessDayConvention convention__, BusinessDayConvention terminationDateConvention__,
                  DateGeneration.Rule rule__, bool endOfMonth__)
             : this(effectiveDate__, terminationDate__, tenor__, calendar__,
                  convention__, terminationDateConvention__, rule__, endOfMonth__, null, null) { }
-		public Schedule(Date effectiveDate__, Date terminationDate__, Period tenor__, Calendar calendar__,
+        public Schedule(Date effectiveDate__, Date terminationDate__, Period tenor__, Calendar calendar__,
                  BusinessDayConvention convention__, BusinessDayConvention terminationDateConvention__,
                  DateGeneration.Rule rule__, bool endOfMonth__,
                  Date firstDate__, Date nextToLastDate__) {
-			// first save the properties
-			fullInterface_ = true;
-		    tenor_ = tenor__;
-			calendar_ = calendar__;
-		    convention_ = convention__;
-		    terminationDateConvention_ = terminationDateConvention__;
-		    rule_ = rule__;
-			endOfMonth_ = endOfMonth__;
-		    firstDate_ = firstDate__;
-			nextToLastDate_ = nextToLastDate__;
-		
-			// sanity checks
-			if (effectiveDate__ == null) throw new ArgumentException("Null effective date");
-			if (terminationDate__ == null) throw new ArgumentException("Null termination  date");
-			if (effectiveDate__ >= terminationDate__) throw new ArgumentException("Effective date (" + effectiveDate__ +
-	                   ") is later than or equal to termination date (" + terminationDate__ + ")");
+            // first save the properties
+            fullInterface_ = true;
+            tenor_ = tenor__;
+            calendar_ = calendar__;
+            convention_ = convention__;
+            terminationDateConvention_ = terminationDateConvention__;
+            rule_ = rule__;
+            endOfMonth_ = endOfMonth__;
+            firstDate_ = firstDate__;
+            nextToLastDate_ = nextToLastDate__;
+
+            // sanity checks
+            if (effectiveDate__ == null) throw new ArgumentException("Null effective date");
+            if (terminationDate__ == null) throw new ArgumentException("Null termination  date");
+            if (effectiveDate__ >= terminationDate__) throw new ArgumentException("Effective date (" + effectiveDate__ +
+                       ") is later than or equal to termination date (" + terminationDate__ + ")");
 
             if (tenor_.units() == 0)
-	            rule_ = DateGeneration.Rule.Zero;
+                rule_ = DateGeneration.Rule.Zero;
             else if (tenor_.units() < 0)
-	            throw new ArgumentException("Non positive tenor (" + tenor_ + ") is not allowed");
+                throw new ArgumentException("Non positive tenor (" + tenor_ + ") is not allowed");
 
-			// though firstDate_ and nextToLastDate are always provided
-	        if (firstDate_ != null) {
-	            switch (rule_) {
-					case DateGeneration.Rule.Backward:
-					case DateGeneration.Rule.Forward:
-						if (!(firstDate_ > effectiveDate__ && firstDate_ < terminationDate__))
-							throw new ArgumentException("First date (" + firstDate_ + ") is out of range [effective date (" + effectiveDate__
-														+ "), termination date (" + terminationDate__ + ")]");
-						break;
-					case DateGeneration.Rule.Zero:
-					case DateGeneration.Rule.ThirdWednesday:
-						throw new ArgumentException("First date is incompatible with " + rule_ + " date generation rule");
-					default:
-						throw Error.UnknownDateGenerationRule(rule_);
-	            }
-	        }
+            // though firstDate_ and nextToLastDate are always provided
+            if (firstDate_ != null) {
+                switch (rule_) {
+                    case DateGeneration.Rule.Backward:
+                    case DateGeneration.Rule.Forward:
+                        if (!(firstDate_ > effectiveDate__ && firstDate_ < terminationDate__))
+                            throw new ArgumentException("First date (" + firstDate_ + ") is out of range [effective date (" + effectiveDate__
+                                                        + "), termination date (" + terminationDate__ + ")]");
+                        break;
+                    case DateGeneration.Rule.Zero:
+                    case DateGeneration.Rule.ThirdWednesday:
+                        throw new ArgumentException("First date is incompatible with " + rule_ + " date generation rule");
+                    default:
+                        throw Error.UnknownDateGenerationRule(rule_);
+                }
+            }
 
             if (nextToLastDate_ != null) {
-	            switch (rule_) {
-					case DateGeneration.Rule.Backward:
-					case DateGeneration.Rule.Forward:
-						if (!(nextToLastDate_ > effectiveDate__ && nextToLastDate_ < terminationDate__))
-	                        throw new ArgumentException("Next to last date (" + nextToLastDate_ + ") out of range [effective date (" + effectiveDate__
-	                           + "), termination date (" + terminationDate__ + ")]");
-						break;
-					case DateGeneration.Rule.Zero:
-					case DateGeneration.Rule.ThirdWednesday:
-						throw new ArgumentException("Next to last date incompatible with " + rule_ + " date generation rule");
-					default:
-						throw Error.UnknownDateGenerationRule(rule_);
-	            }
-	        }
+                switch (rule_) {
+                    case DateGeneration.Rule.Backward:
+                    case DateGeneration.Rule.Forward:
+                        if (!(nextToLastDate_ > effectiveDate__ && nextToLastDate_ < terminationDate__))
+                            throw new ArgumentException("Next to last date (" + nextToLastDate_ + ") out of range [effective date (" + effectiveDate__
+                               + "), termination date (" + terminationDate__ + ")]");
+                        break;
+                    case DateGeneration.Rule.Zero:
+                    case DateGeneration.Rule.ThirdWednesday:
+                        throw new ArgumentException("Next to last date incompatible with " + rule_ + " date generation rule");
+                    default:
+                        throw Error.UnknownDateGenerationRule(rule_);
+                }
+            }
 
-	        // calendar needed for endOfMonth adjustment
-	        Calendar nullCalendar = new NullCalendar();
-	        int periods = 1;
-	        Date seed, exitDate;
+            // calendar needed for endOfMonth adjustment
+            Calendar nullCalendar = new NullCalendar();
+            int periods = 1;
+            Date seed, exitDate;
             switch (rule_) {
-				case DateGeneration.Rule.Zero:
-		            tenor_ = new Period(0, TimeUnit.Days);
+                case DateGeneration.Rule.Zero:
+                    tenor_ = new Period(0, TimeUnit.Days);
                     originalDates_.Add(effectiveDate__);
                     originalDates_.Add(terminationDate__);
                     isRegular_.Add(true);
                     break;
 
-				case DateGeneration.Rule.Backward:
+                case DateGeneration.Rule.Backward:
                     originalDates_.Add(terminationDate__);
                     seed = terminationDate__;
-		            if (nextToLastDate_ != null) {
+                    if (nextToLastDate_ != null) {
                         originalDates_.Insert(0, nextToLastDate_);
                         Date temp = nullCalendar.advance(seed, -periods * tenor_, convention_, endOfMonth_);
                         isRegular_.Insert(0, temp == nextToLastDate_);
                         seed = nextToLastDate_;
-		            }
-		            exitDate = effectiveDate__;
+                    }
+                    exitDate = effectiveDate__;
                     if (firstDate_ != null)
-		                exitDate = firstDate_;
-		            while (true) {
-		                Date temp = nullCalendar.advance(seed, -periods*tenor_, convention_, endOfMonth_);
-		                if (temp < exitDate)
-		                    break;
-		                else {
+                        exitDate = firstDate_;
+                    while (true) {
+                        Date temp = nullCalendar.advance(seed, -periods * tenor_, convention_, endOfMonth_);
+                        if (temp < exitDate)
+                            break;
+                        else {
                             originalDates_.Insert(0, temp);
                             isRegular_.Insert(0, true);
                             ++periods;
-		                }
-		            }
-		            if (endOfMonth_ && calendar_.isEndOfMonth(seed))
-		                convention_ = BusinessDayConvention.Preceding;
+                        }
+                    }
+                    if (endOfMonth_ && calendar_.isEndOfMonth(seed))
+                        convention_ = BusinessDayConvention.Preceding;
                     if (calendar_.adjust(originalDates_[0], convention_) != calendar_.adjust(effectiveDate__, convention_)) {
                         originalDates_.Insert(0, effectiveDate__);
                         isRegular_.Insert(0, false);
                     }
-		            break;
+                    break;
 
                 case DateGeneration.Rule.ThirdWednesday:
                     if (endOfMonth_) throw new ArgumentException("endOfMonth convention is incompatible with " + rule_ + " date generation rule");
                     goto case DateGeneration.Rule.Forward;			// fall through
 
-				case DateGeneration.Rule.Forward:
+                case DateGeneration.Rule.Forward:
                     originalDates_.Add(effectiveDate__);
                     seed = effectiveDate__;
-		            if (firstDate_ != null) {
+                    if (firstDate_ != null) {
                         originalDates_.Add(firstDate_);
                         Date temp = nullCalendar.advance(seed, periods * tenor_, convention_, endOfMonth_);
                         isRegular_.Add(temp == firstDate_);
                         seed = firstDate_;
-		            }
-		            exitDate = terminationDate__;
-		            if (nextToLastDate_ != null)
-		                exitDate = nextToLastDate_;
-		            while (true) {
-		                Date temp = nullCalendar.advance(seed, periods*tenor_, convention_, endOfMonth_);
-		                if (temp > exitDate)
-		                    break;
-		                else {
+                    }
+                    exitDate = terminationDate__;
+                    if (nextToLastDate_ != null)
+                        exitDate = nextToLastDate_;
+                    while (true) {
+                        Date temp = nullCalendar.advance(seed, periods * tenor_, convention_, endOfMonth_);
+                        if (temp > exitDate)
+                            break;
+                        else {
                             originalDates_.Add(temp);
                             isRegular_.Add(true);
                             ++periods;
-		                }
-		            }
-		            if (endOfMonth_ && calendar_.isEndOfMonth(seed))
-		                convention_ = BusinessDayConvention.Preceding;
+                        }
+                    }
+                    if (endOfMonth_ && calendar_.isEndOfMonth(seed))
+                        convention_ = BusinessDayConvention.Preceding;
                     if (calendar_.adjust(originalDates_.Last(), terminationDateConvention_) != calendar_.adjust(terminationDate__, terminationDateConvention_)) {
                         originalDates_.Add(terminationDate__);
                         isRegular_.Add(false);
                     }
-		            break;
+                    break;
 
-				default:
-					throw Error.UnknownDateGenerationRule(rule_);
-	        }
+                default:
+                    throw Error.UnknownDateGenerationRule(rule_);
+            }
 
             // adjustments to holidays, etc.
             if (rule_ == DateGeneration.Rule.ThirdWednesday)
                 for (int i = 1; i < originalDates_.Count; ++i)
                     originalDates_[i] = Date.nthWeekday(3, DayOfWeek.Wednesday, originalDates_[i].Month, originalDates_[i].Year);
 
-            foreach(Date d in originalDates_)
+            foreach (Date d in originalDates_)
                 adjustedDates_.Add(calendar_.adjust(d, convention_));
 
-	        // termination date is NOT adjusted as per ISDA specifications unless otherwise specified in the confirmation of the deal
-	        if (terminationDateConvention_ != BusinessDayConvention.Unadjusted)
+            // termination date is NOT adjusted as per ISDA specifications unless otherwise specified in the confirmation of the deal
+            if (terminationDateConvention_ != BusinessDayConvention.Unadjusted)
                 adjustedDates_[adjustedDates_.Count - 1] = calendar_.adjust(originalDates_.Last(), terminationDateConvention_);
-		}
+        } 
+        #endregion
 
 		private void CheckInterface() {	if (!fullInterface_) throw new ArgumentException("full interface not available"); }
 		
+        // returns the period of the Schedule during which Date d happens
         public int periodOfDate(Date d) {
             int result = adjustedDates_.BinarySearch(d);
             if (result < 0)         // not found directly
                 result = ~result;   // the next element larger than the search value
             return result;
         }
+
+        //// looks up the date of the previous period point relative to Date d
+        //public Date previousDate(Date d) {
+        //    int i = periodOfDate(d);
+        //    return this[i - 1];
+        //}
+
+        //// looks up the date of the next period point relative to Date d
+        //public Date nextDate(Date d) {
+        //    int i = periodOfDate(d);
+        //    return this[i + 1];
+        //}
 
         // Iterator interface
         private int i_ = 0;

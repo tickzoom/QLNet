@@ -22,7 +22,7 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    // this is the abstract class to give access to all properties and methods of PiecewiseYieldCurve and avoiding generics
+    // this is an abstract class to give access to all properties and methods of PiecewiseYieldCurve and avoiding generics
     public abstract class IPiecewiseYieldCurve : YieldTermStructure, ITraits {
         #region Properties
         public List<double> data_;
@@ -69,8 +69,7 @@ namespace QLNet {
     }
 
 
-    public class PiecewiseYieldCurve<Traits, Interpolator>
-        : PiecewiseYieldCurve<Traits, Interpolator, IterativeBootstrap>
+    public class PiecewiseYieldCurve<Traits, Interpolator> : PiecewiseYieldCurve<Traits, Interpolator, IterativeBootstrap>
         where Traits : ITraits, new()
         where Interpolator : IInterpolationFactory, new() {
 
@@ -98,7 +97,7 @@ namespace QLNet {
     }
 
 
-    public class PiecewiseYieldCurve<Traits, Interpolator, BootStrap> : IPiecewiseYieldCurve, ITraits
+    public class PiecewiseYieldCurve<Traits, Interpolator, BootStrap> : IPiecewiseYieldCurve
         where Traits : ITraits, new()
         where Interpolator : IInterpolationFactory, new()
         where BootStrap : IBootStrap, new() {
@@ -229,8 +228,7 @@ namespace QLNet {
         public Dictionary<Date, double> nodes() {
             calculate();
             Dictionary<Date, double> results = new Dictionary<Date, double>();
-            for (int i = 0; i < dates_.Count; ++i)
-                results.Add(dates_[i], data_[i]);
+            dates_.ForEach((i, x) => results.Add(x, data_[i]));
             return results;
         }
 
@@ -247,9 +245,9 @@ namespace QLNet {
 
             if (jumpDates_.Count != 0 && jumps_.Count != 0) { // turn of year dates
                 jumpDates_ = new InitializedList<Date>(nJumps_);
+                jumpDates_.ForEach((i, d) => jumpDates_[i] = new Date(31, Month.December, refDate.Year + i));
+
                 jumpTimes_ = new InitializedList<double>(nJumps_);
-                for (int i=0; i<nJumps_; ++i)
-                    jumpDates_[i] = new Date(31, Month.December, refDate.Year + i);
             } else { // fixed dats
                 if (!(jumpDates_.Count == nJumps_))
                     throw new ApplicationException("mismatch between number of jumps (" + nJumps_ +

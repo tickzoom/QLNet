@@ -66,12 +66,7 @@ namespace QLNet {
         }
 
         //! fixings of the underlying index to be averaged
-        public List<double> indexFixings() {
-            List<double> fixings = new List<double>();
-            for (int i=0; i<fixings.Count; ++i)
-                fixings.Add(index_.fixing(fixingSchedule_.date(i)));
-            return fixings;
-        }
+        public List<double> indexFixings() { return fixingSchedule_.dates().Select(d => index_.fixing(d)).ToList(); }
 
         public override double convexityAdjustment() {
             throw new ApplicationException("not defined for average-BMA coupon");
