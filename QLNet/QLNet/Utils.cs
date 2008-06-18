@@ -22,14 +22,26 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
+    // here are extensions to IList to accomodate some QL functionality as well as have useful things for .net
     public static partial class Utils {
+        // equivalent of ForEach but with the index
+        public static void ForEach<T>(this IList<T> items, Action<int, T> action) {
+            if (items != null && action != null)
+                for (int idx = 0; idx < items.Count; idx++)
+                    action(idx, items[idx]);
+        }
+
+        // this is a version of element retrieval with some logic for default values
         public static T Get<T>(this List<T> v, int i) { return Get(v, i, default(T)); }
         public static T Get<T>(this List<T> v, int i, T defval) {
             if (v == null || v.Count == 0) return defval;
             else if (i >= v.Count) return v.Last();
             else return v[i];
         }
+    }
 
+
+    public static partial class Utils {
         public static double effectiveFixedRate(List<double> spreads, List<double> caps, List<double> floors, int i) {
             double result = Get(spreads, i);
             double floor = Get(floors, i);

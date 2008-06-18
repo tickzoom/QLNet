@@ -55,8 +55,7 @@ namespace QLNet {
             }
 
             // check that there is no instruments with invalid quote
-            i = ts_.instruments_.FindIndex(x => !x.quoteIsValid());
-            if (i != -1)
+            if ((i = ts_.instruments_.FindIndex(x => !x.quoteIsValid())) != -1)
                 throw new ArgumentException("instrument " + i + " (maturity: " + ts_.instruments_[i].latestDate() +
                        ") has an invalid quote");
 

@@ -43,41 +43,22 @@ namespace QLNet {
         }
 
         public override double value(Vector x) {
-            int i = initialIndex_;
-            x.ForEach(z => {
-                curve_.updateGuess(curve_.data_, z, i);
-                ++i;
-            });
+            x.ForEach((j, v) => curve_.updateGuess(curve_.data_, v, j + initialIndex_));
 
             curve_.interpolation_.update();
 
-            double penalty = 0.0;
-            for(int j = start_; j < end_; j++) {
-                double quoteError = rateHelpers_[j].quoteError();
-                penalty += Math.Abs(quoteError);
-            }
+            double penalty = rateHelpers_.GetRange(start_, localisation_)
+                                         .Aggregate(0.0, (acc, v) => Math.Abs(v.quoteError()));
             return penalty;
         }
 
         public override Vector values(Vector x) {
-            int i = initialIndex_;
-            x.ForEach(z => { 
-                curve_.updateGuess(curve_.data_, z, i);
-                ++i; 
-            });
+            x.ForEach((j, v) => curve_.updateGuess(curve_.data_, v, j + initialIndex_));
 
             curve_.interpolation_.update();
 
-            Vector penalties = new Vector(localisation_);
-            var instIt = start_;
-            int penIt = 0;
-            while (instIt != end_) {
-                double quoteError = rateHelpers_[instIt].quoteError();
-                penalties[penIt] = Math.Abs(quoteError);
-                ++instIt;
-                ++penIt;
-            }
-            return penalties;
+            var penalties = rateHelpers_.GetRange(start_, localisation_).Select(c => Math.Abs(c.quoteError())).ToList();
+            return new Vector(penalties);
         }
     }
 
@@ -132,26 +113,25 @@ namespace QLNet {
         public void calculate() {
 
             validCurve_ = false;
-            int nInsts = ts_.instruments_.Count;
+            int nInsts = ts_.instruments_.Count, i;
 
             // ensure rate helpers are sorted
             ts_.instruments_.Sort((x, y) => x.latestDate().CompareTo(y.latestDate()));
 
             // check that there is no instruments with the same maturity
-            for (int i = 1; i < nInsts; ++i) {
+            for (i = 1; i < nInsts; ++i) {
                 Date m1 = ts_.instruments_[i - 1].latestDate(),
                      m2 = ts_.instruments_[i].latestDate();
                 if (m1 == m2) throw new ArgumentException("two instruments have the same maturity (" + m1 + ")");
             }
 
             // check that there is no instruments with invalid quote
-            for (int i = 0; i < nInsts; ++i)
-                if (!ts_.instruments_[i].quoteIsValid())
-                    throw new ArgumentException("instrument " + i + " (maturity: " + ts_.instruments_[i].latestDate() +
-                           ") has an invalid quote");
+            if ((i = ts_.instruments_.FindIndex(x => !x.quoteIsValid())) != -1)
+                throw new ArgumentException("instrument " + i + " (maturity: " + ts_.instruments_[i].latestDate() +
+                       ") has an invalid quote");
 
             // setup instruments and register with them
-            ts_.instruments_.ForEach(i => i.setTermStructure(ts_));
+            ts_.instruments_.ForEach(j => j.setTermStructure(ts_));
 
             // set initial guess only if the current curve cannot be used as guess
             if (validCurve_) {
@@ -167,7 +147,7 @@ namespace QLNet {
             ts_.times_ = new InitializedList<double>(nInsts + 1);
             ts_.dates_[0] = ts_.initialDate(ts_);
             ts_.times_[0] = ts_.timeFromReference(ts_.dates_[0]);
-            for (int i = 0; i < nInsts; ++i) {
+            for (i = 0; i < nInsts; ++i) {
                 ts_.dates_[i + 1] = ts_.instruments_[i].latestDate();
                 ts_.times_[i + 1] = ts_.timeFromReference(ts_.dates_[i + 1]);
                 if (!validCurve_)
