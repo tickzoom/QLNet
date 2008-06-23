@@ -91,25 +91,26 @@ namespace QLNet {
                 Sample<Path> path = pathGenerator_.next();
                 double price = pathPricer_.value(path.value);
 
-                if (isControlVariate_)
+                if (isControlVariate_) {
                     if (cvPathGenerator_ == null) {
-                        price += cvOptionValue_-cvPathPricer_.value(path.value);
-                    }
-                    else {
+                        price += cvOptionValue_ - cvPathPricer_.value(path.value);
+                    } else {
                         Sample<Path> cvPath = cvPathGenerator_.next();
-                        price += cvOptionValue_-cvPathPricer_.value(cvPath.value);
+                        price += cvOptionValue_ - cvPathPricer_.value(cvPath.value);
                     }
+                }
 
                 if (isAntitheticVariate_) {
                     path = pathGenerator_.antithetic();
                     double price2 = pathPricer_.value(path.value);
-                    if (isControlVariate_)
+                    if (isControlVariate_) {
                         if (cvPathGenerator_ == null)
-                            price2 += cvOptionValue_-cvPathPricer_.value(path.value);
+                            price2 += cvOptionValue_ - cvPathPricer_.value(path.value);
                         else {
                             Sample<Path> cvPath = cvPathGenerator_.antithetic();
-                            price2 += cvOptionValue_-cvPathPricer_.value(cvPath.value);
+                            price2 += cvOptionValue_ - cvPathPricer_.value(cvPath.value);
                         }
+                    }
 
                     sampleAccumulator_.add((price+price2)/2.0, path.weight);
                 } else {
