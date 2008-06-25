@@ -453,7 +453,6 @@ namespace QLNet {
 		//                            GFunctionWithShifts                            //
 		//===========================================================================//
 		
-		//C++ TO C# CONVERTER TODO TASK: Octal literals cannot be represented in C#:
 			public GFunctionWithShifts(CmsCoupon coupon, Handle<Quote> meanReversion)
 			{
 				meanReversion_ = meanReversion;
