@@ -119,12 +119,11 @@ namespace QLNet {
             if (effectiveDate__ >= terminationDate__) throw new ArgumentException("Effective date (" + effectiveDate__ +
                        ") is later than or equal to termination date (" + terminationDate__ + ")");
 
-            if (tenor_.units() == 0)
+            if (tenor_.length() == 0)
                 rule_ = DateGeneration.Rule.Zero;
-            else if (tenor_.units() < 0)
+            else if (tenor_.length() < 0)
                 throw new ArgumentException("Non positive tenor (" + tenor_ + ") is not allowed");
 
-            // though firstDate_ and nextToLastDate are always provided
             if (firstDate_ != null) {
                 switch (rule_) {
                     case DateGeneration.Rule.Backward:
@@ -133,11 +132,16 @@ namespace QLNet {
                             throw new ArgumentException("First date (" + firstDate_ + ") is out of range [effective date (" + effectiveDate__
                                                         + "), termination date (" + terminationDate__ + ")]");
                         break;
-                    case DateGeneration.Rule.Zero:
                     case DateGeneration.Rule.ThirdWednesday:
+                        if (!IMM.isIMMdate(firstDate_, false))
+                            throw new ArgumentException("first date (" + firstDate_ + ") is not an IMM date");
+                        break;
+                    case DateGeneration.Rule.Zero:
+                    case DateGeneration.Rule.Twentieth:
+                    case DateGeneration.Rule.TwentiethIMM:
                         throw new ArgumentException("First date is incompatible with " + rule_ + " date generation rule");
                     default:
-                        throw Error.UnknownDateGenerationRule(rule_);
+                        throw new ArgumentException("Unknown DateGeneration rule: " + rule_);
                 }
             }
 
@@ -149,11 +153,16 @@ namespace QLNet {
                             throw new ArgumentException("Next to last date (" + nextToLastDate_ + ") out of range [effective date (" + effectiveDate__
                                + "), termination date (" + terminationDate__ + ")]");
                         break;
-                    case DateGeneration.Rule.Zero:
                     case DateGeneration.Rule.ThirdWednesday:
-                        throw new ArgumentException("Next to last date incompatible with " + rule_ + " date generation rule");
+                        if (!IMM.isIMMdate(firstDate_, false))
+                            throw new ArgumentException("first date (" + firstDate_ + ") is not an IMM date");
+                        break;
+                    case DateGeneration.Rule.Zero:
+                    case DateGeneration.Rule.Twentieth:
+                    case DateGeneration.Rule.TwentiethIMM:
+                        throw new ArgumentException("next to last is incompatible with " + rule_ + " date generation rule");
                     default:
-                        throw Error.UnknownDateGenerationRule(rule_);
+                        throw new ArgumentException("Unknown DateGeneration rule: " + rule_);
                 }
             }
 
@@ -199,8 +208,11 @@ namespace QLNet {
                     }
                     break;
 
+                case DateGeneration.Rule.Twentieth:
+                case DateGeneration.Rule.TwentiethIMM:
                 case DateGeneration.Rule.ThirdWednesday:
-                    if (endOfMonth_) throw new ArgumentException("endOfMonth convention is incompatible with " + rule_ + " date generation rule");
+                    if (endOfMonth_) 
+                        throw new ArgumentException("endOfMonth convention is incompatible with " + rule_ + " date generation rule");
                     goto case DateGeneration.Rule.Forward;			// fall through
 
                 case DateGeneration.Rule.Forward:
@@ -211,7 +223,15 @@ namespace QLNet {
                         Date temp = nullCalendar.advance(seed, periods * tenor_, convention_, endOfMonth_);
                         isRegular_.Add(temp == firstDate_);
                         seed = firstDate_;
+                    } else if (rule_ == DateGeneration.Rule.Twentieth || rule_ == DateGeneration.Rule.TwentiethIMM) {
+                        Date next20th = nextTwentieth(effectiveDate__, rule_);
+                        if (next20th != effectiveDate__) {
+                            originalDates_.Add(next20th);
+                            isRegular_.Add(false);
+                            seed = next20th;
+                        }
                     }
+
                     exitDate = terminationDate__;
                     if (nextToLastDate_ != null)
                         exitDate = nextToLastDate_;
@@ -227,14 +247,20 @@ namespace QLNet {
                     }
                     if (endOfMonth_ && calendar_.isEndOfMonth(seed))
                         convention_ = BusinessDayConvention.Preceding;
+
                     if (calendar_.adjust(originalDates_.Last(), terminationDateConvention_) != calendar_.adjust(terminationDate__, terminationDateConvention_)) {
-                        originalDates_.Add(terminationDate__);
-                        isRegular_.Add(false);
+                        if (rule_ == DateGeneration.Rule.Twentieth || rule_ == DateGeneration.Rule.TwentiethIMM) {
+                            originalDates_.Add(nextTwentieth(terminationDate__, rule_));
+                            isRegular_.Add(true);
+                        } else {
+                            originalDates_.Add(terminationDate__);
+                            isRegular_.Add(false);
+                        }
                     }
                     break;
 
                 default:
-                    throw Error.UnknownDateGenerationRule(rule_);
+                    throw new ArgumentException("Unknown DateGeneration rule: " + rule_);
             }
 
             // adjustments to holidays, etc.
@@ -245,8 +271,11 @@ namespace QLNet {
             foreach (Date d in originalDates_)
                 adjustedDates_.Add(calendar_.adjust(d, convention_));
 
-            // termination date is NOT adjusted as per ISDA specifications unless otherwise specified in the confirmation of the deal
-            if (terminationDateConvention_ != BusinessDayConvention.Unadjusted)
+            // termination date is NOT adjusted as per ISDA specifications, unless otherwise specified in the
+            // confirmation of the deal or unless we're creating a CDS schedule
+            if (terminationDateConvention_ != BusinessDayConvention.Unadjusted 
+                || rule_ == DateGeneration.Rule.Twentieth
+                || rule_ == DateGeneration.Rule.TwentiethIMM)
                 adjustedDates_[adjustedDates_.Count - 1] = calendar_.adjust(originalDates_.Last(), terminationDateConvention_);
         } 
         #endregion
@@ -283,6 +312,21 @@ namespace QLNet {
                 yield return d;
                 i_++;
             }
+        }
+
+
+        Date nextTwentieth(Date d, DateGeneration.Rule rule) {
+            Date result = new Date(20, d.month(), d.year());
+            if (result < d)
+                result += new Period(1, TimeUnit.Months);
+            if (rule == DateGeneration.Rule.TwentiethIMM) {
+                int m = result.month();
+                if (m % 3 != 0) { // not a main IMM nmonth
+                    int skip = 3 - m % 3;
+                    result += new Period(skip, TimeUnit.Months);
+                }
+            }
+            return result;
         }
 	}
 
