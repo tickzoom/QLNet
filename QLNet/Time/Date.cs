@@ -40,7 +40,9 @@ namespace QLNet {
         public int serialNumber() { return (date - new DateTime(1899, 12, 31).Date).Days + 1; }
         public int Day { get { return date.Day; } }
         public int Month { get { return date.Month; } }
+        public int month() { return date.Month; }
         public int Year { get { return date.Year; } }
+        public int year() { return date.Year; }
         public int DayOfYear { get { return date.DayOfYear; } }
         public int weekday() { return (int)date.DayOfWeek + 1; }       // QL compatible definition
         public DayOfWeek DayOfWeek { get { return date.DayOfWeek; } }

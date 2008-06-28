@@ -28,8 +28,6 @@ namespace QLNet {
 			return new ArgumentException("Unknown frequency: " + f); }
 		public static ArgumentException UnknownBusinessDayConvention(BusinessDayConvention c) {
 			return new ArgumentException("Unknown business-day convention: " + c); }
-		public static ArgumentException UnknownDateGenerationRule(DateGeneration.Rule r) {
-			return new ArgumentException("Unknown DateGeneration rule: " + r); }
 
 		public static ApplicationException MissingImplementation() {
 			return new ApplicationException("No implementation provided"); }
