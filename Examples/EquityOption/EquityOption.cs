@@ -249,8 +249,8 @@ namespace EquityOption {
             Console.Write("{0,-" + widths[2] + ":0.000000}", "N/A");
             Console.WriteLine("{0,-" + widths[3] + ":0.000000}", "N/A");
 
-            //// Monte Carlo Method: MC (Longstaff Schwartz)
-            //method = "MC (Longstaff Schwartz)";
+            // Monte Carlo Method: MC (Longstaff Schwartz)
+            method = "MC (Longstaff Schwartz)";
             //IPricingEngine mcengine3 = new MakeMCAmericanEngine<PseudoRandom>(bsmProcess)
             //                            .withSteps(100)
             //                            .withAntitheticVariate()

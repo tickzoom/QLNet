@@ -229,6 +229,7 @@
     <Compile Include="Methods\montecarlo\brownianbridge.cs" />
     <Compile Include="Methods\montecarlo\earlyexercisepathpricer.cs" />
     <Compile Include="Methods\montecarlo\longstaffschwartzpathpricer.cs" />
+    <Compile Include="Methods\montecarlo\lsmbasissystem.cs" />
     <Compile Include="Methods\montecarlo\mctraits.cs" />
     <Compile Include="Methods\montecarlo\montecarlomodel.cs" />
     <Compile Include="Methods\montecarlo\multipath.cs" />
