@@ -90,8 +90,10 @@ namespace QLNet {
                     firstDate = stubDate;
                     nextToLastDate = null;
                     break;
-                case DateGeneration.Rule.Zero:
-                case DateGeneration.Rule.ThirdWednesday:
+              case DateGeneration.Rule.Zero:
+              case DateGeneration.Rule.ThirdWednesday:
+              case DateGeneration.Rule.Twentieth:
+              case DateGeneration.Rule.TwentiethIMM:
                     throw new ApplicationException("stub date (" + stubDate + ") not allowed with " + rule + " DateGeneration::Rule");
                 default:
                     throw new ApplicationException("unknown DateGeneration::Rule (" + rule + ")");

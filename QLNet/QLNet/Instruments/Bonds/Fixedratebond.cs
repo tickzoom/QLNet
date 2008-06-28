@@ -44,5 +44,60 @@ namespace QLNet {
             if (cashflows().Count == 0)
                 throw new ApplicationException("bond with no cashflows!");
         }
+
+        public FixedRateBond(int settlementDays, Calendar calendar,
+                             double faceAmount,
+                             Date startDate,
+                             Date maturityDate,
+                             Period tenor,
+                             List<double> coupons,
+                             DayCounter accrualDayCounter,
+                             BusinessDayConvention accrualConvention,
+                             BusinessDayConvention paymentConvention,
+                             double redemption,
+                             Date issueDate,
+                             Date stubDate,
+                             DateGeneration.Rule rule,
+                             bool endOfMonth)
+            : base(settlementDays, calendar, faceAmount, maturityDate, issueDate) {
+
+            frequency_ = tenor.frequency();
+            dayCounter_ = accrualDayCounter;
+
+            maturityDate_     = maturityDate;
+
+            Date firstDate, nextToLastDate;
+            switch (rule) {
+              case DateGeneration.Rule.Backward:
+                firstDate = null;
+                nextToLastDate = stubDate;
+                break;
+              case DateGeneration.Rule.Forward:
+                firstDate = stubDate;
+                nextToLastDate = null;
+                break;
+              case DateGeneration.Rule.Zero:
+              case DateGeneration.Rule.ThirdWednesday:
+              case DateGeneration.Rule.Twentieth:
+              case DateGeneration.Rule.TwentiethIMM:
+                    throw new ApplicationException("stub date (" + stubDate + ") not allowed with " + rule + " DateGeneration::Rule");
+              default:
+                    throw new ApplicationException("unknown DateGeneration::Rule (" + rule + ")");
+            }
+
+            Schedule schedule = new Schedule(startDate, maturityDate_, tenor,
+                                             calendar_, accrualConvention, accrualConvention,
+                                             rule, endOfMonth,
+                                             firstDate, nextToLastDate);
+
+            cashflows_ = new FixedRateLeg(schedule, accrualDayCounter)
+                            .withNotionals(faceAmount_)
+                            .withCouponRates(coupons)
+                            .withPaymentAdjustment(paymentConvention)
+                            .value();
+
+            Date redemptionDate = calendar_.adjust(maturityDate_, paymentConvention);
+            cashflows_.Add(new SimpleCashFlow(faceAmount_*redemption/100.0, redemptionDate));
+        }
     }
 }
