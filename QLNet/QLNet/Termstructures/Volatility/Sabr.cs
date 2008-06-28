@@ -51,8 +51,6 @@ namespace QLNet {
             // computations become precise enough if the square of z worth slightly more than the precision machine (hence the m)
             const double m = 10;
 
-            // recheck epsilon
-            throw new ApplicationException();
             if (Math.Abs(z * z) > Const.QL_Epsilon * m)
                 multiplier = z/xx;
             else {
@@ -80,7 +78,7 @@ namespace QLNet {
             if (!(strike>0.0))
                 throw new ApplicationException("strike must be positive: " + strike + " not allowed");
             if (!(forward>0.0))
-                throw new ApplicationException("forward must be positive: " + forward + " not allowed");
+                throw new ApplicationException("at the money forward rate must be: " + forward + " not allowed");
             if (!(expiryTime>=0.0))
                 throw new ApplicationException("expiry time must be non-negative: " + expiryTime + " not allowed");
             validateSabrParameters(alpha, beta, nu, rho);

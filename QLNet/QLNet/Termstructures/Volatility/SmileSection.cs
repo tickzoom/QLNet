@@ -134,7 +134,7 @@ namespace QLNet {
             rho_ = sabrParams[3];
 
             if (!(forward_>0.0))
-                throw new ApplicationException("forward must be positive: " + forward_ + " not allowed");
+                throw new ApplicationException("at the money forward rate must be: " + forward_ + " not allowed");
             Utils.validateSabrParameters(alpha_, beta_, nu_, rho_);
         }
 
@@ -149,7 +149,7 @@ namespace QLNet {
             rho_ = sabrParams[3];
 
             if (!(forward_>0.0))
-                throw new ApplicationException("forward must be positive: " + forward_ + " not allowed");
+                throw new ApplicationException("at the money forward rate must be: " + forward_ + " not allowed");
             Utils.validateSabrParameters(alpha_, beta_, nu_, rho_);
         }
 
