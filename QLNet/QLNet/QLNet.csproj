@@ -140,6 +140,7 @@
     <Compile Include="Math\Distributions\NormalDistribution.cs" />
     <Compile Include="Math\Distributions\poissondistribution.cs" />
     <Compile Include="Math\factorial.cs" />
+    <Compile Include="Math\integrals\gaussianorthogonalpolynomial.cs" />
     <Compile Include="Math\integrals\Integral.cs" />
     <Compile Include="Math\integrals\Kronrodintegral.cs" />
     <Compile Include="Math\integrals\Segmentintegral.cs" />
