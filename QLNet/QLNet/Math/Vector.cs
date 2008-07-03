@@ -124,18 +124,29 @@ namespace QLNet {
         }
         //public static double operator /(Vector v1, Vector v2) { return operVector(ref v1, ref v2, (x, y) => x / y); }
         #endregion
-    }
 
-    public static partial class Utils {
+
+        #region Vector utils
         // dot product. It is already overloaded in the vector. Thus for compatibility only
-        public static double DotProduct(Vector v1, Vector  v2) {
+        public static double DotProduct(Vector v1, Vector v2) {
             return v1 * v2;
         }
 
-        public static Vector DirectMultiply(Vector v1, Vector v2)
-        {
+        public static Vector DirectMultiply(Vector v1, Vector v2) {
             return Vector.operVector(v1, v2, (x, y) => x * y);
         }
 
+        public static Vector Sqrt(Vector v) {
+            Vector result = new Vector(v.size());
+            result.ForEach((i, x) => result[i] = Math.Sqrt(v[i]));
+            return result;
+        }
+
+        public void swap(int i1, int i2) {
+            double t = this[i2];
+            this[i2] = this[i1];
+            this[i1] = t;
+        }
+        #endregion
     }
 }

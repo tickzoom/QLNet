@@ -35,7 +35,7 @@ namespace QLNet
             for (int i = 0; i < vertices.Count; ++i)
             {
                 Vector temp = vertices[i] - center;
-                result += Math.Sqrt(Utils.DotProduct(temp, temp));
+                result += Math.Sqrt(Vector.DotProduct(temp, temp));
             }
             return result / (double)(vertices.Count);
         }

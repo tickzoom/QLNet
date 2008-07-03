@@ -126,7 +126,7 @@ namespace QLNet {
 
             // transform(InputIterator1 start1, InputIterator1 finish1, InputIterator2 start2, OutputIterator result,
             // BinaryOperation binary_op)
-            result = Utils.DirectMultiply(diagonal_, v);
+            result = Vector.DirectMultiply(diagonal_, v);
 
             // matricial product
             result[0] += upperDiagonal_[0] * v[1];

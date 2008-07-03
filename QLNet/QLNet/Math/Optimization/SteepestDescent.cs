@@ -60,7 +60,7 @@ namespace QLNet
 
             P.setFunctionValue(P.valueAndGradient(gold, x_));
             lineSearch_.searchDirection = gold*-1.0;
-            P.setGradientNormValue(Utils.DotProduct(gold, gold));
+            P.setGradientNormValue(Vector.DotProduct(gold, gold));
             normdiff = Math.Sqrt(P.gradientNormValue());
 
             do
@@ -83,7 +83,7 @@ namespace QLNet
                 P.setFunctionValue(lineSearch_.lastFunctionValue());
                 // New gradient and search direction vectors
                 gdiff = gold - lineSearch_.lastGradient();
-                normdiff = Math.Sqrt(Utils.DotProduct(gdiff, gdiff));
+                normdiff = Math.Sqrt(Vector.DotProduct(gdiff, gdiff));
                 gold = lineSearch_.lastGradient();
                 lineSearch_.searchDirection = gold*-1.0;
                 // New gradient squared norm

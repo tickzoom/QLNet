@@ -99,7 +99,7 @@ namespace QLNet {
         //! Computes the present value of an asset using Arrow-Debrew prices
         public override double presentValue(DiscretizedAsset asset) {
             int i = t_.index(asset.time());
-            return Utils.DotProduct(asset.values(), statePrices(i));
+            return Vector.DotProduct(asset.values(), statePrices(i));
         }
 
         public Vector statePrices(int i) {

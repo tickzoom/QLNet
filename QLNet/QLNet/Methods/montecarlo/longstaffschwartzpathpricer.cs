@@ -34,7 +34,7 @@ namespace QLNet {
         \test the correctness of the returned value is tested by
               reproducing results available in web/literature
     */
-    public abstract class LongstaffSchwartzPathPricer<PathType> : PathPricer<PathType> where PathType : Path {
+    public class LongstaffSchwartzPathPricer<PathType> : PathPricer<PathType> where PathType : Path {
         protected bool  calibrationPhase_;
         protected EarlyExercisePathPricer<PathType> pathPricer_;
 
@@ -42,62 +42,104 @@ namespace QLNet {
         protected List<double> dF_;
 
         protected List<PathType> paths_;
-        protected List<IValue> v_;
+        protected List<Func<double, double>> v_;
 
+        public LongstaffSchwartzPathPricer(TimeGrid times, EarlyExercisePathPricer<PathType> pathPricer,
+                                           YieldTermStructure termStructure) {
+            calibrationPhase_ = true;
+            pathPricer_ = pathPricer;
+            coeff_ = new InitializedList<Vector>(times.size()-1);
+            dF_ = new InitializedList<double>(times.size()-1);
+            v_ = pathPricer_.basisSystem();
+
+            for (int i=0; i<times.size()-1; ++i) {
+                dF_[i] =   termStructure.discount(times[i+1])
+                         / termStructure.discount(times[i]);
+            }
+        }
         
+
+        public override double value(PathType path) {
+            if (calibrationPhase_) {
+                // store paths for the calibration
+                paths_.Add(path);
+                // result doesn't matter
+                return 0.0;
+            }
+
+            int len = EarlyExerciseTraits<PathType>.pathLength(path);
+            double price = pathPricer_.value(path, len-1);
+            for (int i = len - 2; i > 0; --i) {
+                price*=dF_[i];
+
+                double exercise = pathPricer_.value(path, i);
+                if (exercise > 0.0) {
+                    double regValue  = pathPricer_.state(path, i);
+
+                    double continuationValue = 0.0;
+                    for (int l = 0; l < v_.Count; ++l) {
+                        continuationValue += coeff_[i][l] * v_[l](regValue);
+                    }
+
+                    if (continuationValue < exercise) {
+                        price = exercise;
+                    }
+                }
+            }
+
+            return price*dF_[0];
+        }
+
         public void calibrate() {
-            //const int n = paths_.size();
-            //Vector prices = new Vector(n), exercise = new Vector(n);
-            //const int len = EarlyExerciseTraits<PathType>::pathLength(paths_[0]);
+            int n = paths_.Count;
+            Vector prices = new Vector(n), exercise = new Vector(n);
+            int len = EarlyExerciseTraits<PathType>.pathLength(paths_[0]);
 
-            //std::transform(paths_.begin(), paths_.end(), prices.begin(),
-            //               boost::bind(&EarlyExercisePathPricer<PathType>
-            //                             ::operator(),
-            //                           pathPricer_.get(), _1, len-1));
+            for(int i = 0; i<paths_.Count; i++)
+                prices[i] = pathPricer_.value(paths_[i], len-1);
 
-            //for (Size i=len-2; i>0; --i) {
-            //    std::vector<Real>      y;
-            //    std::vector<StateType> x;
+            for (int i=len-2; i>0; --i) {
+                List<double> y = new List<double>();
+                List<double> x = new List<double>();
 
-            //    //roll back step
-            //    for (Size j=0; j<n; ++j) {
-            //        exercise[j]=(*pathPricer_)(paths_[j], i);
+                //roll back step
+                for (int j=0; j<n; ++j) {
+                    exercise[j]=pathPricer_.value(paths_[j], i);
 
-            //        if (exercise[j]>0.0) {
-            //            x.push_back(pathPricer_->state(paths_[j], i));
-            //            y.push_back(dF_[i]*prices[j]);
-            //        }
-            //    }
+                    if (exercise[j]>0.0) {
+                        x.Add(pathPricer_.state(paths_[j], i));
+                        y.Add(dF_[i]*prices[j]);
+                    }
+                }
 
-            //    if (v_.size() <=  x.size()) {
-            //        coeff_[i]
-            //            = LinearLeastSquaresRegression<StateType>(x, y, v_).a();
-            //    }
-            //    else {
-            //    // if number of itm paths is smaller then the number of
-            //    // calibration functions -> no early exercise
-            //        coeff_[i] = Array(v_.size(), 0.0);
-            //    }
+                if (v_.Count <= x.Count) {
+                    coeff_[i] = new LinearLeastSquaresRegression<double>(x, y, v_).a();
+                }
+                else {
+                // if number of itm paths is smaller then the number of
+                // calibration functions -> no early exercise
+                    coeff_[i] = new Vector(v_.Count);
+                }
 
-            //    for (Size j=0, k=0; j<n; ++j) {
-            //        prices[j]*=dF_[i];
-            //        if (exercise[j]>0.0) {
-            //            Real continuationValue = 0.0;
-            //            for (Size l=0; l<v_.size(); ++l) {
-            //                continuationValue += coeff_[i][l] * v_[l](x[k]);
-            //            }
-            //            if (continuationValue < exercise[j]) {
-            //                prices[j] = exercise[j];
-            //            }
-            //            ++k;
-            //        }
-            //    }
-            //}
+                for (int j=0, k=0; j<n; ++j) {
+                    prices[j]*=dF_[i];
+                    if (exercise[j]>0.0) {
+                        double continuationValue = 0.0;
+                        for (int l = 0; l < v_.Count; ++l) {
+                            continuationValue += coeff_[i][l] * v_[l](x[k]);
+                        }
+                        if (continuationValue < exercise[j]) {
+                            prices[j] = exercise[j];
+                        }
+                        ++k;
+                    }
+                }
+            }
 
-            //// remove calibration paths
-            //paths_.clear();
-            //// entering the calculation phase
-            //calibrationPhase_ = false;
+            // remove calibration paths
+            paths_.Clear();
+            // entering the calculation phase
+            calibrationPhase_ = false;
         }
     }
 }
