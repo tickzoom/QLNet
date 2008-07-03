@@ -55,6 +55,7 @@ namespace QLNet {
             return (Get(caps, i) == default(double)) && (Get(floors, i) == default(double));
         }
 
+        public static void swap(ref double a1, ref double a2) { swap<double>(ref a1, ref a2); }
         public static void swap<T>(ref T a1, ref T a2) {
             T t = a2;
             a2 = a1;

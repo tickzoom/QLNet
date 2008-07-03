@@ -64,7 +64,7 @@ namespace QLNet {
             double qp0 = P.gradientNormValue();
 
             qt_ = q0;
-            qpt_ = (gradient_.Count == 0) ? qp0 : -Utils.DotProduct(gradient_, searchDirection_);
+            qpt_ = (gradient_.Count == 0) ? qp0 : -Vector.DotProduct(gradient_, searchDirection_);
 
             // Initialize gradient
             gradient_ = new Vector(P.currentValue().Count);
@@ -100,7 +100,7 @@ namespace QLNet {
             // Compute new gradient
             P.gradient(gradient_, xtd_);
             // and it squared norm
-            qpt_ = Utils.DotProduct(gradient_, gradient_);
+            qpt_ = Vector.DotProduct(gradient_, gradient_);
 
             // Return new step value
             return t;

@@ -27,13 +27,20 @@ namespace QLNet {
 
         \ingroup mcarlo
     */
+
+    public static class EarlyExerciseTraits<PathType> where PathType : Path {
+        //typedef Real StateType;
+        public static int pathLength(PathType path) { return path.length(); }
+    }
+
+
     // template<class PathType, class TimeType=Size, class ValueType=Real>
     public interface EarlyExercisePathPricer<PathType> {
         // typedef typename EarlyExerciseTraits<PathType>::StateType StateType;
 
-        double value(PathType path, double t);
+        double value(PathType path, int t);
 
-        double state(PathType path, double t);
-        List<IValue> basisSystem();
+        double state(PathType path, int t);
+        List<Func<double, double>> basisSystem();
     }
 }

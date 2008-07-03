@@ -63,7 +63,7 @@ namespace QLNet
             // do the difference
             Vector diff = target - fct2fit;
             // and compute the scalar product (square of the norm)
-            return Utils.DotProduct(diff, diff);
+            return Vector.DotProduct(diff, diff);
         }
         public override Vector values(Vector x)
         {
@@ -74,7 +74,7 @@ namespace QLNet
             lsp_.targetAndValue(x, ref target, ref fct2fit);
             // do the difference
             Vector diff = target - fct2fit;
-            return Utils.DirectMultiply(diff, diff);
+            return Vector.DirectMultiply(diff, diff);
         }
         //! compute vector of derivatives of the least square function
         public void gradient(ref Vector grad_f, Vector x)
@@ -106,7 +106,7 @@ namespace QLNet
             // compute derivative
             grad_f = -2.0 * (Matrix.transpose(grad_fct2fit) * diff);
             // and compute the scalar product (square of the norm)
-            return Utils.DotProduct(diff, diff);
+            return Vector.DotProduct(diff, diff);
         }
     }
 

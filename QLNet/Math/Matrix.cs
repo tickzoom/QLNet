@@ -90,11 +90,8 @@ namespace QLNet {
         // Matrix(const Disposable<Matrix>&); 
 	    #endregion
     
-        //! \name Algebraic operators
-        /*! \pre all matrices involved in an algebraic expression must have
-                 the same size.
-        */
-        //@{
+        #region Algebraic operators
+        /*! \pre all matrices involved in an algebraic expression must have the same size. */
         public static Matrix operator +(Matrix m1, Matrix m2) { return operMatrix(ref m1, ref m2, (x, y) => x + y); }
         public static Matrix operator -(Matrix m1, Matrix m2) { return operMatrix(ref m1, ref m2, (x, y) => x - y); }
         public static Matrix operator *(double value, Matrix m1) { return operValue(ref m1, value, (x, y) => x * y); }
@@ -120,7 +117,7 @@ namespace QLNet {
             return result;
         }
 
-        public static Vector operator *(Vector v, Matrix m){
+        public static Vector operator *(Vector v, Matrix m) {
             if (!(v.Count == m.rows()))
                 throw new ApplicationException("vectors and matrices with different sizes ("
                        + v.Count + ", " + m.rows() + "x" + m.columns() + ") cannot be multiplied");
@@ -145,12 +142,13 @@ namespace QLNet {
                 throw new ApplicationException("matrices with different sizes (" +
                        m1.rows() + "x" + m1.columns() + ", " +
                        m2.rows() + "x" + m2.columns() + ") cannot be multiplied");
-            Matrix result = new Matrix(m1.rows(),m2.columns());
-            for (int i=0; i<result.rows(); i++)
-                for (int j=0; j<result.columns(); j++)
+            Matrix result = new Matrix(m1.rows(), m2.columns());
+            for (int i = 0; i < result.rows(); i++)
+                for (int j = 0; j < result.columns(); j++)
                     result.data_[i, j] = m1.row(i) * m2.column(j);
             return result;
-        }
+        } 
+        #endregion
 
         public static Matrix transpose(Matrix m) {
             Matrix result = new Matrix(m.columns(),m.rows());
@@ -174,6 +172,12 @@ namespace QLNet {
                 for(int j=0; j<v2begin.Count; j++)
                     result[i,j] = v1begin[i] * v2begin[j];
             return result;
+        }
+
+        public void swap(int i1, int j1, int i2, int j2) {
+            double t = this[i2, j2];
+            this[i2, j2] = this[i1, j1];
+            this[i1, j1] = t;
         }
     }
 }

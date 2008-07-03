@@ -156,7 +156,9 @@
     <Compile Include="Math\Interpolations\Loginterpolation.cs" />
     <Compile Include="Math\Interpolations\multicubicspline.cs" />
     <Compile Include="Math\Interpolations\sabrinterpolation.cs" />
+    <Compile Include="Math\linearleastsquaresregression.cs" />
     <Compile Include="Math\Matrix.cs" />
+    <Compile Include="Math\matrixutilities\svd.cs" />
     <Compile Include="Math\Optimization\ArmijoLineSearch.cs" />
     <Compile Include="Math\Optimization\ConjugateGradient.cs" />
     <Compile Include="Math\Optimization\Constraint.cs" />

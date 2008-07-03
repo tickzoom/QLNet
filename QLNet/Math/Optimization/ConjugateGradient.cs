@@ -72,7 +72,7 @@ namespace QLNet
 			Vector sddiff = new Vector(sz);
 			// Initialize cost function, gradient g and search direction
 			P.setFunctionValue(P.valueAndGradient(g, x_));
-			P.setGradientNormValue(Utils.DotProduct(g, g));
+            P.setGradientNormValue(Vector.DotProduct(g, g));
 			lineSearch_.searchDirection = g * -1.0;
 			// Loop over iterations
 			do
@@ -98,7 +98,7 @@ namespace QLNet
 					c = P.gradientNormValue() / gold2;
 					// conjugate gradient search direction
 					sddiff = ((g*-1.0) + c * d) - lineSearch_.searchDirection;
-					normdiff = Math.Sqrt(Utils.DotProduct(sddiff, sddiff));
+                    normdiff = Math.Sqrt(Vector.DotProduct(sddiff, sddiff));
 					lineSearch_.searchDirection = (g*-1.0) + c * d;
 					// Now compute accuracy and check end criteria
 					// Numerical Recipes exit strategy on fx (see NR in C++, p.423)
