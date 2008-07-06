@@ -24,14 +24,13 @@ using System.Text;
 namespace QLNet {
     //! weighted sample
     /*! \ingroup mcarlo */
-    public struct Sample<T> : ICloneable {
+    public struct Sample<T> {
+        public T value;
+        public double weight;
+
         public Sample(T value_, double weight_) {
             value = value_;
             weight = weight_;
         }
-        public T value;
-        public double weight;
-
-        public object Clone() { return this.MemberwiseClone(); }
     }
 }

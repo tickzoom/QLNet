@@ -36,8 +36,6 @@ namespace QLNet {
         private bool transpose_;
 
         public SVD(Matrix M) {
-            //using std::swap;
-
             Matrix A;
 
             /* The implementation requires that rows > columns.
@@ -53,11 +51,10 @@ namespace QLNet {
 
                M = V S U^T             (idempotence of transposition,
                                         symmetry of diagonal matrix S)
-
             */
 
             if (M.rows() >= M.columns()) {
-                A = M;
+                A = (Matrix)M.Clone();
                 transpose_ = false;
             } else {
                 A = Matrix.transpose(M);
@@ -68,7 +65,6 @@ namespace QLNet {
             n_ = A.columns();
 
             // we're sure that m_ >= n_
-
             s_ = new Vector(n_);
             U_ = new Matrix(m_, n_, 0.0);
             V_ = new Matrix(n_, n_);
@@ -78,7 +74,6 @@ namespace QLNet {
 
             // Reduce A to bidiagonal form, storing the diagonal elements
             // in s and the super-diagonal elements in e.
-
             int nct = Math.Min(m_ - 1, n_);
             int nrt = Math.Max(0, n_ - 2);
             for (k = 0; k < Math.Max(nct, nrt); k++) {
@@ -106,7 +101,6 @@ namespace QLNet {
                     if ((k < nct) && (s_[k] != 0.0)) {
 
                         // Apply the transformation.
-
                         double t = 0;
                         for (i = k; i < m_; i++) {
                             t += A[i, k] * A[i, j];
@@ -119,22 +113,18 @@ namespace QLNet {
 
                     // Place the k-th row of A into e for the
                     // subsequent calculation of the row transformation.
-
                     e[j] = A[k, j];
                 }
                 if (k < nct) {
 
-                    // Place the transformation in U for subsequent back
-                    // multiplication.
-
+                    // Place the transformation in U for subsequent back multiplication.
                     for (i = k; i < m_; i++) {
                         U_[i, k] = A[i, k];
                     }
                 }
                 if (k < nrt) {
 
-                    // Compute the k-th row transformation and place the
-                    // k-th super-diagonal in e[k].
+                    // Compute the k-th row transformation and place the k-th super-diagonal in e[k].
                     // Compute 2-norm without under/overflow.
                     e[k] = 0;
                     for (i = k + 1; i < n_; i++) {
@@ -153,7 +143,6 @@ namespace QLNet {
                     if ((k + 1 < m_) & (e[k] != 0.0)) {
 
                         // Apply the transformation.
-
                         for (i = k + 1; i < m_; i++) {
                             work[i] = 0.0;
                         }
@@ -170,9 +159,7 @@ namespace QLNet {
                         }
                     }
 
-                    // Place the transformation in V for subsequent
-                    // back multiplication.
-
+                    // Place the transformation in V for subsequent back multiplication.
                     for (i = k + 1; i < n_; i++) {
                         V_[i, k] = e[i];
                     }
@@ -180,7 +167,6 @@ namespace QLNet {
             }
 
             // Set up the final bidiagonal matrix or order n.
-
             if (nct < n_) {
                 s_[nct] = A[nct, nct];
             }
@@ -190,7 +176,6 @@ namespace QLNet {
             e[n_ - 1] = 0.0;
 
             // generate U
-
             for (j = nct; j < n_; j++) {
                 for (i = 0; i < m_; i++) {
                     U_[i, j] = 0.0;
@@ -225,7 +210,6 @@ namespace QLNet {
             }
 
             // generate V
-
             for (k = n_ - 1; k >= 0; --k) {
                 if ((k < nrt) & (e[k] != 0.0)) {
                     for (j = k + 1; j < n_; ++j) {
@@ -268,8 +252,7 @@ namespace QLNet {
                     if (k == -1) {
                         break;
                     }
-                    if (Math.Abs(e[k]) <= eps * (Math.Abs(s_[k]) +
-                                                Math.Abs(s_[k + 1]))) {
+                    if (Math.Abs(e[k]) <= eps * (Math.Abs(s_[k]) + Math.Abs(s_[k + 1]))) {
                         e[k] = 0.0;
                         break;
                     }

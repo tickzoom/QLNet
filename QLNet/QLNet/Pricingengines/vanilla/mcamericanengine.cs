@@ -123,7 +123,7 @@ namespace QLNet {
                 throw new ApplicationException("insufficient polynom type");
 
             // the payoff gives an additional value
-            v_.Add(payoff.value);
+            v_.Add(this.payoff);
 
             StrikedTypePayoff strikePayoff = payoff_ as StrikedTypePayoff;
 
@@ -136,13 +136,17 @@ namespace QLNet {
         public double state(Path path, int t) { return path[t]*scalingValue_; }
         public double value(Path path, int t) { return payoff(state(path, t)); }
         public List<Func<double, double>> basisSystem() { return v_; }
-
-        protected double payoff(double state) { return state/scalingValue_; }
+        protected double payoff(double state) { return payoff_.value(state / scalingValue_); }
     }
 
 
     //! Monte Carlo American engine factory
     //template <class RNG = PseudoRandom, class S = Statistics>
+    public class MakeMCAmericanEngine<RNG> : MakeMCAmericanEngine<RNG, Statistics>
+        where RNG : IRSG, new() {
+        public MakeMCAmericanEngine(GeneralizedBlackScholesProcess process) : base(process) { }
+    }
+
     public class MakeMCAmericanEngine<RNG, S>
         where RNG : IRSG, new()
         where S : IGeneralStatistics, new() {
@@ -203,7 +207,7 @@ namespace QLNet {
             seed_ = seed;
             return this;
         }
-        //public MakeMCAmericanEngine withAntitheticVariate(bool b = true); b) {
+        public MakeMCAmericanEngine<RNG, S> withAntitheticVariate() { return withAntitheticVariate(true); }
         public MakeMCAmericanEngine<RNG, S> withAntitheticVariate(bool b) {
             antithetic_ = b;
             return this;

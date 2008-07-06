@@ -27,7 +27,7 @@ namespace QLNet {
         algebra. As such, it is <b>not</b> meant to be used as a
         container.
     */
-    public struct Matrix {
+    public struct Matrix : ICloneable {
         #region properties
         private int rows_, columns_;
         public int rows() { return rows_; }
@@ -37,14 +37,14 @@ namespace QLNet {
         private double[,] data_;
         public double this[int i, int j] { get { return data_[i, j]; } set { data_[i, j] = value; } }
         public Vector row(int r) {
-            Vector result = new Vector(rows_);
-            for (int i = 0; i < rows_; i++)
-                result[i] = data_[r, i];
-            return result;
-        }
-        public Vector column(int c) {
             Vector result = new Vector(columns_);
             for (int i = 0; i < columns_; i++)
+                result[i] = data_[r, i];
+            return result; 
+        }
+        public Vector column(int c) {
+            Vector result = new Vector(rows_);
+            for (int i = 0; i < rows_; i++)
                 result[i] = data_[i, c];
             return result;
         }
@@ -179,5 +179,8 @@ namespace QLNet {
             this[i2, j2] = this[i1, j1];
             this[i1, j1] = t;
         }
+
+        // IClonable interface
+        public object Clone() { return this.MemberwiseClone(); }
     }
 }

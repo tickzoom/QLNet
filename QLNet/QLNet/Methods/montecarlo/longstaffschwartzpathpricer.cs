@@ -34,14 +34,14 @@ namespace QLNet {
         \test the correctness of the returned value is tested by
               reproducing results available in web/literature
     */
-    public class LongstaffSchwartzPathPricer<PathType> : PathPricer<PathType> where PathType : Path {
+    public class LongstaffSchwartzPathPricer<PathType> : PathPricer<PathType> where PathType : Path, ICloneable {
         protected bool  calibrationPhase_;
         protected EarlyExercisePathPricer<PathType> pathPricer_;
 
         protected List<Vector> coeff_;
         protected List<double> dF_;
 
-        protected List<PathType> paths_;
+        protected List<PathType> paths_ = new List<PathType>();
         protected List<Func<double, double>> v_;
 
         public LongstaffSchwartzPathPricer(TimeGrid times, EarlyExercisePathPricer<PathType> pathPricer,
@@ -62,7 +62,7 @@ namespace QLNet {
         public override double value(PathType path) {
             if (calibrationPhase_) {
                 // store paths for the calibration
-                paths_.Add(path);
+                paths_.Add((PathType)path.Clone());
                 // result doesn't matter
                 return 0.0;
             }

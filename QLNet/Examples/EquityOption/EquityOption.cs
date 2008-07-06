@@ -221,11 +221,11 @@ namespace EquityOption {
             // Monte Carlo Method: MC (crude)
             timeSteps = 1;
             method = "MC (crude)";
-            int mcSeed = 42;
+            ulong mcSeed = 42;
             IPricingEngine mcengine1 = new MakeMCEuropeanEngine<PseudoRandom>(bsmProcess)
                                             .withSteps(timeSteps)
                                             .withTolerance(0.02)
-                                            .withSeed((ulong)mcSeed)
+                                            .withSeed(mcSeed)
                                             .value();
             europeanOption.setPricingEngine(mcengine1);
             // Real errorEstimate = europeanOption.errorEstimate();
@@ -251,18 +251,18 @@ namespace EquityOption {
 
             // Monte Carlo Method: MC (Longstaff Schwartz)
             method = "MC (Longstaff Schwartz)";
-            //IPricingEngine mcengine3 = new MakeMCAmericanEngine<PseudoRandom>(bsmProcess)
-            //                            .withSteps(100)
-            //                            .withAntitheticVariate()
-            //                            .withCalibrationSamples(4096)
-            //                            .withTolerance(0.02)
-            //                            .withSeed(mcSeed)
-            //                            .value();
-            //americanOption.setPricingEngine(mcengine3);
-            //Console.Write("{0,-" + widths[0] + "}", method);
-            //Console.Write("{0,-" + widths[1] + ":0.000000}", "N/A");
-            //Console.Write("{0,-" + widths[2] + ":0.000000}", "N/A");
-            //Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
+            IPricingEngine mcengine3 = new MakeMCAmericanEngine<PseudoRandom>(bsmProcess)
+                                        .withSteps(100)
+                                        .withAntitheticVariate()
+                                        .withCalibrationSamples(4096)
+                                        .withTolerance(0.02)
+                                        .withSeed(mcSeed)
+                                        .value();
+            americanOption.setPricingEngine(mcengine3);
+            Console.Write("{0,-" + widths[0] + "}", method);
+            Console.Write("{0,-" + widths[1] + ":0.000000}", "N/A");
+            Console.Write("{0,-" + widths[2] + ":0.000000}", "N/A");
+            Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
 
             // End test
 
