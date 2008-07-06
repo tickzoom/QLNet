@@ -30,13 +30,18 @@ namespace QLNet {
         \test the correctness of the returned values is tested by
               checking their properties.
     */
+    public class LinearLeastSquaresRegression : LinearLeastSquaresRegression<double> {
+        public LinearLeastSquaresRegression(List<double> x, List<double> y, List<Func<double, double>> v)
+            : base(x,y,v) { }
+    }
+    
     public class LinearLeastSquaresRegression<ArgumentType> {
         private Vector a_;
         private Vector err_;
 
         public LinearLeastSquaresRegression(List<ArgumentType> x, List<double> y, List<Func<ArgumentType, double>> v) {
-            a_ = new Vector(v.Count, 0.0);
-            err_ = new Vector(v.Count, 0.0);
+            a_ = new Vector(v.Count);
+            err_ = new Vector(v.Count);
 
             if (x.Count != y.Count)
                 throw new ApplicationException("sample set need to be of the same size");
@@ -48,14 +53,13 @@ namespace QLNet {
             int m = v.Count;
 
             Matrix A = new Matrix(n, m);
-            for (i=0; i<m; ++i)
-                for(int j=0;j<x.Count; j++)
-                    A[j,i] = v[i](x[i]);
+            for (i = 0; i < m; ++i)
+                x.ForEach((jj, xx) => A[jj, i] = v[i](xx));
 
             SVD svd = new SVD(A);
             Matrix V = svd.V();
             Matrix U = svd.U();
-            Vector  w = svd.singularValues();
+            Vector w = svd.singularValues();
             double threshold = n*Const.QL_Epsilon;
 
             for (i=0; i<m; ++i) {

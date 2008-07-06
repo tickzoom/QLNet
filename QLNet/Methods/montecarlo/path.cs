@@ -27,7 +27,7 @@ namespace QLNet {
 
         \note the path includes the initial asset value as its first point.
     */
-    public class Path {
+    public class Path : ICloneable {
         private TimeGrid timeGrid_;
         private Vector values_;
 
@@ -65,5 +65,12 @@ namespace QLNet {
         
         //! time grid
         public TimeGrid timeGrid() { return timeGrid_; }
+
+        // ICloneable interface
+        public object Clone() {
+            Path temp = (Path)this.MemberwiseClone();
+            temp.values_ = new Vector(this.values_);
+            return temp;
+        }
     }
 }
