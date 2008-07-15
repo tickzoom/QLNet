@@ -26,6 +26,12 @@ namespace QLNet {
         protected Frequency frequency_;
         protected DayCounter dayCounter_;
 
+                      //BusinessDayConvention paymentConvention = Following,
+                      //Real redemption = 100.0,
+                      //const Date& issueDate = Date());
+        public FixedRateBond(int settlementDays, double faceAmount, Schedule schedule, List<double> coupons,
+                             DayCounter accrualDayCounter)
+            : this(settlementDays, faceAmount, schedule, coupons, accrualDayCounter, BusinessDayConvention.Following, 100, null) { }
         public FixedRateBond(int settlementDays, double faceAmount, Schedule schedule, List<double> coupons,
                              DayCounter accrualDayCounter, BusinessDayConvention paymentConvention,
                              double redemption, Date issueDate)

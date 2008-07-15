@@ -22,8 +22,6 @@ using System.Text;
 
 namespace QLNet {
     public class Error {
-		public static ArgumentException UnknownTimeUnit(TimeUnit u) {
-			return new ArgumentException("Unknown TimeUnit: " + u); }
 		public static ArgumentException UnknownFrequency(Frequency f) {
 			return new ArgumentException("Unknown frequency: " + f); }
 		public static ArgumentException UnknownBusinessDayConvention(BusinessDayConvention c) {

@@ -111,7 +111,7 @@ namespace QLNet {
                 if (controlVariateValue == 0)
                     throw new ApplicationException("engine does not provide control-variation price");
 
-                PathPricer<Path> controlPP = this.controlPathPricer();
+                PathPricer<IPath> controlPP = this.controlPathPricer();
                 if (controlPP == null)
                     throw new ApplicationException("engine does not provide control-variation path pricer");
 
@@ -134,10 +134,10 @@ namespace QLNet {
         }
 
 
-        protected abstract PathPricer<Path> pathPricer();
+        protected abstract PathPricer<IPath> pathPricer();
         protected abstract PathGenerator<IRNG> pathGenerator();
         protected abstract TimeGrid timeGrid();
-        protected virtual PathPricer<Path> controlPathPricer() { return null; }
+        protected virtual PathPricer<IPath> controlPathPricer() { return null; }
         protected virtual PathGenerator<IRNG> controlPathGenerator() { return null; }
         protected virtual IPricingEngine controlPricingEngine() { return null; }
         protected virtual double controlVariateValue() { return 0; }

@@ -28,7 +28,7 @@ namespace QLNet {
 
         \ingroup mcarlo
     */
-    public class MultiPath {
+    public class MultiPath : IPath {
         private List<Path> multiPath_;
         
         public MultiPath() {}
@@ -43,9 +43,17 @@ namespace QLNet {
 
         //! \name inspectors
         public int assetNumber() { return multiPath_.Count; }
+        public int length() { return pathSize(); }
         public int pathSize() { return multiPath_[0].length(); }
 
         //! \name read/write access to components
         public Path this[int j] { get { return multiPath_[j]; } set { multiPath_[j] = value; } }
+
+        // ICloneable interface
+        public object Clone() {
+            MultiPath temp = (MultiPath)this.MemberwiseClone();
+            temp.multiPath_ = new List<Path>(this.multiPath_);
+            return temp;
+        }
     }
 }

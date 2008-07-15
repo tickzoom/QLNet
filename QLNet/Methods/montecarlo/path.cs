@@ -27,7 +27,7 @@ namespace QLNet {
 
         \note the path includes the initial asset value as its first point.
     */
-    public class Path : ICloneable {
+    public class Path : ICloneable, IPath {
         private TimeGrid timeGrid_;
         private Vector values_;
 

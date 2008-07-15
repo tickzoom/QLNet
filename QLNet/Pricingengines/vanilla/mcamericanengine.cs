@@ -49,7 +49,7 @@ namespace QLNet {
         }
 
 
-        protected override LongstaffSchwartzPathPricer<Path> lsmPathPricer() {
+        protected override LongstaffSchwartzPathPricer<IPath> lsmPathPricer() {
             GeneralizedBlackScholesProcess process = process_ as GeneralizedBlackScholesProcess;
             if (process == null)
                 throw new ApplicationException("generalized Black-Scholes process required");
@@ -62,7 +62,7 @@ namespace QLNet {
 
             AmericanPathPricer earlyExercisePathPricer = new AmericanPathPricer(arguments_.payoff, polynomOrder_, polynomType_);
 
-            return new LongstaffSchwartzPathPricer<Path>(timeGrid(), earlyExercisePathPricer, process.riskFreeRate());
+            return new LongstaffSchwartzPathPricer<IPath>(timeGrid(), earlyExercisePathPricer, process.riskFreeRate());
         }
 
         protected override double controlVariateValue() {
@@ -90,7 +90,7 @@ namespace QLNet {
             return new AnalyticEuropeanEngine(process);
         }
 
-        protected override PathPricer<Path> controlPathPricer() {
+        protected override PathPricer<IPath> controlPathPricer() {
             StrikedTypePayoff payoff = arguments_.payoff as StrikedTypePayoff;
             if(payoff == null)
                 throw new ApplicationException("StrikedTypePayoff needed for control variate");
@@ -105,7 +105,7 @@ namespace QLNet {
     }
 
 
-    public class AmericanPathPricer : EarlyExercisePathPricer<Path>  {
+    public class AmericanPathPricer : IEarlyExercisePathPricer<IPath, double>  {
         protected double scalingValue_;
         protected Payoff payoff_;
         protected List<Func<double, double>> v_ = new List<Func<double,double>>();
@@ -133,8 +133,8 @@ namespace QLNet {
         }
 
         // scale values of the underlying to increase numerical stability
-        public double state(Path path, int t) { return path[t]*scalingValue_; }
-        public double value(Path path, int t) { return payoff(state(path, t)); }
+        public double state(IPath path, int t) { return (path as Path)[t]*scalingValue_; }
+        public double value(IPath path, int t) { return payoff(state(path, t)); }
         public List<Func<double, double>> basisSystem() { return v_; }
         protected double payoff(double state) { return payoff_.value(state / scalingValue_); }
     }

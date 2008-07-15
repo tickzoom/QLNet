@@ -32,6 +32,17 @@ namespace QLNet {
         \test the correctness of the returned value is tested by
               reproducing results available in web/literature
     */
+    public abstract class MCLongstaffSchwartzEngine<GenericEngine, MC, RNG> 
+        : MCLongstaffSchwartzEngine<GenericEngine, MC, RNG, Statistics>
+        where GenericEngine : IPricingEngine, new()
+        where RNG : IRSG, new() {
+        protected MCLongstaffSchwartzEngine(StochasticProcess process, int timeSteps, int timeStepsPerYear,
+                                            bool brownianBridge, bool antitheticVariate, bool controlVariate,
+                                            int requiredSamples, double requiredTolerance, int maxSamples,
+                                            ulong seed, int nCalibrationSamples) :
+            base(process, timeSteps, timeStepsPerYear, brownianBridge, antitheticVariate, controlVariate,
+                 requiredSamples, requiredTolerance, maxSamples, seed, nCalibrationSamples) { }
+    }
     public abstract class MCLongstaffSchwartzEngine<GenericEngine, MC, RNG, S> : McSimulation<MC, RNG, S>, IPricingEngine
         where GenericEngine : IPricingEngine, new()
         where RNG : IRSG, new()
@@ -52,7 +63,7 @@ namespace QLNet {
         protected ulong seed_;
         protected int nCalibrationSamples_;
 
-        protected LongstaffSchwartzPathPricer<Path> pathPricer_;
+        protected LongstaffSchwartzPathPricer<IPath> pathPricer_;
 
 
         protected MCLongstaffSchwartzEngine(StochasticProcess process, int timeSteps, int timeStepsPerYear,
@@ -105,7 +116,7 @@ namespace QLNet {
             }
         }
 
-        protected override PathPricer<Path> pathPricer() {
+        protected override PathPricer<IPath> pathPricer() {
             if (pathPricer_ == null) 
                 throw new ApplicationException("path pricer unknown");
             return pathPricer_;
@@ -118,7 +129,7 @@ namespace QLNet {
             return new PathGenerator<IRNG>(process_, grid, generator, brownianBridge_);
         }
 
-        protected abstract LongstaffSchwartzPathPricer<Path> lsmPathPricer();
+        protected abstract LongstaffSchwartzPathPricer<IPath> lsmPathPricer();
 
         #region PricingEngine
         protected OneAssetOption.Arguments arguments_ = new OneAssetOption.Arguments();

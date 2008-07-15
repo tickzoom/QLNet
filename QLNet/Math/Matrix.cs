@@ -78,16 +78,11 @@ namespace QLNet {
             columns_ = columns;
         }
 
-        public Matrix(ref Matrix from) {
-            data_ = !from.empty() ? new double[from.rows_, from.columns_] : null;
+        public Matrix(Matrix from) {
+            data_ = !from.empty() ? from.data_ : null;
             rows_ = from.rows_;
             columns_ = from.columns_;
-
-            for (int i = 0; i < rows_; i++)
-                for (int j = 0; j < columns_; j++)
-                    data_[i, j] = from.data_[i, j];
         }
-        // Matrix(const Disposable<Matrix>&); 
 	    #endregion
     
         #region Algebraic operators
@@ -172,6 +167,12 @@ namespace QLNet {
                 for(int j=0; j<v2begin.Count; j++)
                     result[i,j] = v1begin[i] * v2begin[j];
             return result;
+        }
+
+        public void fill(double value) {
+            for (int i = 0; i < rows(); i++)
+                for (int j = 0; j < columns(); j++)
+                    data_[j, i] = value;
         }
 
         public void swap(int i1, int j1, int i2, int j2) {
