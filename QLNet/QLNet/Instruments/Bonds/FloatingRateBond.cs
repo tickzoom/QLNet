@@ -25,16 +25,10 @@ namespace QLNet {
     //! floating-rate bond (possibly capped and/or floored)
     //! \test calculations are tested by checking results against cached values.
     public class FloatingRateBond : Bond {
-        //public FloatingRateBond(int settlementDays, double faceAmount, Schedule schedule, IborIndex index, DayCounter accrualDayCounter,
-        //                        BusinessDayConvention paymentConvention = Following,
-        //                        int fixingDays = Null<Natural>(),
-        //                        List<double> gearings = std::vector<Real>(1, 1.0),
-        //                        List<double> spreads = std::vector<Spread>(1, 0.0),
-        //                        List<double> caps = std::vector<Rate>(),
-        //                        List<double> floors = std::vector<Rate>(),
-        //                        bool inArrears = false,
-        //                        double redemption = 100.0,
-        //                        Date issueDate = Date())
+        public FloatingRateBond(int settlementDays, double faceAmount, Schedule schedule, IborIndex index, DayCounter paymentDayCounter)
+            : this(settlementDays, faceAmount, schedule, index, paymentDayCounter, BusinessDayConvention.Following,
+                   0, new List<double>() { 1 }, new List<double>() { 1 }, new List<double>(), new List<double>(),
+                   false, 100, null) { }
         public FloatingRateBond(int settlementDays, double faceAmount, Schedule schedule, IborIndex index, DayCounter paymentDayCounter,
                                 BusinessDayConvention paymentConvention, int fixingDays, List<double> gearings, List<double> spreads,
                                 List<double> caps, List<double> floors, bool inArrears, double redemption, Date issueDate)

@@ -32,4 +32,11 @@ namespace QLNet {
         public USDLibor(Period tenor, Handle<YieldTermStructure> h)
             : base("USDLibor", tenor, 2, new USDCurrency(), new UnitedStates(UnitedStates.Market.NYSE), new Actual360(), h) { }
     }
+
+    //! Overnight %USD %Libor index
+    public class USDLiborON : DailyTenorLibor {
+        public USDLiborON() : this(new Handle<YieldTermStructure>()) { }
+        public USDLiborON(Handle<YieldTermStructure> h)
+            : base("USDLibor", 0, new USDCurrency(), new UnitedStates(UnitedStates.Market.NYSE), new Actual360(), h) {}
+    }
 }

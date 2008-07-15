@@ -89,7 +89,7 @@ namespace QLNet {
                 case TimeUnit.Months: { DateTime t = d.date; return new Date(t.AddMonths(n)); }
                 case TimeUnit.Years: { DateTime t = d.date; return new Date(t.AddYears(n)); }
                 default:
-                    throw Error.UnknownTimeUnit(u);
+                    throw new ArgumentException("Unknown TimeUnit: " + u);
             }
         }
 

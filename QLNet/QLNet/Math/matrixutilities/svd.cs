@@ -66,7 +66,7 @@ namespace QLNet {
 
             // we're sure that m_ >= n_
             s_ = new Vector(n_);
-            U_ = new Matrix(m_, n_, 0.0);
+            U_ = new Matrix(m_, n_);
             V_ = new Matrix(n_, n_);
             Vector e = new Vector(n_);
             Vector work = new Vector(m_);
@@ -116,14 +116,12 @@ namespace QLNet {
                     e[j] = A[k, j];
                 }
                 if (k < nct) {
-
                     // Place the transformation in U for subsequent back multiplication.
                     for (i = k; i < m_; i++) {
                         U_[i, k] = A[i, k];
                     }
                 }
                 if (k < nrt) {
-
                     // Compute the k-th row transformation and place the k-th super-diagonal in e[k].
                     // Compute 2-norm without under/overflow.
                     e[k] = 0;
@@ -141,7 +139,6 @@ namespace QLNet {
                     }
                     e[k] = -e[k];
                     if ((k + 1 < m_) & (e[k] != 0.0)) {
-
                         // Apply the transformation.
                         for (i = k + 1; i < m_; i++) {
                             work[i] = 0.0;

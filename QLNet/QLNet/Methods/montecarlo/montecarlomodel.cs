@@ -51,10 +51,10 @@ namespace QLNet {
         // sample_type = Sample<List<double>>
 
         private PathGenerator<IRNG> pathGenerator_;
-        private PathPricer<Path> pathPricer_;
+        private PathPricer<IPath> pathPricer_;
         private S sampleAccumulator_;
         private bool isAntitheticVariate_;
-        private PathPricer<Path> cvPathPricer_;
+        private PathPricer<IPath> cvPathPricer_;
         private double cvOptionValue_;
         private bool isControlVariate_;
         private PathGenerator<IRNG> cvPathGenerator_;
@@ -65,11 +65,11 @@ namespace QLNet {
         //          IPathPricer<Path> cvPathPricer = boost::shared_ptr<path_pricer_type>(),
         //          result_type cvOptionValue = result_type(),
         //          PathGenerator<IRNG> cvPathGenerator = path_generator_type()) {
-        public MonteCarloModel(PathGenerator<IRNG> pathGenerator, PathPricer<Path> pathPricer, S sampleAccumulator,
+        public MonteCarloModel(PathGenerator<IRNG> pathGenerator, PathPricer<IPath> pathPricer, S sampleAccumulator,
                   bool antitheticVariate)
             : this(pathGenerator, pathPricer, sampleAccumulator, antitheticVariate, null, 0, null) { }
-        public MonteCarloModel(PathGenerator<IRNG> pathGenerator, PathPricer<Path> pathPricer, S sampleAccumulator,
-                               bool antitheticVariate, PathPricer<Path> cvPathPricer, double cvOptionValue,
+        public MonteCarloModel(PathGenerator<IRNG> pathGenerator, PathPricer<IPath> pathPricer, S sampleAccumulator,
+                               bool antitheticVariate, PathPricer<IPath> cvPathPricer, double cvOptionValue,
                                PathGenerator<IRNG> cvPathGenerator) {
             pathGenerator_ = pathGenerator;
             pathPricer_ = pathPricer;

@@ -39,7 +39,7 @@ namespace QLNet {
             : base(process, timeSteps, timeStepsPerYear, brownianBridge, antitheticVariate, controlVariate,
                    requiredSamples, requiredTolerance, maxSamples, seed) { }
 
-        protected override PathPricer<Path> pathPricer() {
+        protected override PathPricer<IPath> pathPricer() {
             PlainVanillaPayoff payoff = arguments_.payoff as PlainVanillaPayoff;
             if (payoff == null)
                 throw new ApplicationException("non-plain payoff given");
@@ -131,7 +131,7 @@ namespace QLNet {
     }
 
 
-    public class EuropeanPathPricer : PathPricer<Path> {
+    public class EuropeanPathPricer : PathPricer<IPath> {
         private PlainVanillaPayoff payoff_;
         private double discount_;
 
@@ -142,10 +142,10 @@ namespace QLNet {
                 throw new ApplicationException("strike less than zero not allowed");
         }
 
-        public override double value(Path path) {
+        public double value(IPath path) {
             if (!(path.length() > 0))
                 throw new ApplicationException("the path cannot be empty");
-            return payoff_.value(path.back()) * discount_;
+            return payoff_.value((path as Path).back()) * discount_;
         }
     }
 }

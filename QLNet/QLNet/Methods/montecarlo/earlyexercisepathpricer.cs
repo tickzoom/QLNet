@@ -22,25 +22,26 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
+    public interface IPath : ICloneable {
+        int length();
+    }
+
     //! base class for early exercise path pricers
     /*! Returns the value of an option on a given path and given time.
-
-        \ingroup mcarlo
     */
-
-    public static class EarlyExerciseTraits<PathType> where PathType : Path {
+    public static class EarlyExerciseTraits<PathType> where PathType : IPath {
         //typedef Real StateType;
         public static int pathLength(PathType path) { return path.length(); }
     }
 
 
     // template<class PathType, class TimeType=Size, class ValueType=Real>
-    public interface EarlyExercisePathPricer<PathType> {
+    public interface IEarlyExercisePathPricer<PathType, StateType> where PathType : IPath {
         // typedef typename EarlyExerciseTraits<PathType>::StateType StateType;
 
         double value(PathType path, int t);
 
-        double state(PathType path, int t);
-        List<Func<double, double>> basisSystem();
+        StateType state(PathType path, int t);
+        List<Func<StateType, double>> basisSystem();
     }
 }
