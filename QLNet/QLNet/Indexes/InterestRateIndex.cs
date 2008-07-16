@@ -90,12 +90,11 @@ namespace QLNet {
             if (!isValidFixingDate(fixingDate))
                 throw new ArgumentException("Fixing date " + fixingDate + " is not valid");
 
-            Date today = Settings.evaluationDate();
-
             var fixings = IndexManager.instance().getHistory(name()).value();
             if (fixings.ContainsKey(fixingDate)) {
                 return fixings[fixingDate];
             } else {
+                Date today = Settings.evaluationDate();
                 if (fixingDate < today ||
                     (fixingDate == today && !forecastTodaysFixing && Settings.enforcesTodaysHistoricFixings)) {
                     // must have been fixed

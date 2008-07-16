@@ -67,8 +67,8 @@ namespace QLNet {
         }
 
         // stores historical fixings from a TimeSeries
-        public void addFixings(TimeSeries<double> source) { addFixings(source, false); }
-        public void addFixings(TimeSeries<double> source, bool forceOverwrite) {
+        public void addFixings(Dictionary<Date, double> source) { addFixings(source, false); }
+        public void addFixings(Dictionary<Date, double> source, bool forceOverwrite) {
             ObservableValue<TimeSeries<double>> target = IndexManager.instance().getHistory(name());
             foreach (Date d in source.Keys) {
                 if (isValidFixingDate(d))
