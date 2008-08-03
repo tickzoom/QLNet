@@ -50,6 +50,9 @@ namespace QLNet {
         protected abstract double zeroYieldImpl(double t);
 
         protected override double discountImpl(double t) {
+            if (t == 0.0)     // this acts as a safe guard in cases where
+                return 1.0;   // zeroYieldImpl(0.0) would throw.
+
             double r = zeroYieldImpl(t);
             return System.Math.Exp(-r * t);
         }

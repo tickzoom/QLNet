@@ -70,20 +70,22 @@ namespace QLNet {
             if (length == 0) return Frequency.NoFrequency;
             switch (unit_) {
                 case TimeUnit.Years:
-                    if (length != 1) throw Error.CannotInitiateFrequency(this);
+                    if (length != 1) throw new ArgumentException("Cannot instantiate Frequency from " + unit_.ToString());
                     return Frequency.Annual;
                 case TimeUnit.Months:
-                    if ((12 % length) != 0 || length > 12) throw Error.CannotInitiateFrequency(this);
+                    if ((12 % length) != 0 || length > 12) throw new ArgumentException("Cannot instantiate Frequency from " + unit_.ToString());
                     return (Frequency)(12 / length);
                 case TimeUnit.Weeks:
                     if (length == 1)
                         return Frequency.Weekly;
                     else if (length == 2)
                         return Frequency.Biweekly;
+                    else if (length == 4)
+                        return Frequency.EveryFourthWeek;
                     else
-                        throw Error.CannotInitiateFrequency(this);
+                        throw new ArgumentException("Cannot instantiate Frequency from " + unit_.ToString());
                 case TimeUnit.Days:
-                    if (length != 1) throw Error.CannotInitiateFrequency(this);
+                    if (length != 1) throw new ArgumentException("Cannot instantiate Frequency from " + unit_.ToString());
                     return Frequency.Daily;
                 default:
                     throw new ArgumentException("Unknown TimeUnit: " + unit_);

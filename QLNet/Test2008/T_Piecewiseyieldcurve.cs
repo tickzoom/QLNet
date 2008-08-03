@@ -486,6 +486,76 @@ namespace TestSuite {
 
         }
 
+        [TestMethod()]
+        public void testJpyLibor() {
+            //"Testing bootstrap over JPY LIBOR swaps...");
+
+            CommonVars vars = new CommonVars();
+
+            vars.today = new Date(4, Month.October, 2007);
+            Settings.setEvaluationDate(vars.today);
+
+            vars.calendar = new Japan();
+            vars.settlement = vars.calendar.advance(vars.today,vars.settlementDays, TimeUnit.Days);
+
+            // market elements
+            vars.rates = new InitializedList<SimpleQuote>(vars.swaps);
+            for (int i=0; i<vars.swaps; i++) {
+                vars.rates[i] = new SimpleQuote(vars.swapData[i].rate/100);
+            }
+
+            // rate helpers
+            vars.instruments = new InitializedList<BootstrapHelper<YieldTermStructure>>(vars.swaps);
+
+            IborIndex index = new JPYLibor(new Period(6, TimeUnit.Months));
+            for (int i=0; i<vars.swaps; i++) {
+                Handle<Quote> r = new Handle<Quote>(vars.rates[i]);
+                vars.instruments[i] = new SwapRateHelper(r, new Period(vars.swapData[i].n, vars.swapData[i].units),
+                                                          vars.calendar,
+                                                          vars.fixedLegFrequency, vars.fixedLegConvention,
+                                                          vars.fixedLegDayCounter, index);
+            }
+
+            vars.termStructure = new PiecewiseYieldCurve<Discount,LogLinear>(
+                                               vars.settlement, vars.instruments,
+                                               new Actual360(),
+                                               new List<Handle<Quote>>(),
+                                               new List<Date>(),
+                                               1.0e-12);
+
+            RelinkableHandle<YieldTermStructure> curveHandle = new RelinkableHandle<YieldTermStructure>();
+            curveHandle.linkTo(vars.termStructure);
+
+            // check swaps
+            IborIndex jpylibor6m = new JPYLibor(new Period(6, TimeUnit.Months),curveHandle);
+            for (int i=0; i<vars.swaps; i++) {
+                Period tenor = new Period(vars.swapData[i].n, vars.swapData[i].units);
+
+                VanillaSwap swap = new MakeVanillaSwap(tenor, jpylibor6m, 0.0)
+                    .withEffectiveDate(vars.settlement)
+                    .withFixedLegDayCount(vars.fixedLegDayCounter)
+                    .withFixedLegTenor(new Period(vars.fixedLegFrequency))
+                    .withFixedLegConvention(vars.fixedLegConvention)
+                    .withFixedLegTerminationDateConvention(vars.fixedLegConvention)
+                    .withFixedLegCalendar(vars.calendar)
+                    .withFloatingLegCalendar(vars.calendar)
+                    .value();
+
+                double expectedRate = vars.swapData[i].rate/100,
+                     estimatedRate = swap.fairRate();
+                double error = Math.Abs(expectedRate-estimatedRate);
+                double tolerance = 1.0e-9;
+
+                if (error > tolerance) {
+                    Assert.Fail(vars.swapData[i].n + " year(s) swap:\n"
+                                + "\n estimated rate: " + (estimatedRate)
+                                + "\n expected rate:  " + (expectedRate)
+                                + "\n error:          " + (error)
+                                + "\n tolerance:      " + (tolerance));
+                }
+            }
+        }
+
 
         public void testCurveConsistency<T, I, B>(CommonVars vars)
             where T : ITraits, new()

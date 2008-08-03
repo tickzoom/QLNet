@@ -31,18 +31,17 @@ namespace QLNet {
 
             Month startMonth;
             Month endMonth;
-            switch (frequency)
-            {
+            switch (frequency) {
                 case Frequency.Annual:
                     startMonth = Month.January;
                     endMonth = Month.December;
                     break;
                 case Frequency.Semiannual:
-                    startMonth = (Month)((((int)month) - 1) / 6 + 1);
+                    startMonth = (Month)(6 * ((int)month - 1) / 6 + 1);
                     endMonth = (Month)(startMonth + 5);
                     break;
                 case Frequency.Quarterly:
-                    startMonth = (Month)((((int)month) - 1) / 3 + 1);
+                    startMonth = (Month)(3 * ((int)month - 1) / 3 + 1);
                     endMonth = (Month)(startMonth + 2);
                     break;
                 case Frequency.Monthly:
@@ -61,17 +60,14 @@ namespace QLNet {
 
     //! Interface for inflation term structures.
     //! \ingroup inflationtermstructures 
-    public abstract class InflationTermStructure : TermStructure
-    {
+    public abstract class InflationTermStructure : TermStructure {
         //! \name Constructors
         //@{
         public InflationTermStructure(Period lag, Frequency frequency, double baseRate, Handle<YieldTermStructure> yTS)
-            : this(lag, frequency, baseRate, yTS, new DayCounter())
-        {
+            : this(lag, frequency, baseRate, yTS, new DayCounter()) {
         }
         public InflationTermStructure(Period lag, Frequency frequency, double baseRate, Handle<YieldTermStructure> yTS, DayCounter dayCounter)
-            : base(dayCounter)
-        {
+            : base(dayCounter) {
             nominalTermStructure_ = yTS;
             lag_ = lag;
             frequency_ = frequency;
@@ -81,16 +77,13 @@ namespace QLNet {
 
         }
         public InflationTermStructure(Date referenceDate, Period lag, Frequency frequency, double baseRate, Handle<YieldTermStructure> yTS, Calendar calendar)
-            : this(referenceDate, lag, frequency, baseRate, yTS, calendar, new DayCounter())
-        {
+            : this(referenceDate, lag, frequency, baseRate, yTS, calendar, new DayCounter()) {
         }
         public InflationTermStructure(Date referenceDate, Period lag, Frequency frequency, double baseRate, Handle<YieldTermStructure> yTS)
-            : this(referenceDate, lag, frequency, baseRate, yTS, new Calendar(), new DayCounter())
-        {
+            : this(referenceDate, lag, frequency, baseRate, yTS, new Calendar(), new DayCounter()) {
         }
         public InflationTermStructure(Date referenceDate, Period lag, Frequency frequency, double baseRate, Handle<YieldTermStructure> yTS, Calendar calendar, DayCounter dayCounter)
-            : base(referenceDate, calendar, dayCounter)
-        {
+            : base(referenceDate, calendar, dayCounter) {
             nominalTermStructure_ = yTS;
             lag_ = lag;
             frequency_ = frequency;
@@ -101,12 +94,10 @@ namespace QLNet {
 
         }
         public InflationTermStructure(int settlementDays, Calendar calendar, Period lag, Frequency frequency, double baseRate, Handle<YieldTermStructure> yTS)
-            : this(settlementDays, calendar, lag, frequency, baseRate, yTS, new DayCounter())
-        {
+            : this(settlementDays, calendar, lag, frequency, baseRate, yTS, new DayCounter()) {
         }
         public InflationTermStructure(int settlementDays, Calendar calendar, Period lag, Frequency frequency, double baseRate, Handle<YieldTermStructure> yTS, DayCounter dayCounter)
-            : base(settlementDays, calendar, dayCounter)
-        {
+            : base(settlementDays, calendar, dayCounter) {
             nominalTermStructure_ = yTS;
             lag_ = lag;
             frequency_ = frequency;
@@ -120,20 +111,16 @@ namespace QLNet {
 
         //! \name Inflation interface
         //@{
-        public Period lag()
-        {
+        public Period lag() {
             return lag_;
         }
-        public Frequency frequency()
-        {
+        public Frequency frequency() {
             return frequency_;
         }
-        public double baseRate()
-        {
+        public double baseRate() {
             return baseRate_;
         }
-        public Handle<YieldTermStructure> nominalTermStructure()
-        {
+        public Handle<YieldTermStructure> nominalTermStructure() {
             return nominalTermStructure_;
         }
 
@@ -160,23 +147,20 @@ namespace QLNet {
         // instruments to build the term structure, since the rate at
         // time 0-lag is non-zero, since we deal (effectively) with
         // "forwards".
-        protected virtual void setBaseRate(double r)
-        {
+        protected virtual void setBaseRate(double r) {
             baseRate_ = r;
         }
         protected double baseRate_;
 
         // range-checking
-        protected new void checkRange(Date d, bool extrapolate)
-        {
+        protected new void checkRange(Date d, bool extrapolate) {
             if (!(d >= baseDate()))
                 throw new ApplicationException("date (" + d + ") is before base date");
 
             if (!(extrapolate || allowsExtrapolation() || d <= maxDate()))
                 throw new ApplicationException("date (" + d + ") is past max curve date (" + maxDate() + ")");
         }
-        protected new void checkRange(double t, bool extrapolate)
-        {
+        protected new void checkRange(double t, bool extrapolate) {
             if (!(t >= timeFromReference(baseDate())))
                 throw new ApplicationException("time (" + t + ") is before base date");
 
@@ -189,23 +173,19 @@ namespace QLNet {
     //! Interface for zero inflation term structures.
     // Child classes use templates but do not want that exposed to
     // general users.
-    public abstract class ZeroInflationTermStructure : InflationTermStructure
-    {
+    public abstract class ZeroInflationTermStructure : InflationTermStructure {
         //! \name Constructors
         //@{
         public ZeroInflationTermStructure(DayCounter dayCounter, Period lag, Frequency frequency, double baseZeroRate, Handle<YieldTermStructure> yTS)
-            : base(lag, frequency, baseZeroRate, yTS, dayCounter)
-        {
+            : base(lag, frequency, baseZeroRate, yTS, dayCounter) {
         }
 
         public ZeroInflationTermStructure(Date referenceDate, Calendar calendar, DayCounter dayCounter, Period lag, Frequency frequency, double baseZeroRate, Handle<YieldTermStructure> yTS)
-            : base(referenceDate, lag, frequency, baseZeroRate, yTS, calendar, dayCounter)
-        {
+            : base(referenceDate, lag, frequency, baseZeroRate, yTS, calendar, dayCounter) {
         }
 
         public ZeroInflationTermStructure(int settlementDays, Calendar calendar, DayCounter dayCounter, Period lag, Frequency frequency, double baseZeroRate, Handle<YieldTermStructure> yTS)
-            : base(settlementDays, calendar, lag, frequency, baseZeroRate, yTS, dayCounter)
-        {
+            : base(settlementDays, calendar, lag, frequency, baseZeroRate, yTS, dayCounter) {
         }
         //@}
 
@@ -216,21 +196,17 @@ namespace QLNet {
         //            (by definition), i.e. the zero term structure uses yearly
         //            compounding, which is assumed for ZCIIS instrument quotes.
         //        
-        public double zeroRate(Date d)
-        {
+        public double zeroRate(Date d) {
             return zeroRate(d, false);
         }
-        public double zeroRate(Date d, bool extrapolate)
-        {
+        public double zeroRate(Date d, bool extrapolate) {
             base.checkRange(d, extrapolate);
             return zeroRateImpl(timeFromReference(d));
         }
-        public double zeroRate(double t)
-        {
+        public double zeroRate(double t) {
             return zeroRate(t, false);
         }
-        public double zeroRate(double t, bool extrapolate)
-        {
+        public double zeroRate(double t, bool extrapolate) {
             base.checkRange(t, extrapolate);
             return zeroRateImpl(t);
         }
@@ -241,23 +217,22 @@ namespace QLNet {
 
 
     //! Base class for year-on-year inflation term structures.
-    public abstract class YoYInflationTermStructure : InflationTermStructure
-    {
+    public abstract class YoYInflationTermStructure : InflationTermStructure {
         //! \name Constructors
         //@{
-        public YoYInflationTermStructure(DayCounter dayCounter, Period lag, Frequency frequency, double baseYoYRate, Handle<YieldTermStructure> yTS)
-            : base(lag, frequency, baseYoYRate, yTS, dayCounter)
-        {
+        public YoYInflationTermStructure(DayCounter dayCounter, Period lag, Frequency frequency, double baseYoYRate, 
+                                         Handle<YieldTermStructure> yTS)
+            : base(lag, frequency, baseYoYRate, yTS, dayCounter) {
         }
 
-        public YoYInflationTermStructure(Date referenceDate, Calendar calendar, DayCounter dayCounter, Period lag, Frequency frequency, double baseYoYRate, Handle<YieldTermStructure> yTS)
-            : base(referenceDate, lag, frequency, baseYoYRate, yTS, calendar, dayCounter)
-        {
+        public YoYInflationTermStructure(Date referenceDate, Calendar calendar, DayCounter dayCounter, Period lag, 
+                                         Frequency frequency, double baseYoYRate, Handle<YieldTermStructure> yTS)
+            : base(referenceDate, lag, frequency, baseYoYRate, yTS, calendar, dayCounter) {
         }
 
-        public YoYInflationTermStructure(int settlementDays, Calendar calendar, DayCounter dayCounter, Period lag, Frequency frequency, double baseYoYRate, Handle<YieldTermStructure> yTS)
-            : base(settlementDays, calendar, lag, frequency, baseYoYRate, yTS, dayCounter)
-        {
+        public YoYInflationTermStructure(int settlementDays, Calendar calendar, DayCounter dayCounter, Period lag, 
+                                         Frequency frequency, double baseYoYRate, Handle<YieldTermStructure> yTS)
+            : base(settlementDays, calendar, lag, frequency, baseYoYRate, yTS, dayCounter) {
         }
         //@}
 
@@ -265,21 +240,17 @@ namespace QLNet {
         //@{
         //! year-on-year inflation rate
         //! \note this is not the year-on-year swap (YYIIS) rate. 
-        public double yoyRate(Date d)
-        {
+        public double yoyRate(Date d) {
             return yoyRate(d, false);
         }
-        public double yoyRate(Date d, bool extrapolate)
-        {
+        public double yoyRate(Date d, bool extrapolate) {
             base.checkRange(d, extrapolate);
             return yoyRateImpl(timeFromReference(d));
         }
-        public double yoyRate(double t)
-        {
+        public double yoyRate(double t) {
             return yoyRate(t, false);
         }
-        public double yoyRate(double t, bool extrapolate)
-        {
+        public double yoyRate(double t, bool extrapolate) {
             base.checkRange(t, extrapolate);
             return yoyRateImpl(t);
         }
