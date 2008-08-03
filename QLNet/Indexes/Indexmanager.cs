@@ -33,29 +33,23 @@ namespace QLNet {
 
         //! returns whether historical fixings were stored for the index
         public bool hasHistory(string name) {
-            return data_.ContainsKey(name);
+            return data_.ContainsKey(name) && data_[name].value().Count > 0;
         }
 
         //! returns the (possibly empty) history of the index fixings
         public ObservableValue<TimeSeries<double>> getHistory(string name) {
-            if (!hasHistory(name))
-                data_.Add(name, new ObservableValue<TimeSeries<double>>());
+            checkExists(name);
             return data_[name];
         }
 
         //! stores the historical fixings of the index
         public void setHistory(string name, ObservableValue<TimeSeries<double>> history) {
-            if (!hasHistory(name))
-                data_.Add(name, null);
+            checkExists(name);
             data_[name].Assign(history);
         }
 
-        //! observer notifying of changes in the index fixings
-        public ObservableValue<TimeSeries<double>> notifier(string name) {
-            if (!hasHistory(name))
-                data_.Add(name, new ObservableValue<TimeSeries<double>>());
-            return data_[name];
-        }
+        //! observer notifying of changes in the index fixings; in .NET it has the same logic as getHistory
+        public ObservableValue<TimeSeries<double>> notifier(string name) { return getHistory(name); }
 
         //! returns all names of the indexes for which fixings were stored
         public List<string> histories() {
@@ -74,6 +68,12 @@ namespace QLNet {
         public void clearHistories() {
             foreach (string s in data_.Keys)
                 clearHistory(s);
+        }
+
+        // checks whether index exists and adds it otherwise; for interal use only
+        private void checkExists(string name) {
+            if (!data_.ContainsKey(name))
+                data_.Add(name, new ObservableValue<TimeSeries<double>>());
         }
     }
 }
