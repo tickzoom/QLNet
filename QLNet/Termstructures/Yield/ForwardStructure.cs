@@ -65,6 +65,9 @@ namespace QLNet {
 
         /*! Returns the discount factor for the given date calculating it from the instantaneous forward rate */
         protected override double discountImpl(double t) {
+            if (t == 0.0)     // this acts as a safe guard in cases where
+                return 1.0;   // zeroYieldImpl(0.0) would throw.
+
             double r = zeroYieldImpl(t);
             return Math.Exp(-r*t);
         }

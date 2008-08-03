@@ -397,17 +397,16 @@ namespace QLNet {
 
         protected override void initializeDates() {
             // dummy ibor index with curve/swap arguments
-            IborIndex clonedIborIndex = new IborIndex(iborIndex_.familyName(), iborIndex_.tenor(), iborIndex_.fixingDays(),
-                                                      iborIndex_.currency(), iborIndex_.fixingCalendar(),
-                                                      iborIndex_.businessDayConvention(), iborIndex_.endOfMonth(),
-                                                      iborIndex_.dayCounter(), termStructureHandle_);
+            IborIndex clonedIborIndex = iborIndex_.clone(termStructureHandle_);
 
             // do not pass the spread here, as it might be a Quote i.e. it can dinamically change
             swap_ = new MakeVanillaSwap(tenor_, clonedIborIndex, 0.0, fwdStart_)
                                         .withFixedLegDayCount(fixedDayCount_)
                                         .withFixedLegTenor(new Period(fixedFrequency_))
                                         .withFixedLegConvention(fixedConvention_)
-                                        .withFixedLegTerminationDateConvention(fixedConvention_);
+                                        .withFixedLegTerminationDateConvention(fixedConvention_)
+                                        .withFixedLegCalendar(calendar_)
+                                        .withFloatingLegCalendar(calendar_);
 
             earliestDate_ = swap_.startDate();
 

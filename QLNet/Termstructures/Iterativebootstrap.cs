@@ -94,7 +94,7 @@ namespace QLNet {
                     // calculate guess before extending interpolation to ensure that any extrapolation is performed
                     // using the curve bootstrapped so far and no more
                     BootstrapHelper<YieldTermStructure> instrument = ts_.instruments_[i-1];
-                    double guess;
+                    double guess = 0;
                     if (validCurve_ || iteration>0) {
                         guess = ts_.data_[i];
                     } else if (i==1) {

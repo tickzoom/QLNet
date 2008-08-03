@@ -75,5 +75,11 @@ namespace QLNet {
             double fixingPeriod = dayCounter().yearFraction(fixingValueDate, endValueDate);
             return (fixingDiscount / endDiscount - 1.0) / fixingPeriod;
         }
+
+        //! returns a copy of itself linked to a different forecast curve
+        public IborIndex clone(Handle<YieldTermStructure> h) {
+            return new IborIndex(familyName(), tenor(), fixingDays(), currency(), fixingCalendar(),
+                                 businessDayConvention(), endOfMonth(), dayCounter(), h);
+        }
     }
 }

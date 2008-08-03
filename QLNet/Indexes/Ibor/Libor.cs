@@ -25,6 +25,7 @@ namespace QLNet {
     //! base class for all BBA LIBOR indexes but the EUR, O/N, and S/N ones LIBOR fixed by BBA.
     //! See <http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1414>.
     public class Libor : IborIndex {
+        private Calendar financialCenterCalendar_;
         private Calendar jointCalendar_;
 
         //public Libor(string familyName, Period tenor, int settlementDays, Currency currency, Calendar financialCenterCalendar,
@@ -39,7 +40,8 @@ namespace QLNet {
                 new UnitedKingdom(UnitedKingdom.Market.Exchange),
                 Utils.liborConvention(tenor), Utils.liborEOM(tenor),
                 dayCounter, h) {
-            
+
+            financialCenterCalendar_ = financialCenterCalendar;
             jointCalendar_ = new JointCalendar(new UnitedKingdom(UnitedKingdom.Market.Exchange),
                                                financialCenterCalendar, JointCalendar.JointCalendarRule.JoinHolidays);
             if (tenor.units() == TimeUnit.Days)
@@ -76,6 +78,11 @@ namespace QLNet {
             return jointCalendar_.advance(valueDate, tenor_, convention_, endOfMonth());
         }
 
+        //! \name Other methods
+        public IborIndex clone(Handle<YieldTermStructure> h) {
+            return new Libor(familyName(), tenor(), fixingDays(), currency(), financialCenterCalendar_,
+                             dayCounter(), h);
+        }
     }
 
     public static partial class Utils {

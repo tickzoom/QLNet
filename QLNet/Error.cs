@@ -29,8 +29,5 @@ namespace QLNet {
 
 		public static ApplicationException MissingImplementation() {
 			return new ApplicationException("No implementation provided"); }
-
-		public static ArgumentException CannotInitiateFrequency(Period p) {
-			return new ArgumentException("Cannot instantiate Frequency for " + p.ToString()); }
     }
 }
