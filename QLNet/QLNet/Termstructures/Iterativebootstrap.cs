@@ -79,6 +79,8 @@ namespace QLNet {
             } else {
                 ts_.data_ = new InitializedList<double>(n + 1);
                 ts_.data_[0] = ts_.initialValue(ts_);
+                for (i=0; i<n; ++i)
+                    ts_.data_[i+1] = ts_.initialGuess();
             }
 
             Brent solver = new Brent();
@@ -115,7 +117,10 @@ namespace QLNet {
                         try {
                             ts_.interpolation_ = ts_.interpolator_.interpolate(ts_.times_, i + 1, ts_.data_);
                         } catch {
-                            // if the target interpolation is not usable yet
+                            if (!ts_.interpolator_.global)
+                                throw; // no chance to fix it in a later iteration
+
+                            // otherwise, if the target interpolation is not usable yet
                            ts_.interpolation_ = new Linear().interpolate(ts_.times_, i + 1, ts_.data_);
                         }
                     }
