@@ -332,6 +332,9 @@ namespace QLNet {
         public double yield(double cleanPrice, DayCounter dc, Compounding comp, Frequency freq) {
             return yield(cleanPrice, dc, comp, freq, null, 1.0e-8, 100);
         }
+        public double yield(double cleanPrice, DayCounter dc, Compounding comp, Frequency freq, Date settlement) {
+            return yield(cleanPrice, dc, comp, freq, settlement, 1.0e-8, 100);
+        }
         public double yield(double cleanPrice, DayCounter dc, Compounding comp, Frequency freq, Date settlement,
                             double accuracy, int maxEvaluations) {
             if (settlement == null)
@@ -374,6 +377,7 @@ namespace QLNet {
 
         //! accrued amount at a given date
         /*! The default bond settlement is used if no date is given. */
+        public double accruedAmount() { return accruedAmount(null); }
         public double accruedAmount(Date settlement) {
             if (settlement==null)
                 settlement = settlementDate();
@@ -412,6 +416,7 @@ namespace QLNet {
             is the already-fixed not-yet-paid one.
 
             The current bond settlement is used if no date is given. */
+        public double nextCoupon() { return nextCoupon(null); }
         public double nextCoupon(Date settlement) {
             if (settlement == null)
                 settlement = settlementDate();
@@ -423,6 +428,7 @@ namespace QLNet {
             or expected in a stochastic sense. When the bond settlement date is used the coupon is the last paid one.
 
             The current bond settlement is used if no date is given. */
+        public double previousCoupon() { return previousCoupon(null); }
         public double previousCoupon(Date settlement) {
             if (settlement == null)
                 settlement = settlementDate();
