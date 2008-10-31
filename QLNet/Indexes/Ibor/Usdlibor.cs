@@ -16,10 +16,6 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace QLNet {
     //! %USD %LIBOR rate
@@ -30,13 +26,19 @@ namespace QLNet {
     public class USDLibor : Libor {
         public USDLibor(Period tenor) : this(tenor, new Handle<YieldTermStructure>()) { }
         public USDLibor(Period tenor, Handle<YieldTermStructure> h)
-            : base("USDLibor", tenor, 2, new USDCurrency(), new UnitedStates(UnitedStates.Market.NYSE), new Actual360(), h) { }
+            : base("USDLibor", tenor, 2, new USDCurrency(), new UnitedStates(UnitedStates.Market.Settlement), new Actual360(), h) { }
     }
 
+    //! base class for the one day deposit BBA %USD %LIBOR indexes
+    public class DailyTenorUSDLibor : DailyTenorLibor {
+        public DailyTenorUSDLibor(int settlementDays) : this(settlementDays, new Handle<YieldTermStructure>()) {}
+        public DailyTenorUSDLibor(int settlementDays, Handle<YieldTermStructure> h)
+            : base("USDLibor", settlementDays, new USDCurrency(), new UnitedStates(UnitedStates.Market.Settlement), new Actual360(), h) {}
+    };
+
     //! Overnight %USD %Libor index
-    public class USDLiborON : DailyTenorLibor {
+    public class USDLiborON : DailyTenorUSDLibor {
         public USDLiborON() : this(new Handle<YieldTermStructure>()) { }
-        public USDLiborON(Handle<YieldTermStructure> h)
-            : base("USDLibor", 0, new USDCurrency(), new UnitedStates(UnitedStates.Market.NYSE), new Actual360(), h) {}
+        public USDLiborON(Handle<YieldTermStructure> h) : base(0, h) {}
     }
 }

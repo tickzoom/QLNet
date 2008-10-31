@@ -18,8 +18,6 @@
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace QLNet {
     public class DiscountingBondEngine : Bond.Engine {
@@ -35,10 +33,13 @@ namespace QLNet {
         public override void calculate() {
             List<CashFlow> cashflows = arguments_.cashflows;
             Date settlementDate = arguments_.settlementDate;
+            Date valuationDate = discountCurve().link.referenceDate();
 
             if (discountCurve().empty())
                 throw new ApplicationException("no discounting term structure set");
-            results_.value = CashFlows.npv(cashflows, discountCurve().link, settlementDate, settlementDate);
+
+            results_.value = CashFlows.npv(cashflows, discountCurve().link, valuationDate, valuationDate);
+            results_.settlementValue = CashFlows.npv(cashflows, discountCurve().link, settlementDate, settlementDate);
         }
     }
 }

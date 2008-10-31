@@ -42,6 +42,15 @@ namespace QLNet {
             return close(m1, m2, 42);
         }
 
+        public static bool close_enough(double x, double y) {
+            return close_enough(x,y,42);
+        }
+
+        public static bool close_enough(double x, double y, int n) {
+            double diff = Math.Abs(x-y), tolerance = n*Const.QL_Epsilon;
+            return diff <= tolerance*Math.Abs(x) || diff <= tolerance*Math.Abs(y);
+        }
+
         public static bool close(Money m1, Money m2, int n) {
             if (m1.currency == m2.currency) {
                 return close(m1.value, m2.value, n);

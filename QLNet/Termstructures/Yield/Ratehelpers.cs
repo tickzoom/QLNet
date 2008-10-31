@@ -18,9 +18,6 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace QLNet {
     //! Rate helper for bootstrapping over interest-rate futures prices
@@ -29,9 +26,9 @@ namespace QLNet {
         private Handle<Quote> convAdj_;
 
         // constructors. special case when convexityAdjustment is really delivered as Quote
-        public FuturesRateHelper(Handle<Quote> price, Date immDate, int nMonths, Calendar calendar,
+        public FuturesRateHelper(Handle<Quote> price, Date immDate, int lengthInMonths, Calendar calendar,
                                  BusinessDayConvention convention, bool endOfMonth, DayCounter dayCounter)
-            : this(price, immDate, nMonths, calendar, convention, endOfMonth, dayCounter, new Handle<Quote>()) { }
+            : this(price, immDate, lengthInMonths, calendar, convention, endOfMonth, dayCounter, new Handle<Quote>()) { }
         public FuturesRateHelper(Handle<Quote> price, Date immDate, int nMonths, Calendar calendar,
                                  BusinessDayConvention convention, bool endOfMonth, DayCounter dayCounter,
                                  Handle<Quote> convexityAdjustment)
@@ -208,7 +205,7 @@ namespace QLNet {
     //! Rate helper for bootstrapping over %FRA rates
     public class FraRateHelper : RelativeDateRateHelper {
         private Date fixingDate_;
-        private int monthsToStart_;
+        private Period periodToStart_;
         private IborIndex iborIndex_;
         // need to init this because it is used before the handle has any link, i.e. setTermStructure will be used after ctor
         RelinkableHandle<YieldTermStructure> termStructureHandle_ = new RelinkableHandle<YieldTermStructure>();
@@ -218,7 +215,7 @@ namespace QLNet {
                              Calendar calendar, BusinessDayConvention convention, bool endOfMonth,
                              DayCounter dayCounter) :
             base(rate) {
-            monthsToStart_ = monthsToStart;
+            periodToStart_ = new Period(monthsToStart, TimeUnit.Months);
 
             if (!(monthsToEnd>monthsToStart)) throw new ArgumentException("monthsToEnd must be grater than monthsToStart");
             iborIndex_ = new IborIndex("no-fix", new Period(monthsToEnd - monthsToStart, TimeUnit.Months), fixingDays,
@@ -229,11 +226,33 @@ namespace QLNet {
         public FraRateHelper(double rate, int monthsToStart, int monthsToEnd, int fixingDays, Calendar calendar,
                              BusinessDayConvention convention, bool endOfMonth, DayCounter dayCounter)
             : base(rate) {
-            monthsToStart_ = monthsToStart;
+            periodToStart_ = new Period(monthsToStart, TimeUnit.Months);
 
             if (!(monthsToEnd>monthsToStart)) throw new ArgumentException("monthsToEnd must be grater than monthsToStart");
             iborIndex_ = new IborIndex("no-fix", new Period(monthsToEnd - monthsToStart, TimeUnit.Months), fixingDays,
                                     new Currency(), calendar, convention, endOfMonth, dayCounter, termStructureHandle_);
+            initializeDates();
+        }
+
+        public FraRateHelper(Handle<Quote> rate, int monthsToStart, IborIndex i) : base(rate) {
+            periodToStart_ = new Period(monthsToStart, TimeUnit.Months);
+
+            iborIndex_ = new IborIndex("no-fix",  // never take fixing into account
+                                       i.tenor(), i.fixingDays(), new Currency(),
+                                       i.fixingCalendar(), i.businessDayConvention(),
+                                       i.endOfMonth(), i.dayCounter(), termStructureHandle_);
+
+            initializeDates();
+        }
+
+        public FraRateHelper(double rate, int monthsToStart, IborIndex i) : base(rate) {
+            periodToStart_ = new Period(monthsToStart, TimeUnit.Months);
+
+            iborIndex_ = new IborIndex("no-fix",  // never take fixing into account
+                                       i.tenor(), i.fixingDays(), new Currency(),
+                                       i.fixingCalendar(), i.businessDayConvention(),
+                                       i.endOfMonth(), i.dayCounter(), termStructureHandle_);
+
             initializeDates();
         }
 
@@ -254,8 +273,8 @@ namespace QLNet {
         protected override void initializeDates() {
             // why not using index_->fixingDays instead of settlementDays_
             Date settlement = iborIndex_.fixingCalendar().advance(evaluationDate_, iborIndex_.fixingDays(), TimeUnit.Days);
-            earliestDate_ = iborIndex_.fixingCalendar().advance(settlement, monthsToStart_, TimeUnit.Months,
-                                   iborIndex_.businessDayConvention(), iborIndex_.endOfMonth());
+            earliestDate_ = iborIndex_.fixingCalendar().advance(settlement, periodToStart_,
+                                                                iborIndex_.businessDayConvention(), iborIndex_.endOfMonth());
             latestDate_ = iborIndex_.maturityDate(earliestDate_);
             fixingDate_ = iborIndex_.fixingDate(earliestDate_);
         }

@@ -16,10 +16,7 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace QLNet {
     //! zero-coupon bond
@@ -35,10 +32,11 @@ namespace QLNet {
         //               Date issueDate = Date());
         public ZeroCouponBond(int settlementDays, Calendar calendar, double faceAmount, Date maturityDate,
                               BusinessDayConvention paymentConvention, double redemption, Date issueDate)
-            : base(settlementDays, calendar, faceAmount, maturityDate, issueDate) {
-            
-            Date redemptionDate = calendar_.adjust(maturityDate_, paymentConvention);
-            cashflows_ = new List<CashFlow>() { new SimpleCashFlow(faceAmount_*redemption/100, redemptionDate) };
+            : base(settlementDays, calendar, issueDate) {
+
+            maturityDate_ = maturityDate;
+            Date redemptionDate = calendar_.adjust(maturityDate, paymentConvention);
+            setSingleRedemption(faceAmount, redemption, redemptionDate);
         }
     }
 }

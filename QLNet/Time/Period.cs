@@ -50,6 +50,7 @@ namespace QLNet {
                     unit_ = TimeUnit.Months;
                     length_ = 12 / (int)f;
                     break;
+                case Frequency.EveryFourthWeek:
                 case Frequency.Biweekly:
                 case Frequency.Weekly:
                     unit_ = TimeUnit.Weeks;
@@ -59,6 +60,8 @@ namespace QLNet {
                     unit_ = TimeUnit.Days;
                     length_ = 1;
                     break;
+                case Frequency.OtherFrequency:
+                    throw Error.UnknownFrequency(f);
                 default:
                     throw Error.UnknownFrequency(f);
             }
@@ -70,11 +73,12 @@ namespace QLNet {
             if (length == 0) return Frequency.NoFrequency;
             switch (unit_) {
                 case TimeUnit.Years:
-                    if (length != 1) throw new ArgumentException("Cannot instantiate Frequency from " + unit_.ToString());
-                    return Frequency.Annual;
+                    return (length == 1) ? Frequency.Annual : Frequency.OtherFrequency;
                 case TimeUnit.Months:
-                    if ((12 % length) != 0 || length > 12) throw new ArgumentException("Cannot instantiate Frequency from " + unit_.ToString());
-                    return (Frequency)(12 / length);
+                    if (12 % length == 0 && length <= 12)
+                        return (Frequency)(12 / length);
+                    else
+                        return Frequency.OtherFrequency;
                 case TimeUnit.Weeks:
                     if (length == 1)
                         return Frequency.Weekly;
@@ -83,10 +87,9 @@ namespace QLNet {
                     else if (length == 4)
                         return Frequency.EveryFourthWeek;
                     else
-                        throw new ArgumentException("Cannot instantiate Frequency from " + unit_.ToString());
+                        return Frequency.OtherFrequency;
                 case TimeUnit.Days:
-                    if (length != 1) throw new ArgumentException("Cannot instantiate Frequency from " + unit_.ToString());
-                    return Frequency.Daily;
+                    return (length == 1) ? Frequency.Daily : Frequency.OtherFrequency;
                 default:
                     throw new ArgumentException("Unknown TimeUnit: " + unit_);
             }

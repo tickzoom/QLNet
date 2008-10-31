@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -17,9 +18,6 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace QLNet {
     public static partial class Utils {
@@ -72,8 +70,8 @@ namespace QLNet {
                 Utils.eurliborConvention(tenor), Utils.eurliborEOM(tenor), new Actual360(),
                 new Handle<YieldTermStructure>()) {
             target_ = new TARGET();
-            if (!(tenor.units() != TimeUnit.Days))
-                throw new ApplicationException("for daily tenors (" + tenor + ") dedicated DailyTenor constructor must be used");
+            if (!(this.tenor().units() != TimeUnit.Days))
+                throw new ApplicationException("for daily tenors (" + this.tenor() + ") dedicated DailyTenor constructor must be used");
         }
 
         public EURLibor(Period tenor, Handle<YieldTermStructure> h)
@@ -81,8 +79,8 @@ namespace QLNet {
                 JointCalendar.JointCalendarRule.JoinHolidays),
                 Utils.eurliborConvention(tenor), Utils.eurliborEOM(tenor), new Actual360(), h) {
             target_ = new TARGET();
-            if (!(tenor.units() != TimeUnit.Days))
-                throw new ApplicationException("for daily tenors (" + tenor + ") dedicated DailyTenor constructor must be used");
+            if (!(this.tenor().units() != TimeUnit.Days))
+                throw new ApplicationException("for daily tenors (" + this.tenor() + ") dedicated DailyTenor constructor must be used");
         }
 
         //        ! \name Date calculations

@@ -122,7 +122,7 @@ namespace QLNet
         {
             if (t < 0) throw new ArgumentException("negative time (" + t + ") is given");
 
-            if (!(extrapolate || allowsExtrapolation() || t <= maxTime()))
+            if (!(extrapolate || allowsExtrapolation() || t <= maxTime() || Utils.close_enough(t, maxTime())))
                 throw new ArgumentException("time (" + t + ") is past max curve time (" + maxTime() + ")");
         }
 

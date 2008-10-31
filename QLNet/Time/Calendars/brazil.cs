@@ -22,6 +22,50 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
+    //! Brazilian calendar
+    /*! Banking holidays:
+        <ul>
+        <li>Saturdays</li>
+        <li>Sundays</li>
+        <li>New Year's Day, January 1st</li>
+        <li>Tiradentes's Day, April 21th</li>
+        <li>Labour Day, May 1st</li>
+        <li>Independence Day, September 7th</li>
+        <li>Nossa Sra. Aparecida Day, October 12th</li>
+        <li>All Souls Day, November 2nd</li>
+        <li>Republic Day, November 15th</li>
+        <li>Christmas, December 25th</li>
+        <li>Passion of Christ</li>
+        <li>Carnival</li>
+        <li>Corpus Christi</li>
+        </ul>
+
+        Holidays for the Bovespa stock exchange
+        <ul>
+        <li>Saturdays</li>
+        <li>Sundays</li>
+        <li>New Year's Day, January 1st</li>
+        <li>Sao Paulo City Day, January 25th</li>
+        <li>Tiradentes's Day, April 21th</li>
+        <li>Labour Day, May 1st</li>
+        <li>Revolution Day, July 9th</li>
+        <li>Independence Day, September 7th</li>
+        <li>Nossa Sra. Aparecida Day, October 12th</li>
+        <li>All Souls Day, November 2nd</li>
+        <li>Republic Day, November 15th</li>
+        <li>Black Consciousness Day, November 20th (since 2007)</li>
+        <li>Christmas, December 25th</li>
+        <li>Passion of Christ</li>
+        <li>Carnival</li>
+        <li>Corpus Christi</li>
+        <li>the last business day of the year</li>
+        </ul>
+
+        \ingroup calendars
+
+        \test the correctness of the returned results is tested
+              against a list of known holidays.
+    */
     public class Brazil : Calendar {
         //! Brazilian calendars
         public enum Market { Settlement,            //!< generic settlement calendar
