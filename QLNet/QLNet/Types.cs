@@ -123,7 +123,8 @@ namespace QLNet {
         EveryFourthWeek = 13, //!< every fourth week
         Biweekly = 26,        //!< every second week
         Weekly = 52,          //!< once a week
-        Daily = 365           //!< once a day
+        Daily = 365,          //!< once a day
+        OtherFrequency = 999  //!< some other unknown frequency
     };
 
     // These conventions specify the rule used to generate dates in a Schedule.

@@ -27,7 +27,7 @@ namespace QLNet {
     public class VolatilityTermStructure : TermStructure {
         //! the business day convention used in tenor to date conversion
         private BusinessDayConvention bdc_;
-        public BusinessDayConvention businessDayConvention() { return bdc_; }
+        public virtual BusinessDayConvention businessDayConvention() { return bdc_; }
 
 
         // parameterless ctor is required for Handles

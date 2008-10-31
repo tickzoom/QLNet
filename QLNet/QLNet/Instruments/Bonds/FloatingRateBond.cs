@@ -18,8 +18,6 @@
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace QLNet {
     //! floating-rate bond (possibly capped and/or floored)
@@ -38,10 +36,10 @@ namespace QLNet {
         public FloatingRateBond(int settlementDays, double faceAmount, Schedule schedule, IborIndex index, DayCounter paymentDayCounter,
                                 BusinessDayConvention paymentConvention, int fixingDays, List<double> gearings, List<double> spreads,
                                 List<double> caps, List<double> floors, bool inArrears, double redemption, Date issueDate)
-            : base(settlementDays, schedule.calendar(), faceAmount, schedule.endDate(), issueDate) {
-
+            : base(settlementDays, schedule.calendar(), issueDate) {
+            maturityDate_ = schedule.endDate();
             cashflows_ = new IborLeg(schedule, index)
-                            .withNotionals(faceAmount_)
+                            .withNotionals(faceAmount)
                             .withPaymentDayCounter(paymentDayCounter)
                             .withPaymentAdjustment(paymentConvention)
                             .withFixingDays(fixingDays)
@@ -51,8 +49,12 @@ namespace QLNet {
                             .withFloors(floors)
                             .inArrears(inArrears).value();
 
-            Date redemptionDate = calendar_.adjust(maturityDate_, paymentConvention);
-            cashflows_.Add(new SimpleCashFlow(faceAmount_*redemption/100.0, redemptionDate));
+            addRedemptionsToCashflows(new List<double>() { redemption });
+
+            if (cashflows().Count == 0)
+                throw new ApplicationException("bond with no cashflows!");
+            if (redemptions_.Count != 1)
+                throw new ApplicationException("multiple redemptions created");
 
             index.registerWith(update);
         }
@@ -78,7 +80,9 @@ namespace QLNet {
                                 int fixingDays, List<double> gearings, List<double> spreads, List<double> caps,
                                 List<double> floors, bool inArrears, double redemption, Date issueDate,
                                 Date stubDate, DateGeneration.Rule rule, bool endOfMonth)
-            : base(settlementDays, calendar, faceAmount, maturityDate, issueDate) {
+            : base(settlementDays, calendar, issueDate) {
+
+            maturityDate_ = maturityDate;
 
             Date firstDate, nextToLastDate;
             switch (rule) {
@@ -103,7 +107,7 @@ namespace QLNet {
                                              accrualConvention, accrualConvention, rule, endOfMonth, firstDate, nextToLastDate);
 
             cashflows_ = new IborLeg(schedule, index)
-                            .withNotionals(faceAmount_)
+                            .withNotionals(faceAmount)
                             .withPaymentDayCounter(accrualDayCounter)
                             .withPaymentAdjustment(paymentConvention)
                             .withFixingDays(fixingDays)
@@ -113,8 +117,12 @@ namespace QLNet {
                             .withFloors(floors)
                             .inArrears(inArrears).value();
 
-            Date redemptionDate = calendar_.adjust(maturityDate_, paymentConvention);
-            cashflows_.Add(new SimpleCashFlow(faceAmount_*redemption/100.0, redemptionDate));
+            addRedemptionsToCashflows(new List<double>() { redemption });
+
+            if (cashflows().Count == 0)
+                throw new ApplicationException("bond with no cashflows!");
+            if (redemptions_.Count != 1)
+                throw new ApplicationException("multiple redemptions created");
 
             index.registerWith(update);
         }

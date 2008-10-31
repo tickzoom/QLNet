@@ -18,8 +18,6 @@
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace QLNet {
     public class FixedRateBond : Bond {
@@ -35,20 +33,22 @@ namespace QLNet {
         public FixedRateBond(int settlementDays, double faceAmount, Schedule schedule, List<double> coupons,
                              DayCounter accrualDayCounter, BusinessDayConvention paymentConvention,
                              double redemption, Date issueDate)
-                : base(settlementDays, schedule.calendar(), faceAmount, schedule.endDate(), issueDate) {
+                : base(settlementDays, schedule.calendar(), issueDate) {
             frequency_ = schedule.tenor().frequency();
             dayCounter_ = accrualDayCounter;
+            maturityDate_ = schedule.endDate();
 
             cashflows_ = new FixedRateLeg(schedule, accrualDayCounter)
-                                         .withNotionals(faceAmount_)
+                                         .withNotionals(faceAmount)
                                          .withCouponRates(coupons)
                                          .withPaymentAdjustment(paymentConvention);
 
-            Date redemptionDate = calendar_.adjust(maturityDate_, paymentConvention);
-            cashflows_.Add(new SimpleCashFlow(faceAmount_*redemption/100.0, redemptionDate));
+            addRedemptionsToCashflows(new List<double>() { redemption });
 
             if (cashflows().Count == 0)
                 throw new ApplicationException("bond with no cashflows!");
+            if (redemptions_.Count != 1)
+                throw new ApplicationException("multiple redemptions created");
         }
 
         public FixedRateBond(int settlementDays, Calendar calendar,
@@ -65,7 +65,7 @@ namespace QLNet {
                              Date stubDate,
                              DateGeneration.Rule rule,
                              bool endOfMonth)
-            : base(settlementDays, calendar, faceAmount, maturityDate, issueDate) {
+            : base(settlementDays, calendar, issueDate) {
 
             frequency_ = tenor.frequency();
             dayCounter_ = accrualDayCounter;
@@ -97,13 +97,17 @@ namespace QLNet {
                                              firstDate, nextToLastDate);
 
             cashflows_ = new FixedRateLeg(schedule, accrualDayCounter)
-                            .withNotionals(faceAmount_)
+                            .withNotionals(faceAmount)
                             .withCouponRates(coupons)
                             .withPaymentAdjustment(paymentConvention)
                             .value();
 
-            Date redemptionDate = calendar_.adjust(maturityDate_, paymentConvention);
-            cashflows_.Add(new SimpleCashFlow(faceAmount_*redemption/100.0, redemptionDate));
+            addRedemptionsToCashflows(new List<double>() { redemption });
+
+            if (cashflows().Count == 0)
+                throw new ApplicationException("bond with no cashflows!");
+            if (redemptions_.Count != 1)
+                throw new ApplicationException("multiple redemptions created");
         }
     }
 }

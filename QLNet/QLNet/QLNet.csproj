@@ -82,7 +82,6 @@
     <Compile Include="Indexes\Ibor\Cadlibor.cs" />
     <Compile Include="Indexes\Ibor\Cdor.cs" />
     <Compile Include="Indexes\Ibor\Chflibor.cs" />
-    <Compile Include="Indexes\Ibor\DailyTenorLibor.cs" />
     <Compile Include="Indexes\Ibor\Dkklibor.cs" />
     <Compile Include="Indexes\Ibor\Euribor.cs" />
     <Compile Include="Indexes\Ibor\Eurlibor.cs" />
@@ -340,6 +339,7 @@
     <Compile Include="Time\Calendar.cs" />
     <Compile Include="Time\Calendars\argentina.cs" />
     <Compile Include="Time\Calendars\australia.cs" />
+    <Compile Include="Time\Calendars\bespokecalendar.cs" />
     <Compile Include="Time\Calendars\brazil.cs" />
     <Compile Include="Time\Calendars\canada.cs" />
     <Compile Include="Time\Calendars\china.cs" />

@@ -17,9 +17,6 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace QLNet {
     //! Normal distribution function
@@ -403,8 +400,16 @@ namespace QLNet {
 
         // function
         public double value(double x) {
-            if (!(x > 0.0 && x < 1.0))
+            if (x < 0.0 || x > 1.0) {
+                // try to recover if due to numerical error
+                if (Utils.close_enough(x, 1.0)) {
+                    x = 1.0;
+                } else if (Math.Abs(x) < Const.QL_Epsilon) {
+                    x = 0.0;
+                } else {
                 throw new ApplicationException("InverseCumulativeNormal(" + x + ") undefined: must be 0 < x < 1");
+                }
+            }
 
             double z, r;
 

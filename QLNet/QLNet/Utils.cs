@@ -24,6 +24,8 @@ using System.Text;
 namespace QLNet {
     // here are extensions to IList to accomodate some QL functionality as well as have useful things for .net
     public static partial class Utils {
+        public static bool empty<T>(this IList<T> items) { return items.Count == 0; }
+
         // equivalent of ForEach but with the index
         public static void ForEach<T>(this IList<T> items, Action<int, T> action) {
             if (items != null && action != null)
