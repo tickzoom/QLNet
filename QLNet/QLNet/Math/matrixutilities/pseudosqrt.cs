@@ -259,7 +259,7 @@ namespace QLNet {
             if (size != M.columns())
                 throw new ApplicationException("matrix not square");
 
-            Matrix result = (Matrix)M.Clone();
+            Matrix result = new Matrix(M);
             for (int i=0; i<size; ++i)
                 result[i,i] = 1.0;
 
@@ -287,10 +287,10 @@ namespace QLNet {
         // implementation of the Higham algorithm to find the nearest correlation matrix.
         private static Matrix highamImplementation(Matrix A, int maxIterations, double tolerance) {
             int size = A.rows();
-            Matrix R, Y = (Matrix)A.Clone(), X = (Matrix)A.Clone(), deltaS = new Matrix(size, size, 0.0);
+            Matrix R, Y = new Matrix(A), X = new Matrix(A), deltaS = new Matrix(size, size, 0.0);
 
-            Matrix lastX = (Matrix)X.Clone();
-            Matrix lastY = (Matrix)Y.Clone();
+            Matrix lastX = new Matrix(X);
+            Matrix lastY = new Matrix(Y);
 
             for (int i=0; i<maxIterations; ++i) {
                 R = Y - deltaS;

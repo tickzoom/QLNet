@@ -18,8 +18,6 @@
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace QLNet {
     //! symmetric threshold Jacobi algorithm.
@@ -59,7 +57,7 @@ namespace QLNet {
                 diagonal_[q] = s[q,q];
                 eigenVectors_[q,q] = 1.0;
             }
-            Matrix ss = s;
+            Matrix ss = new Matrix(s);
 
             Vector tmpDiag = new Vector(diagonal_);
             Vector tmpAccumulate = new Vector(size, 0.0);
@@ -145,13 +143,12 @@ namespace QLNet {
                 eigenVectors_.column(col).ForEach((ii, xx) => eigenVector[ii] = xx);
                 temp[col] = new KeyValuePair<double,Vector>(diagonal_[col], eigenVector);
             }
-            temp.Sort((x, y) => x.Key.CompareTo(y.Key));
+            // sort descending: std::greater
+            temp.Sort((x, y) => y.Key.CompareTo(x.Key));
             double maxEv = temp[0].Key;
             for (col=0; col<size; col++) {
                 // check for round-off errors
-                diagonal_[col] =
-                    (Math.Abs(temp[col].Key/maxEv)<1e-16 ? 0.0 :
-                                                              temp[col].Key);
+                diagonal_[col] = (Math.Abs(temp[col].Key/maxEv)<1e-16 ? 0.0 : temp[col].Key);
                 double sign = 1.0;
                 if (temp[col].Value[0]<0.0)
                     sign = -1.0;

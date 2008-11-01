@@ -891,8 +891,8 @@ namespace QLNet {
         *
         *     **********
         */
-        static void qrfac(int m, int n, Vector a, int dummy1, int pivot, ref List<int> ipvt,
-                          int dummy2, ref Vector rdiag, ref Vector acnorm, Vector wa) {
+        public static void qrfac(int m, int n, Vector a, int dummy1, int pivot, ref List<int> ipvt,
+                                 int dummy2, ref Vector rdiag, ref Vector acnorm, Vector wa) {
             int i, ij, jj, j, jp1, k, kmax, minmn;
             double ajnorm, sum, temp;
 
@@ -1083,7 +1083,7 @@ namespace QLNet {
         *
         *     **********
         */
-        static void qrsolv(int n, Vector r, int ldr, List<int> ipvt, Vector diag, Vector qtb, Vector x, Vector sdiag, Vector wa) {
+        public static void qrsolv(int n, Vector r, int ldr, List<int> ipvt, Vector diag, Vector qtb, Vector x, Vector sdiag, Vector wa) {
             int i, ij, ik, kk, j, jp1, k, kp1, l, nsing;
             double cos, cotan, qtbpj, sin, sum, tan, temp;
 

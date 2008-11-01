@@ -159,6 +159,7 @@
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="Math\matrixutilities\choleskydecomposition.cs" />
     <Compile Include="Math\matrixutilities\pseudosqrt.cs" />
+    <Compile Include="Math\matrixutilities\qrdecomposition.cs" />
     <Compile Include="Math\matrixutilities\svd.cs" />
     <Compile Include="Math\matrixutilities\symmetricschurdecomposition.cs" />
     <Compile Include="Math\Optimization\ArmijoLineSearch.cs" />
