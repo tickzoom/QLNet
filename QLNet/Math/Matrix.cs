@@ -18,8 +18,6 @@
 */
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace QLNet {
     //! %Matrix used in linear algebra.
@@ -27,7 +25,7 @@ namespace QLNet {
         algebra. As such, it is <b>not</b> meant to be used as a
         container.
     */
-    public struct Matrix : ICloneable {
+    public struct Matrix {
         #region properties
         private int rows_, columns_;
         public int rows() { return rows_; }
@@ -79,7 +77,7 @@ namespace QLNet {
         }
 
         public Matrix(Matrix from) {
-            data_ = !from.empty() ? from.data_ : null;
+            data_ = !from.empty() ? (double[,])from.data_.Clone() : null;
             rows_ = from.rows_;
             columns_ = from.columns_;
         }
@@ -149,7 +147,7 @@ namespace QLNet {
             Matrix result = new Matrix(m.columns(),m.rows());
             for (int i=0; i<m.rows(); i++)
                 for (int j=0; j<m.columns();j++)
-                    result.data_[j,i] = m.data_[j,i];
+                    result.data_[j,i] = m.data_[i,j];
             return result;
         }
 
@@ -180,8 +178,5 @@ namespace QLNet {
             this[i2, j2] = this[i1, j1];
             this[i1, j1] = t;
         }
-
-        // IClonable interface
-        public object Clone() { return this.MemberwiseClone(); }
     }
 }

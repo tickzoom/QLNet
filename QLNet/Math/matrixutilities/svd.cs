@@ -17,9 +17,6 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace QLNet {
     //! Singular value decomposition
@@ -54,7 +51,7 @@ namespace QLNet {
             */
 
             if (M.rows() >= M.columns()) {
-                A = (Matrix)M.Clone();
+                A = new Matrix(M);
                 transpose_ = false;
             } else {
                 A = Matrix.transpose(M);
@@ -431,7 +428,41 @@ namespace QLNet {
 
         public Matrix U() { return (transpose_ ? V_ : U_); }
         public Matrix V() { return (transpose_ ? U_ : V_); }
+        public Matrix S() {
+            Matrix S = new Matrix(n_,n_);
+            for (int i = 0; i < n_; i++) {
+                for (int j = 0; j < n_; j++) {
+                    S[i,j] = 0.0;
+                }
+                S[i,i] = s_[i];
+            }
+            return S;
+        }
+
         public Vector singularValues() { return s_; }
+        public double norm2() { return s_[0]; }
+        public double cond() { return s_[0]/s_[n_-1]; }
+        public int rank() {
+            double eps = Math.Pow(2.0,-52.0);
+            double tol = m_*s_[0]*eps;
+            int r = 0;
+            for (int i = 0; i < s_.size(); i++) {
+                if (s_[i] > tol) {
+                    r++;
+                }
+            }
+            return r;
+        }
+
+        public Vector solveFor(Vector b) {
+            Matrix W = new Matrix(n_, n_, 0.0);
+            for (int i=0; i<n_; i++)
+                W[i,i] = 1.0/s_[i];
+
+            Matrix inverse = V()* W * Matrix.transpose(U());
+            Vector result = inverse * b;
+            return result;
+        }
 
 
         /*  returns hypotenuse of real (non-complex) scalars a and b by avoiding underflow/overflow
