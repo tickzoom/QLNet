@@ -51,27 +51,27 @@ namespace QLNet {
             Vector rdiag = new Vector(n);
             Vector wa = new Vector(n);
 
-            //MINPACK.qrfac(m, n, mT, 0, (pivot)?1:0, ref lipvt, n, ref rdiag, ref rdiag, wa);
+            MINPACK.qrfac(m, n, mT, 0, (pivot)?1:0, ref lipvt, n, ref rdiag, ref rdiag, wa);
 
-            //if (r.columns() != n || r.rows() !=n)
-            //    r = new Matrix(n, n);
+            if (r.columns() != n || r.rows() !=n)
+                r = new Matrix(n, n);
 
-            //for (int i=0; i < n; ++i) {
+            for (int i=0; i < n; ++i) {
             //    std::fill(r.row_begin(i), r.row_begin(i)+i, 0.0);
-            //    r[i,i] = rdiag[i];
-            //    if (i < m) {
+                r[i, i] = rdiag[i];
+                if (i < m) {
             //        std::copy(mT.column_begin(i)+i+1, mT.column_end(i),
             //                  r.row_begin(i)+i+1);
-            //    }
-            //    else {
+                }
+                else {
             //        std::fill(r.row_begin(i)+i+1, r.row_end(i), 0.0);
-            //    }
-            //}
+                }
+            }
 
-            //if (q.rows() != m || q.columns() != n)
-            //    q = new Matrix(m, n);
+            if (q.rows() != m || q.columns() != n)
+                q = new Matrix(m, n);
 
-            //Vector w = new Vector(m);
+            Vector w = new Vector(m);
             //for (int k=0; k < m; ++k) {
             //    std::fill(w.begin(), w.end(), 0.0);
             //    w[k] = 1.0;

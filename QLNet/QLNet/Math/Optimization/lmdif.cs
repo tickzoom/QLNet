@@ -271,7 +271,7 @@ namespace QLNet {
         public static void lmdif(int m, int n, Vector x, ref Vector fvec, double ftol,
                                  double xtol, double gtol, int maxfev, double epsfcn,
                                  Vector diag, int mode, double factor,
-                                 int nprint, ref int info, ref int nfev, ref Vector fjac,
+                                 int nprint, ref int info, ref int nfev, ref Matrix fjac,
                                  int ldfjac, ref List<int> ipvt, ref Vector qtf,
                                  Vector wa1, Vector wa2, Vector wa3, Vector wa4,
                                  Func<int, int, Vector, int, Vector> fcn) {
@@ -785,7 +785,7 @@ namespace QLNet {
         *
               **********
         */
-        static void fdjac2(int m, int n, Vector x, Vector fvec, Vector fjac, int dummy1,
+        static void fdjac2(int m, int n, Vector x, Vector fvec, Matrix fjac, int dummy1,
                            int iflag, double epsfcn, ref Vector wa,
                            Func<int, int, Vector, int, Vector> fcn) {
             int i, j, ij;
@@ -891,7 +891,7 @@ namespace QLNet {
         *
         *     **********
         */
-        public static void qrfac(int m, int n, Vector a, int dummy1, int pivot, ref List<int> ipvt,
+        public static void qrfac(int m, int n, Matrix a, int dummy1, int pivot, ref List<int> ipvt,
                                  int dummy2, ref Vector rdiag, ref Vector acnorm, Vector wa) {
             int i, ij, jj, j, jp1, k, kmax, minmn;
             double ajnorm, sum, temp;
@@ -951,7 +951,7 @@ namespace QLNet {
                 *    j-th column of a to a multiple of the j-th unit vector.
                 */
                 jj = j + m * j;
-                ajnorm = enorm(m - j, a.GetRange(jj, m - j));
+                ajnorm = enorm(m - j, a.GetRange(jj, m-j));
                 if (ajnorm == zero)
                     goto L100;
                 if (a[jj] < zero)
@@ -991,7 +991,7 @@ namespace QLNet {
                             rdiag[k] *= Math.Sqrt(temp);
                             temp = rdiag[k] / wa[k];
                             if ((p05 * temp * temp) <= MACHEP) {
-                                rdiag[k] = enorm(m - j - 1, a.GetRange(jp1 + m * k, m - j - 1));
+                                rdiag[k] = enorm(m - j - 1, a.GetRange(jp1+m*k, m - j - 1));
                                 wa[k] = rdiag[k];
                             }
                         }
@@ -1083,7 +1083,7 @@ namespace QLNet {
         *
         *     **********
         */
-        public static void qrsolv(int n, Vector r, int ldr, List<int> ipvt, Vector diag, Vector qtb, Vector x, Vector sdiag, Vector wa) {
+        public static void qrsolv(int n, Matrix r, int ldr, List<int> ipvt, Vector diag, Vector qtb, Vector x, Vector sdiag, Vector wa) {
             int i, ij, ik, kk, j, jp1, k, kp1, l, nsing;
             double cos, cotan, qtbpj, sin, sum, tan, temp;
 
@@ -1311,7 +1311,7 @@ namespace QLNet {
         *
         *     **********
         */
-        static void lmpar(int n, Vector r, int ldr, List<int> ipvt, Vector diag,
+        static void lmpar(int n, Matrix r, int ldr, List<int> ipvt, Vector diag,
                           Vector qtb, double delta, double par, Vector x, Vector sdiag,
                           Vector wa1, Vector wa2) {
             int i, iter, ij, jj, j, jm1, jp1, k, l, nsing;

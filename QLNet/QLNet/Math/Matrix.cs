@@ -17,6 +17,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace QLNet {
@@ -32,26 +33,30 @@ namespace QLNet {
         public int columns() { return columns_; }
         public bool empty() { return rows_ == 0 || columns_ == 0; }
 
-        private double[,] data_;
-        public double this[int i, int j] { get { return data_[i, j]; } set { data_[i, j] = value; } }
+        private double[] data_;
+        public double this[int i, int j] { get { return data_[i * columns_ + j]; } set { data_[i * columns_ + j] = value; } }
+        public double this[int i] { get { return data_[i]; } set { data_[i] = value; } }
         public Vector row(int r) {
             Vector result = new Vector(columns_);
             for (int i = 0; i < columns_; i++)
-                result[i] = data_[r, i];
+                result[i] = this[r, i];
             return result; 
         }
         public Vector column(int c) {
             Vector result = new Vector(rows_);
             for (int i = 0; i < rows_; i++)
-                result[i] = data_[i, c];
+                result[i] = this[i, c];
             return result;
         }
         public Vector diagonal() {
             int arraySize = Math.Min(rows(), columns());
             Vector tmp = new Vector(arraySize);
             for(int i = 0; i < arraySize; i++)
-                tmp[i] = data_[i,i];
+                tmp[i] = this[i, i];
             return tmp;
+        }
+        public Vector GetRange(int start, int length) {
+            return new Vector(data_.Skip(start).Take(length).ToList());
         }
         #endregion
 
@@ -61,23 +66,22 @@ namespace QLNet {
 
         //! creates a matrix with the given dimensions
         public Matrix(int rows, int columns) {
-            data_ = new double[rows, columns];
+            data_ = new double[rows * columns];
             rows_ = rows;
             columns_ = columns;
         }
 
         //! creates the matrix and fills it with <tt>value</tt>
         public Matrix(int rows, int columns, double value) {
-            data_ = new double[rows, columns];
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < columns; j++)
-                    data_[i, j] = value;
+            data_ = new double[rows * columns];
+            for (int i = 0; i < data_.Length; i++)
+                data_[i] = value;
             rows_ = rows;
             columns_ = columns;
         }
 
         public Matrix(Matrix from) {
-            data_ = !from.empty() ? (double[,])from.data_.Clone() : null;
+            data_ = !from.empty() ? (double[])from.data_.Clone() : null;
             rows_ = from.rows_;
             columns_ = from.columns_;
         }
@@ -99,14 +103,14 @@ namespace QLNet {
             Matrix result = new Matrix(m1.rows_, m1.columns_);
             for (int i = 0; i < m1.rows_; i++)
                 for (int j = 0; j < m1.columns_; j++)
-                    result.data_[i, j] = func(m1.data_[i, j], m2.data_[i, j]);
+                    result[i, j] = func(m1[i, j], m2[i, j]);
             return result;
         }
         private static Matrix operValue(ref Matrix m1, double value, Func<double, double, double> func) {
             Matrix result = new Matrix(m1.rows_, m1.columns_);
             for (int i = 0; i < m1.rows_; i++)
                 for (int j = 0; j < m1.columns_; j++)
-                    result.data_[i, j] = func(m1.data_[i, j], value);
+                    result[i, j] = func(m1[i, j], value);
             return result;
         }
 
@@ -138,7 +142,7 @@ namespace QLNet {
             Matrix result = new Matrix(m1.rows(), m2.columns());
             for (int i = 0; i < result.rows(); i++)
                 for (int j = 0; j < result.columns(); j++)
-                    result.data_[i, j] = m1.row(i) * m2.column(j);
+                    result[i, j] = m1.row(i) * m2.column(j);
             return result;
         } 
         #endregion
@@ -147,7 +151,7 @@ namespace QLNet {
             Matrix result = new Matrix(m.columns(),m.rows());
             for (int i=0; i<m.rows(); i++)
                 for (int j=0; j<m.columns();j++)
-                    result.data_[j,i] = m.data_[i,j];
+                    result[j,i] = m[i,j];
             return result;
         }
 
@@ -168,9 +172,8 @@ namespace QLNet {
         }
 
         public void fill(double value) {
-            for (int i = 0; i < rows(); i++)
-                for (int j = 0; j < columns(); j++)
-                    data_[j, i] = value;
+            for (int i = 0; i < data_.Length; i++)
+                data_[i] = value;
         }
 
         public void swap(int i1, int j1, int i2, int j2) {

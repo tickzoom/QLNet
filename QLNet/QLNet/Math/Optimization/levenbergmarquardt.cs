@@ -63,7 +63,7 @@ namespace QLNet {
             int info = 0;
             int nfev =0;
 
-            Vector fjac = new Vector(m*n);
+            Matrix fjac = new Matrix(m, n);
 
             int ldfjac = m;
             
