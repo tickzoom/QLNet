@@ -21,6 +21,7 @@
     <TestLinks>
       <TestLink id="4ce2360d-89a9-7eb6-63e7-107dc19eaaf5" name="testSqrt" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
       <TestLink id="b4704ed2-b5d7-2ec0-af5e-d8f52bdc6660" name="testEigenvectors" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="0fd7e1aa-48ef-8115-5451-d13b06f52fa3" name="testQRDecomposition" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
       <TestLink id="2b185bf4-0090-857f-fc72-aaefe1fe38e4" name="testHighamSqrt" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
       <TestLink id="590afada-c3fb-8923-397f-de4aa0054dca" name="testSVD" storage="test2008\bin\debug\test2008.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
     </TestLinks>
