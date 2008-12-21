@@ -672,11 +672,11 @@ namespace TestSuite {
         public void testBMACurveConsistency<T, I, B>(CommonVars vars)
             where T : ITraits, new()
             where I : IInterpolationFactory, new()
-            where B : IBootStrap, new() { testBMACurveConsistency<T, I, B>(vars, new I(), 1.0e-9); }
+            where B : IBootStrap, new() { testBMACurveConsistency<T, I, B>(vars, new I(), 1.0e-7); }
         public void testBMACurveConsistency<T, I, B>(CommonVars vars, I interpolator)
             where T : ITraits, new()
             where I : IInterpolationFactory, new()
-            where B : IBootStrap, new() { testBMACurveConsistency<T, I, B>(vars, interpolator, 1.0e-9); }
+            where B : IBootStrap, new() { testBMACurveConsistency<T, I, B>(vars, interpolator, 1.0e-7); }
         public void testBMACurveConsistency<T, I, B>(CommonVars vars, I interpolator, double tolerance)
             where T : ITraits, new()
             where I : IInterpolationFactory, new()

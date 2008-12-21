@@ -34,9 +34,9 @@ namespace QLNet {
 
         // constructor
         public MCEuropeanEngine(GeneralizedBlackScholesProcess process, int timeSteps, int timeStepsPerYear,
-                                bool brownianBridge, bool antitheticVariate, bool controlVariate,
+                                bool brownianBridge, bool antitheticVariate,
                                 int requiredSamples, double requiredTolerance, int maxSamples, ulong seed)
-            : base(process, timeSteps, timeStepsPerYear, brownianBridge, antitheticVariate, controlVariate,
+            : base(process, timeSteps, timeStepsPerYear, brownianBridge, antitheticVariate, false,
                    requiredSamples, requiredTolerance, maxSamples, seed) { }
 
         protected override PathPricer<IPath> pathPricer() {
@@ -62,7 +62,7 @@ namespace QLNet {
 
     public class MakeMCEuropeanEngine<RNG, S> where RNG : IRSG, new() where S : IGeneralStatistics, new() {
         private GeneralizedBlackScholesProcess process_;
-        private bool antithetic_, controlVariate_;
+        private bool antithetic_;
         private int steps_, stepsPerYear_, samples_, maxSamples_;
         private double tolerance_;
         private bool brownianBridge_;
@@ -92,7 +92,7 @@ namespace QLNet {
             samples_ = samples;
             return this;
         }
-        public MakeMCEuropeanEngine<RNG, S> withTolerance(double tolerance) {
+        public MakeMCEuropeanEngine<RNG, S> withAbsoluteTolerance(double tolerance) {
             if(samples_ != 0)
                 throw new ApplicationException("number of samples already set");
             if (new RNG().allowsErrorEstimate == 0)
@@ -113,11 +113,6 @@ namespace QLNet {
             antithetic_ = b;
             return this;
         }
-        //public MakeMCEuropeanEngine withControlVariate(bool b = true)
-        public MakeMCEuropeanEngine<RNG, S> withControlVariate(bool b) {
-            controlVariate_ = b;
-            return this;
-        }
 
         // conversion to pricing engine
         public IPricingEngine value() {
@@ -126,7 +121,7 @@ namespace QLNet {
             if (!(steps_ == 0 || stepsPerYear_ == 0))
                 throw new ApplicationException("number of steps overspecified");
             return new MCEuropeanEngine<RNG,S>(process_, steps_, stepsPerYear_, brownianBridge_, antithetic_,
-                                               controlVariate_, samples_, tolerance_, maxSamples_, seed_);
+                                               samples_, tolerance_, maxSamples_, seed_);
         }
     }
 

@@ -327,8 +327,9 @@ namespace TestSuite
                expected = s.gaussianPotentialUpside(twoSigma);
                calculated = test.gaussianPotentialUpside(twoSigma);
                if (calculated != expected)
-                  Assert.Fail("GenericGaussianStatistics<StatsHolder> fails");
-
+                  Assert.Fail("GenericGaussianStatistics<StatsHolder> fails"
+                              + "\n  calculated: " + calculated
+                              + "\n  expected: " + expected);
 
 
                // value-at-risk

@@ -109,16 +109,16 @@ namespace QLNet {
            forward = forward + displacement;
            strike = strike + displacement;
 
-           if (stdDev==0.0)
-              if (forward>strike)
-                 return discount * forward;
-              else
-                 return 0.0;
+           if (stdDev == 0.0) {
+               if (forward > strike)
+                   return discount * forward;
+               else
+                   return 0.0;
+           }
 
            double d1 = Math.Log(forward/strike)/stdDev + .5*stdDev;
            CumulativeNormalDistribution phi = new CumulativeNormalDistribution();
            return discount * forward * phi.derivative(d1);
-
         }
     }
 }

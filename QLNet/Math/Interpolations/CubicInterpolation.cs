@@ -77,9 +77,6 @@ namespace QLNet {
             //! Parabolic approximation (local, non-monotone, linear)
             Parabolic,
 
-            //! Modified-Parabolic approximation (local, monotone, non-linear)
-            ModifiedParabolic,
-
             //! Fritsch-Butland approximation (local, monotone, non-linear)
             FritschButland,
 
@@ -276,16 +273,31 @@ namespace QLNet {
                             throw new NotImplementedException("FourthOrder not implemented yet");
                             break;
                         case CubicInterpolation.DerivativeApprox.Parabolic:
-                            throw new NotImplementedException("Parabolic not implemented yet");
+                            // intermediate points
+                            for (int i = 1; i < size_ - 1; ++i) {
+                                tmp[i] = (dx[i - 1] * S[i] + dx[i] * S[i - 1]) / (dx[i] + dx[i - 1]);
+                            }
+                            // end points
+                            tmp[0] = ((2.0 * dx[0] + dx[1]) * S[0] - dx[0] * S[1]) / (dx[0] + dx[1]);
+                            tmp[size_ - 1] = ((2.0 * dx[size_ - 2] + dx[size_ - 3]) * S[size_ - 2] - dx[size_ - 2] * S[size_ - 3]) / (dx[size_ - 2] + dx[size_ - 3]);
                             break;
-                        case CubicInterpolation.DerivativeApprox.ModifiedParabolic:
-                            throw new NotImplementedException("ModifiedParabolic not implemented yet");
                             break;
                         case CubicInterpolation.DerivativeApprox.FritschButland:
-                            throw new NotImplementedException("FritschButland not implemented yet");
+                            // intermediate points
+                            for (int i=1; i<size_-1; ++i) {
+                                double Smin = Math.Min(S[i-1], S[i]);
+                                double Smax = Math.Max(S[i-1], S[i]);
+                                tmp[i] = 3.0*Smin*Smax/(Smax+2.0*Smin);
+                            }
+                            // end points
+                            tmp[0]    = ((2.0*dx[   0]+dx[   1])*S[   0] - dx[   0]*S[   1]) / (dx[   0]+dx[   1]);
+                            tmp[size_-1] = ((2.0*dx[size_-2]+dx[size_-3])*S[size_-2] - dx[size_-2]*S[size_-3]) / (dx[size_-2]+dx[size_-3]);
                             break;
                         case CubicInterpolation.DerivativeApprox.Akima:
                             throw new NotImplementedException("Akima not implemented yet");
+                            // end points
+                            tmp[0] = ((2.0 * dx[0] + dx[1]) * S[0] - dx[0] * S[1]) / (dx[0] + dx[1]);
+                            tmp[size_ - 1] = ((2.0 * dx[size_ - 2] + dx[size_ - 3]) * S[size_ - 2] - dx[size_ - 2] * S[size_ - 3]) / (dx[size_ - 2] + dx[size_ - 3]);
                             break;
                         case CubicInterpolation.DerivativeApprox.Kruger:
                             // intermediate points

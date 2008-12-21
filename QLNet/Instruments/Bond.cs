@@ -537,7 +537,7 @@ namespace QLNet {
                     lastPaymentDate = coupon.date();
                 } else if (!Utils.close(notional, notionals_.Last())) {
                     // ...or if it has changed.
-                    if (!(notional > notionals_.Last()))
+                    if (!(notional < notionals_.Last()))
                         throw new ApplicationException("increasing coupon notionals");
                     notionals_.Add(coupon.nominal());
                     // in this case, we also add the last valid date for
