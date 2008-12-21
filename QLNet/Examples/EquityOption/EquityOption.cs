@@ -224,7 +224,7 @@ namespace EquityOption {
             ulong mcSeed = 42;
             IPricingEngine mcengine1 = new MakeMCEuropeanEngine<PseudoRandom>(bsmProcess)
                                             .withSteps(timeSteps)
-                                            .withTolerance(0.02)
+                                            .withAbsoluteTolerance(0.02)
                                             .withSeed(mcSeed)
                                             .value();
             europeanOption.setPricingEngine(mcengine1);
@@ -255,7 +255,7 @@ namespace EquityOption {
                                         .withSteps(100)
                                         .withAntitheticVariate()
                                         .withCalibrationSamples(4096)
-                                        .withTolerance(0.02)
+                                        .withAbsoluteTolerance(0.02)
                                         .withSeed(mcSeed)
                                         .value();
             americanOption.setPricingEngine(mcengine3);

@@ -76,6 +76,10 @@ namespace QLNet {
                 double endDiscount = termStructure.link.discount(nextFixingValueDate);
                 // forecast: 3) spanningTime
                 double spanningTime = index_.dayCounter().yearFraction(fixingValueDate, nextFixingValueDate);
+                if (!(spanningTime > 0.0))
+                    throw new ApplicationException("cannot calculate forward rate between " +
+                           fixingValueDate + " and " + nextFixingValueDate +
+                           ": non positive time using " + index_.dayCounter().name());
                 // forecast: 4) implied fixing
                 return (startDiscount / endDiscount - 1.0) / spanningTime;
             }

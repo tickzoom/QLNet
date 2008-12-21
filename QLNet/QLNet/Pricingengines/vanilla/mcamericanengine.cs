@@ -190,7 +190,7 @@ namespace QLNet {
             samples_ = samples;
             return this;
         }
-        public MakeMCAmericanEngine<RNG, S> withTolerance(double tolerance) {
+        public MakeMCAmericanEngine<RNG, S> withAbsoluteTolerance(double tolerance) {
             if (samples_ != 0)
                 throw new ApplicationException("number of samples already set");
 

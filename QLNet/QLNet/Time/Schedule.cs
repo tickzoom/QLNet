@@ -131,6 +131,7 @@ namespace QLNet {
                         if (!(firstDate_ > effectiveDate__ && firstDate_ < terminationDate__))
                             throw new ArgumentException("First date (" + firstDate_ + ") is out of range [effective date (" + effectiveDate__
                                                         + "), termination date (" + terminationDate__ + ")]");
+                        // we should ensure that the above condition is still verified after adjustment
                         break;
                     case DateGeneration.Rule.ThirdWednesday:
                         if (!IMM.isIMMdate(firstDate_, false))
@@ -152,6 +153,7 @@ namespace QLNet {
                         if (!(nextToLastDate_ > effectiveDate__ && nextToLastDate_ < terminationDate__))
                             throw new ArgumentException("Next to last date (" + nextToLastDate_ + ") out of range [effective date (" + effectiveDate__
                                + "), termination date (" + terminationDate__ + ")]");
+                        // we should ensure that the above condition is still verified after adjustment
                         break;
                     case DateGeneration.Rule.ThirdWednesday:
                         if (!IMM.isIMMdate(firstDate_, false))
@@ -192,9 +194,14 @@ namespace QLNet {
                         exitDate = firstDate_;
                     while (true) {
                         Date temp = nullCalendar.advance(seed, -periods * tenor_, convention_, endOfMonth_);
-                        if (temp < exitDate)
+                        if (temp < exitDate) {
+                            if (firstDate_ != null && (calendar_.adjust(originalDates_.First(), convention_) !=
+                                 calendar_.adjust(firstDate_, convention_))) {
+                                originalDates_.Insert(0, firstDate_);
+                                isRegular_.Insert(0, false);
+                            }
                             break;
-                        else {
+                        } else {
                             originalDates_.Insert(0, temp);
                             isRegular_.Insert(0, true);
                             ++periods;
@@ -237,9 +244,15 @@ namespace QLNet {
                         exitDate = nextToLastDate_;
                     while (true) {
                         Date temp = nullCalendar.advance(seed, periods * tenor_, convention_, endOfMonth_);
-                        if (temp > exitDate)
+                        if (temp > exitDate) {
+                            if (nextToLastDate_ != null &&
+                                (calendar_.adjust(originalDates_.Last(), convention_) !=
+                                 calendar_.adjust(nextToLastDate_, convention_))) {
+                                originalDates_.Add(nextToLastDate_);
+                                isRegular_.Add(false);
+                            }
                             break;
-                        else {
+                        } else {
                             originalDates_.Add(temp);
                             isRegular_.Add(true);
                             ++periods;

@@ -81,9 +81,13 @@ namespace QLNet {
             seed_               = seed;
             nCalibrationSamples_ = nCalibrationSamples == 0 ? 2048 : nCalibrationSamples;
 
-            if (timeSteps < 0)
+            if (!(timeSteps != 0 || timeStepsPerYear != 0))
+                throw new ApplicationException("no time steps provided");
+            if (!(timeSteps == 0 || timeStepsPerYear == 0))
+                throw new ApplicationException("both time steps and time steps per year were provided");
+            if (!(timeSteps != 0))
                 throw new ApplicationException("timeSteps must be positive, " + timeSteps + " not allowed");
-            if (timeStepsPerYear < 0)
+            if (!(timeStepsPerYear != 0))
                 throw new ApplicationException("timeStepsPerYear must be positive, " + timeStepsPerYear + " not allowed");
 
             process_.registerWith(update);
