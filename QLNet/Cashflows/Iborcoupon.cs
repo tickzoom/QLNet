@@ -43,7 +43,7 @@ namespace QLNet {
         //! Implemented in order to manage the case of par coupon
         public override double indexFixing() {
             #if QL_USE_INDEXED_COUPON
-                return index_.fixing(fixingDate());
+            return index_.fixing(fixingDate());
             #else
             if (isInArrears()) {
                 return index_.fixing(fixingDate());
@@ -53,13 +53,21 @@ namespace QLNet {
                 Date today = Settings.evaluationDate();
                 Date fixingDate = this.fixingDate();
 
-                var fixings = IndexManager.instance().getHistory(index_.name()).value();
+                TimeSeries<double> fixings = IndexManager.instance().getHistory(index_.name()).value();
                 if (fixings.ContainsKey(fixingDate)) {
                     return fixings[fixingDate];
                 } else {
                     if (fixingDate < today) {
                         // must have been fixed
-                        throw new ArgumentException("Missing " + index_.name() + " fixing for " + fixingDate);
+                        if (IndexManager.MissingPastFixingCallBack == null) {
+                            throw new ArgumentException("Missing " + index_.name() + " fixing for " + fixingDate);
+                        } else {
+                            // try to load missing fixing from external source
+                            double fixing = IndexManager.MissingPastFixingCallBack(index_.name(), fixingDate);
+                            // add to history
+                            index_.addFixing(fixingDate, fixing);
+                            return fixing;
+                        }
                     }
                     if (fixingDate == today) {
                         // might have been fixed
