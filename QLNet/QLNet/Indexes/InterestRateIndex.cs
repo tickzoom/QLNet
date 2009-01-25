@@ -90,15 +90,23 @@ namespace QLNet {
             if (!isValidFixingDate(fixingDate))
                 throw new ArgumentException("Fixing date " + fixingDate + " is not valid");
 
-            var fixings = IndexManager.instance().getHistory(name()).value();
+            TimeSeries<double> fixings = IndexManager.instance().getHistory(name()).value();
             if (fixings.ContainsKey(fixingDate)) {
                 return fixings[fixingDate];
             } else {
                 Date today = Settings.evaluationDate();
-                if (fixingDate < today ||
-                    (fixingDate == today && !forecastTodaysFixing && Settings.enforcesTodaysHistoricFixings)) {
+                if (fixingDate < today
+                    || (fixingDate == today && !forecastTodaysFixing && Settings.enforcesTodaysHistoricFixings)) {
                     // must have been fixed
-                    throw new ArgumentException("Missing " + name() + " fixing for " + fixingDate);
+                    if (IndexManager.MissingPastFixingCallBack == null) {
+                        throw new ArgumentException("Missing " + name() + " fixing for " + fixingDate);
+                    } else {
+                        // try to load missing fixing from external source
+                        double fixing = IndexManager.MissingPastFixingCallBack(name(), fixingDate);
+                        // add to history
+                        addFixing(fixingDate, fixing);
+                        return fixing;
+                    }
                 }
                 if ((fixingDate == today) && !forecastTodaysFixing) {
                     // might have been fixed but forecast since it does not exist
