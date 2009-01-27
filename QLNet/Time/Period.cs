@@ -67,6 +67,31 @@ namespace QLNet {
             }
         }
 
+        // Create from a string like "1M", "2Y"...
+        public Period(string periodString)
+        {
+           periodString = periodString.ToUpper();
+           length_ = int.Parse(periodString.Substring(0, periodString.Length - 1));
+           string freq = periodString.Substring(periodString.Length - 1, 1);
+           switch (freq)
+           {
+              case "D":
+                 unit_ = TimeUnit.Days;
+                 break;
+              case "W":
+                 unit_ = TimeUnit.Weeks;
+                 break;
+              case "M":
+                 unit_ = TimeUnit.Months;
+                 break;
+              case "Y":
+                 unit_ = TimeUnit.Years;
+                 break;
+              default:
+                 throw new ArgumentException("Unknown TimeUnit: " + freq);
+           }
+        }
+
         public Frequency frequency() {
             int length = System.Math.Abs(length_);	// unsigned version
 
