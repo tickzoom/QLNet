@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	Visual Studio global web project settings.
+-->
+<VisualWebDeveloper>
+	<Globals>
+		<UserProperties IsWebProject="true" />
+  </Globals>
+</VisualWebDeveloper>
