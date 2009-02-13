@@ -28,7 +28,7 @@ namespace QLNet {
             new Dictionary<string, ObservableValue<TimeSeries<double>>>();
 
         // Index manager can store a callback for missing fixings
-        public static Func<string, DateTime, double> MissingPastFixingCallBack { get; set; }
+        public static Func<InterestRateIndex, DateTime, double> MissingPastFixingCallBack { get; set; }
 
         private static readonly IndexManager instance_ = new IndexManager();
         public static IndexManager instance() { return instance_; }
