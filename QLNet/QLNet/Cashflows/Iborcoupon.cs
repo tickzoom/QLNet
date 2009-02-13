@@ -63,7 +63,7 @@ namespace QLNet {
                             throw new ArgumentException("Missing " + index_.name() + " fixing for " + fixingDate);
                         } else {
                             // try to load missing fixing from external source
-                            double fixing = IndexManager.MissingPastFixingCallBack(index_.name(), fixingDate);
+                            double fixing = IndexManager.MissingPastFixingCallBack(index_, fixingDate);
                             // add to history
                             index_.addFixing(fixingDate, fixing);
                             return fixing;
