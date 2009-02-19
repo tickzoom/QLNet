@@ -1,0 +1,28 @@
+
+2009-02-13 Siarhei Novik
+
+	* [244] Changed callback for missing fixings to accept index as paramerter instead of string
+			
+			trunk/QLNet/QLNet/Cashflows/Iborcoupon.cs
+			trunk/QLNet/QLNet/Indexes/Indexmanager.cs
+			trunk/QLNet/QLNet/Indexes/InterestRateIndex.cs
+			
+2009-02-11 Andrea Maggiulli
+
+	* [242] New folder for the upcoming work of Chris : NUnit tests.
+			
+			trunk/QLNet/TestNUnit/
+
+2009-02-11 Andrea Maggiulli
+
+	* [241] New solution without test project for user with 
+	        Visual Studio Standard/Professional Edition .
+			
+			trunk/QLNet/QLNet-NoTest.sln
+
+2009-02-11 Andrea Maggiulli
+
+	* [240] Moved to the new Sourceforge Repository
+	        Deleted Old VS2005 Files 
+				
+			Build Package Release 1.0.0	
