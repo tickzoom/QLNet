@@ -101,9 +101,7 @@ namespace QLNet {
             InterestRateIndex index = coupon_.index();
             Handle<YieldTermStructure> rateCurve = index.termStructure();
 
-            Date today = Settings.evaluationDate();
-
-            if (paymentDate > today)
+            if (paymentDate > rateCurve.link.referenceDate())
                 discount_ = rateCurve.link.discount(paymentDate);
             else
                 discount_ = 1.0;

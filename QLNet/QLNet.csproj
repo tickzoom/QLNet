@@ -306,6 +306,7 @@
     <Compile Include="Termstructures\Bootstraphelper.cs" />
     <Compile Include="Termstructures\DefaultProbabilityTermStructure.cs" />
     <Compile Include="Termstructures\InflationTermStructure.cs" />
+    <Compile Include="Termstructures\interpolatedcurve.cs" />
     <Compile Include="Termstructures\Iterativebootstrap.cs" />
     <Compile Include="Termstructures\localbootstrap.cs" />
     <Compile Include="Termstructures\TermStructure.cs" />
@@ -328,12 +329,15 @@
     <Compile Include="Termstructures\YieldTermStructure.cs" />
     <Compile Include="Termstructures\Yield\Bondhelpers.cs" />
     <Compile Include="Termstructures\Yield\Bootstraptraits.cs" />
+    <Compile Include="Termstructures\Yield\DiscountCurve.cs" />
     <Compile Include="Termstructures\Yield\Flatforward.cs" />
+    <Compile Include="Termstructures\Yield\ForwardCurve.cs" />
     <Compile Include="Termstructures\Yield\ForwardSpreadedTermStructure.cs" />
     <Compile Include="Termstructures\Yield\ForwardStructure.cs" />
     <Compile Include="Termstructures\Yield\ImpliedTermStructure.cs" />
     <Compile Include="Termstructures\Yield\PiecewiseYieldCurve.cs" />
     <Compile Include="Termstructures\Yield\Ratehelpers.cs" />
+    <Compile Include="Termstructures\Yield\ZeroCurve.cs" />
     <Compile Include="Termstructures\Yield\ZeroSpreadedTermStructure.cs" />
     <Compile Include="Termstructures\Yield\Zeroyieldstructure.cs" />
     <Compile Include="timegrid.cs" />

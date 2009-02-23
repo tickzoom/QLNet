@@ -73,8 +73,12 @@ namespace QLNet {
             dates_[0] = earliestDate;
             dates_[1] = latestDate;
         }
-        
-        // public AmericanExercise(Date latestDate, bool payoffAtExpiry = false);
+
+        public AmericanExercise(Date latest, bool payoffAtExpiry) : base(Type.American, payoffAtExpiry) {
+            dates_ = new InitializedList<Date>(2);
+            dates_[0] = Date.minDate();
+            dates_[1] = latest;
+        }
     }
 
     //! Bermudan exercise

@@ -104,45 +104,45 @@ Module Swapvaluation
         ' deposits
         Dim depositDayCounter As DayCounter = New Actual360()
 
-        Dim d1w As BootstrapHelper(Of YieldTermStructure) = New DepositRateHelper(New Handle(Of Quote)(d1wRate), New Period(1, TimeUnit.Weeks), fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
-        Dim d1m As BootstrapHelper(Of YieldTermStructure) = New DepositRateHelper(New Handle(Of Quote)(d1mRate), New Period(1, TimeUnit.Months), fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
-        Dim d3m As BootstrapHelper(Of YieldTermStructure) = New DepositRateHelper(New Handle(Of Quote)(d3mRate), New Period(3, TimeUnit.Months), fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
-        Dim d6m As BootstrapHelper(Of YieldTermStructure) = New DepositRateHelper(New Handle(Of Quote)(d6mRate), New Period(6, TimeUnit.Months), fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
-        Dim d9m As BootstrapHelper(Of YieldTermStructure) = New DepositRateHelper(New Handle(Of Quote)(d9mRate), New Period(9, TimeUnit.Months), fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
-        Dim d1y As BootstrapHelper(Of YieldTermStructure) = New DepositRateHelper(New Handle(Of Quote)(d1yRate), New Period(1, TimeUnit.Years), fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
+        Dim d1w As BootstrapHelper = New DepositRateHelper(New Handle(Of Quote)(d1wRate), New Period(1, TimeUnit.Weeks), fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
+        Dim d1m As BootstrapHelper = New DepositRateHelper(New Handle(Of Quote)(d1mRate), New Period(1, TimeUnit.Months), fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
+        Dim d3m As BootstrapHelper = New DepositRateHelper(New Handle(Of Quote)(d3mRate), New Period(3, TimeUnit.Months), fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
+        Dim d6m As BootstrapHelper = New DepositRateHelper(New Handle(Of Quote)(d6mRate), New Period(6, TimeUnit.Months), fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
+        Dim d9m As BootstrapHelper = New DepositRateHelper(New Handle(Of Quote)(d9mRate), New Period(9, TimeUnit.Months), fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
+        Dim d1y As BootstrapHelper = New DepositRateHelper(New Handle(Of Quote)(d1yRate), New Period(1, TimeUnit.Years), fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
 
         ' setup FRAs
-        Dim fra3x6 As BootstrapHelper(Of YieldTermStructure) = New FraRateHelper(New Handle(Of Quote)(fra3x6Rate), 3, 6, fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
-        Dim fra6x9 As BootstrapHelper(Of YieldTermStructure) = New FraRateHelper(New Handle(Of Quote)(fra6x9Rate), 6, 9, fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
-        Dim fra6x12 As BootstrapHelper(Of YieldTermStructure) = New FraRateHelper(New Handle(Of Quote)(fra6x12Rate), 6, 12, fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
+        Dim fra3x6 As BootstrapHelper = New FraRateHelper(New Handle(Of Quote)(fra3x6Rate), 3, 6, fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
+        Dim fra6x9 As BootstrapHelper = New FraRateHelper(New Handle(Of Quote)(fra6x9Rate), 6, 9, fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
+        Dim fra6x12 As BootstrapHelper = New FraRateHelper(New Handle(Of Quote)(fra6x12Rate), 6, 12, fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
 
         ' setup futures
         ' Handle<Quote> convexityAdjustment = new Handle<Quote>(new SimpleQuote(0.0));
         Dim futMonths As Integer = 3
 
         Dim imm As [Date] = QLNet.IMM.nextDate(settlementDate)
-        Dim fut1 As BootstrapHelper(Of YieldTermStructure) = New FuturesRateHelper(New Handle(Of Quote)(fut1Price), imm, futMonths, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
+        Dim fut1 As BootstrapHelper = New FuturesRateHelper(New Handle(Of Quote)(fut1Price), imm, futMonths, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
 
         imm = QLNet.IMM.nextDate(imm + 1)
-        Dim fut2 As BootstrapHelper(Of YieldTermStructure) = New FuturesRateHelper(New Handle(Of Quote)(fut2Price), imm, futMonths, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
+        Dim fut2 As BootstrapHelper = New FuturesRateHelper(New Handle(Of Quote)(fut2Price), imm, futMonths, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
 
         imm = QLNet.IMM.nextDate(imm + 1)
-        Dim fut3 As BootstrapHelper(Of YieldTermStructure) = New FuturesRateHelper(New Handle(Of Quote)(fut3Price), imm, futMonths, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
+        Dim fut3 As BootstrapHelper = New FuturesRateHelper(New Handle(Of Quote)(fut3Price), imm, futMonths, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
 
         imm = QLNet.IMM.nextDate(imm + 1)
-        Dim fut4 As BootstrapHelper(Of YieldTermStructure) = New FuturesRateHelper(New Handle(Of Quote)(fut4Price), imm, futMonths, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
+        Dim fut4 As BootstrapHelper = New FuturesRateHelper(New Handle(Of Quote)(fut4Price), imm, futMonths, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
 
         imm = QLNet.IMM.nextDate(imm + 1)
-        Dim fut5 As BootstrapHelper(Of YieldTermStructure) = New FuturesRateHelper(New Handle(Of Quote)(fut5Price), imm, futMonths, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
+        Dim fut5 As BootstrapHelper = New FuturesRateHelper(New Handle(Of Quote)(fut5Price), imm, futMonths, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
 
         imm = QLNet.IMM.nextDate(imm + 1)
-        Dim fut6 As BootstrapHelper(Of YieldTermStructure) = New FuturesRateHelper(New Handle(Of Quote)(fut6Price), imm, futMonths, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
+        Dim fut6 As BootstrapHelper = New FuturesRateHelper(New Handle(Of Quote)(fut6Price), imm, futMonths, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
 
         imm = QLNet.IMM.nextDate(imm + 1)
-        Dim fut7 As BootstrapHelper(Of YieldTermStructure) = New FuturesRateHelper(New Handle(Of Quote)(fut7Price), imm, futMonths, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
+        Dim fut7 As BootstrapHelper = New FuturesRateHelper(New Handle(Of Quote)(fut7Price), imm, futMonths, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
 
         imm = QLNet.IMM.nextDate(imm + 1)
-        Dim fut8 As BootstrapHelper(Of YieldTermStructure) = New FuturesRateHelper(New Handle(Of Quote)(fut8Price), imm, futMonths, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
+        Dim fut8 As BootstrapHelper = New FuturesRateHelper(New Handle(Of Quote)(fut8Price), imm, futMonths, calendar, BusinessDayConvention.ModifiedFollowing, True, depositDayCounter)
 
         ' setup swaps
         Dim swFixedLegFrequency As Frequency = Frequency.Annual
@@ -151,11 +151,11 @@ Module Swapvaluation
 
         Dim swFloatingLegIndex As IborIndex = New Euribor6M()
 
-        Dim s2y As BootstrapHelper(Of YieldTermStructure) = New SwapRateHelper(New Handle(Of Quote)(s2yRate), New Period(2, TimeUnit.Years), calendar, swFixedLegFrequency, swFixedLegConvention, swFixedLegDayCounter, swFloatingLegIndex)
-        Dim s3y As BootstrapHelper(Of YieldTermStructure) = New SwapRateHelper(New Handle(Of Quote)(s3yRate), New Period(3, TimeUnit.Years), calendar, swFixedLegFrequency, swFixedLegConvention, swFixedLegDayCounter, swFloatingLegIndex)
-        Dim s5y As BootstrapHelper(Of YieldTermStructure) = New SwapRateHelper(New Handle(Of Quote)(s5yRate), New Period(5, TimeUnit.Years), calendar, swFixedLegFrequency, swFixedLegConvention, swFixedLegDayCounter, swFloatingLegIndex)
-        Dim s10y As BootstrapHelper(Of YieldTermStructure) = New SwapRateHelper(New Handle(Of Quote)(s10yRate), New Period(10, TimeUnit.Years), calendar, swFixedLegFrequency, swFixedLegConvention, swFixedLegDayCounter, swFloatingLegIndex)
-        Dim s15y As BootstrapHelper(Of YieldTermStructure) = New SwapRateHelper(New Handle(Of Quote)(s15yRate), New Period(15, TimeUnit.Years), calendar, swFixedLegFrequency, swFixedLegConvention, swFixedLegDayCounter, swFloatingLegIndex)
+        Dim s2y As BootstrapHelper = New SwapRateHelper(New Handle(Of Quote)(s2yRate), New Period(2, TimeUnit.Years), calendar, swFixedLegFrequency, swFixedLegConvention, swFixedLegDayCounter, swFloatingLegIndex)
+        Dim s3y As BootstrapHelper = New SwapRateHelper(New Handle(Of Quote)(s3yRate), New Period(3, TimeUnit.Years), calendar, swFixedLegFrequency, swFixedLegConvention, swFixedLegDayCounter, swFloatingLegIndex)
+        Dim s5y As BootstrapHelper = New SwapRateHelper(New Handle(Of Quote)(s5yRate), New Period(5, TimeUnit.Years), calendar, swFixedLegFrequency, swFixedLegConvention, swFixedLegDayCounter, swFloatingLegIndex)
+        Dim s10y As BootstrapHelper = New SwapRateHelper(New Handle(Of Quote)(s10yRate), New Period(10, TimeUnit.Years), calendar, swFixedLegFrequency, swFixedLegConvention, swFixedLegDayCounter, swFloatingLegIndex)
+        Dim s15y As BootstrapHelper = New SwapRateHelper(New Handle(Of Quote)(s15yRate), New Period(15, TimeUnit.Years), calendar, swFixedLegFrequency, swFixedLegConvention, swFixedLegDayCounter, swFloatingLegIndex)
 
         '*********************
         '*  CURVE BUILDING **
@@ -168,7 +168,7 @@ Module Swapvaluation
         Dim tolerance As Double = 0.000000000000001
 
         ' A depo-swap curve
-        Dim depoSwapInstruments As List(Of BootstrapHelper(Of YieldTermStructure)) = New List(Of BootstrapHelper(Of YieldTermStructure))()
+        Dim depoSwapInstruments As List(Of BootstrapHelper) = New List(Of BootstrapHelper)()
         depoSwapInstruments.Add(d1w)
         depoSwapInstruments.Add(d1m)
         depoSwapInstruments.Add(d3m)
@@ -185,7 +185,7 @@ Module Swapvaluation
                     New List(Of Handle(Of Quote))(), New List(Of [Date])(), tolerance)
 
         ' A depo-futures-swap curve
-        Dim depoFutSwapInstruments As List(Of BootstrapHelper(Of YieldTermStructure)) = New List(Of BootstrapHelper(Of YieldTermStructure))()
+        Dim depoFutSwapInstruments As List(Of BootstrapHelper) = New List(Of BootstrapHelper)()
         depoFutSwapInstruments.Add(d1w)
         depoFutSwapInstruments.Add(d1m)
         depoFutSwapInstruments.Add(fut1)
@@ -204,7 +204,7 @@ Module Swapvaluation
                 settlementDate, depoFutSwapInstruments, termStructureDayCounter, New List(Of Handle(Of Quote))(), New List(Of [Date])(), tolerance)
 
         ' A depo-FRA-swap curve
-        Dim depoFRASwapInstruments As List(Of BootstrapHelper(Of YieldTermStructure)) = New List(Of BootstrapHelper(Of YieldTermStructure))()
+        Dim depoFRASwapInstruments As List(Of BootstrapHelper) = New List(Of BootstrapHelper)()
         depoFRASwapInstruments.Add(d1w)
         depoFRASwapInstruments.Add(d1m)
         depoFRASwapInstruments.Add(d3m)

@@ -113,7 +113,7 @@ namespace QLNet {
                 }
 
                 if (v_.Count <= x.Count) {
-                    coeff_[i] = new LinearLeastSquaresRegression<double>(x, y, v_).a();
+                    coeff_[i] = new LinearLeastSquaresRegression<double>(x, y, v_).coefficients();
                 }
                 else {
                 // if number of itm paths is smaller then the number of

@@ -67,12 +67,11 @@ namespace QLNet {
                            Schedule fixedSchedule, double fixedRate, DayCounter fixedDayCount,
                            Schedule floatSchedule, IborIndex iborIndex, double spread, DayCounter floatingDayCount)
             : this(type, nominal, fixedSchedule, fixedRate, fixedDayCount,
-                   floatSchedule, iborIndex, spread, floatingDayCount,
-                   BusinessDayConvention.Following) { }
+                   floatSchedule, iborIndex, spread, floatingDayCount, null) { }
         public VanillaSwap(Type type, double nominal,
                            Schedule fixedSchedule, double fixedRate, DayCounter fixedDayCount,
                            Schedule floatSchedule, IborIndex iborIndex, double spread, DayCounter floatingDayCount,
-                           BusinessDayConvention paymentConvention) :
+                           BusinessDayConvention? paymentConvention) :
             base(2) {
             type_ = type;
             nominal_ = nominal;
@@ -83,17 +82,21 @@ namespace QLNet {
             iborIndex_ = iborIndex;
             spread_ = spread;
             floatingDayCount_ = floatingDayCount;
-            paymentConvention_ = paymentConvention;
+
+            if (paymentConvention.HasValue)
+                paymentConvention_ = paymentConvention.Value;
+            else
+                paymentConvention_ = floatingSchedule_.businessDayConvention();
 
             var fixedLeg = new FixedRateLeg(fixedSchedule, fixedDayCount)
                                         .withNotionals(nominal)
                                         .withCouponRates(fixedRate)
-                                        .withPaymentAdjustment(paymentConvention).value();
+                                        .withPaymentAdjustment(paymentConvention_).value();
 
             var floatingLeg = new IborLeg(floatSchedule, iborIndex)
                                         .withNotionals(nominal)
                                         .withPaymentDayCounter(floatingDayCount)
-                                        .withPaymentAdjustment(paymentConvention)
+                                        .withPaymentAdjustment(paymentConvention_)
                 //.withFixingDays(iborIndex.fixingDays())
                                         .withSpreads(spread).value();
 

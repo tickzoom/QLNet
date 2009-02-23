@@ -114,7 +114,7 @@ namespace TestSuite {
 
             public int deposits, fras, swaps, bonds, bmas;
             public List<SimpleQuote> rates, fraRates, prices, fractions;
-            public List<BootstrapHelper<YieldTermStructure>> instruments, fraHelpers, bondHelpers, bmaHelpers;
+            public List<BootstrapHelper> instruments, fraHelpers, bondHelpers, bmaHelpers;
             public List<Schedule> schedules;
             public YieldTermStructure termStructure;
 
@@ -176,11 +176,11 @@ namespace TestSuite {
                 }
 
                 // rate helpers
-                instruments = new List<BootstrapHelper<YieldTermStructure>>(deposits + swaps);
-                fraHelpers = new List<BootstrapHelper<YieldTermStructure>>(fras);
-                bondHelpers = new List<BootstrapHelper<YieldTermStructure>>(bonds);
+                instruments = new List<BootstrapHelper>(deposits + swaps);
+                fraHelpers = new List<BootstrapHelper>(fras);
+                bondHelpers = new List<BootstrapHelper>(bonds);
                 schedules = new List<Schedule>(bonds);
-                bmaHelpers = new List<BootstrapHelper<YieldTermStructure>>(bmas);
+                bmaHelpers = new List<BootstrapHelper>(bmas);
 
                 IborIndex euribor6m = new Euribor6M();
                 for (int i = 0; i < deposits; i++) {
@@ -392,7 +392,7 @@ namespace TestSuite {
 
             CommonVars vars = new CommonVars();
 
-            var swapHelpers = new InitializedList<BootstrapHelper<YieldTermStructure>>();
+            var swapHelpers = new InitializedList<BootstrapHelper>();
             IborIndex euribor6m = new Euribor6M();
 
             for (int i=0; i<vars.swaps; i++) {
@@ -505,7 +505,7 @@ namespace TestSuite {
             }
 
             // rate helpers
-            vars.instruments = new InitializedList<BootstrapHelper<YieldTermStructure>>(vars.swaps);
+            vars.instruments = new InitializedList<BootstrapHelper>(vars.swaps);
 
             IborIndex index = new JPYLibor(new Period(6, TimeUnit.Months));
             for (int i=0; i<vars.swaps; i++) {
@@ -556,17 +556,41 @@ namespace TestSuite {
             }
         }
 
+        [TestMethod()]
+        public void testDiscountCopy() {
+            //BOOST_MESSAGE("Testing copying of discount curve...");
+
+            CommonVars vars = new CommonVars();
+            testCurveCopy<Discount, LogLinear>(vars);
+        }
+
+        [TestMethod()]
+        public void testForwardCopy() {
+            //BOOST_MESSAGE("Testing copying of forward-rate curve...");
+
+            CommonVars vars = new CommonVars();
+            testCurveCopy<ForwardRate, BackwardFlat>(vars);
+        }
+
+        [TestMethod()]
+        public void testZeroCopy() {
+            //BOOST_MESSAGE("Testing copying of zero-rate curve...");
+
+            CommonVars vars = new CommonVars();
+            testCurveCopy<ZeroYield, Linear>(vars);
+        }
+
 
         public void testCurveConsistency<T, I, B>(CommonVars vars)
-            where T : ITraits, new()
+            where T : BootstrapTraits, new()
             where I : IInterpolationFactory, new()
             where B : IBootStrap, new() { testCurveConsistency<T, I, B>(vars, new I(), 1.0e-9); }
         public void testCurveConsistency<T, I, B>(CommonVars vars, I interpolator)
-            where T : ITraits, new()
+            where T : BootstrapTraits, new()
             where I : IInterpolationFactory, new()
             where B : IBootStrap, new() { testCurveConsistency<T, I, B>(vars, new I(), 1.0e-9); }
         public void testCurveConsistency<T, I, B>(CommonVars vars, I interpolator, double tolerance)
-            where T : ITraits, new()
+            where T : BootstrapTraits, new()
             where I : IInterpolationFactory, new()
             where B : IBootStrap, new() {
 
@@ -670,15 +694,15 @@ namespace TestSuite {
         }
 
         public void testBMACurveConsistency<T, I, B>(CommonVars vars)
-            where T : ITraits, new()
+            where T : BootstrapTraits, new()
             where I : IInterpolationFactory, new()
             where B : IBootStrap, new() { testBMACurveConsistency<T, I, B>(vars, new I(), 1.0e-7); }
         public void testBMACurveConsistency<T, I, B>(CommonVars vars, I interpolator)
-            where T : ITraits, new()
+            where T : BootstrapTraits, new()
             where I : IInterpolationFactory, new()
             where B : IBootStrap, new() { testBMACurveConsistency<T, I, B>(vars, interpolator, 1.0e-7); }
         public void testBMACurveConsistency<T, I, B>(CommonVars vars, I interpolator, double tolerance)
-            where T : ITraits, new()
+            where T : BootstrapTraits, new()
             where I : IInterpolationFactory, new()
             where B : IBootStrap, new() {
 
@@ -757,6 +781,50 @@ namespace TestSuite {
             // this is a workaround for grabage collection
             // garbage collection needs a proper solution
             IndexManager.instance().clearHistories();
+        }
+
+        public void testCurveCopy<T, I>(CommonVars vars)             
+            where T : BootstrapTraits, new()
+            where I : IInterpolationFactory, new() {
+            testCurveCopy<T, I>(vars, new I());
+        }
+        public void testCurveCopy<T, I>(CommonVars vars, I interpolator) 
+            where T : BootstrapTraits, new()
+            where I : IInterpolationFactory, new() {
+
+            PiecewiseYieldCurve<T,I> curve = new PiecewiseYieldCurve<T,I>(vars.settlement, vars.instruments,
+                                                                          new Actual360(),
+                                                                          new List<Handle<Quote>>(),
+                                                                          new List<Date>(),
+                                                                          1.0e-12,
+                                                                          interpolator);
+            // necessary to trigger bootstrap
+            curve.recalculate();
+
+            PiecewiseYieldCurve copiedCurve = curve.Clone() as PiecewiseYieldCurve;
+
+            // the two curves should be the same.
+            double t = 2.718;
+            var r1 = curve.zeroRate(t, Compounding.Continuous).value();
+            var r2 = copiedCurve.zeroRate(t, Compounding.Continuous).value();
+            if (!Utils.close(r1, r2)) {
+                Assert.Fail("failed to link original and copied curve");
+            }
+
+            for (int i=0; i<vars.rates.Count; ++i) {
+                vars.rates[i].setValue(vars.rates[i].value() + 0.001);
+            }
+
+            // now the original curve should have changed; the copied
+            // curve should not.
+            double r3 = curve.zeroRate(t, Compounding.Continuous).value();
+            double r4 = copiedCurve.zeroRate(t, Compounding.Continuous).value();
+            if (Utils.close(r1, r3)) {
+                Assert.Fail("failed to modify original curve");
+            }
+            if (!Utils.close(r2,r4)) {
+                Assert.Fail("failed to break link between original and copied curve");
+            }
         }
    }
 }

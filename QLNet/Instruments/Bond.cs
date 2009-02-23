@@ -503,6 +503,11 @@ namespace QLNet {
             data members.
         */
         protected void setSingleRedemption(double notional, double redemption, Date date) {
+            CashFlow redemptionCashflow = new SimpleCashFlow(notional*redemption/100.0, date);
+            setSingleRedemption(notional, redemptionCashflow);
+        }
+
+        protected void setSingleRedemption(double notional, CashFlow redemption) {
             notionals_.Clear();
             notionalSchedule_.Clear();
             redemptions_.Clear();
@@ -510,12 +515,11 @@ namespace QLNet {
             notionalSchedule_.Add(new Date());
             notionals_.Add(notional);
 
-            notionalSchedule_.Add(date);
+            notionalSchedule_.Add(redemption.date());
             notionals_.Add(0.0);
 
-            CashFlow redemptionCashflow = new SimpleCashFlow(notional*redemption/100.0, date);
-            cashflows_.Add(redemptionCashflow);
-            redemptions_.Add(redemptionCashflow);
+            cashflows_.Add(redemption);
+            redemptions_.Add(redemption);
         }
 
 

@@ -1,5 +1,5 @@
 ﻿/*
- Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -33,6 +33,7 @@ namespace QLNet {
     */
     public abstract class ForwardRateStructure : YieldTermStructure {
 
+        #region ctors
         public ForwardRateStructure() : base(new Actual365Fixed()) { }
         public ForwardRateStructure(DayCounter dayCounter) : base(dayCounter) { }
 
@@ -42,8 +43,8 @@ namespace QLNet {
 
         // public ForwardRateStructure(int settlementDays, Calendar cal, DayCounter dayCounter = Actual365Fixed());
         public ForwardRateStructure(int settlementDays, Calendar cal, DayCounter dayCounter)
-            : base(settlementDays, cal, dayCounter) { }
-
+            : base(settlementDays, cal, dayCounter) { } 
+        #endregion
 
         //! \name YieldTermStructure implementation
 

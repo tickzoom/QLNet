@@ -160,16 +160,10 @@ namespace QLNet {
 			return isFloored_;
 		}
 
-		public override void setPricer(FloatingRateCouponPricer pricer)
-		{
-				if (pricer_ != null)
-                    pricer_.unregisterWith(update);
-				pricer_ = pricer;
-                if (pricer_ != null)
-                    pricer_.registerWith(update);
-				update();
-				underlying_.setPricer(pricer);
-			}
+		public override void setPricer(FloatingRateCouponPricer pricer) {
+            base.setPricer(pricer);
+            underlying_.setPricer(pricer);
+		}
 
         // Factory - for Leg generators
         public virtual CashFlow factory(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays, InterestRateIndex index, double gearing, double spread, double? cap, double? floor, Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter, bool isInArrears)

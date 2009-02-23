@@ -21,7 +21,7 @@ using System;
 
 namespace QLNet {
     //! Rate helper for bootstrapping over interest-rate futures prices
-    public class FuturesRateHelper : BootstrapHelper<YieldTermStructure> {
+    public class FuturesRateHelper : BootstrapHelper {
         private double yearFraction_;
         private Handle<Quote> convAdj_;
 
@@ -108,7 +108,7 @@ namespace QLNet {
 
     // Rate helper with date schedule relative to the global evaluation date
     // This class takes care of rebuilding the date schedule when the global evaluation date changes
-    public abstract class RelativeDateRateHelper : BootstrapHelper<YieldTermStructure> {
+    public abstract class RelativeDateRateHelper : BootstrapHelper {
         protected Date evaluationDate_;
 
         ///////////////////////////////////////////

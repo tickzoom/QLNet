@@ -99,7 +99,7 @@ namespace QLNet {
             center_ *= scaleFactor;
 
             intrinsicValues_.scaleGrid(scaleFactor);
-            initializeInitialCondition();
+            intrinsicValues_.sample(payoff_.value);
             prices_.scaleGrid(scaleFactor);
             initializeOperator();
             initializeModel();
@@ -144,7 +144,7 @@ namespace QLNet {
             center_ = adder.value(center_);
             intrinsicValues_.transformGrid(adder.value);
 
-            initializeInitialCondition();
+            intrinsicValues_.sample(payoff_.value);
             prices_.transformGrid(adder.value);
 
             initializeOperator();

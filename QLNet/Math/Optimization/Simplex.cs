@@ -140,31 +140,36 @@ namespace QLNet
                 {
                     factor = 2.0;
                     extrapolate(ref P, iHighest, ref factor);
-                }
-                else
-                {
+                } else if (Math.Abs(factor) > Const.QL_Epsilon) {
                     if (vTry >= values_[iNextHighest])
                     {
                         double vSave = values_[iHighest];
                         factor = 0.5;
                         vTry = extrapolate(ref P, iHighest, ref factor);
-                        if (vTry >= vSave)
-                        {
+                        if (vTry >= vSave && Math.Abs(factor) > Const.QL_Epsilon) {
                             for (int i = 0; i <= n; i++)
                             {
                                 if (i != iLowest)
                                 {
-                                    //#if QL_ARRAY_EXPRESSIONS
+                                    #if QL_ARRAY_EXPRESSIONS
                                     vertices_[i] = 0.5 * (vertices_[i] + vertices_[iLowest]);
-                                    //#else
-                                    //                                        vertices_[i] += vertices_[iLowest];
-                                    //                                        vertices_[i] *= 0.5;
-                                    //#endif
-                                    //                                        values_[i] = P.value(vertices_[i]);
+                                    #else
+                                    vertices_[i] += vertices_[iLowest];
+                                    vertices_[i] *= 0.5;
+                                    #endif
+                                    values_[i] = P.value(vertices_[i]);
                                 }
                             }
                         }
                     }
+                }
+                // If can't extrapolate given the constraints, exit
+                if (Math.Abs(factor) <= Const.QL_Epsilon) {
+                    x_ = vertices_[iLowest];
+                    double low = values_[iLowest];
+                    P.setFunctionValue(low);
+                    P.setCurrentValue(x_);
+                    return EndCriteria.Type.StationaryFunctionValue;
                 }
             } while (end == false);
             throw new ApplicationException("optimization failed: unexpected behaviour");
@@ -187,7 +192,10 @@ namespace QLNet
                 //                    pTry -= vertices_[iHighest] * factor2;
                 //#endif
                 factor *= 0.5;
-            } while (!P.constraint().test(pTry));
+            } while (!P.constraint().test(pTry) && Math.Abs(factor) > Const.QL_Epsilon);
+            if (Math.Abs(factor) <= Const.QL_Epsilon) {
+        	    return values_[iHighest];
+            }
             factor *= 2.0;
             double vTry = P.value(pTry);
             if (vTry < values_[iHighest])

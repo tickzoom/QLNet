@@ -26,7 +26,7 @@ namespace QLNet {
     /*! \warning This class assumes that the reference date
                  does not change between calls of setTermStructure().
     */
-    public class FixedRateBondHelper : BootstrapHelper<YieldTermStructure> {
+    public class FixedRateBondHelper : BootstrapHelper {
         protected FixedRateBond bond_;
         public FixedRateBond bond() { return bond_; }
 
