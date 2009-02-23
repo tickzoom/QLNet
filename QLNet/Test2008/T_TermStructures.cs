@@ -58,7 +58,7 @@ namespace TestSuite
             int deposits = depositData.Length,
                 swaps = swapData.Length;
 
-            var instruments = new List<BootstrapHelper<YieldTermStructure>>(deposits + swaps);
+            var instruments = new List<BootstrapHelper>(deposits + swaps);
             for (int i = 0; i < deposits; i++)
             {
                instruments.Add(new DepositRateHelper(depositData[i].rate / 100, new Period(depositData[i].n, depositData[i].units),

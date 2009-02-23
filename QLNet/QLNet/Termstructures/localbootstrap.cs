@@ -23,7 +23,7 @@ using System.Text;
 
 namespace QLNet {
     // penalty function class for solving using a multi-dimensional solver
-    public class PenaltyFunction<Curve> : CostFunction where Curve : IPiecewiseYieldCurve {
+    public class PenaltyFunction<Curve> : CostFunction where Curve : PiecewiseYieldCurve {
         //typedef typename Curve::traits_type Traits;
         //typedef typename Traits::helper helper;
         //typedef typename std::vector< boost::shared_ptr<helper> >::const_iterator helper_iterator;
@@ -31,9 +31,9 @@ namespace QLNet {
         private Curve curve_;
         private int initialIndex_;
         private int localisation_, start_, end_;
-        private List<BootstrapHelper<YieldTermStructure>> rateHelpers_;
+        private List<BootstrapHelper> rateHelpers_;
 
-        public PenaltyFunction(Curve curve, int initialIndex, List<BootstrapHelper<YieldTermStructure>> rateHelpers, int start, int end) {
+        public PenaltyFunction(Curve curve, int initialIndex, List<BootstrapHelper> rateHelpers, int start, int end) {
             curve_ = curve;
             initialIndex_ = initialIndex;
             rateHelpers_ = rateHelpers;
@@ -85,7 +85,7 @@ namespace QLNet {
         //typedef typename Curve::interpolator_type Interpolator;
       
         private bool validCurve_;
-        private IPiecewiseYieldCurve ts_; // yes, it is a workaround
+        private PiecewiseYieldCurve ts_; // yes, it is a workaround
         int localisation_;
         bool forcePositive_;
         
@@ -96,7 +96,7 @@ namespace QLNet {
             forcePositive_ = forcePositive;
         }
 
-        public void setup(IPiecewiseYieldCurve ts) {
+        public void setup(PiecewiseYieldCurve ts) {
             ts_ = ts;
 
             int n = ts_.instruments_.Count;
@@ -187,7 +187,7 @@ namespace QLNet {
                     startArray[localisation_-dataAdjust] = ts_.data_[0];
                 }
 
-                var currentCost = new PenaltyFunction<IPiecewiseYieldCurve>(ts_, initialDataPt, ts_.instruments_, 
+                var currentCost = new PenaltyFunction<PiecewiseYieldCurve>(ts_, initialDataPt, ts_.instruments_, 
                                                                             iInst - localisation_ + 1, iInst + 1);
                 Problem toSolve = new Problem(currentCost, solverConstraint, startArray);
                 EndCriteria.Type endType = solver.minimize(toSolve, endCriteria);

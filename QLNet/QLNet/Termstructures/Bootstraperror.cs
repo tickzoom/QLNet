@@ -16,20 +16,16 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace QLNet {
     //! bootstrap error
     public class BootstrapError : ISolver1d {
 
-        private IPiecewiseYieldCurve curve_;
-        private BootstrapHelper<YieldTermStructure> helper_;
+        private PiecewiseYieldCurve curve_;
+        private BootstrapHelper helper_;
         private int segment_;
 
-        public BootstrapError(IPiecewiseYieldCurve curve, BootstrapHelper<YieldTermStructure> helper, int segment) {
+        public BootstrapError(PiecewiseYieldCurve curve, BootstrapHelper helper, int segment) {
             curve_ = curve;
             helper_ = helper;
             segment_ = segment; 

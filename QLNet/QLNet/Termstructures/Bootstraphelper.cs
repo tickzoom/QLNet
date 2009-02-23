@@ -22,19 +22,14 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    public interface IBootStrap {
-        void setup(IPiecewiseYieldCurve ts);
-        void calculate();
-    }
-
     // Base helper class for bootstrapping
     /* This class provides an abstraction for the instruments used to bootstrap a term structure.
        It is advised that a bootstrap helper for an instrument contains an instance of the actual instrument 
      * class to ensure consistancy between the algorithms used during bootstrapping
        and later instrument pricing. This is not yet fully enforced in the available rate helpers. */
-    public class BootstrapHelper<TS> : IObservable, IObserver where TS : YieldTermStructure {
+    public class BootstrapHelper : IObservable, IObserver {
         protected Handle<Quote> quote_;
-        protected TS termStructure_;
+        protected YieldTermStructure termStructure_;
         protected Date earliestDate_, latestDate_;
 
         public BootstrapHelper() { } // required for generics
@@ -56,7 +51,7 @@ namespace QLNet {
 
 
         //! sets the term structure to be used for pricing
-        public virtual void setTermStructure(TS ts) {
+        public virtual void setTermStructure(YieldTermStructure ts) {
             if (ts == null) throw new ArgumentException("null term structure given");
             termStructure_ = ts;
         }

@@ -22,13 +22,18 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
+    public interface IBootStrap {
+        void setup(PiecewiseYieldCurve ts);
+        void calculate();
+    }
+
     //! Universal piecewise-term-structure boostrapper.
     public class IterativeBootstrap : IBootStrap {
         
         private bool validCurve_ = false;
-        private IPiecewiseYieldCurve ts_; // yes, it is a workaround
+        private PiecewiseYieldCurve ts_; // yes, it is a workaround
 
-        public void setup(IPiecewiseYieldCurve ts) {
+        public void setup(PiecewiseYieldCurve ts) {
             ts_ = ts;
 
             int n = ts_.instruments_.Count;
@@ -95,7 +100,7 @@ namespace QLNet {
                 for (i=1; i<n+1; ++i) {
                     // calculate guess before extending interpolation to ensure that any extrapolation is performed
                     // using the curve bootstrapped so far and no more
-                    BootstrapHelper<YieldTermStructure> instrument = ts_.instruments_[i-1];
+                    BootstrapHelper instrument = ts_.instruments_[i-1];
                     double guess = 0;
                     if (validCurve_ || iteration>0) {
                         guess = ts_.data_[i];

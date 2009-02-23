@@ -29,7 +29,7 @@ namespace QLNet {
     // and same for other traits. This should make things consistent with reliance on inheritance
     // However such inheritance can conflict with PiecewiseYieldCurve inheritance
 
-    public interface ITraits {
+    public interface BootstrapTraits {
         Date initialDate(YieldTermStructure c);     // start of curve data
         double initialValue(YieldTermStructure c);   // value at reference date
         bool dummyInitialValue();                    // true if the initialValue is just a dummy value
@@ -42,13 +42,13 @@ namespace QLNet {
         void updateGuess(List<double> data, double discount, int i);
         int maxIterations();                          // upper bound for convergence loop
 
-        // 
+        //
         double discountImpl(Interpolation i, double t);
         double zeroYieldImpl(Interpolation i, double t);
         double forwardImpl(Interpolation i, double t);
     }
 
-    public class Discount : ITraits {
+    public class Discount : BootstrapTraits {
         public Date initialDate(YieldTermStructure c) { return c.referenceDate(); }   // start of curve data
         public double initialValue(YieldTermStructure c) { return 1; }    // value at reference date
         public bool dummyInitialValue() { return false; }   // true if the initialValue is just a dummy value
@@ -70,7 +70,7 @@ namespace QLNet {
     }
 
     //! Zero-curve traits
-    public class ZeroYield : ITraits {
+    public class ZeroYield : BootstrapTraits {
         const double avgRate = 0.05;
 
         public Date initialDate(YieldTermStructure c) { return c.referenceDate(); }   // start of curve data
@@ -112,7 +112,7 @@ namespace QLNet {
     }
 
     //! Forward-curve traits
-    public class ForwardRate : ITraits {
+    public class ForwardRate : BootstrapTraits {
         const double avgRate = 0.05;
 
         public Date initialDate(YieldTermStructure c) { return c.referenceDate(); }   // start of curve data

@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -31,20 +31,22 @@ namespace QLNet {
     */
     public abstract class ZeroYieldStructure : YieldTermStructure {
 
+        #region ctors
         public ZeroYieldStructure() : this(new DayCounter()) { }
-        public ZeroYieldStructure(DayCounter dc) : base(dc) {}
+        public ZeroYieldStructure(DayCounter dc) : base(dc) { }
 
         //public ZeroYieldStructure(Date referenceDate) :
         //    this(referenceDate, new Calendar(), new DayCounter()) { }
         //public ZeroYieldStructure(Date referenceDate, Calendar calendar) :
         //    this(referenceDate, calendar, new DayCounter()) { }
         public ZeroYieldStructure(Date referenceDate, Calendar calendar, DayCounter dc) :
-            base(referenceDate, calendar,dc) {}
+            base(referenceDate, calendar, dc) { }
 
         //public ZeroYieldStructure(int settlementDays, Calendar c) :
         //    this(settlementDays, c, new DayCounter()) { }
         public ZeroYieldStructure(int settlementDays, Calendar c, DayCounter dc) :
-            base(settlementDays, c, dc) {}
+            base(settlementDays, c, dc) { } 
+        #endregion
 
         // zero-yield calculation
         protected abstract double zeroYieldImpl(double t);

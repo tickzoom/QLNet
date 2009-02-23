@@ -11,15 +11,15 @@ namespace TestSuite {
     /// </summary>
     [TestClass]
     public class T_LinearLeastSquaresRegression {
+        const double tolerance = 0.025;
+
         [TestMethod]
         public void testRegression() {
             //("Testing linear least-squares regression...");
 
             //SavedSettings backup;
 
-            const double tolerance = 0.025;
             const int nr=100000;
-
             
             var rng = new InverseCumulativeRng<MersenneTwisterUniformRng,InverseCumulativeNormal>(
                             new MersenneTwisterUniformRng(1234u));
@@ -52,28 +52,28 @@ namespace TestSuite {
                 LinearLeastSquaresRegression m = new LinearLeastSquaresRegression(x, y, v);
 
                 for (i=0; i<v.Count; ++i) {
-                    if (m.error()[i] > tolerance) {
+                    if (m.standardErrors()[i] > tolerance) {
                         Assert.Fail("Failed to reproduce linear regression coef."
-                                    + "\n    error:     " + m.error()[i]
+                                    + "\n    error:     " + m.standardErrors()[i]
                                     + "\n    tolerance: " + tolerance);
                     }
-                    if (Math.Abs(m.a()[i]-a[i]) > 3*m.error()[i]) {
+                    if (Math.Abs(m.coefficients()[i]-a[i]) > 3*m.error()[i]) {
                         Assert.Fail("Failed to reproduce linear regression coef."
-                                    + "\n    calculated: " + m.a()[i]
-                                    + "\n    error:      " + m.error()[i]
+                                    + "\n    calculated: " + m.coefficients()[i]
+                                    + "\n    error:      " + m.standardErrors()[i]
                                     + "\n    expected:   " + a[i]);
                     }
                 }
 
                 m = new LinearLeastSquaresRegression(x, y, w);
 
-                double[] ma = {m.a()[0], m.a()[1], m.a()[2]+m.a()[4],m.a()[3]};
-                double[] err = {m.error()[0], m.error()[1],
-                                    Math.Sqrt( m.error()[2]*m.error()[2]
-                                              +m.error()[4]*m.error()[4]),
-                                    m.error()[3]};
-                for (i=0; i<v.Count; ++i) {
-                    if (Math.Abs(ma[i] - a[i]) > 3*err[i]) {
+                double[] ma = { m.coefficients()[0], m.coefficients()[1], m.coefficients()[2] + m.coefficients()[4], m.coefficients()[3] };
+                double[] err = {m.standardErrors()[0], m.standardErrors()[1],
+                                    Math.Sqrt( m.standardErrors()[2]*m.standardErrors()[2]
+                                              +m.standardErrors()[4]*m.standardErrors()[4]),
+                                    m.standardErrors()[3]};
+                for (i = 0; i < v.Count; ++i) {
+                    if (Math.Abs(ma[i] - a[i]) > 3 * err[i]) {
                         Assert.Fail("Failed to reproduce linear regression coef."
                                     + "\n    calculated: " + ma[i]
                                     + "\n    error:      " + err[i]
@@ -83,5 +83,108 @@ namespace TestSuite {
             }
 
         }
+
+        [TestMethod]
+        public void test1dLinearRegression() {
+
+            //BOOST_MESSAGE("Testing 1d simple linear least-squares regression...");
+
+            /* Example taken from the QuantLib-User list, see posting
+             * Multiple linear regression/weighted regression, Boris Skorodumov */
+
+            //SavedSettings backup;
+
+            List<double> x = new InitializedList<double>(9),
+                         y = new InitializedList<double>(9);
+            x[0] = 2.4; x[1] = 1.8; x[2] = 2.5; x[3] = 3.0;
+            x[4] = 2.1; x[5] = 1.2; x[6] = 2.0; x[7] = 2.7; x[8] = 3.6;
+
+            y[0] = 7.8; y[1] = 5.5; y[2] = 8.0; y[3] = 9.0;
+            y[4] = 6.5; y[5] = 4.0; y[6] = 6.3; y[7] = 8.4; y[8] = 10.2;
+
+            List<Func<double, double>> v = new List<Func<double, double>>();
+            v.Add(a => 1.0);
+            v.Add(a => a);
+
+            LinearRegression m = new LinearRegression(x, y);
+
+            const double tol = 0.0002;
+            double[] coeffExpected = new double[] { 0.9448, 2.6853 };
+            double[] errorsExpected = new double[] { 0.3654, 0.1487 };
+
+            for (int i = 0; i < 2; ++i) {
+                if (Math.Abs(m.standardErrors()[i] - errorsExpected[i]) > tol) {
+                    Assert.Fail("Failed to reproduce linear regression standard errors"
+                                + "\n    calculated: " + m.standardErrors()[i]
+                                + "\n    expected:   " + errorsExpected[i]
+                                + "\n    tolerance:  " + tol);
+                }
+
+                if (Math.Abs(m.coefficients()[i] - coeffExpected[i]) > tol) {
+                    Assert.Fail("Failed to reproduce linear regression coef."
+                                + "\n    calculated: " + m.coefficients()[i]
+                                + "\n    expected:   " + coeffExpected[i]
+                                + "\n    tolerance:  " + tol);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void testMultiDimRegression() {
+
+            //BOOST_MESSAGE("Testing linear least-squares regression...");
+
+            //SavedSettings backup;
+
+            const int nr=100000;
+            const int dims = 4;
+            const double tolerance = 0.01;
+
+            var rng = new InverseCumulativeRng<MersenneTwisterUniformRng,InverseCumulativeNormal>(
+                            new MersenneTwisterUniformRng(1234u));
+
+            List<Func<Vector, double>> v = new List<Func<Vector,double>>();
+            v.Add(xx => 1.0);
+            for (int i = 0; i < dims; ++i) {
+                int jj = i;     // c# delegate work-around vs. boost bind; jj has to be evaluted before add delegate to the list
+                v.Add(vv => vv[jj]);
+            }
+
+            Vector coeff = new Vector(v.Count);
+            for (int i=0; i < v.Count; ++i)
+                coeff[i] = rng.next().value;
+            
+            List<double> y = new InitializedList<double>(nr, 0.0);
+            List<Vector> x = new InitializedList<Vector>(nr);
+            for (int i=0; i < nr; ++i) {
+                x[i] = new Vector(dims);
+                for (int j = 0; j < dims; ++j) {
+                    x[i][j] = rng.next().value;
+                }
+                
+                for (int j=0; j < v.Count; ++j) {
+                    y[i] += coeff[j]*v[j](x[i]);
+                }
+                y[i] += rng.next().value;
+            }
+            
+            LinearLeastSquaresRegression<Vector> m = new LinearLeastSquaresRegression<Vector>(x, y, v);
+            
+            for (int i=0; i < v.Count; ++i) {
+                if (m.standardErrors()[i] > tolerance) {
+                    Assert.Fail("Failed to reproduce linear regression coef."
+                                + "\n    error:     " + m.standardErrors()[i]
+                                + "\n    tolerance: " + tolerance);
+                }
+                
+                if (Math.Abs(m.coefficients()[i]-coeff[i]) > 3*tolerance) {
+                    Assert.Fail("Failed to reproduce linear regression coef."
+                                + "\n    calculated: " + m.coefficients()[i]
+                                + "\n    error:      " + m.standardErrors()[i]
+                                + "\n    expected:   " + coeff[i]);
+                }
+            }
+        }
+
     }
 }

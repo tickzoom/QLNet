@@ -101,6 +101,7 @@ namespace QLNet {
             // set problem
             x_ = new Vector(xx.GetRange(0, n));
             P.setCurrentValue(x_);
+            P.setFunctionValue(P.costFunction().value(x_));
 
             return ecType;
         }
