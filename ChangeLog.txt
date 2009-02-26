@@ -1,4 +1,41 @@
 
+2009-02-23 Siarhei Novik
+
+	* [247] Update to QL 15930 (there was some redesign of term structure bootstrapping; 
+	        should be more design-proof now)
+
+		trunk/QLNet/Examples/Bonds/Bonds.cs 							modified
+		trunk/QLNet/Examples/VB/Swap/Swapvaluation.vb 					modified
+		trunk/QLNet/QLNet/Cashflows/CappedFlooredCoupon.cs 				modified
+		trunk/QLNet/QLNet/Cashflows/CouponPricer.cs 					modified
+		trunk/QLNet/QLNet/Exercise.cs 									modified
+		trunk/QLNet/QLNet/Instruments/Bond.cs 							modified
+		trunk/QLNet/QLNet/Instruments/VanillaSwap.cs 					modified
+		trunk/QLNet/QLNet/Math/Optimization/Simplex.cs 					modified
+		trunk/QLNet/QLNet/Math/Optimization/levenbergmarquardt.cs 		modified
+		trunk/QLNet/QLNet/Math/linearleastsquaresregression.cs 			modified
+		trunk/QLNet/QLNet/Methods/montecarlo/longstaffschwartzpathpricer.cs 	modified
+		trunk/QLNet/QLNet/Pricingengines/vanilla/fddividendengine.cs 	modified
+		trunk/QLNet/QLNet/QLNet.csproj 	modified
+		trunk/QLNet/QLNet/Termstructures/Bootstraperror.cs 				modified
+		trunk/QLNet/QLNet/Termstructures/Bootstraphelper.cs 			modified
+		trunk/QLNet/QLNet/Termstructures/Iterativebootstrap.cs 			modified
+		trunk/QLNet/QLNet/Termstructures/Yield/Bondhelpers.cs 			modified
+		trunk/QLNet/QLNet/Termstructures/Yield/Bootstraptraits.cs 		modified
+		trunk/QLNet/QLNet/Termstructures/Yield/DiscountCurve.cs 		added
+		trunk/QLNet/QLNet/Termstructures/Yield/ForwardCurve.cs 			added
+		trunk/QLNet/QLNet/Termstructures/Yield/ForwardStructure.cs 		modified
+		trunk/QLNet/QLNet/Termstructures/Yield/PiecewiseYieldCurve.cs 	modified
+		trunk/QLNet/QLNet/Termstructures/Yield/Ratehelpers.cs 			modified
+		trunk/QLNet/QLNet/Termstructures/Yield/ZeroCurve.cs 			added
+		trunk/QLNet/QLNet/Termstructures/Yield/Zeroyieldstructure.cs 	modified
+		trunk/QLNet/QLNet/Termstructures/interpolatedcurve.cs 			added
+		trunk/QLNet/QLNet/Termstructures/localbootstrap.cs 				modified
+		trunk/QLNet/QLNet.vsmdi 										modified
+		trunk/QLNet/Test2008/T_LinearLeastSquaresRegression.cs 			modified
+		trunk/QLNet/Test2008/T_Piecewiseyieldcurve.cs 					modified
+		trunk/QLNet/Test2008/T_TermStructures.cs 						modified
+		
 2009-02-13 Siarhei Novik
 
 	* [244] Changed callback for missing fixings to accept index as paramerter instead of string
