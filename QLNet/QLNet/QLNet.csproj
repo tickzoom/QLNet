@@ -298,7 +298,9 @@
     <Compile Include="processes\Squarerootprocess.cs" />
     <Compile Include="processes\stochasticprocessarray.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Quotes\CompositeQuote.cs" />
     <Compile Include="Quotes\DerivedQuote.cs" />
+    <Compile Include="Quotes\LastFixingQuote.cs" />
     <Compile Include="Quotes\Quote.cs" />
     <Compile Include="Quotes\SimpleQuote.cs" />
     <Compile Include="Settings.cs" />

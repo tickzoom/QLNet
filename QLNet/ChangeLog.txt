@@ -1,3 +1,12 @@
+2009-02-26 Andrea Maggiulli
+
+	* [248] Quotes : Start to adding the other  types of quotes : Derived , Composite ... with Tests.
+
+		trunk/QLNet/ChangeLog.txt 					modified
+		trunk/QLNet/QLNet/QLNet.csproj 				modified
+		trunk/QLNet/QLNet/Quotes/DerivedQuote.cs 	added
+		trunk/QLNet/Test2008/T_Quotes.cs 			added
+		trunk/QLNet/Test2008/Test2008.csproj 		modified
 
 2009-02-23 Siarhei Novik
 

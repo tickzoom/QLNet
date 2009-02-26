@@ -101,5 +101,29 @@ namespace TestSuite
          }
       
       }
+
+      [TestMethod()]
+      public void testComposite() 
+      {
+         // Testing composite quotes
+
+         Func<double, double,double >[] f = { add, mul, sub };
+
+         Quote me1 = new SimpleQuote(12.0),
+               me2 = new SimpleQuote(13.0);
+         Handle<Quote> h1 = new Handle<Quote>(me1), 
+                       h2 = new Handle<Quote>(me2);
+
+         for (int i=0; i<3; i++) 
+         {
+            CompositeQuote composite = new CompositeQuote(h1,h2,f[i]);
+            double x = composite.value(),
+                   y = f[i](me1.value(),me2.value());
+            if (Math.Abs(x-y) > 1.0e-10)
+               Assert.Fail("composite quote yields " + x + "function result is " + y);
+         }
+      }
+   
+
    }
 }
