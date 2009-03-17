@@ -39,15 +39,15 @@ namespace QLNet {
             : base(settlementDays, schedule.calendar(), issueDate) {
             maturityDate_ = schedule.endDate();
             cashflows_ = new IborLeg(schedule, index)
-                            .withNotionals(faceAmount)
                             .withPaymentDayCounter(paymentDayCounter)
-                            .withPaymentAdjustment(paymentConvention)
                             .withFixingDays(fixingDays)
                             .withGearings(gearings)
                             .withSpreads(spreads)
                             .withCaps(caps)
                             .withFloors(floors)
-                            .inArrears(inArrears).value();
+                            .inArrears(inArrears)
+                            .withNotionals(faceAmount)
+                            .withPaymentAdjustment(paymentConvention);
 
             addRedemptionsToCashflows(new List<double>() { redemption });
 
@@ -107,15 +107,15 @@ namespace QLNet {
                                              accrualConvention, accrualConvention, rule, endOfMonth, firstDate, nextToLastDate);
 
             cashflows_ = new IborLeg(schedule, index)
-                            .withNotionals(faceAmount)
                             .withPaymentDayCounter(accrualDayCounter)
-                            .withPaymentAdjustment(paymentConvention)
                             .withFixingDays(fixingDays)
                             .withGearings(gearings)
                             .withSpreads(spreads)
                             .withCaps(caps)
                             .withFloors(floors)
-                            .inArrears(inArrears).value();
+                            .inArrears(inArrears)
+                            .withNotionals(faceAmount)
+                            .withPaymentAdjustment(paymentConvention);
 
             addRedemptionsToCashflows(new List<double>() { redemption });
 

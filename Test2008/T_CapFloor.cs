@@ -65,10 +65,10 @@ namespace TestSuite {
                                                  convention, convention, DateGeneration.Rule.Forward,
                                                  false);
                 return new IborLeg(schedule, index)
-                    .withNotionals(nominals)
                     .withPaymentDayCounter(index.dayCounter())
-                    .withPaymentAdjustment(convention)
-                    .withFixingDays(fixingDays).value();
+                    .withFixingDays(fixingDays)
+                    .withNotionals(nominals)
+                    .withPaymentAdjustment(convention);
             }
 
             public IPricingEngine makeEngine(double volatility) {

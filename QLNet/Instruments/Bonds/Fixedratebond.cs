@@ -39,9 +39,9 @@ namespace QLNet {
             maturityDate_ = schedule.endDate();
 
             cashflows_ = new FixedRateLeg(schedule, accrualDayCounter)
-                                         .withNotionals(faceAmount)
                                          .withCouponRates(coupons)
-                                         .withPaymentAdjustment(paymentConvention);
+                                         .withPaymentAdjustment(paymentConvention)
+                                         .withNotionals(faceAmount);
 
             addRedemptionsToCashflows(new List<double>() { redemption });
 
@@ -97,10 +97,9 @@ namespace QLNet {
                                              firstDate, nextToLastDate);
 
             cashflows_ = new FixedRateLeg(schedule, accrualDayCounter)
-                            .withNotionals(faceAmount)
                             .withCouponRates(coupons)
                             .withPaymentAdjustment(paymentConvention)
-                            .value();
+                            .withNotionals(faceAmount);
 
             addRedemptionsToCashflows(new List<double>() { redemption });
 

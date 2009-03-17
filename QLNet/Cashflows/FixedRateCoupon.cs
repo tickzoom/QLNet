@@ -68,13 +68,10 @@ namespace QLNet {
     }
 
     //! helper class building a sequence of fixed rate coupons
-    public class FixedRateLeg {
+    public class FixedRateLeg : Cashflows.RateLegBase {
         // properties
-        private Schedule schedule_;
-        private List<double> notionals_ = new List<double>();
         private List<InterestRate> couponRates_ = new List<InterestRate>();
-        private DayCounter paymentDayCounter_, firstPeriodDayCounter_ = null;
-        private BusinessDayConvention paymentAdjustment_;
+        private DayCounter firstPeriodDayCounter_ = null;
 
         // constructor
         public FixedRateLeg(Schedule schedule, DayCounter paymentDayCounter) {
@@ -84,16 +81,6 @@ namespace QLNet {
         }
 
         // other initializers
-        public FixedRateLeg withNotionals(double notional) {
-            notionals_.Clear();
-            notionals_.Add(notional);
-            return this;
-        }
-        public FixedRateLeg withNotionals(List<double> notionals) {
-            notionals_ = notionals;
-            return this;
-        }
-
         public FixedRateLeg withCouponRates(double couponRate) {
             couponRates_.Clear();
             couponRates_.Add(new InterestRate(couponRate, paymentDayCounter_, Compounding.Simple));
@@ -115,18 +102,13 @@ namespace QLNet {
             return this;
         }
 
-        public FixedRateLeg withPaymentAdjustment(BusinessDayConvention c) {
-            paymentAdjustment_ = c;
-            return this; 
-        }
         public FixedRateLeg withFirstPeriodDayCounter(DayCounter dayCounter) {
             firstPeriodDayCounter_ = dayCounter;
             return this;
         }
 
         // creator
-        public static implicit operator List<CashFlow>(FixedRateLeg o) { return o.value(); }
-        public List<CashFlow> value() {
+        public override List<CashFlow> value() {
             if (couponRates_.Count == 0) throw new ArgumentException("coupon rates not specified");
             if (notionals_.Count == 0) throw new ArgumentException("nominals not specified");
 

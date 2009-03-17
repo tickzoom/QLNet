@@ -59,6 +59,7 @@
     <Compile Include="Cashflows\FixedRateCoupon.cs" />
     <Compile Include="Cashflows\FloatingRateCoupon.cs" />
     <Compile Include="Cashflows\Iborcoupon.cs" />
+    <Compile Include="Cashflows\RateLegBase.cs" />
     <Compile Include="Cashflows\Replication.cs" />
     <Compile Include="Cashflows\SimpleCashFlow.cs" />
     <Compile Include="Currencies\Africa.cs" />
