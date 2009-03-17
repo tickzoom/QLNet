@@ -104,18 +104,7 @@ namespace QLNet {
     }
 
     //! helper class building a sequence of capped/floored ibor-rate coupons
-    public class IborLeg {
-        private Schedule schedule_;
-        private IborIndex index_;
-        private List<double> notionals_ = new List<double>();
-        private DayCounter paymentDayCounter_ = null;
-        private BusinessDayConvention paymentAdjustment_;
-        private List<int> fixingDays_;
-        private List<double> gearings_ = new List<double>();
-        private List<double> spreads_ = new List<double>();
-        private List<double> caps_ = new List<double>(), floors_ = new List<double>();
-        private bool inArrears_, zeroPayments_;
-
+    public class IborLeg : Cashflows.FloatingLegBase {
         // constructor
         public IborLeg(Schedule schedule, IborIndex index) {
             schedule_ = schedule;
@@ -125,83 +114,9 @@ namespace QLNet {
             zeroPayments_ = false;
         }
 
-        // helper functions
-        public IborLeg withNotionals(double notional) {
-            notionals_ = new List<double>();
-            notionals_.Add(notional);
-            return this;
-        }
-        public IborLeg withNotionals(List<double> notionals) {
-            notionals_ = notionals;
-            return this;
-        }
-        public IborLeg withPaymentDayCounter(DayCounter dayCounter) {
-            paymentDayCounter_ = dayCounter;
-            return this;
-        }
-        public IborLeg withPaymentAdjustment(BusinessDayConvention convention) {
-            paymentAdjustment_ = convention;
-            return this;
-        }
-        public IborLeg withFixingDays(int fixingDays) {
-            fixingDays_ = new List<int>();
-            fixingDays_.Add(fixingDays);
-            return this;
-        }
-        public IborLeg withFixingDays(List<int> fixingDays) {
-            fixingDays_ = fixingDays;
-            return this;
-        }
-        public IborLeg withGearings(double gearing) {
-            gearings_ = new List<double>();
-            gearings_.Add(gearing);
-            return this;
-        }
-        public IborLeg withGearings(List<double> gearings) {
-            gearings_ = gearings;
-            return this;
-        }
-        public IborLeg withSpreads(double spread) {
-            spreads_ = new List<double>();
-            spreads_.Add(spread);
-            return this;
-        }
-        public IborLeg withSpreads(List<double> spreads) {
-            spreads_ = spreads;
-            return this;
-        }
-        public IborLeg withCaps(double cap) {
-            caps_ = new List<double>();
-            caps_.Add(cap);
-            return this;
-        }
-        public IborLeg withCaps(List<double> caps) {
-            caps_ = caps;
-            return this;
-        }
-        public IborLeg withFloors(double floor) {
-            floors_ = new List<double>();
-            floors_.Add(floor);
-            return this;
-        }
-        public IborLeg withFloors(List<double> floors) {
-            floors_ = floors;
-            return this;
-        }
-        public IborLeg inArrears() { return inArrears(true); }
-        public IborLeg inArrears(bool flag) {
-            inArrears_ = flag;
-            return this;
-        }
-        public IborLeg withZeroPayments() { return withZeroPayments(true); }
-        public IborLeg withZeroPayments(bool flag) {
-            zeroPayments_ = flag;
-            return this;
-        }
-
-        public List<CashFlow> value() {
+        public override List<CashFlow> value() {
             List<CashFlow> cashflows = CashFlowVectors.FloatingLeg<IborIndex, IborCoupon, CappedFlooredIborCoupon>(
-                                    notionals_, schedule_, index_, paymentDayCounter_,
+                                    notionals_, schedule_, index_ as IborIndex, paymentDayCounter_,
                                     paymentAdjustment_, fixingDays_, gearings_, spreads_,
                                     caps_, floors_, inArrears_, zeroPayments_);
 

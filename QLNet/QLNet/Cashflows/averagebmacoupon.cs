@@ -148,12 +148,8 @@ namespace QLNet {
     }
 
     //! helper class building a sequence of average BMA coupons
-    public class AverageBMALeg {
-        private Schedule schedule_;
+    public class AverageBMALeg : Cashflows.RateLegBase {
         private BMAIndex index_;
-        private List<double> notionals_;
-        private DayCounter paymentDayCounter_;
-        private BusinessDayConvention paymentAdjustment_;
         private List<double> gearings_;
         private List<double> spreads_;
 
@@ -163,20 +159,8 @@ namespace QLNet {
             paymentAdjustment_ = BusinessDayConvention.Following;
         }
 
-        public AverageBMALeg withNotionals(double notional) {
-            notionals_ = new List<double>() { notional };
-            return this;
-        }
-        public AverageBMALeg withNotionals(List<double> notionals) {
-            notionals_ = notionals;
-            return this;
-        }
         public AverageBMALeg withPaymentDayCounter(DayCounter dayCounter) {
             paymentDayCounter_ = dayCounter;
-            return this;
-        }
-        public AverageBMALeg withPaymentAdjustment(BusinessDayConvention convention) {
-            paymentAdjustment_ = convention;
             return this;
         }
         public AverageBMALeg withGearings(double gearing) {
@@ -196,7 +180,7 @@ namespace QLNet {
             return this;
         }
 
-        public List<CashFlow> value() {
+        public override List<CashFlow> value() {
             if (notionals_.Count == 0)
                 throw new ApplicationException("no notional given");
 

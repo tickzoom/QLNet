@@ -747,9 +747,9 @@ namespace TestSuite
 
             // fixed coupons
             List<CashFlow> cashflows = new FixedRateLeg(schedule, new Actual360())
-                            .withNotionals(vars.faceAmount)
                             .withCouponRates(couponRates)
-                            .withPaymentAdjustment(BusinessDayConvention.ModifiedFollowing).value();
+                            .withPaymentAdjustment(BusinessDayConvention.ModifiedFollowing)
+                            .withNotionals(vars.faceAmount);
             // redemption
             cashflows.Add(new SimpleCashFlow(vars.faceAmount, cashflows.Last().date()));
 

@@ -53,17 +53,17 @@ namespace QLNet {
             BusinessDayConvention convention = liborSchedule.businessDayConvention();
 
             legs_[0] = new IborLeg(liborSchedule, liborIndex)
-                        .withNotionals(nominal)
                         .withPaymentDayCounter(liborDayCount)
-                        .withPaymentAdjustment(convention)
                         .withFixingDays(liborIndex.fixingDays())
                         .withGearings(liborFraction)
-                        .withSpreads(liborSpread).value();
+                        .withSpreads(liborSpread)
+                        .withNotionals(nominal)
+                        .withPaymentAdjustment(convention);
 
             legs_[1] = new AverageBMALeg(bmaSchedule, bmaIndex)
-                        .withNotionals(nominal)
                         .withPaymentDayCounter(bmaDayCount)
-                        .withPaymentAdjustment(bmaSchedule.businessDayConvention()).value();
+                        .withNotionals(nominal)
+                        .withPaymentAdjustment(bmaSchedule.businessDayConvention());
 
             for (int j=0; j<2; ++j) {
                 for (int i=0; i<legs_[j].Count; i++)

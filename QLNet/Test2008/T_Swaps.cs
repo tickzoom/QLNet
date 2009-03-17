@@ -242,8 +242,8 @@ namespace TestSuite
 
          List<double> coupons = new List<double>() { oneYear };
          List<CashFlow> fixedLeg = new FixedRateLeg(schedule, dayCounter)
-                                 .withNotionals(nominals)
-                                 .withCouponRates(coupons).value();
+                                 .withCouponRates(coupons)
+                                 .withNotionals(nominals);
 
          List<double> gearings = new List<double>();
          List<double> spreads = new List<double>();
@@ -256,12 +256,12 @@ namespace TestSuite
          IborCouponPricer pricer = new BlackIborCouponPricer(vol);
 
          List<CashFlow> floatingLeg = new IborLeg(schedule, index)
-                                     .withNotionals(nominals)
                                      .withPaymentDayCounter(dayCounter)
                                      .withFixingDays(fixingDays)
                                      .withGearings(gearings)
                                      .withSpreads(spreads)
-                                     .inArrears().value();
+                                     .inArrears()
+                                     .withNotionals(nominals);
          Utils.setCouponPricer(floatingLeg, pricer);
 
          Swap swap = new Swap(floatingLeg, fixedLeg);

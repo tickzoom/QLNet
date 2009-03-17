@@ -88,17 +88,17 @@ namespace QLNet {
             else
                 paymentConvention_ = floatingSchedule_.businessDayConvention();
 
-            var fixedLeg = new FixedRateLeg(fixedSchedule, fixedDayCount)
-                                        .withNotionals(nominal)
+            List<CashFlow> fixedLeg = new FixedRateLeg(fixedSchedule, fixedDayCount)
                                         .withCouponRates(fixedRate)
-                                        .withPaymentAdjustment(paymentConvention_).value();
-
-            var floatingLeg = new IborLeg(floatSchedule, iborIndex)
-                                        .withNotionals(nominal)
-                                        .withPaymentDayCounter(floatingDayCount)
                                         .withPaymentAdjustment(paymentConvention_)
+                                        .withNotionals(nominal);
+
+            List<CashFlow> floatingLeg = new IborLeg(floatSchedule, iborIndex)
+                                        .withPaymentDayCounter(floatingDayCount)
                 //.withFixingDays(iborIndex.fixingDays())
-                                        .withSpreads(spread).value();
+                                        .withSpreads(spread)
+                                        .withNotionals(nominal)
+                                        .withPaymentAdjustment(paymentConvention_);
 
             foreach (var cf in floatingLeg)
                 cf.registerWith(update);
