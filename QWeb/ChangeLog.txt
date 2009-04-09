@@ -1,0 +1,11 @@
+2009-02-17 Andrea Maggiulli
+
+	* [245] Initial skeleton for the QWeb client. Adding missed files
+			
+			trunk/QWeb/...
+
+2009-02-13 Andrea Maggiulli
+
+	* [243] Initial skeleton for the QWeb client
+			
+			trunk/QWeb/...
