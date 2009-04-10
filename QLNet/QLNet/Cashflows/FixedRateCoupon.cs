@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -26,11 +26,6 @@ namespace QLNet {
         private InterestRate rate_;
         private DayCounter dayCounter_;
 
-        // properties access
-        public override double rate() { return rate_.rate(); }
-        public InterestRate InterestRate { get { return rate_; } }
-        public override DayCounter dayCounter() { return dayCounter_; }
-        public override FloatingRateCouponPricer pricer() { return null; }
 
         // constructors
         public FixedRateCoupon(double nominal, Date paymentDate, double rate, DayCounter dayCounter,
@@ -58,6 +53,9 @@ namespace QLNet {
                                                        accrualEndDate_, refPeriodStart_, refPeriodEnd_) - 1.0); }
 
         //! Coupon interface
+        public override double rate() { return rate_.rate(); }
+        public InterestRate interestRate() { return rate_; }
+        public override DayCounter dayCounter() { return dayCounter_; }
         public override double accruedAmount(Date d) {
             if (d <= accrualStartDate_ || d > paymentDate_)
                 return 0;
@@ -109,8 +107,8 @@ namespace QLNet {
 
         // creator
         public override List<CashFlow> value() {
-            if (couponRates_.Count == 0) throw new ArgumentException("coupon rates not specified");
-            if (notionals_.Count == 0) throw new ArgumentException("nominals not specified");
+            if (couponRates_.Count == 0) throw new ArgumentException("no coupon rates given");
+            if (notionals_.Count == 0) throw new ArgumentException("no nominals given");
 
             List<CashFlow> leg = new List<CashFlow>();
 

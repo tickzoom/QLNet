@@ -32,26 +32,26 @@ namespace QLNet {
         // need by CashFlowVectors
         public CmsCoupon() { }
 
-        public CmsCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex, double gearing, double spread, Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter)
-            : this(paymentDate, nominal, startDate, endDate, fixingDays, swapIndex, gearing, spread, refPeriodStart, refPeriodEnd, dayCounter, false) {
+        public CmsCoupon(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex, double gearing, double spread, Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter)
+            : this(nominal, paymentDate, startDate, endDate, fixingDays, swapIndex, gearing, spread, refPeriodStart, refPeriodEnd, dayCounter, false) {
         }
-        public CmsCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex, double gearing, double spread, Date refPeriodStart, Date refPeriodEnd)
-            : this(paymentDate, nominal, startDate, endDate, fixingDays, swapIndex, gearing, spread, refPeriodStart, refPeriodEnd, new DayCounter(), false) {
+        public CmsCoupon(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex, double gearing, double spread, Date refPeriodStart, Date refPeriodEnd)
+            : this(nominal, paymentDate, startDate, endDate, fixingDays, swapIndex, gearing, spread, refPeriodStart, refPeriodEnd, new DayCounter(), false) {
         }
-        public CmsCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex, double gearing, double spread, Date refPeriodStart)
-            : this(paymentDate, nominal, startDate, endDate, fixingDays, swapIndex, gearing, spread, refPeriodStart, new Date(), new DayCounter(), false) {
+        public CmsCoupon(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex, double gearing, double spread, Date refPeriodStart)
+            : this(nominal, paymentDate, startDate, endDate, fixingDays, swapIndex, gearing, spread, refPeriodStart, new Date(), new DayCounter(), false) {
         }
-        public CmsCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex, double gearing, double spread)
-            : this(paymentDate, nominal, startDate, endDate, fixingDays, swapIndex, gearing, spread, new Date(), new Date(), new DayCounter(), false) {
+        public CmsCoupon(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex, double gearing, double spread)
+            : this(nominal, paymentDate, startDate, endDate, fixingDays, swapIndex, gearing, spread, new Date(), new Date(), new DayCounter(), false) {
         }
-        public CmsCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex, double gearing)
-            : this(paymentDate, nominal, startDate, endDate, fixingDays, swapIndex, gearing, 0.0, new Date(), new Date(), new DayCounter(), false) {
+        public CmsCoupon(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex, double gearing)
+            : this(nominal, paymentDate, startDate, endDate, fixingDays, swapIndex, gearing, 0.0, new Date(), new Date(), new DayCounter(), false) {
         }
-        public CmsCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex)
-            : this(paymentDate, nominal, startDate, endDate, fixingDays, swapIndex, 1.0, 0.0, new Date(), new Date(), new DayCounter(), false) {
+        public CmsCoupon(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex)
+            : this(nominal, paymentDate, startDate, endDate, fixingDays, swapIndex, 1.0, 0.0, new Date(), new Date(), new DayCounter(), false) {
         }
-        public CmsCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex, double gearing, double spread, Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter, bool isInArrears)
-            : base(paymentDate, nominal, startDate, endDate, fixingDays, swapIndex, gearing, spread, refPeriodStart, refPeriodEnd, dayCounter, isInArrears) {
+        public CmsCoupon(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex, double gearing, double spread, Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter, bool isInArrears)
+            : base(nominal, paymentDate, startDate, endDate, fixingDays, swapIndex, gearing, spread, refPeriodStart, refPeriodEnd, dayCounter, isInArrears) {
             swapIndex_ = swapIndex;
         }
         //! \name Inspectors

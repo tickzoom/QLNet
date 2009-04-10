@@ -49,6 +49,15 @@ namespace QLNet {
         }
 
 
+        public override void calculate() {
+            base.calculate();
+            if (controlVariate_) {
+                // control variate might lead to small negative
+                // option values for deep OTM options
+                this.results_.value = Math.Max(0.0, this.results_.value.Value);
+            }
+        }
+        
         protected override LongstaffSchwartzPathPricer<IPath> lsmPathPricer() {
             GeneralizedBlackScholesProcess process = process_ as GeneralizedBlackScholesProcess;
             if (process == null)

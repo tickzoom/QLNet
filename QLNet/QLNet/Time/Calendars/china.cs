@@ -1,6 +1,6 @@
 /*
  Copyright (C) 2008 Alessandro Duci
- Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
 
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -35,7 +35,7 @@ namespace QLNet {
         </ul>
 
         Other holidays for which no rule is given (data available for
-        2004-2008 only):
+        2004-2009 only):
         <ul>
         <li>Chinese New Year</li>
         <li>Ching Ming Festival</li>
@@ -67,31 +67,37 @@ namespace QLNet {
                 if (isWeekend(w)
                     // New Year's Day
                     || (d == 1 && m == Month.January)
-                    || (d == 3 && m == Month.January && y == 2005)
-                    || ((d == 2 || d == 3) && m == Month.January && y == 2006)
-                    || (d <= 3 && m == Month.January && y == 2007)
-                    || (d == 31 && m == Month.December && y == 2007)
-                    || (d == 1 && m == Month.January && y == 2008)
+                    || (y == 2005 && d == 3 && m == Month.January)
+                    || (y == 2006 && (d == 2 || d == 3) && m == Month.January)
+                    || (y == 2007 && d <= 3 && m == Month.January)
+                    || (y == 2007 && d == 31 && m == Month.December)
+                    || (y == 2008 && d == 1 && m == Month.January)
+                    || (y == 2009 && (d == 1 || d == 2) && m == Month.January)
                             // Chinese New Year
-                    || (d >= 19 && d <= 28 && m == Month.January && y == 2004)
-                    || (d >= 7 && d <= 15 && m == Month.February && y == 2005)
-                    || (((d >= 26 && m == Month.January) || (d <= 3 && m == Month.February))
-                        && y == 2006)
-                    || (d >= 17 && d <= 25 && m == Month.February && y == 2007)
-                    || (d >= 6 && d <= 12 && m == Month.February && y == 2008)
+                    || (y == 2004 && d >= 19 && d <= 28 && m == Month.January)
+                    || (y == 2005 && d >= 7 && d <= 15 && m == Month.February)
+                    || (y == 2006 && ((d >= 26 && m == Month.January) ||
+                                      (d <= 3 && m == Month.February)))
+                    || (y == 2007 && d >= 17 && d <= 25 && m == Month.February)
+                    || (y == 2008 && d >= 6 && d <= 12 && m == Month.February)
+                    || (y == 2009 && d >= 26 && d <= 30 && m == Month.January)
                             // Ching Ming Festival
-                    || (d == 4 && m == Month.April && y <= 2008)
+                    || (y <= 2008 && d == 4 && m == Month.April)
+                    || (y == 2009 && d == 6 && m == Month.April)
                             // Labor Day
-                    || (d >= 1 && d <= 7 && m == Month.May && y <= 2007)
-                    || (d >= 1 && d <= 2 && m == Month.May && y == 2008)
+                    || (y <= 2007 && d >= 1 && d <= 7 && m == Month.May)
+                    || (y == 2008 && d >= 1 && d <= 2 && m == Month.May)
+                    || (y == 2009 && d == 1 && m == Month.May)
                             // Tuen Ng Festival
-                    || (d == 9 && m == Month.June && y <= 2008)
+                    || (y <= 2008 && d == 9 && m == Month.June)
+                    || (y == 2009 && (d == 28 || d == 29) && m == Month.May)
                             // Mid-Autumn Festival
-                    || (d == 15 && m == Month.September && y <= 2008)
+                    || (y <= 2008 && d == 15 && m == Month.September)
                             // National Day
-                    || (d >= 1 && d <= 7 && m == Month.October && y <= 2007)
-                    || (d >= 29 && m == Month.September && y == 2008)
-                    || (d <= 3 && m == Month.October && y == 2008)
+                    || (y <= 2007 && d >= 1 && d <= 7 && m == Month.October)
+                    || (y == 2008 && ((d >= 29 && m == Month.September) ||
+                                      (d <= 3 && m == Month.October)))
+                    || (y == 2009 && d >= 1 && d <= 8 && m == Month.October)
                     )
                     return false;
                 return true;

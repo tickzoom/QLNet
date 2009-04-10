@@ -1,6 +1,6 @@
 /*
  Copyright (C) 2008 Alessandro Duci
- Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
 
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -38,7 +38,7 @@ namespace QLNet {
         </ul>
 
         Other holidays for which no rule is given (data available for
-        2005-2008 only:)
+        2005-2009 only:)
         <ul>
         <li>Bakri Id</li>
         <li>Moharram</li>
@@ -77,18 +77,19 @@ namespace QLNet {
                 if (isWeekend(w)
                     // Republic Day
                     || (d == 26 && m == Month.January)
-                    // Good Friday
-                    || (dd == em-3)
-                    // Ambedkar Jayanti
+                            // Good Friday
+                    || (dd == em - 3)
+                            // Ambedkar Jayanti
                     || (d == 14 && m == Month.April)
-                    // Independence Day
+                            // Independence Day
                     || (d == 15 && m == Month.August)
-                    // Gandhi Jayanti
+                            // Gandhi Jayanti
                     || (d == 2 && m == Month.October)
-                    // Christmas
+                            // Christmas
                     || (d == 25 && m == Month.December)
                     )
                     return false;
+
                 if (y == 2005) {
                     // Moharram, Holi, Maharashtra Day, and Ramzan Id fall
                     // on Saturday or Sunday in 2005
@@ -107,6 +108,7 @@ namespace QLNet {
                         )
                         return false;
                 }
+
                 if (y == 2006) {
                     if (// Bakri Id
                         (d == 11 && m == Month.January)
@@ -127,6 +129,7 @@ namespace QLNet {
                         )
                         return false;
                 }
+
                 if (y == 2007) {
                     if (// Bakri Id
                         (d == 1 && m == Month.January)
@@ -138,7 +141,7 @@ namespace QLNet {
                         || (d == 27 && m == Month.March)
                         // Maharashtra Day
                         || (d == 1 && m == Month.May)
-                        // Buddha Pournima 
+                        // Buddha Pournima
                         || (d == 2 && m == Month.May)
                         // Laxmi Puja
                         || (d == 9 && m == Month.November)
@@ -147,6 +150,7 @@ namespace QLNet {
                         )
                         return false;
                 }
+
                 if (y == 2008) {
                     if (// Mahashivratri
                         (d == 6 && m == Month.March)
@@ -175,6 +179,36 @@ namespace QLNet {
                         )
                         return false;
                 }
+
+                if (y == 2009) {
+                    if (// Moharram
+                        (d == 8 && m == Month.January)
+                        // Mahashivratri
+                        || (d == 23 && m == Month.February)
+                        // Id-E-Milad
+                        || (d == 10 && m == Month.March)
+                        // Holi
+                        || (d == 11 && m == Month.March)
+                        // Ram Navmi
+                        || (d == 3 && m == Month.April)
+                        // Mahavir Jayanti
+                        || (d == 7 && m == Month.April)
+                        // Maharashtra Day
+                        || (d == 1 && m == Month.May)
+                        // Ramzan Id
+                        || (d == 21 && m == Month.September)
+                        // Dasara
+                        || (d == 28 && m == Month.September)
+                        // Bhau Bhij
+                        || (d == 19 && m == Month.October)
+                        // Gurunanak Jayanti
+                        || (d == 2 && m == Month.November)
+                        // Moharram (again)
+                        || (d == 28 && m == Month.December)
+                        )
+                        return false;
+                }
+
                 return true;
             }
         }

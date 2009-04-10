@@ -1,6 +1,6 @@
 /*
  Copyright (C) 2008 Alessandro Duci
- Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
 
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -37,7 +37,7 @@ namespace QLNet {
         </ul>
 
         Other holidays for which no rule is given
-        (data available for 2004-2008 only:)
+        (data available for 2004-2009 only:)
         <ul>
         <li>Chinese New Year</li>
         <li>Hari Raya Haji</li>
@@ -67,13 +67,14 @@ namespace QLNet {
                 if (isWeekend(w)
                     // New Year's Day
                     || (d == 1 && m == Month.January)
-                    // Good Friday
+                            // Good Friday
                     || (dd == em - 3)
-                    // Labor Day
+                            // Labor Day
                     || (d == 1 && m == Month.May)
-                    // National Day
+                            // National Day
                     || (d == 9 && m == Month.August)
-                    // Christmas Day
+                    || (d == 10 && m == Month.August && y == 2009)
+                            // Christmas Day
                     || (d == 25 && m == Month.December)
 
                     // Chinese New Year
@@ -82,6 +83,7 @@ namespace QLNet {
                     || ((d == 30 || d == 31) && m == Month.January && y == 2006)
                     || ((d == 19 || d == 20) && m == Month.February && y == 2007)
                     || ((d == 7 || d == 8) && m == Month.February && y == 2008)
+                    || ((d == 26 || d == 27) && m == Month.January && y == 2009)
 
                     // Hari Raya Haji
                     || ((d == 1 || d == 2) && m == Month.February && y == 2004)
@@ -90,6 +92,7 @@ namespace QLNet {
                     || (d == 2 && m == Month.January && y == 2007)
                     || (d == 20 && m == Month.December && y == 2007)
                     || (d == 8 && m == Month.December && y == 2008)
+                    || (d == 27 && m == Month.November && y == 2009)
 
                     // Vesak Poya Day
                     || (d == 2 && m == Month.June && y == 2004)
@@ -97,11 +100,13 @@ namespace QLNet {
                     || (d == 12 && m == Month.May && y == 2006)
                     || (d == 31 && m == Month.May && y == 2007)
                     || (d == 18 && m == Month.May && y == 2008)
+                    || (d == 9 && m == Month.May && y == 2009)
 
                     // Deepavali
                     || (d == 11 && m == Month.November && y == 2004)
                     || (d == 8 && m == Month.November && y == 2007)
                     || (d == 28 && m == Month.October && y == 2008)
+                    || (d == 16 && m == Month.November && y == 2009)
 
                     // Diwali
                     || (d == 1 && m == Month.November && y == 2005)
@@ -112,6 +117,7 @@ namespace QLNet {
                     || (d == 24 && m == Month.October && y == 2006)
                     || (d == 13 && m == Month.October && y == 2007)
                     || (d == 1 && m == Month.October && y == 2008)
+                    || (d == 21 && m == Month.September && y == 2009)
                     )
                     return false;
                 return true;

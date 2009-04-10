@@ -93,7 +93,7 @@ namespace QLNet {
             process_.registerWith(update);
         }
 
-        public void calculate() {
+        public virtual void calculate() {
             pathPricer_ = lsmPathPricer();
             mcModel_ = new MonteCarloModel<MC,RNG,S>(pathGenerator(), pathPricer_, new S(), antitheticVariate_);
 

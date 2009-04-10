@@ -29,13 +29,13 @@ namespace QLNet {
 
         public IborCoupon() { }
 
-        public IborCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays, IborIndex index) :
-            this(paymentDate, nominal, startDate, endDate, fixingDays, index, 1, 0,
+        public IborCoupon(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays, IborIndex index) :
+            this(nominal, paymentDate, startDate, endDate, fixingDays, index, 1, 0,
                            null, null, new DayCounter(), false) { }
-        public IborCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays,
+        public IborCoupon(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays,
                           IborIndex iborIndex, double gearing, double spread,
                           Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter, bool isInArrears) :
-            base(paymentDate, nominal, startDate, endDate, fixingDays, iborIndex, gearing, spread,
+            base(nominal, paymentDate, startDate, endDate, fixingDays, iborIndex, gearing, spread,
                      refPeriodStart, refPeriodEnd, dayCounter, isInArrears) {
             iborIndex_ = iborIndex;
         }
@@ -95,10 +95,10 @@ namespace QLNet {
         }
 
         // Factory - for Leg generators
-        public override CashFlow factory(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays,
+        public override CashFlow factory(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays,
                        InterestRateIndex index, double gearing, double spread,
                        Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter, bool isInArrears) {
-            return new IborCoupon(paymentDate, nominal, startDate, endDate, fixingDays,
+            return new IborCoupon(nominal, paymentDate, startDate, endDate, fixingDays,
                        (IborIndex)index, gearing, spread, refPeriodStart, refPeriodEnd, dayCounter, isInArrears);
         }
     }
