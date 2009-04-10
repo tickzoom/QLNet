@@ -1,6 +1,6 @@
 /*
  Copyright (C) 2008 Alessandro Duci
- Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
 
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -37,7 +37,7 @@ namespace QLNet {
         </ul>
 
         Other holidays for which no rule is given
-        (data available for 2005-2008 only:)
+        (data available for 2005-2009 only:)
         <ul>
         <li>Idul Adha</li>
         <li>Ied Adha</li>
@@ -90,16 +90,17 @@ namespace QLNet {
                 if (isWeekend(w)
                     // New Year's Day
                     || (d == 1 && m == Month.January)
-                    // Good Friday
-                    || (dd == em-3)
-                    // Ascension Thursday
-                    || (dd == em+38)
-                    // Independence Day
+                            // Good Friday
+                    || (dd == em - 3)
+                            // Ascension Thursday
+                    || (dd == em + 38)
+                            // Independence Day
                     || (d == 17 && m == Month.August)
-                    // Christmas
+                            // Christmas
                     || (d == 25 && m == Month.December)
                     )
                     return false;
+
                 if (y == 2005) {
                     if (// Idul Adha
                         (d == 21 && m == Month.January)
@@ -123,6 +124,7 @@ namespace QLNet {
                         )
                         return false;
                 }
+
                 if (y == 2006) {
                     if (// Idul Adha
                         (d == 10 && m == Month.January)
@@ -141,6 +143,7 @@ namespace QLNet {
                         )
                         return false;
                 }
+
                 if (y == 2007) {
                     if (// Nyepi
                         (d == 19 && m == Month.March)
@@ -155,7 +158,8 @@ namespace QLNet {
                         )
                         return false;
                 }
-                if (y == 2007) {
+
+                if (y == 2008) {
                     if (// Islamic New Year
                         ((d == 10 || d == 11) && m == Month.January)
                         // Chinese New Year
@@ -168,6 +172,8 @@ namespace QLNet {
                         || (d == 20 && m == Month.May)
                         // Isra' Mi'raj of the prophet Muhammad SAW
                         || (d == 30 && m == Month.July)
+                        // National leave
+                        || (d == 18 && m == Month.August)
                         // Ied Fitr
                         || (d == 30 && m == Month.September)
                         || ((d == 1 || d == 2 || d == 3) && m == Month.October)
@@ -177,11 +183,37 @@ namespace QLNet {
                         || (d == 29 && m == Month.December)
                         // New Year's Eve
                         || (d == 31 && m == Month.December)
-                        // National leave
-                        || (d == 18 && m == Month.August)
                         )
                         return false;
                 }
+
+                if (y == 2009) {
+                    if (// Public holiday
+                        (d == 2 && m == Month.January)
+                        // Chinese New Year
+                        || (d == 26 && m == Month.January)
+                        // Birthday of the prophet Muhammad SAW
+                        || (d == 9 && m == Month.March)
+                        // Saka's New Year
+                        || (d == 26 && m == Month.March)
+                        // National leave
+                        || (d == 9 && m == Month.April)
+                        // Isra' Mi'raj of the prophet Muhammad SAW
+                        || (d == 20 && m == Month.July)
+                        // Ied Fitr
+                        || (d >= 18 && d <= 23 && m == Month.September)
+                        // Ied Adha
+                        || (d == 27 && m == Month.November)
+                        // Islamic New Year
+                        || (d == 18 && m == Month.December)
+                        // Public Holiday
+                        || (d == 24 && m == Month.December)
+                        // Trading holiday
+                        || (d == 31 && m == Month.December)
+                        )
+                        return false;
+                }
+
                 return true;
             }
         }

@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
  Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
  * 
  This file is part of QLNet Project http://www.qlnet.org
@@ -51,7 +51,7 @@ namespace QLNet {
             where CappedFlooredCouponType : CappedFlooredCoupon, new() {
 
             int n = schedule.Count;
-            if (nominals.Count == 0) throw new ArgumentException("no nominal given");
+            if (nominals.Count == 0) throw new ArgumentException("no notional given");
             if (nominals.Count > n) throw new ArgumentException(
                        "too many nominals (" + nominals.Count + "), only " + n + " required");
             if (gearings != null && gearings.Count > n) throw new ArgumentException(
@@ -89,9 +89,8 @@ namespace QLNet {
                                                 start, end, refStart, refEnd));
                 } else {
                     if (Utils.noOption(caps, floors, i)) {
-                        leg.Add(new FloatingCouponType().factory(paymentDate,
-                            Utils.Get(nominals, i),
-                            start, end,
+                        leg.Add(new FloatingCouponType().factory(Utils.Get(nominals, i),
+                            paymentDate, start, end,
                             Utils.Get(fixingDays, i, 2),
                             index,
                             Utils.Get(gearings, i, 1),
@@ -99,9 +98,8 @@ namespace QLNet {
                             refStart, refEnd, paymentDayCounter,
                             isInArrears));
                     } else {
-                        leg.Add(new CappedFlooredCouponType().factory(paymentDate,
-                            Utils.Get(nominals, i),
-                            start, end,
+                        leg.Add(new CappedFlooredCouponType().factory(Utils.Get(nominals, i),
+                            paymentDate, start, end,
                             Utils.Get(fixingDays, i, 2),
                             index,
                             Utils.Get(gearings, i, 1),
@@ -182,9 +180,8 @@ namespace QLNet {
 
                 } else { // floating digital coupon
                     FloatingCouponType underlying = new FloatingCouponType().factory(
-                       paymentDate,
                        Utils.Get(nominals, i, 1.0),
-                       start, end,
+                       paymentDate, start, end,
                        Utils.Get(fixingDays, i, index.fixingDays()),
                        index,
                        Utils.Get(gearings, i, 1.0),

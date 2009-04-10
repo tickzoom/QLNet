@@ -1,6 +1,6 @@
 /*
  Copyright (C) 2008 Alessandro Duci
- Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
 
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -36,11 +36,11 @@ namespace QLNet {
         <li>SAR Establishment Day, July 1st (possibly moved to Monday)</li>
         <li>National Day, October 1st (possibly moved to Monday)</li>
         <li>Christmas, December 25th</li>
-        <li>Boxing Day, December 26th (possibly moved to Monday)</li>
+        <li>Boxing Day, December 26th</li>
         </ul>
 
         Other holidays for which no rule is given
-        (data available for 2004-2007 only:)
+        (data available for 2004-2009 only:)
         <ul>
         <li>Lunar New Year</li>
         <li>Chinese New Year</li>
@@ -89,8 +89,7 @@ namespace QLNet {
                     // Christmas Day
                     || (d == 25 && m == Month.December)
                     // Boxing Day
-                    || ((d == 26 || ((d == 27 || d == 28) && w == DayOfWeek.Monday))
-                        && m == Month.December))
+                    || (d == 26 && m == Month.December))
                     return false;
 
                 if (y == 2004) {
@@ -163,6 +162,22 @@ namespace QLNet {
                         // Chung Yeung festival
                         || (d == 7 && m == Month.October))
                     return false;
+                }
+
+                if (y == 2009) {
+                    if (// Lunar New Year
+                        ((d >= 26 && d <= 28) && m == Month.January)
+                        // Ching Ming Festival
+                        || (d == 4 && m == Month.April)
+                        // Buddha's birthday
+                        || (d == 2 && m == Month.May)
+                        // Tuen NG festival
+                        || (d == 28 && m == Month.May)
+                        // Mid-autumn festival
+                        || (d == 3 && m == Month.October)
+                        // Chung Yeung festival
+                        || (d == 26 && m == Month.October))
+                        return false;
                 }
 
                 return true;

@@ -1,5 +1,5 @@
 ﻿/*
- Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -39,9 +39,9 @@ namespace QLNet {
 
         // double gearing = 1.0, double spread = 0.0, 
         // Date refPeriodStart = Date(), Date refPeriodEnd = Date(), DayCounter dayCounter = DayCounter());
-        public AverageBMACoupon(Date paymentDate, double nominal, Date startDate, Date endDate, BMAIndex index,
-                         double gearing, double spread, Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter)    
-            : base(paymentDate, nominal, startDate, endDate, index.fixingDays(), index, gearing, spread,
+        public AverageBMACoupon(double nominal, Date paymentDate, Date startDate, Date endDate, BMAIndex index,
+                                double gearing, double spread, Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter)
+            : base(nominal, paymentDate, startDate, endDate, index.fixingDays(), index, gearing, spread,
                          refPeriodStart, refPeriodEnd, dayCounter, false) {
             fixingSchedule_ = index.fixingSchedule(
                                 index.fixingCalendar()
@@ -202,9 +202,8 @@ namespace QLNet {
                 if (i == n-1 && !schedule_.isRegular(i+1))
                     refEnd = calendar.adjust(start + schedule_.tenor(), paymentAdjustment_);
 
-                cashflows.Add(new AverageBMACoupon(paymentDate,
-                                                   Utils.Get<double>(notionals_, i, notionals_.Last()),
-                                                   start, end,
+                cashflows.Add(new AverageBMACoupon(Utils.Get<double>(notionals_, i, notionals_.Last()),
+                                                   paymentDate, start, end,
                                                    index_,
                                                    Utils.Get<double>(gearings_, i, 1.0),
                                                    Utils.Get<double>(spreads_, i, 0.0),

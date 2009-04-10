@@ -1,5 +1,5 @@
 ﻿/*
- Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
  
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -117,6 +117,18 @@ namespace QLNet {
 
         public override double apply(double x0, double dx) {
             return x0 * Math.Exp(dx);
+        }
+
+        /*! \warning raises a "not implemented" exception.  It should
+                     be rewritten to return the expectation E(S) of
+                     the process, not exp(E(log S)).
+        */
+        public override double expectation(double t0, double x0, double dt) {
+            throw new NotImplementedException();
+        }
+
+        public override double evolve(double t0, double x0, double dt, double dw) {
+            return apply(x0, discretization_.drift(this, t0, x0, dt) + stdDeviation(t0, x0, dt) * dw);
         }
 
         public override double time(Date d) {

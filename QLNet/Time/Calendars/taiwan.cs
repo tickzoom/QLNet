@@ -1,6 +1,6 @@
 /*
  Copyright (C) 2008 Alessandro Duci
- Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
 
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -36,7 +36,7 @@ namespace QLNet {
         </ul>
 
         Other holidays for which no rule is given
-        (data available for 2002-2008 only:)
+        (data available for 2002-2009 only:)
         <ul>
         <li>Chinese Lunar New Year</li>
         <li>Tomb Sweeping Day</li>
@@ -66,11 +66,11 @@ namespace QLNet {
                 if (isWeekend(w)
                     // New Year's Day
                     || (d == 1 && m == Month.January)
-                    // Peace Memorial Day
+                            // Peace Memorial Day
                     || (d == 28 && m == Month.February)
-                    // Labor Day
+                            // Labor Day
                     || (d == 1 && m == Month.May)
-                    // Double Tenth
+                            // Double Tenth
                     || (d == 10 && m == Month.October)
                     )
                     return false;
@@ -84,6 +84,7 @@ namespace QLNet {
                         )
                         return false;
                 }
+
                 if (y == 2003) {
                     // Tomb Sweeping Day falls on Saturday
                     if (// Chinese Lunar New Year
@@ -95,6 +96,7 @@ namespace QLNet {
                         )
                         return false;
                 }
+
                 if (y == 2004) {
                     // Tomb Sweeping Day falls on Sunday
                     if (// Chinese Lunar New Year
@@ -106,6 +108,7 @@ namespace QLNet {
                         )
                         return false;
                 }
+
                 if (y == 2005) {
                     // Dragon Boat and Moon Festival fall on Saturday or Sunday
                     if (// Chinese Lunar New Year
@@ -117,6 +120,7 @@ namespace QLNet {
                         )
                         return false;
                 }
+
                 if (y == 2006) {
                     // Dragon Boat and Moon Festival fall on Saturday or Sunday
                     if (// Chinese Lunar New Year
@@ -130,6 +134,7 @@ namespace QLNet {
                         )
                         return false;
                 }
+
                 if (y == 2007) {
                     if (// Chinese Lunar New Year
                         (d >= 17 && d <= 25 && m == Month.February)
@@ -147,6 +152,7 @@ namespace QLNet {
                         )
                         return false;
                 }
+
                 if (y == 2008) {
                     if (// Chinese Lunar New Year
                         (d >= 4 && d <= 11 && m == Month.February)
@@ -155,6 +161,22 @@ namespace QLNet {
                         )
                         return false;
                 }
+
+                if (y == 2009) {
+                    if (// Public holiday
+                        (d == 2 && m == Month.January)
+                        // Chinese Lunar New Year
+                        || (d >= 24 && m == Month.January)
+                        // Tomb Sweeping Day
+                        || (d == 4 && m == Month.April)
+                        // Dragon Boat Festival
+                        || ((d == 28 || d == 29) && m == Month.May)
+                        // Moon Festival
+                        || (d == 3 && m == Month.October)
+                        )
+                        return false;
+                }
+
                 return true;
             }
         };

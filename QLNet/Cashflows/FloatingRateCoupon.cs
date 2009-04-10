@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
  Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
  * 
  This file is part of QLNet Project http://www.qlnet.org
@@ -45,7 +45,7 @@ namespace QLNet {
         //public FloatingRateCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays, InterestRateIndex index,
         //                          double gearing, double spread, Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter) : 
         //    this(paymentDate, nominal, startDate, endDate, fixingDays, index, gearing, spread, refPeriodStart, refPeriodEnd, dayCounter, false) {}
-        public FloatingRateCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays, InterestRateIndex index,
+        public FloatingRateCoupon(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays, InterestRateIndex index,
                                   double gearing, double spread, Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter, bool isInArrears) :
             base(nominal, paymentDate, startDate, endDate, refPeriodStart, refPeriodEnd) {
             index_ = index;
@@ -151,10 +151,10 @@ namespace QLNet {
 
 
         // Factory - for Leg generators
-        public virtual CashFlow factory(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays,
+        public virtual CashFlow factory(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays,
                        InterestRateIndex index, double gearing, double spread,
                        Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter, bool isInArrears) {
-            return new FloatingRateCoupon(paymentDate, nominal, startDate, endDate, fixingDays,
+            return new FloatingRateCoupon(nominal, paymentDate, startDate, endDate, fixingDays,
                        index, gearing, spread, refPeriodStart, refPeriodEnd, dayCounter, isInArrears);
         }
     }

@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -433,6 +433,20 @@ namespace QLNet {
             if (settlement == null)
                 settlement = settlementDate();
             return CashFlows.previousCouponRate(cashflows_, settlement);
+        }
+
+        public Date nextCouponDate() { return nextCouponDate(null); }
+        public Date nextCouponDate(Date settlement) {
+            if (settlement == null)
+                settlement = settlementDate();
+            return CashFlows.nextCouponDate(cashflows_, settlement);
+        }
+
+        public Date previousCouponDate() { return previousCouponDate(null); }
+        public Date previousCouponDate(Date settlement) {
+            if (settlement == null)
+                settlement = settlementDate();
+            return CashFlows.previousCouponDate(cashflows_, settlement);
         }
 
         protected override void setupExpired() {

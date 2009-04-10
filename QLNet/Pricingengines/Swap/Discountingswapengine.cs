@@ -27,9 +27,7 @@ namespace QLNet {
 
         public DiscountingSwapEngine(Handle<YieldTermStructure> discountCurve) {
             discountCurve_ = discountCurve;
-
-            if (!discountCurve_.empty())  // add to observers of discountCurve
-                discountCurve_.registerWith(update);
+            discountCurve_.registerWith(update);
         }
 
         // Instrument interface
@@ -40,11 +38,19 @@ namespace QLNet {
             results_.errorEstimate = null;
             results_.legNPV = new InitializedList<double?>(arguments_.legs.Count);
             results_.legBPS = new InitializedList<double?>(arguments_.legs.Count);
+            List<double?> startDiscounts = new InitializedList<double?>(arguments_.legs.Count);
             for (int i=0; i<arguments_.legs.Count; ++i) {
                 results_.legNPV[i] = arguments_.payer[i] * CashFlows.npv(arguments_.legs[i], discountCurve_);
                 results_.legBPS[i] = arguments_.payer[i] * CashFlows.bps(arguments_.legs[i], discountCurve_);
                 results_.value += results_.legNPV[i];
+                try {
+                    Date d = CashFlows.startDate(arguments_.legs[i]);
+                    startDiscounts[i] = discountCurve_.link.discount(d);
+                } catch {
+                    startDiscounts[i] = null;
+                }
             }
+            results_.additionalResults.Add("startDiscounts", startDiscounts);
         }
     }
 }
