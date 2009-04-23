@@ -37,7 +37,9 @@ namespace QSilver
         protected override IModuleCatalog GetModuleCatalog()
         {
             ModuleCatalog catalog = new ModuleCatalog();
-            catalog.AddModule(typeof(QSilver.Modules.Market.MarketModule));
+            catalog.AddModule(typeof(QSilver.Modules.Login.LoginModule));
+            catalog.AddModule(typeof(QSilver.Modules.News.NewsModule));
+            //catalog.AddModule(typeof(QSilver.Modules.Market.MarketModule));
             return catalog;
         }
 

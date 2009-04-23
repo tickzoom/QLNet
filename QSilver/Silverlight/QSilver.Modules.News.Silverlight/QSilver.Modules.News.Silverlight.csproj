@@ -4,22 +4,14 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{177BBE97-17C5-45EC-A132-167A6EFB4B4F}</ProjectGuid>
+    <ProjectGuid>{2BACAB86-4547-44F9-ABFB-E36FE9355310}</ProjectGuid>
     <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QSilver</RootNamespace>
-    <AssemblyName>QSilver</AssemblyName>
+    <RootNamespace>QSilver.Modules.News</RootNamespace>
+    <AssemblyName>QSilver.Modules.News</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <SilverlightApplication>true</SilverlightApplication>
-    <SupportedCultures>it</SupportedCultures>
-    <XapOutputs>true</XapOutputs>
-    <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
-    <XapFilename>QSilver.xap</XapFilename>
-    <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
-    <SilverlightAppEntry>QSilver.App</SilverlightAppEntry>
-    <TestPageFileName>TestPage.html</TestPageFileName>
-    <CreateTestPage>true</CreateTestPage>
+    <SilverlightApplication>false</SilverlightApplication>
     <ValidateXaml>true</ValidateXaml>
     <ThrowErrorsInValidation>false</ThrowErrorsInValidation>
   </PropertyGroup>
@@ -69,79 +61,63 @@
     <Reference Include="mscorlib" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Windows.Controls, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Windows.Controls.Data, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Windows.Browser" />
-    <Resource Include="Resources\background.png" />
+    <Reference Include="System.Xml.Linq, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
+    <Compile Include="Article\ArticlePresentationModel.cs" />
+    <Compile Include="Article\ArticleView.xaml.cs">
+      <DependentUpon>ArticleView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Controls\AnimatedTabControl.Silverlight.cs" />
-    <Compile Include="Controls\ResearchControl.cs" />
-    <Compile Include="Controls\RoundedBox.xaml.cs">
-      <DependentUpon>RoundedBox.xaml</DependentUpon>
+    <Compile Include="Article\IArticlePresentationModel.cs" />
+    <Compile Include="Article\IArticleView.cs" />
+    <Compile Include="Article\INewsReaderPresenter.cs" />
+    <Compile Include="Article\INewsReaderView.cs" />
+    <Compile Include="Article\NewsReader.xaml.cs">
+      <DependentUpon>NewsReader.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IShellView.cs" />
-    <Compile Include="Resources\ResourceNames.cs" />
-    <Compile Include="Shell.xaml.cs">
-      <DependentUpon>Shell.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Article\NewsReaderPresenter.cs" />
+    <Compile Include="Controllers\INewsController.cs" />
+    <Compile Include="Controllers\NewsController.cs" />
+    <Compile Include="NewsModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ShellPresenter.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Services\NewsFeedService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:MarkupCompilePass1</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Page Include="Controls\RoundedBox.xaml">
-      <SubType>Page</SubType>
-      <Generator>MSBuild:MarkupCompilePass1</Generator>
-    </Page>
-    <Page Include="Shell.xaml">
+    <Page Include="Article\ArticleView.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\generic.xaml">
+    <Page Include="Article\NewsReader.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\AppManifest.xml" />
+    <Resource Include="Data\Images\Annotation_New.png" />
+    <Resource Include="Data\Images\info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Data\News.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QSilver.Infrastructure.Silverlight\QSilver.Infrastructure.Silverlight.csproj">
       <Project>{020429F7-4C31-4AEF-BAE8-616B7B2BBB14}</Project>
       <Name>QSilver.Infrastructure.Silverlight</Name>
     </ProjectReference>
-    <ProjectReference Include="..\QSilver.Modules.Login.Silverlight\QSilver.Modules.Login.Silverlight.csproj">
-      <Project>{E3953DD9-347F-452D-AC6C-A89887572609}</Project>
-      <Name>QSilver.Modules.Login.Silverlight</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\QSilver.Modules.Market.Silverlight\QSilver.Modules.Market.Silverlight.csproj">
-      <Project>{89D8FCF1-B3B0-4597-B39C-C6E78B872DE0}</Project>
-      <Name>QSilver.Modules.Market.Silverlight</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\QSilver.Modules.News.Silverlight\QSilver.Modules.News.Silverlight.csproj">
-      <Project>{2BACAB86-4547-44F9-ABFB-E36FE9355310}</Project>
-      <Name>QSilver.Modules.News.Silverlight</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\shadow_b.png" />
-    <Resource Include="Resources\shadow_bl.png" />
-    <Resource Include="Resources\shadow_br.png" />
-    <Resource Include="Resources\shadow_l.png" />
-    <Resource Include="Resources\shadow_r.png" />
-    <Resource Include="Resources\shadow_t.png" />
-    <Resource Include="Resources\shadow_tl.png" />
-    <Resource Include="Resources\shadow_tr.png" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\v2.0\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

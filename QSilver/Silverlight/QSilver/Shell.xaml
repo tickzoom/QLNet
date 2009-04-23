@@ -4,7 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-    xmlns:Controls="clr-namespace:QSilver.Controls" >
+    xmlns:Controls="clr-namespace:QSilver.Controls"
+    xmlns:infBehaviors="clr-namespace:QSilver.Infrastructure.Behaviors;assembly=QSilver.Infrastructure"
+    infBehaviors:RegionPopupBehaviors.CreatePopupRegionWithName="SecondaryRegion"
+
+             >
     
     <UserControl.Resources>
         <Storyboard x:Key="InTransition">

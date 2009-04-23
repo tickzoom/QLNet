@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="QSilver.Modules.News.Article.NewsReader"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Width="640" Height="480">
+<Grid>
+	<Grid.RowDefinitions>
+		<RowDefinition Height="Auto"/>
+		<RowDefinition Height="*"/>
+	</Grid.RowDefinitions>
+	<StackPanel>
+		<TextBlock Height="17.167" FontFamily="Trebuchet MS" FontSize="12" FontWeight="Normal" Foreground="#FF1B75BB" TextAlignment="Left" TextWrapping="Wrap" HorizontalAlignment="Left" Width="165.36" Text="{Binding Path=PublishedDate}"/>
+		<TextBlock Height="31.563" FontFamily="Trebuchet MS" FontSize="16" FontWeight="Normal" Foreground="#FF1B75BB" TextAlignment="Left" TextWrapping="Wrap" Text="{Binding Path=Title}"/>
+	</StackPanel>
+	<ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,0,0,0" VerticalAlignment="Stretch" Grid.Row="1" Style="{StaticResource ScrollViewerStyle}" Padding="0,0,4,0">
+		<TextBox BorderThickness="0,0,0,0" FontFamily="Trebuchet MS" Foreground="#FF808080" FontSize="16" Text="{Binding Path=Body}" TextAlignment="Left" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0,0,0,0" IsReadOnly="True" />
+	</ScrollViewer>
+	</Grid>
+</UserControl>
