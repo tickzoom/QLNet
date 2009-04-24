@@ -7,7 +7,7 @@
     xmlns:Controls="clr-namespace:QSilver.Controls"
     xmlns:infBehaviors="clr-namespace:QSilver.Infrastructure.Behaviors;assembly=QSilver.Infrastructure"
     infBehaviors:RegionPopupBehaviors.CreatePopupRegionWithName="SecondaryRegion"
-
+    infBehaviors:RegionPopupBehaviors.ContainerWindowStyle="{StaticResource PopupStyle}"
              >
     
     <UserControl.Resources>

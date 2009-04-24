@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              x:Class="QSilver.App"
              xmlns:vsm="clr-namespace:System.Windows;assembly=System.Windows"
+             xmlns:Behaviors="clr-namespace:QSilver.Infrastructure.Behaviors;assembly=QSilver.Infrastructure"
              xmlns:Controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -362,7 +363,7 @@
                                 </Border.RenderTransform>
                                 <Grid x:Name="grid">
                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="15,15,15,15" />
-                                    <Button Cursor="Hand"  HorizontalAlignment="Right" Width="Auto" VerticalAlignment="Top" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="{x:Null}" BorderThickness="0,0,0,0" Template="{StaticResource CloseButtonStyle}" Margin="15,15,15,15"/>
+                                    <Button Cursor="Hand"  HorizontalAlignment="Right" Width="Auto" Behaviors:ButtonBehaviors.CloseAncestorPopup="true" VerticalAlignment="Top" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="{x:Null}" BorderThickness="0,0,0,0" Template="{StaticResource CloseButtonStyle}" Margin="15,15,15,15"/>
                                 </Grid>
                             </Border>
                         </Border>
