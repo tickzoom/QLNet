@@ -6,7 +6,7 @@ EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "QWeb", "WebSites\QWeb", "{4B7BFAF0-D7BF-49C1-B6B6-A566A486763B}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFramework = "3.5"
-		ProjectReferences = "{4B28B598-4C72-4C04-8039-E23EA59258BB}|Shell.dll;"
+		ProjectReferences = "{4B28B598-4C72-4C04-8039-E23EA59258BB}|Shell.dll;{E94FC4EC-65EA-40A5-95EE-FFF1F41765C2}|Mercato.dll;{7AE4C705-014C-48C0-9819-23458C734F41}|Mercato.Interface.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/QWeb"
 		Debug.AspNetCompiler.PhysicalPath = "WebSites\QWeb\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\QWeb\"
@@ -29,6 +29,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{0695
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shell", "Modules\Shell\Shell.csproj", "{4B28B598-4C72-4C04-8039-E23EA59258BB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mercato", "Mercato\Mercato.csproj", "{E94FC4EC-65EA-40A5-95EE-FFF1F41765C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mercato.Interface", "Mercato.Interface\Mercato.Interface.csproj", "{7AE4C705-014C-48C0-9819-23458C734F41}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +47,14 @@ Global
 		{4B28B598-4C72-4C04-8039-E23EA59258BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B28B598-4C72-4C04-8039-E23EA59258BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B28B598-4C72-4C04-8039-E23EA59258BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E94FC4EC-65EA-40A5-95EE-FFF1F41765C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E94FC4EC-65EA-40A5-95EE-FFF1F41765C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E94FC4EC-65EA-40A5-95EE-FFF1F41765C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E94FC4EC-65EA-40A5-95EE-FFF1F41765C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AE4C705-014C-48C0-9819-23458C734F41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AE4C705-014C-48C0-9819-23458C734F41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AE4C705-014C-48C0-9819-23458C734F41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AE4C705-014C-48C0-9819-23458C734F41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,9 +62,11 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4B7BFAF0-D7BF-49C1-B6B6-A566A486763B} = {FA4236ED-DB1D-46CF-BC61-9B4621D8014A}
 		{4B28B598-4C72-4C04-8039-E23EA59258BB} = {0695A852-9A66-4468-9569-98C2BB13E4F9}
+		{E94FC4EC-65EA-40A5-95EE-FFF1F41765C2} = {0695A852-9A66-4468-9569-98C2BB13E4F9}
+		{7AE4C705-014C-48C0-9819-23458C734F41} = {0695A852-9A66-4468-9569-98C2BB13E4F9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		RootNamespace = QWeb
 		IsWCSFSolution = True
+		RootNamespace = QWeb
 	EndGlobalSection
 EndGlobal

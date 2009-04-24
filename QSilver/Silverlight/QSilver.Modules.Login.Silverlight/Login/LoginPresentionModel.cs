@@ -17,13 +17,14 @@ namespace QSilver.Modules.Login.Login
     public class LoginPresentationModel : ILoginPresentationModel, INotifyPropertyChanged
     {
         private string tickerSymbol;
+        private readonly IEventAggregator eventAggregator;
 
         public LoginPresentationModel(ILoginView view, IEventAggregator eventAggregator)
         {
+            this.eventAggregator = eventAggregator;
             View = view;
             View.Model = this;
-            eventAggregator.GetEvent<TickerSymbolSelectedEvent>().Subscribe(this.TickerSymbolChanged);
-            TickerSymbolChanged("STOCK0");
+            TickerSymbolChanged("LOGIN");
         }
 
 
@@ -51,6 +52,7 @@ namespace QSilver.Modules.Login.Login
                 {
                     this.tickerSymbol = value;
                     this.InvokePropertyChanged("TickerSymbol");
+                    eventAggregator.GetEvent<TickerSymbolSelectedEvent>().Publish(this.tickerSymbol);
                 }
             }
         }
