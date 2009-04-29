@@ -140,6 +140,7 @@
     <None Include="Service References\QSilverSvc\service.edmx" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Data\MySqlDataBase.sql" />
     <None Include="Service References\QSilverSvc\Reference.datasvcmap">
       <Generator>DataServiceClientGenerator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
