@@ -28,6 +28,10 @@ namespace QSilver.Modules.News.Services
                 .ToDictionary(group => group.Key, group => group.ToList());
         }
 
+        public void LoadNews(string ModuleName)
+        {
+        }
+
         #region INewsFeed Members
 
         public IList<NewsArticle> GetNews(string tickerSymbol)

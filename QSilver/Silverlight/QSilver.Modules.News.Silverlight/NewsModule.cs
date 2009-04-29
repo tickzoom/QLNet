@@ -29,7 +29,8 @@ namespace QSilver.Modules.News
             this.container.RegisterType<INewsController, NewsController>(new ContainerControlledLifetimeManager());
             this.container.RegisterType<IArticleView, ArticleView>();
             this.container.RegisterType<IArticlePresentationModel, ArticlePresentationModel>();
-            this.container.RegisterType<INewsFeedService, NewsFeedService>(new ContainerControlledLifetimeManager());
+            //this.container.RegisterType<INewsFeedService, NewsFeedService>(new ContainerControlledLifetimeManager());
+            this.container.RegisterType<INewsFeedService, NewsFeedServiceEDM>(new ContainerControlledLifetimeManager());
             this.container.RegisterType<INewsReaderView, NewsReader>();
             this.container.RegisterType<INewsReaderPresenter, NewsReaderPresenter>();
         }

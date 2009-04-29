@@ -24,7 +24,8 @@ namespace QSilver.Modules.Login.Login
             this.eventAggregator = eventAggregator;
             View = view;
             View.Model = this;
-            TickerSymbolChanged("LOGIN");
+            //TickerSymbolChanged("LOGIN");
+            this.eventAggregator.GetEvent<ModuleLoadedEvent>().Publish("LOGIN");
         }
 
 

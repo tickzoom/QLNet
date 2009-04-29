@@ -1,0 +1,30 @@
+﻿<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="QSilverModel" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
+      <EntityType Name="news">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Body" Type="Edm.String" Nullable="true" />
+        <Property Name="IconUri" Type="Edm.String" Nullable="true" />
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Module" Type="Edm.String" Nullable="true" />
+        <Property Name="PublishedDate" Type="Edm.DateTime" Nullable="true" />
+        <Property Name="Title" Type="Edm.String" Nullable="true" />
+      </EntityType>
+      <EntityType Name="test">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Value" Type="Edm.String" Nullable="true" />
+      </EntityType>
+    </Schema>
+    <Schema Namespace="QSilver.Web" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
+      <EntityContainer Name="QSilverEntities" m:IsDefaultEntityContainer="true">
+        <EntitySet Name="news" EntityType="QSilverModel.news" />
+        <EntitySet Name="test" EntityType="QSilverModel.test" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

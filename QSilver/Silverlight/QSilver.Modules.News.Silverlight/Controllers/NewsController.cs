@@ -33,6 +33,12 @@ namespace QSilver.Modules.News.Controllers
         {
             this.regionManager.Regions[RegionNames.ResearchRegion].Add(articlePresentationModel.View);
             eventAggregator.GetEvent<TickerSymbolSelectedEvent>().Subscribe(ShowNews, ThreadOption.UIThread);
+            eventAggregator.GetEvent<ModuleLoadedEvent>().Subscribe(LoadNews, ThreadOption.UIThread);
+        }
+
+        public void LoadNews(string moduleName)
+        {
+            this.articlePresentationModel.LoadNews(moduleName);
         }
 
         public void ShowNews(string companySymbol)

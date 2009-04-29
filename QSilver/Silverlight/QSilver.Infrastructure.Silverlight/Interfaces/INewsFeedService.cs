@@ -11,6 +11,7 @@ namespace QSilver.Infrastructure.Interfaces
         IList<NewsArticle> GetNews(string tickerSymbol);
         bool HasNews(string tickerSymbol);
         event EventHandler<NewsFeedEventArgs> Updated;
+        void LoadNews(string moduleName);
 
 
     }

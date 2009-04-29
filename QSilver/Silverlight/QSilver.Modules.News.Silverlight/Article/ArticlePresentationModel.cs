@@ -13,6 +13,9 @@ using System.Collections.Generic;
 using QSilver.Infrastructure.Models;
 using QSilver.Modules.News.Controllers;
 using QSilver.Infrastructure.Interfaces;
+using Microsoft.Practices.Composite.Events;
+using Microsoft.Practices.Composite.Presentation.Events;
+using QSilver.Infrastructure;
 
 namespace QSilver.Modules.News.Article
 {
@@ -22,18 +25,31 @@ namespace QSilver.Modules.News.Article
         private NewsArticle selectedArticle;
         private readonly INewsFeedService newsFeedService;
         public event PropertyChangedEventHandler PropertyChanged;
+        private readonly IEventAggregator eventAggregator;
 
-        public ArticlePresentationModel(IArticleView view, INewsFeedService newsFeedService)
+        public ArticlePresentationModel(IArticleView view, INewsFeedService newsFeedService, IEventAggregator eventAggregator)
         {
             View = view;
             View.Model = this;
             this.newsFeedService = newsFeedService;
+            this.eventAggregator = eventAggregator;
             View.ShowNewsReader += View_ShowNewsReader;
+            this.eventAggregator.GetEvent<NewsLoadedEvent>().Subscribe(SetModuleNews);
         }
 
         public IArticleView View { get; private set; }
 
         public INewsController Controller { get; set; }
+
+        public void LoadNews(string moduleName)
+        {
+            newsFeedService.LoadNews(moduleName);
+        }
+
+        public void SetModuleNews(IList<NewsArticle> articles)
+        {
+            this.Articles = articles;
+        }
 
         public void SetTickerSymbol(string companySymbol)
         {
