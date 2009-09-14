@@ -90,23 +90,23 @@ namespace FRA {
             BusinessDayConvention convention = euribor3m.businessDayConvention();
             bool endOfMonth = euribor3m.endOfMonth();
 
-            BootstrapHelper<YieldTermStructure> fra1x4 =  new FraRateHelper(h1x4, 1, 4,
+            BootstrapHelper fra1x4 =  new FraRateHelper(h1x4, 1, 4,
                                                  fixingDays, calendar, convention,
                                                  endOfMonth, fraDayCounter);
 
-            BootstrapHelper<YieldTermStructure> fra2x5 =  new FraRateHelper(h2x5, 2, 5,
+            BootstrapHelper fra2x5 =  new FraRateHelper(h2x5, 2, 5,
                                                  fixingDays, calendar, convention,
                                                  endOfMonth, fraDayCounter);
 
-            BootstrapHelper<YieldTermStructure> fra3x6 = new FraRateHelper(h3x6, 3, 6,
+            BootstrapHelper fra3x6 = new FraRateHelper(h3x6, 3, 6,
                                                  fixingDays, calendar, convention,
                                                  endOfMonth, fraDayCounter);
 
-            BootstrapHelper<YieldTermStructure> fra6x9 = new FraRateHelper(h6x9, 6, 9,
+            BootstrapHelper fra6x9 = new FraRateHelper(h6x9, 6, 9,
                                                  fixingDays, calendar, convention,
                                                  endOfMonth, fraDayCounter);
 
-            BootstrapHelper<YieldTermStructure> fra9x12 = new FraRateHelper(h9x12, 9, 12,
+            BootstrapHelper fra9x12 = new FraRateHelper(h9x12, 9, 12,
                                                  fixingDays, calendar, convention,
                                                  endOfMonth, fraDayCounter);
 
@@ -122,7 +122,7 @@ namespace FRA {
             double tolerance = 1.0e-15;
 
             // A FRA curve
-            List<BootstrapHelper<YieldTermStructure>> fraInstruments = new List<BootstrapHelper<YieldTermStructure>>();
+            List<BootstrapHelper> fraInstruments = new List<BootstrapHelper>();
 
             fraInstruments.Add(fra1x4);
             fraInstruments.Add(fra2x5);
