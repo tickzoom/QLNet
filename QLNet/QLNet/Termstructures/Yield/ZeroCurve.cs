@@ -83,7 +83,7 @@ namespace QLNet {
                 //#if not QL_NEGATIVE_RATES
                 //QL_REQUIRE(data_[i] >= 0.0, "negative yield");
                 //#endif
-                times_[i] = dayCounter.yearFraction(dates_[0], dates_[i]);
+                times_.Add(dayCounter.yearFraction(dates_[0], dates_[i]));
 
                 if (Utils.close(times_[i], times_[i - 1]))
                     throw new ApplicationException("two dates correspond to the same time " +
