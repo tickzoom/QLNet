@@ -67,8 +67,8 @@ namespace QLNet {
                 throw new ApplicationException("both time steps and time steps per year were provided");
             if (!(timeSteps != 0))
                 throw new ApplicationException("timeSteps must be positive, " + timeSteps + " not allowed");
-            if (!(timeStepsPerYear != 0))
-                throw new ApplicationException("timeStepsPerYear must be positive, " + timeStepsPerYear + " not allowed");
+            //if (!(timeStepsPerYear != 0))
+            //    throw new ApplicationException("timeStepsPerYear must be positive, " + timeStepsPerYear + " not allowed");
 
             process_.registerWith(update);
         }
