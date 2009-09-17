@@ -265,9 +265,11 @@ namespace EquityOption {
             Console.WriteLine("{0,-" + widths[3] + ":0.000000}", americanOption.NPV());
 
             // End test
-
             Console.WriteLine(" \nRun completed in {0}", DateTime.Now - timer);
             Console.WriteLine();
+
+            Console.Write("Press any key to continue ...");
+            Console.ReadKey();
         }
     }
 }
