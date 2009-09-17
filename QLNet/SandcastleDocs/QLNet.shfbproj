@@ -21,9 +21,6 @@
     </DocumentationSources>
     <HelpFileFormat>Help2xAndWebsite</HelpFileFormat>
     <PlugInConfigurations>
-      <PlugInConfig id="Bibliography Support" enabled="True" xmlns="">
-        <configuration />
-      </PlugInConfig>
     </PlugInConfigurations>
     <ProjectSummary>The C# port for the Quantlib library.</ProjectSummary>
     <FeedbackEMailAddress>moufatich%40gmail.com</FeedbackEMailAddress>
