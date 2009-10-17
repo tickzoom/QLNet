@@ -126,7 +126,10 @@ namespace QLNet {
 
             sequence_ = new Sample<List<double>>(new InitializedList<double>(dimensionality), 1.0);
             integerSequence_ = new InitializedList<ulong>(dimensionality);
-            directionIntegers_ = new InitializedList<List<ulong>>(dimensionality, new InitializedList<ulong>(bits_));
+            
+            directionIntegers_ = new InitializedList<List<ulong>>(dimensionality, new List<ulong>(bits_));
+            for (int i = 0; i < dimensionality; i++)
+                directionIntegers_[i] = new InitializedList<ulong>(bits_);
 
             if (!(dimensionality>0)) throw new ApplicationException("dimensionality must be greater than 0");
             if (!(dimensionality<=PPMT_MAX_DIM))
