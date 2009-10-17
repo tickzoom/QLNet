@@ -56,7 +56,6 @@ namespace QLNet {
 
         public TimeGrid(List<double> times, int steps)
         {
-            //philippe2009_01
             //not really finished bu run well for actals tests
             mandatoryTimes_ = times;
             mandatoryTimes_.Sort();
