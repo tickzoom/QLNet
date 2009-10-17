@@ -194,6 +194,9 @@ namespace QLNet {
             }
         }
 
+        //philippe2009_16
+        public void add(List<double> begin) { add(begin, 1); }
+
         //public void add(S sample, double weight = 1.0) {
         public void add(List<double> begin, double weight) {
             if (dimension_ == 0) {
