@@ -50,7 +50,11 @@ namespace QLNet {
         public RandomSequenceGenerator(int dimensionality, RNG rng) {
             dimensionality_ = dimensionality;
             rng_ = rng;
-            sequence_ = new Sample<List<double>>(new InitializedList<double>(dimensionality), 1.0);
+            
+            List<double> ls = new List<double>();
+            for (int i = 0; i < dimensionality; i++)
+                ls.Add(0.0);
+            sequence_ = new Sample<List<double>>(ls, 1.0);
             int32Sequence_ = new InitializedList<ulong>(dimensionality);
 
             if (!(dimensionality>0)) throw new ApplicationException("dimensionality must be greater than 0");
