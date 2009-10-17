@@ -45,6 +45,45 @@ namespace QLNet {
         public void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
     }
 
+    //Affince Model Interface used for multihritage in 
+    //liborforwardmodel.cs & analyticcapfloorengine.cs
+    public interface IAffineModel
+    {
+        double discount(double t);
+        double discountBond(double now, double maturity, Vector factors);
+        double discountBondOption(Option.Type type, double strike, double maturity, double bondMaturity);
+        //event Callback notifyObserversEvent;
+        // this method is required for calling from derived classes
+    }
+
+    //TermStructureConsistentModel used in analyticcapfloorengine.cs
+    public class TermStructureConsistentModel : IObservable
+    {
+        public TermStructureConsistentModel(Handle<YieldTermStructure> termStructure)
+        {
+            termStructure_ = termStructure;
+        }
+
+        public Handle<YieldTermStructure> termStructure()
+        {
+            return termStructure_;
+        }
+        private Handle<YieldTermStructure> termStructure_;
+
+        public event Callback notifyObserversEvent;
+        // this method is required for calling from derived classes
+        protected void notifyObservers()
+        {
+            Callback handler = notifyObserversEvent;
+            if (handler != null)
+            {
+                handler();
+            }
+        }
+        public void registerWith(Callback handler) { notifyObserversEvent += handler; }
+        public void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
+    }
+
     //! Calibrated model class
     public class CalibratedModel : IObserver, IObservable {
         protected List<Parameter> arguments_;
