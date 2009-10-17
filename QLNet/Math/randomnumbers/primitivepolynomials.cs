@@ -114,70 +114,9 @@ namespace QLNet {
  * below.
  */
     public partial class SobolRsg {
-
-        const long PPMT_MAX_DIM = 21200;
-        const int N_MAX_DEGREE = 18;
-
-        /*! You can access the following array as in PrimitivePolynomials[i][j]
-            with i and j counting from 0 in C convention. PrimitivePolynomials[i][j]
-            will get you the j-th (counting from zero) primitive polynomial of degree
-            i+1. Each one-dimensional array of primitive polynomials of a given
-            degree is terminated with an entry of -1. Accessing beyond this entry
-            will result in a memory violation and must be avoided.  */
-        static long[][] PrimitivePolynomials = new long[N_MAX_DEGREE][] {
-            PrimitivePolynomialDegree01
-            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_01
-            , PrimitivePolynomialDegree02
-            //#endif
-            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_02
-            , PrimitivePolynomialDegree03
-            //#endif
-            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_03
-            , PrimitivePolynomialDegree04
-            //#endif
-            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_04
-            , PrimitivePolynomialDegree05
-            //#endif
-            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_05
-            , PrimitivePolynomialDegree06
-            //#endif
-            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_06
-            , PrimitivePolynomialDegree07
-            //#endif
-            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_07
-            , PrimitivePolynomialDegree08
-            //#endif
-            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_08
-            , PrimitivePolynomialDegree09
-            //#endif
-            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_09
-            , PrimitivePolynomialDegree10
-            //#endif
-            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_10
-            , PrimitivePolynomialDegree11
-            //#endif
-            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_11
-            , PrimitivePolynomialDegree12
-            //#endif
-            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_12
-            , PrimitivePolynomialDegree13
-            //#endif
-            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_13
-            , PrimitivePolynomialDegree14
-            //#endif
-            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_14
-            , PrimitivePolynomialDegree15
-            //#endif
-            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_15
-            , PrimitivePolynomialDegree16
-            //#endif
-            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_16
-            , PrimitivePolynomialDegree17
-            //#endif
-            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_17
-            , PrimitivePolynomialDegree18
-            //#endif
-        };
+       
+        public const long PPMT_MAX_DIM = 21200;
+        public const int N_MAX_DEGREE = 18;
 
         static long[] PrimitivePolynomialDegree01 = {
         0, /* x+1 (1)(1) */
@@ -21467,5 +21406,67 @@ namespace QLNet {
         131059,
         -1 };
         //#endif
+
+        /*! You can access the following array as in PrimitivePolynomials[i][j]
+    with i and j counting from 0 in C convention. PrimitivePolynomials[i][j]
+    will get you the j-th (counting from zero) primitive polynomial of degree
+    i+1. Each one-dimensional array of primitive polynomials of a given
+    degree is terminated with an entry of -1. Accessing beyond this entry
+    will result in a memory violation and must be avoided.  */
+        public static long[][] PrimitivePolynomials = new long[N_MAX_DEGREE][] {
+            PrimitivePolynomialDegree01
+            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_01
+            , PrimitivePolynomialDegree02
+            //#endif
+            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_02
+            , PrimitivePolynomialDegree03
+            //#endif
+            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_03
+            , PrimitivePolynomialDegree04
+            //#endif
+            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_04
+            , PrimitivePolynomialDegree05
+            //#endif
+            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_05
+            , PrimitivePolynomialDegree06
+            //#endif
+            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_06
+            , PrimitivePolynomialDegree07
+            //#endif
+            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_07
+            , PrimitivePolynomialDegree08
+            //#endif
+            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_08
+            , PrimitivePolynomialDegree09
+            //#endif
+            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_09
+            , PrimitivePolynomialDegree10
+            //#endif
+            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_10
+            , PrimitivePolynomialDegree11
+            //#endif
+            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_11
+            , PrimitivePolynomialDegree12
+            //#endif
+            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_12
+            , PrimitivePolynomialDegree13
+            //#endif
+            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_13
+            , PrimitivePolynomialDegree14
+            //#endif
+            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_14
+            , PrimitivePolynomialDegree15
+            //#endif
+            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_15
+            , PrimitivePolynomialDegree16
+            //#endif
+            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_16
+            , PrimitivePolynomialDegree17
+            //#endif
+            //#if PPMT_MAX_DIM > N_PRIMITIVES_UP_TO_DEGREE_17
+            , PrimitivePolynomialDegree18
+            //#endif
+        };
+
     }
 }
