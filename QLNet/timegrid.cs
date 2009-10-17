@@ -54,6 +54,70 @@ namespace QLNet {
             dt_ = new InitializedList<double>(steps, dt);
         }
 
+        public TimeGrid(List<double> times, int steps)
+        {
+            //philippe2009_01
+            //not really finished bu run well for actals tests
+            mandatoryTimes_ = times;
+            mandatoryTimes_.Sort();
+
+            if (!(mandatoryTimes_[0] >= 0.0)) throw new ApplicationException("negative times not allowed");
+
+            for (int i = 0; i < mandatoryTimes_.Count - 1; ++i)
+            {
+                if (Utils.close_enough(mandatoryTimes_[i], mandatoryTimes_[i + 1]))
+                {
+                    mandatoryTimes_.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            // The resulting timegrid have points at times listed in the input
+            // list. Between these points, there are inner-points which are
+            // regularly spaced.
+            times_ = new List<double>(steps);
+            dt_ = new List<double>(steps);
+            double last = mandatoryTimes_.Last();
+            double dtMax = 0;
+
+            if (steps == 0)
+            {
+                List<double> diff = new List<double>();
+                //std::vector<Time> diff;
+                //std::adjacent_difference(mandatoryTimes_.begin(),
+                //                         mandatoryTimes_.end(),
+                //                         std::back_inserter(diff));
+                //if (diff.front()==0.0)
+                //    diff.erase(diff.begin());
+                //dtMax = *(std::min_element(diff.begin(), diff.end()));
+            }
+            else { dtMax = last / steps; }
+
+            double periodBegin = 0.0;
+            times_.Add(periodBegin);
+
+            for (int k = 0; k < mandatoryTimes_.Count; k++)
+            {
+                double dt = 0;
+                double periodEnd = mandatoryTimes_[k];
+                if (periodEnd != 0.0)
+                {
+                    // the nearest integer
+                    int nSteps = (int)((periodEnd - periodBegin) / dtMax + 0.5);
+                    // at least one time step!
+                    nSteps = (nSteps != 0 ? nSteps : 1);
+                    dt = (periodEnd - periodBegin) / nSteps;
+                    //times_.Capacity=nSteps+1;
+                    for (int n = 1; n <= nSteps; ++n)
+                    {
+                        times_.Add(periodBegin + n * dt);
+                        dt_.Add(dt);
+                    }
+                }
+                periodBegin = periodEnd;
+            }
+        }
+
         //! \name Time grid interface
         //! returns the index i such that grid[i] = t
         public int index(double t) {
