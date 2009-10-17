@@ -167,4 +167,12 @@ namespace QLNet {
         public Euribor6M() : this(new Handle<YieldTermStructure>()) { }
         public Euribor6M(Handle<YieldTermStructure> h) : base(new Period(6, TimeUnit.Months), h) { }
     }
+
+    // 1-year %Euribor index
+    public class Euribor1Y : Euribor {
+        public Euribor1Y() : this(new Handle<YieldTermStructure>()) { }
+        public Euribor1Y(Handle<YieldTermStructure> h) : base(new Period(1, TimeUnit.Years), h) { }
+
+    }
+
 }
