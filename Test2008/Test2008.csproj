@@ -69,6 +69,12 @@
     <Compile Include="T_Swaps.cs" />
     <Compile Include="T_TermStructures.cs" />
     <Compile Include="Utilities.cs" />
+    <Compile Include="T_LiborMarketModel.cs" />
+    <Compile Include="T_LiborMarketModelProcess.cs" />
+    <Compile Include="T_LowDiscrepancySequences.cs" />
+    <Compile Include="T_PathGenerator.cs" />
+    <Compile Include="T_Swaption.cs" />
+    <Compile Include="T_SwaptionVolatilitymatrix.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QLNet\QLNet.csproj">
