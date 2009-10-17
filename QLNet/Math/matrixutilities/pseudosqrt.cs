@@ -423,5 +423,91 @@ namespace QLNet {
 
             return result;
         }
+
+        public static Matrix rankReducedSqrt(Matrix matrix,
+                                             int maxRank,
+                                             double componentRetainedPercentage,
+                                             SalvagingAlgorithm sa)
+        {
+            int size = matrix.rows();
+
+            #if QL_EXTRA_SAFETY_CHECKS
+                checkSymmetry(matrix);
+            #else
+            if (size != matrix.columns())
+                throw new ApplicationException("non square matrix: " + size + " rows, " + matrix.columns() + " columns");
+            #endif
+
+            if (!(componentRetainedPercentage > 0.0))
+                throw new ApplicationException("no eigenvalues retained");
+
+            if (!(componentRetainedPercentage <= 1.0))
+                throw new ApplicationException("percentage to be retained > 100%");
+
+            if (!(maxRank >= 1))
+                throw new ApplicationException("max rank required < 1");
+
+            // spectral (a.k.a Principal Component) analysis
+            SymmetricSchurDecomposition jd = new SymmetricSchurDecomposition(matrix);
+            Vector eigenValues = jd.eigenvalues();
+
+            // salvaging algorithm
+            switch (sa)
+            {
+                case SalvagingAlgorithm.None:
+                    // eigenvalues are sorted in decreasing order
+                    if (!(eigenValues[size - 1] >= -1e-16))
+                        throw new ApplicationException("negative eigenvalue(s) (" + eigenValues[size - 1] + ")");
+                    break;
+                case SalvagingAlgorithm.Spectral:
+                    // negative eigenvalues set to zero
+                    for (int i = 0; i < size; ++i)
+                        eigenValues[i] = Math.Max(eigenValues[i], 0.0);
+                    break;
+                case SalvagingAlgorithm.Higham:
+                    {
+                        int maxIterations = 40;
+                        double tolerance = 1e-6;
+                        Matrix adjustedMatrix = highamImplementation(matrix, maxIterations, tolerance);
+                        jd = new SymmetricSchurDecomposition(adjustedMatrix);
+                        eigenValues = jd.eigenvalues();
+                    }
+                    break;
+                default:
+                    throw new ApplicationException("unknown or invalid salvaging algorithm");
+
+            }
+
+            // factor reduction
+            /*std::accumulate(eigenValues.begin(),
+                              eigenValues.end(), 0.0);*/
+            double accumulate = 0;
+            eigenValues.ForEach((ii, vv) => accumulate += eigenValues[ii]);
+            double enough = componentRetainedPercentage * accumulate;
+
+            if (componentRetainedPercentage == 1.0)
+            {
+                // numerical glitches might cause some factors to be discarded
+                enough *= 1.1;
+            }
+            // retain at least one factor
+            double components = eigenValues[0];
+            int retainedFactors = 1;
+            for (int i = 1; components < enough && i < size; ++i)
+            {
+                components += eigenValues[i];
+                retainedFactors++;
+            }
+            // output is granted to have a rank<=maxRank
+            retainedFactors = Math.Min(retainedFactors, maxRank);
+
+            Matrix diagonal = new Matrix(size, retainedFactors, 0.0);
+            for (int i = 0; i < retainedFactors; ++i)
+                diagonal[i, i] = Math.Sqrt(eigenValues[i]);
+            Matrix result = jd.eigenvectors() * diagonal;
+
+            normalizePseudoRoot(matrix, result);
+            return result;
+        }
     }
 }
