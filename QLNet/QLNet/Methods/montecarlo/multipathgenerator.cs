@@ -89,7 +89,7 @@ namespace QLNet {
                     t = timeGrid[i-1];
                     dt = timeGrid.dt(i-1);
                     if (antithetic)
-                        (temp = new Vector(sequence_.value.GetRange(offset, n))).ForEach(x => x = -x);
+                        temp = -1 * new Vector(sequence_.value.GetRange(offset, n));
                     else
                         temp = new Vector(sequence_.value.GetRange(offset, n));
 
