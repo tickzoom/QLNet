@@ -33,7 +33,9 @@ namespace QLNet {
         
         public MultiPath() {}
         public MultiPath(int nAsset, TimeGrid timeGrid) {
-            multiPath_ = new InitializedList<Path>(nAsset, new Path(timeGrid));
+            multiPath_ = new List<Path>(nAsset);
+            for (int i = 0; i < nAsset; i++)
+                multiPath_.Add(new Path(timeGrid));
             if (!(nAsset > 0)) throw new ApplicationException("number of asset must be positive");
         }
 
