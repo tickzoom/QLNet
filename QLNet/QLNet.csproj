@@ -123,15 +123,32 @@
     <Compile Include="Instruments\forwardrateagreement.cs" />
     <Compile Include="Instruments\ImpliedVolatility.cs" />
     <Compile Include="Instruments\Instrument.cs" />
+    <Compile Include="Instruments\Makeswaption.cs" />
     <Compile Include="Instruments\Makevanillaswap.cs" />
     <Compile Include="Instruments\MultiAssetOption.cs" />
     <Compile Include="Instruments\OneAssetOption.cs" />
     <Compile Include="Instruments\payoffs.cs" />
     <Compile Include="Instruments\Stock.cs" />
     <Compile Include="Instruments\Swap.cs" />
+    <Compile Include="Instruments\Swaption.cs" />
     <Compile Include="Instruments\VanillaOption.cs" />
     <Compile Include="Instruments\VanillaSwap.cs" />
     <Compile Include="InterestRate.cs" />
+    <Compile Include="legacy\libormarketmodels\lfmcovarparam.cs" />
+    <Compile Include="legacy\libormarketmodels\lfmcovarproxy.cs" />
+    <Compile Include="legacy\libormarketmodels\lfmhullwhiteparam.cs" />
+    <Compile Include="legacy\libormarketmodels\lfmprocess.cs" />
+    <Compile Include="legacy\libormarketmodels\lfmswaptionengine.cs" />
+    <Compile Include="legacy\libormarketmodels\liborforwardmodel.cs" />
+    <Compile Include="legacy\libormarketmodels\lmconstwrappercorrmodel.cs" />
+    <Compile Include="legacy\libormarketmodels\lmconstwrappervolmodel.cs" />
+    <Compile Include="legacy\libormarketmodels\lmcorrmodel.cs" />
+    <Compile Include="legacy\libormarketmodels\lmexpcorrmodel.cs" />
+    <Compile Include="legacy\libormarketmodels\lmextlinexpvolmodel.cs" />
+    <Compile Include="legacy\libormarketmodels\lmfixedvolmodel.cs" />
+    <Compile Include="legacy\libormarketmodels\lmlinexpcorrmodel.cs" />
+    <Compile Include="legacy\libormarketmodels\lmlinexpvolmodel.cs" />
+    <Compile Include="legacy\libormarketmodels\lmvolmodel.cs" />
     <Compile Include="Math\beta.cs" />
     <Compile Include="Math\Comparison.cs" />
     <Compile Include="Math\CostFunction.cs" />
@@ -147,11 +164,13 @@
     <Compile Include="Math\integrals\simpsonintegral.cs" />
     <Compile Include="Math\integrals\trapezoidintegral.cs" />
     <Compile Include="Math\Interpolations\backwardflatinterpolation.cs" />
+    <Compile Include="Math\Interpolations\bilinearinterpolation.cs" />
     <Compile Include="Math\Interpolations\convexmonotoneinterpolation.cs" />
     <Compile Include="Math\Interpolations\CubicInterpolation.cs" />
     <Compile Include="Math\Interpolations\Extrapolator.cs" />
     <Compile Include="Math\Interpolation.cs" />
     <Compile Include="Math\Interpolations\forwardflatinterpolation.cs" />
+    <Compile Include="Math\Interpolations\interpolation2d.cs" />
     <Compile Include="Math\Interpolations\Linearinterpolation.cs" />
     <Compile Include="Math\Interpolations\Loginterpolation.cs" />
     <Compile Include="Math\Interpolations\multicubicspline.cs" />
@@ -177,6 +196,8 @@
     <Compile Include="Math\Optimization\ProjectedCostFunction.cs" />
     <Compile Include="Math\Optimization\Simplex.cs" />
     <Compile Include="Math\Optimization\SteepestDescent.cs" />
+    <Compile Include="Math\PrimeNumbers.cs" />
+    <Compile Include="Math\randomnumbers\Haltonrsg.cs" />
     <Compile Include="Math\randomnumbers\inversecumulativerng.cs" />
     <Compile Include="Math\randomnumbers\inversecumulativersg.cs" />
     <Compile Include="Math\randomnumbers\mt19937uniformrng.cs" />
@@ -205,6 +226,7 @@
     </Compile>
     <Compile Include="Math\Solvers1d\Secant.cs" />
     <Compile Include="Math\statistics\convergencestatistics.cs" />
+    <Compile Include="Math\statistics\DiscrepancyStatistics.cs" />
     <Compile Include="Math\statistics\gaussianstatistics.cs" />
     <Compile Include="Math\statistics\generalstatistics.cs" />
     <Compile Include="Math\statistics\incrementalstatistics.cs" />
@@ -250,6 +272,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\Parameter.cs" />
+    <Compile Include="Models\Shortrate\calibrationhelpers\caphelper.cs" />
+    <Compile Include="Models\Shortrate\calibrationhelpers\swaptionhelper.cs" />
     <Compile Include="Models\Shortrate\OneFactorModel.cs" />
     <Compile Include="Money.cs" />
     <Compile Include="numericalmethod.cs" />
@@ -267,11 +291,17 @@
     <Compile Include="Pricingengines\blackformula.cs" />
     <Compile Include="Pricingengines\Blackscholescalculator.cs" />
     <Compile Include="Pricingengines\Bond\Discountingbondengine.cs" />
+    <Compile Include="Pricingengines\CapFloor\analyticcapfloorengine.cs" />
     <Compile Include="Pricingengines\CapFloor\BlackCapFloorEngine.cs" />
+    <Compile Include="Pricingengines\CapFloor\discretizedcapfloor.cs" />
+    <Compile Include="Pricingengines\genericmodelengine.cs" />
     <Compile Include="Pricingengines\Greeks.cs" />
     <Compile Include="Pricingengines\mclongstaffschwartzengine.cs" />
     <Compile Include="Pricingengines\mcsimulation.cs" />
+    <Compile Include="Pricingengines\swaption\blackswaptionengine.cs" />
+    <Compile Include="Pricingengines\swaption\discretizedswaption.cs" />
     <Compile Include="Pricingengines\Swap\Discountingswapengine.cs" />
+    <Compile Include="Pricingengines\Swap\discretizedswap.cs" />
     <Compile Include="Pricingengines\vanilla\AnalyticEuropeanEngine.cs" />
     <Compile Include="Pricingengines\vanilla\baroneadesiwhaleyengine.cs" />
     <Compile Include="Pricingengines\vanilla\binomialengine.cs" />
@@ -314,6 +344,10 @@
     <Compile Include="Termstructures\Iterativebootstrap.cs" />
     <Compile Include="Termstructures\localbootstrap.cs" />
     <Compile Include="Termstructures\TermStructure.cs" />
+    <Compile Include="Termstructures\Volatility\Optionlet\capletvariancecurve.cs" />
+    <Compile Include="Termstructures\Volatility\swaption\swaptionconstantvol.cs" />
+    <Compile Include="Termstructures\Volatility\swaption\swaptionvoldiscrete.cs" />
+    <Compile Include="Termstructures\Volatility\swaption\swaptionvolmatrix.cs" />
     <Compile Include="Termstructures\voltermstructure.cs" />
     <Compile Include="Termstructures\Volatility\CapFloor\CapFloorTermVolatilityStructure.cs" />
     <Compile Include="Termstructures\Volatility\CapFloor\ConstantCapFloorTermVolatility.cs" />
