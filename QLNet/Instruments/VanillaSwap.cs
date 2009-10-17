@@ -126,9 +126,10 @@ namespace QLNet {
             arguments.nominal = nominal_;
 
             List<CashFlow> fixedCoupons = fixedLeg();
-
-            arguments.fixedResetDates = arguments.fixedPayDates = new List<Date>(fixedCoupons.Count);
-            arguments.fixedCoupons = new List<double>(fixedCoupons.Count);
+            
+            arguments.fixedResetDates = new InitializedList<Date>(fixedCoupons.Count);
+            arguments.fixedPayDates = new InitializedList<Date>(fixedCoupons.Count);
+            arguments.fixedCoupons = new InitializedList<double>(fixedCoupons.Count);
 
             for (int i = 0; i < fixedCoupons.Count; ++i) {
                 FixedRateCoupon coupon = (FixedRateCoupon)fixedCoupons[i];
@@ -139,12 +140,13 @@ namespace QLNet {
             }
 
             List<CashFlow> floatingCoupons = floatingLeg();
-
-            arguments.floatingResetDates = arguments.floatingPayDates = arguments.floatingFixingDates =
-                new List<Date>(floatingCoupons.Count);
-            arguments.floatingAccrualTimes = new List<double>(floatingCoupons.Count);
-            arguments.floatingSpreads = new List<double>(floatingCoupons.Count);
-            arguments.floatingCoupons = new List<double>(floatingCoupons.Count);
+            
+            arguments.floatingResetDates = new InitializedList<Date>(floatingCoupons.Count);
+            arguments.floatingPayDates = new InitializedList<Date>(floatingCoupons.Count);
+            arguments.floatingFixingDates = new InitializedList<Date>(floatingCoupons.Count);
+            arguments.floatingAccrualTimes = new InitializedList<double>(floatingCoupons.Count);
+            arguments.floatingSpreads = new InitializedList<double>(floatingCoupons.Count);
+            arguments.floatingCoupons = new InitializedList<double>(floatingCoupons.Count);
             for (int i = 0; i < floatingCoupons.Count; ++i) {
                 IborCoupon coupon = (IborCoupon)floatingCoupons[i];
 
@@ -197,6 +199,10 @@ namespace QLNet {
             calculate();
             if (legNPV_[1] == null) throw new ArgumentException("result not available");
             return legNPV_[1].GetValueOrDefault();
+        }
+
+        public IborIndex iborIndex(){
+            return iborIndex_;
         }
 
         public double fixedRate { get { return fixedRate_; } }
