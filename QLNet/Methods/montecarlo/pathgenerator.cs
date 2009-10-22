@@ -50,7 +50,7 @@ namespace QLNet {
             timeGrid_ = new TimeGrid(length, timeSteps);
             process_ = process as StochasticProcess1D;
             next_ = new Sample<Path>(new Path(timeGrid_),1.0);
-            //temp_ = new InitializedList<double>(dimension_);
+            temp_ = new InitializedList<double>(dimension_);
             bb_ = new BrownianBridge(timeGrid_);
             if (dimension_ != timeSteps) 
                 throw new ApplicationException("sequence generator dimensionality (" + dimension_
@@ -64,7 +64,7 @@ namespace QLNet {
             timeGrid_ = timeGrid;
             process_ = process as StochasticProcess1D;
             next_ = new Sample<Path>(new Path(timeGrid_),1.0);
-            //temp_ = new InitializedList<double>(dimension_);
+            temp_ = new InitializedList<double>(dimension_);
             bb_ = new BrownianBridge(timeGrid_);
 
             if (dimension_ != timeGrid_.size() - 1)
