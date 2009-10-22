@@ -286,6 +286,12 @@
     <Compile Include="PricingEngine.cs" />
     <Compile Include="Pricingengines\Americanpayoffatexpiry.cs" />
     <Compile Include="Pricingengines\Americanpayoffathit.cs" />
+    <Compile Include="Pricingengines\asian\analytic_cont_geom_av_price.cs" />
+    <Compile Include="Pricingengines\asian\analytic_discr_geom_av_price.cs" />
+    <Compile Include="Pricingengines\asian\mcdiscreteasianengine.cs" />
+    <Compile Include="Pricingengines\asian\mc_discr_arith_av_price.cs" />
+    <Compile Include="Pricingengines\asian\mc_discr_arith_av_strike.cs" />
+    <Compile Include="Pricingengines\asian\mc_discr_geom_av_price.cs" />
     <Compile Include="Pricingengines\barrier\AnalyticBarrierEngine.cs" />
     <Compile Include="Pricingengines\BlackCalculator.cs" />
     <Compile Include="Pricingengines\blackformula.cs" />
