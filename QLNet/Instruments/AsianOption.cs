@@ -110,15 +110,15 @@ namespace QLNet {
 			}
 			public Average.Type averageType;
 			public double? runningAccumulator;
-            public double? pastFixings;
-			public List<Date> fixingDates;
+            public int? pastFixings;
+            public List<Date> fixingDates;
 		}
 
  	    new public class Engine: GenericEngine<DiscreteAveragingAsianOption.Arguments, DiscreteAveragingAsianOption.Results> 
         {
         }
 
-        public DiscreteAveragingAsianOption(Average.Type averageType, double runningAccumulator, double pastFixings, List<Date> fixingDates, StrikedTypePayoff payoff, Exercise exercise)
+        public DiscreteAveragingAsianOption(Average.Type averageType, double runningAccumulator, int pastFixings, List<Date> fixingDates, StrikedTypePayoff payoff, Exercise exercise)
             : base(payoff, exercise)
 		{
 			averageType_ = averageType;
@@ -146,7 +146,7 @@ namespace QLNet {
 		}
 		protected Average.Type averageType_;
 		protected double? runningAccumulator_;
-        protected double? pastFixings_;
+        protected int? pastFixings_;
         protected List<Date> fixingDates_;
 	}
 }
