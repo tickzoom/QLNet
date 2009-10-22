@@ -167,8 +167,8 @@ namespace TestSuite
                        "Black-Scholes", false, 26.13784357783, 467.2928561411);
                                             // 26.13784357783, 467.2928562519);
             //Error make the borwnian bridge test first
-            //testSingle(new BlackScholesMertonProcess(x0,q,r,sigma),
-            //           "Black-Scholes", true, 60.28215549393, 202.6143139999);
+            testSingle(new BlackScholesMertonProcess(x0,q,r,sigma),
+                       "Black-Scholes", true, 60.28215549393, 202.6143139999);
                                            // 60.28215551021, 202.6143139437);
 
             testSingle(new GeometricBrownianMotionProcess(100.0, 0.03, 0.20),
