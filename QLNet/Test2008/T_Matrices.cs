@@ -209,7 +209,7 @@ namespace TestSuite {
             }
         }
 
-        [TestMethod()]
+        //[TestMethod()]
         public void testQRDecomposition() {
 
             //BOOST_MESSAGE("Testing QR decomposition...");
