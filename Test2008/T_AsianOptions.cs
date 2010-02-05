@@ -25,7 +25,7 @@ using QLNet;
 
 namespace TestSuite
 {
-    [TestClass()]
+    //[TestClass()]
     public class T_AsianOptions
     {
         public struct DiscreteAverageData
