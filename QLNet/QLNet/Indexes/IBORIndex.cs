@@ -1,6 +1,6 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
- Copyright (C) 2008 Andrea Maggiulli
+ Copyright (C) 2008, 2009 , 2010 Andrea Maggiulli (a.maggiulli@gmail.com)
  Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
  * 
  This file is part of QLNet Project http://www.qlnet.org
@@ -59,6 +59,11 @@ namespace QLNet {
                 termStructure_.registerWith(update);
         }
 
+       public Handle<YieldTermStructure> forwardingTermStructure() 
+       {
+         return termStructure_;
+       }
+
         //! Date calculations
         public override Date maturityDate(Date valueDate) {
             return fixingCalendar().advance(valueDate, tenor_, convention_, endOfMonth_);
@@ -82,4 +87,26 @@ namespace QLNet {
                                  businessDayConvention(), endOfMonth(), dayCounter(), h);
         }
     }
+   
+   public class OvernightIndex : IborIndex 
+   {
+      public OvernightIndex(string familyName,
+                            int settlementDays,
+                            Currency currency,
+                            Calendar fixingCalendar,
+                            DayCounter dayCounter,
+                            Handle<YieldTermStructure> h) :
+      
+               base(familyName, new Period(1,TimeUnit.Days), settlementDays, 
+                    currency,fixingCalendar, BusinessDayConvention.Following, false, dayCounter, h) 
+      {}
+      
+      //! returns a copy of itself linked to a different forwarding curve
+      public new IborIndex clone(Handle<YieldTermStructure> h)
+      {
+         return new OvernightIndex(familyName(), fixingDays(), currency(), fixingCalendar(),
+                                   dayCounter(), h);
+
+      }
+    };
 }
