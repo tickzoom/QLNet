@@ -59,6 +59,7 @@
     <Compile Include="Cashflows\FixedRateCoupon.cs" />
     <Compile Include="Cashflows\FloatingRateCoupon.cs" />
     <Compile Include="Cashflows\Iborcoupon.cs" />
+    <Compile Include="Cashflows\OvernightIndexedCoupon.cs" />
     <Compile Include="Cashflows\RateLegBase.cs" />
     <Compile Include="Cashflows\Replication.cs" />
     <Compile Include="Cashflows\SimpleCashFlow.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Indexes\Ibor\Cdor.cs" />
     <Compile Include="Indexes\Ibor\Chflibor.cs" />
     <Compile Include="Indexes\Ibor\Dkklibor.cs" />
+    <Compile Include="Indexes\Ibor\Eonia.cs" />
     <Compile Include="Indexes\Ibor\Euribor.cs" />
     <Compile Include="Indexes\Ibor\Eurlibor.cs" />
     <Compile Include="Indexes\Ibor\Gbplibor.cs" />
@@ -123,10 +125,12 @@
     <Compile Include="Instruments\forwardrateagreement.cs" />
     <Compile Include="Instruments\ImpliedVolatility.cs" />
     <Compile Include="Instruments\Instrument.cs" />
+    <Compile Include="Instruments\MakeOIS.cs" />
     <Compile Include="Instruments\Makeswaption.cs" />
     <Compile Include="Instruments\Makevanillaswap.cs" />
     <Compile Include="Instruments\MultiAssetOption.cs" />
     <Compile Include="Instruments\OneAssetOption.cs" />
+    <Compile Include="Instruments\OvernightIndexedSwap.cs" />
     <Compile Include="Instruments\payoffs.cs" />
     <Compile Include="Instruments\Stock.cs" />
     <Compile Include="Instruments\Swap.cs" />
@@ -379,6 +383,7 @@
     <Compile Include="Termstructures\Yield\ForwardSpreadedTermStructure.cs" />
     <Compile Include="Termstructures\Yield\ForwardStructure.cs" />
     <Compile Include="Termstructures\Yield\ImpliedTermStructure.cs" />
+    <Compile Include="Termstructures\Yield\OISRateHelper.cs" />
     <Compile Include="Termstructures\Yield\PiecewiseYieldCurve.cs" />
     <Compile Include="Termstructures\Yield\Ratehelpers.cs" />
     <Compile Include="Termstructures\Yield\ZeroCurve.cs" />

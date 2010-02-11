@@ -1,6 +1,7 @@
 /*
  Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
  Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ Copyright (C) 2008, 2009 , 2010 Andrea Maggiulli (a.maggiulli@gmail.com)
  * 
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -206,6 +207,55 @@ namespace QLNet {
             }
             return leg;
         }
+
+        
+         public static List<CashFlow> OvernightLeg(List<double> nominals,
+                                                   Schedule schedule,
+                                                   BusinessDayConvention paymentAdjustment,
+                                                   OvernightIndex overnightIndex,
+                                                   List<double> gearings,
+                                                   List<double> spreads,
+                                                   DayCounter paymentDayCounter      
+                                                  )
+        
+       
+         {
+            if (nominals.Count == 0) throw new ArgumentException("no nominal given");
+
+            List<CashFlow> leg = new List<CashFlow>();
+
+            // the following is not always correct
+            Calendar calendar = schedule.calendar();
+
+            Date refStart, start, refEnd, end;
+            Date paymentDate;
+
+            int n = schedule.Count;
+            for (int i=0; i<n-1; ++i) 
+            {
+               refStart = start = schedule.date(i);
+               refEnd   =   end = schedule.date(i+1);
+               paymentDate = calendar.adjust(end, paymentAdjustment);
+               if (i == 0 && !schedule.isRegular(i+1))
+                   refStart = calendar.adjust(end - schedule.tenor(),
+                                              paymentAdjustment);
+               if (i == n-1 && !schedule.isRegular(i+1))
+                   refEnd = calendar.adjust(start + schedule.tenor(),
+                                            paymentAdjustment);
+
+               leg.Add( new OvernightIndexedCoupon(paymentDate,
+                                                   Utils.Get(nominals, i),
+                                                   start, end,
+                                                   overnightIndex,
+                                                   Utils.Get(gearings, i, 1.0),
+                                                   Utils.Get(spreads, i, 0.0),
+                                                   refStart, refEnd,
+                                                   paymentDayCounter));
+           }
+           return leg;
+        }
+
+
 
     }
 }
