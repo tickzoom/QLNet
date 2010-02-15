@@ -226,11 +226,11 @@ namespace QLNet {
     public class GarmanKohlagenProcess : GeneralizedBlackScholesProcess {
         public GarmanKohlagenProcess(Handle<Quote> x0,
                                      Handle<YieldTermStructure> foreignRiskFreeTS,
-                                     Handle<BlackVolTermStructure> domesticRiskFreeTS,
+                                     Handle<YieldTermStructure> domesticRiskFreeTS,
                                      Handle<BlackVolTermStructure> blackVolTS)
             : this(x0, foreignRiskFreeTS, domesticRiskFreeTS, blackVolTS, new EulerDiscretization()) { }
         public GarmanKohlagenProcess(Handle<Quote> x0, Handle<YieldTermStructure> foreignRiskFreeTS,
-                                     Handle<BlackVolTermStructure> domesticRiskFreeTS,
+                                     Handle<YieldTermStructure> domesticRiskFreeTS,
                                      Handle<BlackVolTermStructure> blackVolTS, IDiscretization1D d)
             : base(x0, foreignRiskFreeTS, foreignRiskFreeTS, blackVolTS, d) { }
     }
