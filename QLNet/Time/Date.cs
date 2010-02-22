@@ -109,6 +109,7 @@ namespace QLNet {
 
         // this is the overload for DateTime operations
         public static implicit operator DateTime(Date d) { return d.date; }
+        public static implicit operator Date(DateTime d) { return new Date(d.Day, d.Month, d.Year); }
 
         public static bool operator ==(Date d1, Date d2) {
             return ((Object)d1 == null || (Object)d2 == null) ?
