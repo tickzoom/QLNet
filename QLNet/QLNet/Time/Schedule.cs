@@ -354,49 +354,152 @@ namespace QLNet {
         private bool endOfMonth_;
         private Date firstDate_, nextToLastDate_;
 
-        public MakeSchedule(Date effectiveDate, Date terminationDate, Period tenor, Calendar calendar,
-                            BusinessDayConvention convention) {
-            calendar_ = calendar;
-            effectiveDate_ = effectiveDate;
-            terminationDate_ = terminationDate;
-            tenor_ = tenor;
-            convention_ = convention;
-            terminationDateConvention_ = convention;
-            rule_ = DateGeneration.Rule.Backward;
-            endOfMonth_ = false;
-            firstDate_ = nextToLastDate_ = null;
+        public MakeSchedule() { rule_ = DateGeneration.Rule.Backward; endOfMonth_ = false; }
+
+        public MakeSchedule from(Date effectiveDate)
+        {
+           effectiveDate_ = effectiveDate;
+           return this;
         }
 
+        public MakeSchedule to(Date terminationDate) 
+        {
+           terminationDate_ = terminationDate;
+           return this;
+        }
 
-        public MakeSchedule withTerminationDateConvention(BusinessDayConvention conv) {
-            terminationDateConvention_ = conv;
-            return this;
+        public MakeSchedule withTenor(Period tenor) 
+        {
+           tenor_ = tenor;
+           return this;
         }
-        public MakeSchedule withRule(DateGeneration.Rule r) {
-            rule_ = r;
-            return this;
+
+        public MakeSchedule withFrequency(Frequency frequency) 
+        {
+           tenor_ = new Period(frequency);
+           return this;
         }
-        public MakeSchedule forwards() {
-            rule_ = DateGeneration.Rule.Forward;
-            return this;
+
+        public MakeSchedule withCalendar(Calendar calendar) 
+        {
+           calendar_ = calendar;
+           return this;
         }
-        public MakeSchedule backwards() {
-            rule_ = DateGeneration.Rule.Backward;
-            return this;
+
+        public MakeSchedule withConvention(BusinessDayConvention conv) 
+        {
+           convention_ = conv;
+           return this;
         }
-        public MakeSchedule endOfMonth(bool flag) {
-            endOfMonth_ = flag;
-            return this;
+
+        public MakeSchedule withTerminationDateConvention(BusinessDayConvention conv)
+        {
+           terminationDateConvention_ = conv;
+           return this;
         }
-        public MakeSchedule withFirstDate(Date d) {
-            firstDate_ = d;
-            return this;
+
+        public MakeSchedule withRule(DateGeneration.Rule r)
+        {
+           rule_ = r;
+           return this;
         }
-        public MakeSchedule withNextToLastDate(Date d) {
-            nextToLastDate_ = d;
-            return this;
+
+        public MakeSchedule forwards()
+        {
+           rule_ = DateGeneration.Rule.Forward;
+           return this;
         }
-        public Schedule value() {
+
+        public MakeSchedule backwards()
+        {
+           rule_ = DateGeneration.Rule.Backward;
+           return this;
+        }
+
+        public MakeSchedule endOfMonth(bool flag)
+        {
+           endOfMonth_ = flag;
+           return this;
+        }
+
+        public MakeSchedule withFirstDate(Date d)
+        {
+           firstDate_ = d;
+           return this;
+        }
+
+        public MakeSchedule withNextToLastDate(Date d)
+        {
+           nextToLastDate_ = d;
+           return this;
+        }
+
+        //public MakeSchedule(Date effectiveDate, Date terminationDate, Period tenor, Calendar calendar,
+        //                    BusinessDayConvention convention) {
+        //    calendar_ = calendar;
+        //    effectiveDate_ = effectiveDate;
+        //    terminationDate_ = terminationDate;
+        //    tenor_ = tenor;
+        //    convention_ = convention;
+        //    terminationDateConvention_ = convention;
+        //    rule_ = DateGeneration.Rule.Backward;
+        //    endOfMonth_ = false;
+        //    firstDate_ = nextToLastDate_ = null;
+        //}
+
+
+        public Schedule value() 
+        {
+
+           // check for mandatory arguments
+           if (effectiveDate_ == null)
+              throw new ApplicationException("effective date not provided");
+           if (terminationDate_ == null)
+              throw new ApplicationException("termination date not provided");
+           if ((object)tenor_ == null)
+              throw new ApplicationException("tenor/frequency not provided");
+
+           // set dynamic defaults:
+           BusinessDayConvention convention;
+           // if a convention was set, we use it.
+           if (convention_ != null )
+           {
+              convention = convention_;
+           }
+           else
+           {
+              if (!calendar_.empty())
+              {
+                 // ...if we set a calendar, we probably want it to be used;
+                 convention = BusinessDayConvention.Following;
+              }
+              else
+              {
+                 // if not, we don't care.
+                 convention = BusinessDayConvention.Unadjusted;
+              }
+           }
+
+           BusinessDayConvention terminationDateConvention;
+           // if set explicitly, we use it;
+           if (terminationDateConvention_ != null )
+           {
+              terminationDateConvention = terminationDateConvention_;
+           }
+           else
+           {
+              // Unadjusted as per ISDA specification
+              terminationDateConvention = convention;
+           }
+
+           Calendar calendar = calendar_;
+           // if no calendar was set...
+           if (calendar.empty())
+           {
+              // ...we use a null one.
+              calendar = new NullCalendar();
+           }
+
             return new Schedule(effectiveDate_, terminationDate_, tenor_, calendar_,
                                 convention_, terminationDateConvention_,
                                 rule_, endOfMonth_, firstDate_, nextToLastDate_);

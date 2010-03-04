@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -22,10 +23,11 @@ namespace QLNet {
     public class BootstrapError : ISolver1d {
 
         private PiecewiseYieldCurve curve_;
-        private BootstrapHelper helper_;
+        private RateHelper helper_;
         private int segment_;
 
-        public BootstrapError(PiecewiseYieldCurve curve, BootstrapHelper helper, int segment) {
+        public BootstrapError(PiecewiseYieldCurve curve, RateHelper helper, int segment)
+        {
             curve_ = curve;
             helper_ = helper;
             segment_ = segment; 

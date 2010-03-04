@@ -1,7 +1,8 @@
 /*
  Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
  Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
- * 
+ Copyright (C) 2008, 2009 , 2010 Andrea Maggiulli (a.maggiulli@gmail.com)
+  
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -80,7 +81,7 @@ namespace QLNet {
             update();                                   // fire the change event to notify observers of this
         }
 
-        public override FloatingRateCouponPricer pricer() { return pricer_; }
+        public FloatingRateCouponPricer pricer() { return pricer_; }
 
 
         //////////////////////////////////////////////////////////////////////////////////////

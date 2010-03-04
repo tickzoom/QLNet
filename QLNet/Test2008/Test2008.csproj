@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="T_AsianOptions.cs" />
+    <Compile Include="T_Inflation.cs" />
     <Compile Include="T_LinearLeastSquaresRegression.cs" />
     <Compile Include="T_Matrices.cs" />
     <Compile Include="T_Mclongstaffschwartzengine.cs" />

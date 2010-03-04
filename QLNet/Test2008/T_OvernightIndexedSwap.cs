@@ -302,8 +302,8 @@ namespace TestSuite
          // Testing Eonia-swap curve building...
          CommonVars vars = new CommonVars();
 
-         List<BootstrapHelper> eoniaHelpers  = new List<BootstrapHelper>();
-         List<BootstrapHelper> swap3mHelpers = new List<BootstrapHelper>();
+         List<RateHelper> eoniaHelpers = new List<RateHelper>();
+         List<RateHelper> swap3mHelpers = new List<RateHelper>();
 
          IborIndex euribor3m = new Euribor3M();
          Eonia eonia = new Eonia();
@@ -315,7 +315,7 @@ namespace TestSuite
             Handle<Quote> quote = new Handle<Quote>(simple);
 
             Period term = new Period(depositData[i].n , depositData[i].unit);
-            BootstrapHelper helper = new DepositRateHelper(quote,
+            RateHelper helper = new DepositRateHelper(quote,
                                          term,
                                          depositData[i].settlementDays,
                                          euribor3m.fixingCalendar(),
@@ -337,7 +337,7 @@ namespace TestSuite
             double rate = 0.01 * fraData[i].rate;
             SimpleQuote simple = new SimpleQuote(rate);
             Handle<Quote> quote = new Handle<Quote>(simple);
-            BootstrapHelper helper = new FraRateHelper(quote,
+            RateHelper helper = new FraRateHelper(quote,
                                              fraData[i].nExpiry,
                                              fraData[i].nMaturity,
                                              fraData[i].settlementDays,
@@ -355,7 +355,7 @@ namespace TestSuite
             SimpleQuote simple = new SimpleQuote(rate);
             Handle<Quote> quote = new Handle<Quote>(simple);
             Period term = new Period(eoniaSwapData[i].n , eoniaSwapData[i].unit);
-            BootstrapHelper helper = new OISRateHelper(eoniaSwapData[i].settlementDays,
+            RateHelper helper = new OISRateHelper(eoniaSwapData[i].settlementDays,
                                                        term,
                                                        quote,
                                                        eonia);
@@ -370,8 +370,8 @@ namespace TestSuite
             Handle<Quote> quote = new Handle<Quote>(simple);
             Period tenor = new Period(swapData[i].nIndexUnits , swapData[i].indexUnit);
             Period term = new Period(swapData[i].nTermUnits , swapData[i].termUnit);
-        
-            BootstrapHelper helper = new SwapRateHelper(quote,
+
+            RateHelper helper = new SwapRateHelper(quote,
                                                         term,
                                                         vars.calendar,
                                                         vars.fixedSwapFrequency,

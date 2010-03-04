@@ -1,5 +1,6 @@
 ﻿/*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 , 2010 Andrea Maggiulli (a.maggiulli@gmail.com)  
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -126,25 +127,25 @@ namespace Swap {
             // deposits
             DayCounter depositDayCounter = new Actual360();
 
-            BootstrapHelper d1w = new DepositRateHelper(new Handle<Quote>(d1wRate), new Period(1, TimeUnit.Weeks),
+            RateHelper d1w = new DepositRateHelper(new Handle<Quote>(d1wRate), new Period(1, TimeUnit.Weeks),
                 fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
-            BootstrapHelper d1m = new DepositRateHelper(new Handle<Quote>(d1mRate), new Period(1, TimeUnit.Months),
+            RateHelper d1m = new DepositRateHelper(new Handle<Quote>(d1mRate), new Period(1, TimeUnit.Months),
                 fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
-            BootstrapHelper d3m = new DepositRateHelper(new Handle<Quote>(d3mRate), new Period(3, TimeUnit.Months), 
+            RateHelper d3m = new DepositRateHelper(new Handle<Quote>(d3mRate), new Period(3, TimeUnit.Months), 
                 fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
-            BootstrapHelper d6m = new DepositRateHelper(new Handle<Quote>(d6mRate), new Period(6, TimeUnit.Months),
+            RateHelper d6m = new DepositRateHelper(new Handle<Quote>(d6mRate), new Period(6, TimeUnit.Months),
                 fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
-            BootstrapHelper d9m = new DepositRateHelper(new Handle<Quote>(d9mRate), new Period(9, TimeUnit.Months),
+            RateHelper d9m = new DepositRateHelper(new Handle<Quote>(d9mRate), new Period(9, TimeUnit.Months),
                 fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
-            BootstrapHelper d1y = new DepositRateHelper(new Handle<Quote>(d1yRate), new Period(1, TimeUnit.Years),
+            RateHelper d1y = new DepositRateHelper(new Handle<Quote>(d1yRate), new Period(1, TimeUnit.Years),
                 fixingDays, calendar, BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
 
             // setup FRAs
-            BootstrapHelper fra3x6 = new FraRateHelper(new Handle<Quote>(fra3x6Rate), 3, 6, fixingDays, calendar,
+            RateHelper fra3x6 = new FraRateHelper(new Handle<Quote>(fra3x6Rate), 3, 6, fixingDays, calendar,
                         BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
-            BootstrapHelper fra6x9 = new FraRateHelper(new Handle<Quote>(fra6x9Rate), 6, 9, fixingDays, calendar,
+            RateHelper fra6x9 = new FraRateHelper(new Handle<Quote>(fra6x9Rate), 6, 9, fixingDays, calendar,
                         BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
-            BootstrapHelper fra6x12 = new FraRateHelper(new Handle<Quote>(fra6x12Rate), 6, 12, fixingDays, calendar,
+            RateHelper fra6x12 = new FraRateHelper(new Handle<Quote>(fra6x12Rate), 6, 12, fixingDays, calendar,
                         BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
 
 
@@ -153,35 +154,35 @@ namespace Swap {
             int futMonths = 3;
             Date imm = IMM.nextDate(settlementDate);
 
-            BootstrapHelper fut1 = new FuturesRateHelper(new Handle<Quote>(fut1Price), imm, futMonths, calendar,
+            RateHelper fut1 = new FuturesRateHelper(new Handle<Quote>(fut1Price), imm, futMonths, calendar,
                     BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
 
             imm = IMM.nextDate(imm + 1);
-            BootstrapHelper fut2 = new FuturesRateHelper(new Handle<Quote>(fut2Price), imm, futMonths, calendar,
+            RateHelper fut2 = new FuturesRateHelper(new Handle<Quote>(fut2Price), imm, futMonths, calendar,
                     BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
 
             imm = IMM.nextDate(imm + 1);
-            BootstrapHelper fut3 = new FuturesRateHelper(new Handle<Quote>(fut3Price), imm, futMonths, calendar,
+            RateHelper fut3 = new FuturesRateHelper(new Handle<Quote>(fut3Price), imm, futMonths, calendar,
                     BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
 
             imm = IMM.nextDate(imm + 1);
-            BootstrapHelper fut4 = new FuturesRateHelper(new Handle<Quote>(fut4Price), imm, futMonths, calendar,
+            RateHelper fut4 = new FuturesRateHelper(new Handle<Quote>(fut4Price), imm, futMonths, calendar,
                     BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
 
             imm = IMM.nextDate(imm + 1);
-            BootstrapHelper fut5 = new FuturesRateHelper(new Handle<Quote>(fut5Price), imm, futMonths, calendar,
+            RateHelper fut5 = new FuturesRateHelper(new Handle<Quote>(fut5Price), imm, futMonths, calendar,
                     BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
 
             imm = IMM.nextDate(imm + 1);
-            BootstrapHelper fut6 = new FuturesRateHelper(new Handle<Quote>(fut6Price), imm, futMonths, calendar,
+            RateHelper fut6 = new FuturesRateHelper(new Handle<Quote>(fut6Price), imm, futMonths, calendar,
                     BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
 
             imm = IMM.nextDate(imm + 1);
-            BootstrapHelper fut7 = new FuturesRateHelper(new Handle<Quote>(fut7Price), imm, futMonths, calendar,
+            RateHelper fut7 = new FuturesRateHelper(new Handle<Quote>(fut7Price), imm, futMonths, calendar,
                     BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
 
             imm = IMM.nextDate(imm + 1);
-            BootstrapHelper fut8 = new FuturesRateHelper(new Handle<Quote>(fut8Price), imm, futMonths, calendar,
+            RateHelper fut8 = new FuturesRateHelper(new Handle<Quote>(fut8Price), imm, futMonths, calendar,
                     BusinessDayConvention.ModifiedFollowing, true, depositDayCounter);
 
 
@@ -192,15 +193,15 @@ namespace Swap {
 
             IborIndex swFloatingLegIndex = new Euribor6M();
 
-            BootstrapHelper s2y = new SwapRateHelper(new Handle<Quote>(s2yRate), new Period(2, TimeUnit.Years),
+            RateHelper s2y = new SwapRateHelper(new Handle<Quote>(s2yRate), new Period(2, TimeUnit.Years),
                 calendar, swFixedLegFrequency, swFixedLegConvention, swFixedLegDayCounter, swFloatingLegIndex);
-            BootstrapHelper s3y = new SwapRateHelper(new Handle<Quote>(s3yRate), new Period(3, TimeUnit.Years), 
+            RateHelper s3y = new SwapRateHelper(new Handle<Quote>(s3yRate), new Period(3, TimeUnit.Years), 
                 calendar, swFixedLegFrequency, swFixedLegConvention, swFixedLegDayCounter, swFloatingLegIndex);
-            BootstrapHelper s5y = new SwapRateHelper(new Handle<Quote>(s5yRate), new Period(5, TimeUnit.Years), 
+            RateHelper s5y = new SwapRateHelper(new Handle<Quote>(s5yRate), new Period(5, TimeUnit.Years), 
                 calendar, swFixedLegFrequency, swFixedLegConvention, swFixedLegDayCounter, swFloatingLegIndex);
-            BootstrapHelper s10y = new SwapRateHelper(new Handle<Quote>(s10yRate), new Period(10, TimeUnit.Years), 
+            RateHelper s10y = new SwapRateHelper(new Handle<Quote>(s10yRate), new Period(10, TimeUnit.Years), 
                 calendar, swFixedLegFrequency, swFixedLegConvention, swFixedLegDayCounter, swFloatingLegIndex);
-            BootstrapHelper s15y = new SwapRateHelper(new Handle<Quote>(s15yRate), new Period(15, TimeUnit.Years), 
+            RateHelper s15y = new SwapRateHelper(new Handle<Quote>(s15yRate), new Period(15, TimeUnit.Years), 
                 calendar, swFixedLegFrequency, swFixedLegConvention, swFixedLegDayCounter, swFloatingLegIndex);
 
 
@@ -216,7 +217,7 @@ namespace Swap {
             double tolerance = 1.0e-15;
 
             // A depo-swap curve
-            List<BootstrapHelper> depoSwapInstruments = new List<BootstrapHelper>();
+            List<RateHelper> depoSwapInstruments = new List<RateHelper>();
             depoSwapInstruments.Add(d1w);
             depoSwapInstruments.Add(d1m);
             depoSwapInstruments.Add(d3m);
@@ -233,7 +234,7 @@ namespace Swap {
 
 
             // A depo-futures-swap curve
-            List<BootstrapHelper> depoFutSwapInstruments = new List<BootstrapHelper>();
+            List<RateHelper> depoFutSwapInstruments = new List<RateHelper>();
             depoFutSwapInstruments.Add(d1w);
             depoFutSwapInstruments.Add(d1m);
             depoFutSwapInstruments.Add(fut1);
@@ -253,7 +254,7 @@ namespace Swap {
 
 
             // A depo-FRA-swap curve
-            List<BootstrapHelper> depoFRASwapInstruments = new List<BootstrapHelper>();
+            List<RateHelper> depoFRASwapInstruments = new List<RateHelper>();
             depoFRASwapInstruments.Add(d1w);
             depoFRASwapInstruments.Add(d1m);
             depoFRASwapInstruments.Add(d3m);

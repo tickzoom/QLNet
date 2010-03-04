@@ -2,7 +2,7 @@
  Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
  Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
  Copyright (C) 2008, 2009 , 2010 Andrea Maggiulli (a.maggiulli@gmail.com)
- * 
+  
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -255,6 +255,122 @@ namespace QLNet {
            return leg;
         }
 
+         public static List<CashFlow> yoyInflationLeg(List<double> notionals_, 
+                                                      Schedule schedule_, 
+                                                      BusinessDayConvention paymentAdjustment_, 
+                                                      YoYInflationIndex index_, 
+                                                      List<double> gearings_, 
+                                                      List<double> spreads_, 
+                                                      DayCounter paymentDayCounter_,
+                                                      List<double> caps_, 
+                                                      List<double> floors_ ,
+                                                      Calendar paymentCalendar_,
+                                                      List<int> fixingDays_,
+                                                      Period observationLag_)
+         {
+            int n = schedule_.Count;
+
+            if (notionals_.empty())
+               throw new ApplicationException("no notional given");
+
+            if (notionals_.Count > n)
+               throw new ApplicationException("too many nominals (" + notionals_.Count +
+                                              "), only " + n + " required");
+            if (gearings_.Count > n)
+               throw new ApplicationException("too many gearings (" + gearings_.Count +
+                                              "), only " + n + " required");
+
+            if (spreads_.Count > n)
+               throw new ApplicationException("too many spreads (" + spreads_.Count +
+                                              "), only " + n + " required");
+
+            if (caps_.Count > n)
+               throw new ApplicationException("too many caps (" + caps_.Count +
+                                              "), only " + n + " required");
+
+            if (floors_.Count > n)
+               throw new ApplicationException("too many floors (" + floors_.Count +
+                                              "), only " + n + " required");
+
+
+            List<CashFlow> leg = new List<CashFlow>(n);
+
+            Calendar calendar = paymentCalendar_;
+
+            Date refStart, start, refEnd, end;
+            Date lastPaymentDate = calendar.adjust(schedule_.date(n), paymentAdjustment_);
+
+            for (int i = 0; i < n; ++i)
+            {
+               refStart = start = schedule_.date(i);
+               refEnd = end = schedule_.date(i + 1);
+               Date paymentDate = calendar.adjust(end, paymentAdjustment_);
+               if (i == 0 && !schedule_.isRegular(i + 1))
+               {
+                  BusinessDayConvention bdc = schedule_.businessDayConvention();
+                  refStart = schedule_.calendar().adjust(end - schedule_.tenor(), bdc);
+               }
+               if (i == n - 1 && !schedule_.isRegular(i + 1))
+               {
+                  BusinessDayConvention bdc = schedule_.businessDayConvention();
+                  refEnd = schedule_.calendar().adjust(start + schedule_.tenor(), bdc);
+               }
+               if (Utils.Get(gearings_, i, 1.0) == 0.0)
+               {
+                  // fixed coupon
+                  leg.Add(new FixedRateCoupon(Utils.Get(notionals_, i, 1.0),
+                                              paymentDate,
+                                              Utils.effectiveFixedRate(spreads_, caps_,
+                                                                         floors_, i),
+                                              paymentDayCounter_,
+                                              start, end, refStart, refEnd));
+               }
+               else
+               {
+                  // yoy inflation coupon
+                  if (Utils.noOption(caps_, floors_, i))
+                  {
+                     // just swaplet
+                     YoYInflationCoupon coup = new YoYInflationCoupon(paymentDate,
+                                                                     Utils.Get(notionals_, i, 1.0),
+                                                                     start, end,
+                                                                     Utils.Get(fixingDays_, i, 0),
+                                                                     index_,
+                                                                     observationLag_,
+                                                                     paymentDayCounter_,
+                                                                     Utils.Get(gearings_, i, 1.0),
+                                                                     Utils.Get(spreads_, i, 0.0),
+                                                                     refStart, refEnd);
+
+                     // in this case you can set a pricer
+                     // straight away because it only provides computation - not data
+                     YoYInflationCouponPricer pricer = new YoYInflationCouponPricer();
+                     coup.setPricer(pricer);
+                     leg.Add(coup);
+                  }
+                  else
+                  {
+                     // cap/floorlet
+                     leg.Add(new CappedFlooredYoYInflationCoupon(
+                                   paymentDate,
+                                   Utils.Get(notionals_, i, 1.0),
+                                   start, end,
+                                   Utils.Get(fixingDays_, i, 0),
+                                   index_,
+                                   observationLag_,
+                                   paymentDayCounter_,
+                                   Utils.Get(gearings_, i, 1.0),
+                                   Utils.Get(spreads_, i, 0.0),
+                                   Utils.toNullable(Utils.Get(caps_, i, Double.MinValue)),
+                                   Utils.toNullable(Utils.Get(floors_, i, Double.MinValue)),
+                                   refStart, refEnd));
+                  }
+               }
+            }
+
+            return leg;
+
+         }
 
 
     }

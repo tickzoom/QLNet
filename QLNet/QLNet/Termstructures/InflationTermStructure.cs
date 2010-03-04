@@ -1,6 +1,7 @@
 /*
  Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -56,207 +57,595 @@ namespace QLNet {
 
             return new KeyValuePair<Date, Date>(startDate, endDate);
         }
+
+       public static double inflationYearFraction(Frequency f, bool indexIsInterpolated,
+                                    DayCounter dayCounter,
+                                    Date d1, Date d2) 
+       {
+          double t=0;
+          if (indexIsInterpolated) 
+          {
+            // N.B. we do not use linear interpolation between flat
+            // fixing forecasts for forecasts.  This avoids awkwardnesses
+            // when bootstrapping the inflation curve.
+            t = dayCounter.yearFraction(d1, d2);
+          } 
+          else 
+          {
+            // I.e. fixing is constant for the whole inflation period.
+            // Use the value for half way along the period.
+            // But the inflation time is the time between period starts
+            KeyValuePair<Date,Date> limD1 = inflationPeriod(d1, f);
+            KeyValuePair<Date,Date> limD2 = inflationPeriod(d2, f);
+            t = dayCounter.yearFraction(limD1.Key, limD2.Key);
+          }
+          return t;
+       }
     }
 
-    //! Interface for inflation term structures.
-    //! \ingroup inflationtermstructures 
-    public abstract class InflationTermStructure : TermStructure {
-        //! \name Constructors
-        //@{
-        public InflationTermStructure(Period lag, Frequency frequency, double baseRate, Handle<YieldTermStructure> yTS)
-            : this(lag, frequency, baseRate, yTS, new DayCounter()) {
-        }
-        public InflationTermStructure(Period lag, Frequency frequency, double baseRate, Handle<YieldTermStructure> yTS, DayCounter dayCounter)
-            : base(dayCounter) {
-            nominalTermStructure_ = yTS;
-            lag_ = lag;
-            frequency_ = frequency;
-            baseRate_ = baseRate;
-            if (nominalTermStructure_ != null)
-                nominalTermStructure_.registerWith(update);
+   //! Interface for inflation term structures.
+   //! \ingroup inflationtermstructures 
+   public class InflationTermStructure : TermStructure 
+   {
+      public InflationTermStructure() { }
 
-        }
-        public InflationTermStructure(Date referenceDate, Period lag, Frequency frequency, double baseRate, Handle<YieldTermStructure> yTS, Calendar calendar)
-            : this(referenceDate, lag, frequency, baseRate, yTS, calendar, new DayCounter()) {
-        }
-        public InflationTermStructure(Date referenceDate, Period lag, Frequency frequency, double baseRate, Handle<YieldTermStructure> yTS)
-            : this(referenceDate, lag, frequency, baseRate, yTS, new Calendar(), new DayCounter()) {
-        }
-        public InflationTermStructure(Date referenceDate, Period lag, Frequency frequency, double baseRate, Handle<YieldTermStructure> yTS, Calendar calendar, DayCounter dayCounter)
-            : base(referenceDate, calendar, dayCounter) {
-            nominalTermStructure_ = yTS;
-            lag_ = lag;
-            frequency_ = frequency;
-            baseRate_ = baseRate;
+      //! \name Constructors
+      //@{
+      public InflationTermStructure(double baseRate,
+                                     Period observationLag,
+                                     Frequency frequency,
+                                     bool indexIsInterpolated,
+                                     Handle<YieldTermStructure> yTS)
+          :this(baseRate,observationLag,frequency,indexIsInterpolated,yTS,
+                new DayCounter(),new Seasonality()){}
 
-            if (nominalTermStructure_ != null)
-                nominalTermStructure_.registerWith(update);
+      public InflationTermStructure(double baseRate,
+                                     Period observationLag,
+                                     Frequency frequency,
+                                     bool indexIsInterpolated,
+                                     Handle<YieldTermStructure> yTS,
+                                     DayCounter dayCounter)
+          :this(baseRate,observationLag,frequency,indexIsInterpolated,yTS,
+                dayCounter,new Seasonality()){}
 
-        }
-        public InflationTermStructure(int settlementDays, Calendar calendar, Period lag, Frequency frequency, double baseRate, Handle<YieldTermStructure> yTS)
-            : this(settlementDays, calendar, lag, frequency, baseRate, yTS, new DayCounter()) {
-        }
-        public InflationTermStructure(int settlementDays, Calendar calendar, Period lag, Frequency frequency, double baseRate, Handle<YieldTermStructure> yTS, DayCounter dayCounter)
-            : base(settlementDays, calendar, dayCounter) {
-            nominalTermStructure_ = yTS;
-            lag_ = lag;
-            frequency_ = frequency;
-            baseRate_ = baseRate;
+      public InflationTermStructure(double baseRate,
+                                     Period observationLag,
+                                     Frequency frequency,
+                                     bool indexIsInterpolated,
+                                     Handle<YieldTermStructure> yTS,
+                                     DayCounter dayCounter,
+                                     Seasonality seasonality)
+         :base(dayCounter)
+      {
+         nominalTermStructure_ = yTS;
+         observationLag_ = observationLag;
+         frequency_ = frequency;
+         indexIsInterpolated_ = indexIsInterpolated;
+         baseRate_= baseRate;
+         nominalTermStructure_.registerWith(update);
+         setSeasonality(seasonality);
+      }
 
-            if (nominalTermStructure_ != null)
-                nominalTermStructure_.registerWith(update);
+   public InflationTermStructure(Date referenceDate,
+                                 double baseRate,
+                                 Period observationLag,
+                                 Frequency frequency,
+                                 bool indexIsInterpolated,
+                                 Handle<YieldTermStructure> yTS)
+      :this(referenceDate,baseRate,observationLag,frequency,indexIsInterpolated,
+            yTS,new Calendar(),new DayCounter(),new Seasonality()) {}
 
-        }
-        //@}
+   public InflationTermStructure(Date referenceDate,
+                                 double baseRate,
+                                 Period observationLag,
+                                 Frequency frequency,
+                                 bool indexIsInterpolated,
+                                 Handle<YieldTermStructure> yTS,
+                                 Calendar calendar)
+      :this(referenceDate,baseRate,observationLag,frequency,indexIsInterpolated,
+            yTS,calendar,new DayCounter(),new Seasonality()) {}
 
-        //! \name Inflation interface
-        //@{
-        public Period lag() {
-            return lag_;
-        }
-        public Frequency frequency() {
-            return frequency_;
-        }
-        public double baseRate() {
-            return baseRate_;
-        }
-        public Handle<YieldTermStructure> nominalTermStructure() {
-            return nominalTermStructure_;
-        }
+   public InflationTermStructure(Date referenceDate,
+                                 double baseRate,
+                                 Period observationLag,
+                                 Frequency frequency,
+                                 bool indexIsInterpolated,
+                                 Handle<YieldTermStructure> yTS,
+                                 Calendar calendar,
+                                 DayCounter dayCounter)
+      :this(referenceDate,baseRate,observationLag,frequency,indexIsInterpolated,
+            yTS,calendar,dayCounter,new Seasonality()) {}
 
-        //! minimum (base) date
-        //        ! Important in inflation since it starts before nominal
-        //            reference date.
-        //        
-        public abstract Date baseDate();
-        // public virtual Date baseDate() { throw new NotSupportedException(); }
-        //@}
+   public InflationTermStructure(Date referenceDate,
+                                 double baseRate,
+                                 Period observationLag,
+                                 Frequency frequency,
+                                 bool indexIsInterpolated,
+                                 Handle<YieldTermStructure> yTS,
+                                 Calendar calendar,
+                                 DayCounter dayCounter,
+                                 Seasonality seasonality)
+      : base(referenceDate, calendar, dayCounter)
+   {
+      nominalTermStructure_ = yTS;
+      observationLag_ = observationLag;
+      frequency_ = frequency;
+      indexIsInterpolated_ = indexIsInterpolated;
+      baseRate_ = baseRate;
+      nominalTermStructure_.registerWith(update);
+      setSeasonality(seasonality);
+   }
 
-        protected Handle<YieldTermStructure> nominalTermStructure_;
+   public InflationTermStructure(int settlementDays,
+                                 Calendar calendar,
+                                 double baseRate,
+                                 Period observationLag,
+                                 Frequency frequency,
+                                 bool indexIsInterpolated,
+                                 Handle<YieldTermStructure> yTS)
+      :this(settlementDays,calendar,baseRate,observationLag,frequency,
+            indexIsInterpolated,yTS,new DayCounter(),new Seasonality()) {}
 
-        // connection with base index:
-        //  lag to base date
-        //  index
-        //  whether or not to connect with the index at the short end
-        //  (don't if you have no index set up)
-        protected Period lag_;
-        protected Frequency frequency_;
+   public InflationTermStructure(int settlementDays,
+                                 Calendar calendar,
+                                 double baseRate,
+                                 Period observationLag,
+                                 Frequency frequency,
+                                 bool indexIsInterpolated,
+                                 Handle<YieldTermStructure> yTS,
+                                 DayCounter dayCounter)
+      :this(settlementDays,calendar,baseRate,observationLag,frequency,
+            indexIsInterpolated,yTS,dayCounter,new Seasonality()) {}
 
-        // This next part is required for piecewise- constructors
-        // because, for inflation, they need more than just the
-        // instruments to build the term structure, since the rate at
-        // time 0-lag is non-zero, since we deal (effectively) with
-        // "forwards".
-        protected virtual void setBaseRate(double r) {
-            baseRate_ = r;
-        }
-        protected double baseRate_;
+   public InflationTermStructure(int settlementDays,
+                              Calendar calendar,
+                              double baseRate,
+                              Period observationLag,
+                              Frequency frequency,
+                              bool indexIsInterpolated,
+                              Handle<YieldTermStructure> yTS,
+                              DayCounter dayCounter,
+                              Seasonality seasonality)
+      : base(settlementDays, calendar, dayCounter)
+   {
+      nominalTermStructure_ = yTS;
+      observationLag_ = observationLag;
+      frequency_ = frequency;
+      indexIsInterpolated_ = indexIsInterpolated;
+      baseRate_ = baseRate;
+      nominalTermStructure_.registerWith(update);
+      setSeasonality(seasonality);
+   }
+   //@}
 
-        // range-checking
-        protected new void checkRange(Date d, bool extrapolate) {
-            if (!(d >= baseDate()))
-                throw new ApplicationException("date (" + d + ") is before base date");
+      //! \name Inflation interface
+      //@{
+      //! The TS observes with a lag that is usually different from the
+      //! availability lag of the index.  An inflation rate is given,
+      //! by default, for the maturity requested assuming this lag.
+      public virtual Period observationLag() { return observationLag_; }
+      public virtual Frequency frequency() { return frequency_; }
+      public virtual bool indexIsInterpolated() { return indexIsInterpolated_; }
+      public virtual double baseRate() { return baseRate_; }
+      public virtual Handle<YieldTermStructure> nominalTermStructure() 
+         { return nominalTermStructure_; }
 
-            if (!(extrapolate || allowsExtrapolation() || d <= maxDate()))
-                throw new ApplicationException("date (" + d + ") is past max curve date (" + maxDate() + ")");
-        }
-        protected new void checkRange(double t, bool extrapolate) {
-            if (!(t >= timeFromReference(baseDate())))
-                throw new ApplicationException("time (" + t + ") is before base date");
+      //! minimum (base) date
+      /*! Important in inflation since it starts before nominal
+          reference date.  Changes depending whether index is
+          interpolated or not.  When interpolated the base date
+          is just observation lag before nominal.  When not
+          interpolated it is the beginning of the relevant period
+          (hence it is easy to create interpolated fixings from
+           a not-interpolated curve because interpolation, usually,
+           of fixings is forward looking).
+      */
+      public virtual Date baseDate() { return null; }
+      //@}
 
-            if (!(extrapolate || allowsExtrapolation() || t <= maxTime()))
-                throw new ApplicationException("time (" + t + ") is past max curve time (" + maxTime() + ")");
-        }
-    }
+      //! Functions to set and get seasonality.
+      /*! Calling setSeasonality with no arguments means unsetting
+          as the default is used to choose unsetting.
+      */
+      public void setSeasonality() {setSeasonality(new Seasonality());}
+      public void setSeasonality(Seasonality seasonality)
+      {
+         // always reset, whether with null or new pointer
+         seasonality_ = seasonality;
+         if (seasonality_ == null) 
+         {
+            if (!seasonality_.isConsistent(this))
+               throw new ApplicationException("Seasonality inconsistent with " +
+                                             "inflation term structure");
+         }
+         notifyObservers();
+      }
+
+      public Seasonality seasonality() { return seasonality_; }
+      public bool hasSeasonality() { return seasonality_ != null; }
+
+
+      protected Handle<YieldTermStructure> nominalTermStructure_;
+      protected Period observationLag_;
+      protected Frequency frequency_;
+      protected bool indexIsInterpolated_;
+      protected double baseRate_;
+
+      // This next part is required for piecewise- constructors
+      // because, for inflation, they need more than just the
+      // instruments to build the term structure, since the rate at
+      // time 0-lag is non-zero, since we deal (effectively) with
+      // "forwards".
+      protected virtual void setBaseRate(double r){ baseRate_ = r; }
+
+      // range-checking
+      void checkRange(Date d,bool extrapolate)
+      {
+         if (d < baseDate())
+            throw new ApplicationException("date (" + d + ") is before base date");
+
+         if (!extrapolate && allowsExtrapolation() && d > maxDate())
+            throw new ApplicationException("date (" + d + ") is past max curve date ("
+                                            + maxDate() + ")");
+      }
+
+      Seasonality seasonality_;
+   }
 
 
     //! Interface for zero inflation term structures.
     // Child classes use templates but do not want that exposed to
     // general users.
-    public abstract class ZeroInflationTermStructure : InflationTermStructure {
-        //! \name Constructors
-        //@{
-        public ZeroInflationTermStructure(DayCounter dayCounter, Period lag, Frequency frequency, double baseZeroRate, Handle<YieldTermStructure> yTS)
-            : base(lag, frequency, baseZeroRate, yTS, dayCounter) {
-        }
+    public class ZeroInflationTermStructure : InflationTermStructure 
+    {
+       public ZeroInflationTermStructure() { }
 
-        public ZeroInflationTermStructure(Date referenceDate, Calendar calendar, DayCounter dayCounter, Period lag, Frequency frequency, double baseZeroRate, Handle<YieldTermStructure> yTS)
-            : base(referenceDate, lag, frequency, baseZeroRate, yTS, calendar, dayCounter) {
-        }
-
-        public ZeroInflationTermStructure(int settlementDays, Calendar calendar, DayCounter dayCounter, Period lag, Frequency frequency, double baseZeroRate, Handle<YieldTermStructure> yTS)
-            : base(settlementDays, calendar, lag, frequency, baseZeroRate, yTS, dayCounter) {
-        }
-        //@}
-
-        //! \name Inspectors
-        //@{
-        //! zero-coupon inflation rate
-        //        ! Essentially the fair rate for a zero-coupon inflation swap
-        //            (by definition), i.e. the zero term structure uses yearly
-        //            compounding, which is assumed for ZCIIS instrument quotes.
-        //        
-        public double zeroRate(Date d) {
-            return zeroRate(d, false);
-        }
-        public double zeroRate(Date d, bool extrapolate) {
-            base.checkRange(d, extrapolate);
-            return zeroRateImpl(timeFromReference(d));
-        }
-        public double zeroRate(double t) {
-            return zeroRate(t, false);
-        }
-        public double zeroRate(double t, bool extrapolate) {
-            base.checkRange(t, extrapolate);
-            return zeroRateImpl(t);
-        }
-        //@}
-        //! to be defined in derived classes
-        protected abstract double zeroRateImpl(double t);
-    }
-
-
-    //! Base class for year-on-year inflation term structures.
-    public abstract class YoYInflationTermStructure : InflationTermStructure {
-        //! \name Constructors
-        //@{
-        public YoYInflationTermStructure(DayCounter dayCounter, Period lag, Frequency frequency, double baseYoYRate, 
+       //! \name Constructors
+       //@{
+       public ZeroInflationTermStructure(DayCounter dayCounter,
+                                         double baseZeroRate,
+                                         Period lag,
+                                         Frequency frequency,
+                                         bool indexIsInterpolated,
                                          Handle<YieldTermStructure> yTS)
-            : base(lag, frequency, baseYoYRate, yTS, dayCounter) {
-        }
+          :this(dayCounter,baseZeroRate,lag,frequency,indexIsInterpolated,yTS,
+                new Seasonality()) {}
 
-        public YoYInflationTermStructure(Date referenceDate, Calendar calendar, DayCounter dayCounter, Period lag, 
-                                         Frequency frequency, double baseYoYRate, Handle<YieldTermStructure> yTS)
-            : base(referenceDate, lag, frequency, baseYoYRate, yTS, calendar, dayCounter) {
-        }
 
-        public YoYInflationTermStructure(int settlementDays, Calendar calendar, DayCounter dayCounter, Period lag, 
-                                         Frequency frequency, double baseYoYRate, Handle<YieldTermStructure> yTS)
-            : base(settlementDays, calendar, lag, frequency, baseYoYRate, yTS, dayCounter) {
-        }
-        //@}
+       public ZeroInflationTermStructure(DayCounter dayCounter,
+                                         double baseZeroRate,
+                                         Period observationLag,
+                                         Frequency frequency,
+                                         bool indexIsInterpolated,
+                                         Handle<YieldTermStructure> yTS,
+                                         Seasonality seasonality)
+          :base(baseZeroRate, observationLag, frequency, indexIsInterpolated,
+                yTS, dayCounter, seasonality)
+       {}
 
-        //! \name Inspectors
-        //@{
-        //! year-on-year inflation rate
-        //! \note this is not the year-on-year swap (YYIIS) rate. 
-        public double yoyRate(Date d) {
-            return yoyRate(d, false);
-        }
-        public double yoyRate(Date d, bool extrapolate) {
+
+       public ZeroInflationTermStructure(Date referenceDate,
+                                         Calendar calendar,
+                                         DayCounter dayCounter,
+                                         double baseZeroRate,
+                                         Period lag,
+                                         Frequency frequency,
+                                         bool indexIsInterpolated,
+                                         Handle<YieldTermStructure> yTS)
+          :this(referenceDate,calendar,dayCounter,baseZeroRate,lag,frequency,
+                indexIsInterpolated,yTS,new Seasonality())  {}
+
+       public ZeroInflationTermStructure(Date referenceDate,
+                                          Calendar calendar,
+                                          DayCounter dayCounter,
+                                          double baseZeroRate,
+                                          Period observationLag,
+                                          Frequency frequency,
+                                          bool indexIsInterpolated,
+                                          Handle<YieldTermStructure> yTS,
+                                          Seasonality seasonality)
+           : base(referenceDate, baseZeroRate, observationLag, frequency, indexIsInterpolated,
+                  yTS, calendar, dayCounter, seasonality) {}
+
+
+
+       public ZeroInflationTermStructure(int settlementDays,
+                                         Calendar calendar,
+                                         DayCounter dayCounter,
+                                         double baseZeroRate,
+                                         Period lag,
+                                         Frequency frequency,
+                                         bool indexIsInterpolated,
+                                         Handle<YieldTermStructure> yTS)
+          : this(settlementDays, calendar, dayCounter, baseZeroRate, lag, frequency,
+                indexIsInterpolated, yTS, new Seasonality()) { }
+
+       public ZeroInflationTermStructure(int settlementDays,
+                                         Calendar calendar,
+                                         DayCounter dayCounter,
+                                         double baseZeroRate,
+                                         Period observationLag,
+                                         Frequency frequency,
+                                         bool indexIsInterpolated,
+                                         Handle<YieldTermStructure> yTS,
+                                         Seasonality seasonality)
+          :base(settlementDays, calendar, baseZeroRate, observationLag, frequency, 
+                indexIsInterpolated, yTS, dayCounter, seasonality) { }
+       //@}
+
+
+       //! \name Inspectors
+       //@{
+       //! zero-coupon inflation rate for an instrument with maturity (pay date) d
+       //! that observes with given lag and interpolation.
+       //! Since inflation is highly linked to dates (lags, interpolation, months for seasonality, etc)
+       //! we do NOT provide a "time" version of the rate lookup.
+       /*! Essentially the fair rate for a zero-coupon inflation swap
+           (by definition), i.e. the zero term structure uses yearly
+           compounding, which is assumed for ZCIIS instrument quotes.
+           N.B. by default you get the same as lag and interpolation
+           as the term structure.
+           If you want to get predictions of RPI/CPI/etc then use an
+           index.
+       */
+       public double zeroRate(Date d) 
+       {
+          return zeroRate(d, new Period(-1,TimeUnit.Days),false,false) ;
+       }
+       public double zeroRate(Date d, Period instObsLag)
+       {
+          return zeroRate(d, instObsLag,false, false) ;
+       }
+       public double zeroRate(Date d, Period instObsLag,bool forceLinearInterpolation)
+       {
+          return zeroRate(d,instObsLag,forceLinearInterpolation,false);
+       }
+
+       public double zeroRate(Date d, Period instObsLag,
+                              bool forceLinearInterpolation,
+                              bool extrapolate)
+       {
+          Period useLag = instObsLag;
+          if (instObsLag == new Period(-1,TimeUnit.Days)) 
+          {
+             useLag = observationLag();
+          }
+         
+          double zeroRate;
+          if (forceLinearInterpolation) 
+          {
+            KeyValuePair<Date,Date> dd = Utils.inflationPeriod(d-useLag, frequency());
+            Date ddValue = dd.Value + new Period(1,TimeUnit.Days);
+            double dp = ddValue - dd.Key;
+            double dt = d - dd.Key;
+            // if we are interpolating we only check the exact point
+            // this prevents falling off the end at curve maturity
             base.checkRange(d, extrapolate);
-            return yoyRateImpl(timeFromReference(d));
+            double t1 = timeFromReference(dd.Key);
+            double t2 = timeFromReference(ddValue);
+            zeroRate = zeroRateImpl(t1) + zeroRateImpl(t2) * (dt/dp);
+          } 
+          else 
+          {
+             if (indexIsInterpolated()) 
+             {
+                base.checkRange(d-useLag, extrapolate);
+                double t = timeFromReference(d-useLag);
+                zeroRate = zeroRateImpl(t);
+             } 
+             else 
+             {
+                KeyValuePair<Date,Date> dd = Utils.inflationPeriod(d-useLag, frequency());
+                base.checkRange(dd.Key, extrapolate);
+                double t = timeFromReference(dd.Key);
+                zeroRate = zeroRateImpl(t);
+            }
         }
-        public double yoyRate(double t) {
-            return yoyRate(t, false);
+
+        if (hasSeasonality()) 
+        {
+            zeroRate = seasonality().correctZeroRate(d-useLag, zeroRate, this);
         }
-        public double yoyRate(double t, bool extrapolate) {
-            base.checkRange(t, extrapolate);
-            return yoyRateImpl(t);
-        }
-        //@}
-        //! to be defined in derived classes
-        protected abstract double yoyRateImpl(double time);
+        
+        
+          return zeroRate;
+       }
+
+       //@}
+   
+       //! to be defined in derived classes
+       protected virtual double zeroRateImpl(double t) {return 0;}
+   
+   }
+
+
+   
+   //! Base class for year-on-year inflation term structures.
+    public class YoYInflationTermStructure : InflationTermStructure
+    {
+       public YoYInflationTermStructure() { }
+       //! \name Constructors
+       //@{
+       public YoYInflationTermStructure(DayCounter dayCounter,
+                                        double baseYoYRate,
+                                        Period lag,
+                                        Frequency frequency,
+                                        bool indexIsInterpolated,
+                                        Handle<YieldTermStructure> yieldTS)
+          : this(dayCounter, baseYoYRate, lag, frequency, indexIsInterpolated, yieldTS, new Seasonality()) { }
+
+       public YoYInflationTermStructure(DayCounter dayCounter,
+                                        double baseYoYRate,
+                                        Period observationLag,
+                                        Frequency frequency,
+                                        bool indexIsInterpolated,
+                                        Handle<YieldTermStructure> yTS,
+                                        Seasonality seasonality)
+          : base(baseYoYRate, observationLag, frequency, indexIsInterpolated,
+                yTS, dayCounter, seasonality) { }
+
+
+       public YoYInflationTermStructure(Date referenceDate,
+                                        Calendar calendar,
+                                        DayCounter dayCounter,
+                                        double baseYoYRate,
+                                        Period lag,
+                                        Frequency frequency,
+                                        bool indexIsInterpolated,
+                                        Handle<YieldTermStructure> yieldTS)
+          : this(referenceDate, calendar, dayCounter, baseYoYRate, lag, frequency,
+                indexIsInterpolated, yieldTS, new Seasonality()) { }
+
+       public YoYInflationTermStructure(Date referenceDate,
+                                        Calendar calendar,
+                                        DayCounter dayCounter,
+                                        double baseYoYRate,
+                                        Period observationLag,
+                                        Frequency frequency,
+                                        bool indexIsInterpolated,
+                                        Handle<YieldTermStructure> yTS,
+                                        Seasonality seasonality)
+          : base(referenceDate, baseYoYRate, observationLag, frequency, indexIsInterpolated,
+                              yTS, calendar, dayCounter, seasonality) { }
+
+
+       public YoYInflationTermStructure(int settlementDays,
+                                        Calendar calendar,
+                                        DayCounter dayCounter,
+                                        double baseYoYRate,
+                                        Period lag,
+                                        Frequency frequency,
+                                        bool indexIsInterpolated,
+                                        Handle<YieldTermStructure> yieldTS)
+          : this(settlementDays, calendar, dayCounter, baseYoYRate, lag, frequency,
+                indexIsInterpolated, yieldTS, new Seasonality()) { }
+
+       public YoYInflationTermStructure(int settlementDays,
+                                        Calendar calendar,
+                                        DayCounter dayCounter,
+                                        double baseYoYRate,
+                                        Period observationLag,
+                                        Frequency frequency,
+                                        bool indexIsInterpolated,
+                                        Handle<YieldTermStructure> yTS,
+                                        Seasonality seasonality)
+          : base(settlementDays, calendar, baseYoYRate, observationLag,
+                              frequency, indexIsInterpolated,
+                              yTS, dayCounter, seasonality) { }
+       //@}
+
+       //! \name Inspectors
+       //@{
+       //! year-on-year inflation rate, forceLinearInterpolation
+       //! is relative to the frequency of the TS.
+       //! Since inflation is highly linked to dates (lags, interpolation, months for seasonality etc)
+       //! we do NOT provide a "time" version of the rate lookup.
+       /*! \note this is not the year-on-year swap (YYIIS) rate. */
+       public double yoyRate(Date d)
+       {
+          return yoyRate(d, new Period(-1, TimeUnit.Days), false, false);
+       }
+       public double yoyRate(Date d, Period instObsLag)
+       {
+          return yoyRate(d, instObsLag, false, false);
+       }
+       public double yoyRate(Date d, Period instObsLag, bool forceLinearInterpolation)
+       {
+          return yoyRate(d, instObsLag, forceLinearInterpolation, false);
+       }
+
+       public double yoyRate(Date d, Period instObsLag, bool forceLinearInterpolation,
+                             bool extrapolate)
+       {
+          Period useLag = instObsLag;
+          if (instObsLag == new Period(-1, TimeUnit.Days))
+          {
+             useLag = observationLag();
+          }
+
+          double yoyRate;
+          if (forceLinearInterpolation)
+          {
+             KeyValuePair<Date, Date> dd = Utils.inflationPeriod(d - useLag, frequency());
+             Date ddValue = dd.Value + new Period(1, TimeUnit.Days);
+             double dp = ddValue - dd.Key;
+             double dt = (d - useLag) - dd.Key;
+             // if we are interpolating we only check the exact point
+             // this prevents falling off the end at curve maturity
+             base.checkRange(d, extrapolate);
+             double t1 = timeFromReference(dd.Key);
+             double t2 = timeFromReference(dd.Value);
+             yoyRate = yoyRateImpl(t1) + (yoyRateImpl(t2) - yoyRateImpl(t1)) * (dt / dp);
+          }
+          else
+          {
+             if (indexIsInterpolated())
+             {
+                base.checkRange(d - useLag, extrapolate);
+                double t = timeFromReference(d - useLag);
+                yoyRate = yoyRateImpl(t);
+             }
+             else
+             {
+                KeyValuePair<Date, Date> dd = Utils.inflationPeriod(d - useLag, frequency());
+                base.checkRange(dd.Key, extrapolate);
+                double t = timeFromReference(dd.Key);
+                yoyRate = yoyRateImpl(t);
+             }
+          }
+
+          if (hasSeasonality())
+          {
+             yoyRate = seasonality().correctYoYRate(d - useLag, yoyRate, this);
+          }
+          return yoyRate;
+       }
+       //@}
+
+       //! to be defined in derived classes
+       protected virtual double yoyRateImpl(double time) { return 0; }
+
     }
+
+    //  //! \name Constructors
+    //  //@{
+    //  public YoYInflationTermStructure(DayCounter dayCounter, Period lag, Frequency frequency, double baseYoYRate, 
+    //                                   Handle<YieldTermStructure> yTS)
+    //      : base(lag, frequency, baseYoYRate, yTS, dayCounter) {
+    //  }
+
+    //    public YoYInflationTermStructure(Date referenceDate, Calendar calendar, DayCounter dayCounter, Period lag, 
+    //                                     Frequency frequency, double baseYoYRate, Handle<YieldTermStructure> yTS)
+    //        : base(referenceDate, lag, frequency, baseYoYRate, yTS, calendar, dayCounter) {
+    //    }
+
+    //    public YoYInflationTermStructure(int settlementDays, Calendar calendar, DayCounter dayCounter, Period lag, 
+    //                                     Frequency frequency, double baseYoYRate, Handle<YieldTermStructure> yTS)
+    //        : base(settlementDays, calendar, lag, frequency, baseYoYRate, yTS, dayCounter) {
+    //    }
+    //    //@}
+
+    //    //! \name Inspectors
+    //    //@{
+    //    //! year-on-year inflation rate
+    //    //! \note this is not the year-on-year swap (YYIIS) rate. 
+    //    public double yoyRate(Date d) {
+    //        return yoyRate(d, false);
+    //    }
+    //    public double yoyRate(Date d, bool extrapolate) {
+    //        base.checkRange(d, extrapolate);
+    //        return yoyRateImpl(timeFromReference(d));
+    //    }
+    //    public double yoyRate(double t) {
+    //        return yoyRate(t, false);
+    //    }
+    //    public double yoyRate(double t, bool extrapolate) {
+    //        base.checkRange(t, extrapolate);
+    //        return yoyRateImpl(t);
+    //    }
+    //    //@}
+    //    //! to be defined in derived classes
+    //    protected abstract double yoyRateImpl(double time);
+    //}
 
 }

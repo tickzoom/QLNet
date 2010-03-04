@@ -1,5 +1,6 @@
 ﻿/*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -31,9 +32,10 @@ namespace QLNet {
         private Curve curve_;
         private int initialIndex_;
         private int localisation_, start_, end_;
-        private List<BootstrapHelper> rateHelpers_;
+        private List<RateHelper> rateHelpers_;
 
-        public PenaltyFunction(Curve curve, int initialIndex, List<BootstrapHelper> rateHelpers, int start, int end) {
+        public PenaltyFunction(Curve curve, int initialIndex, List<RateHelper> rateHelpers, int start, int end)
+        {
             curve_ = curve;
             initialIndex_ = initialIndex;
             rateHelpers_ = rateHelpers;
