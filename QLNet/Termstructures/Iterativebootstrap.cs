@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -100,7 +101,7 @@ namespace QLNet {
                 for (i=1; i<n+1; ++i) {
                     // calculate guess before extending interpolation to ensure that any extrapolation is performed
                     // using the curve bootstrapped so far and no more
-                    BootstrapHelper instrument = ts_.instruments_[i-1];
+                    RateHelper instrument = ts_.instruments_[i-1];
                     double guess = 0;
                     if (validCurve_ || iteration>0) {
                         guess = ts_.data_[i];

@@ -134,6 +134,69 @@ namespace QLNet
                double gearing,
                double spread,
                Date refPeriodStart,
+               Date refPeriodEnd
+               ) 
+         : this(paymentDate,
+                nominal,
+                startDate,
+                endDate,
+                overnightIndex,
+                gearing,
+                spread,
+                refPeriodStart,
+                refPeriodEnd,
+                new DayCounter()){}
+
+      public OvernightIndexedCoupon(
+               Date paymentDate,
+               double nominal,
+               Date startDate,
+               Date endDate,
+               OvernightIndex overnightIndex,
+               double gearing,
+               double spread,
+               Date refPeriodStart
+               )
+         : this(paymentDate,
+                nominal,
+                startDate,
+                endDate,
+                overnightIndex,
+                gearing,
+                spread,
+                refPeriodStart,
+                null,
+                new DayCounter()) { }
+
+      public OvernightIndexedCoupon(
+               Date paymentDate,
+               double nominal,
+               Date startDate,
+               Date endDate,
+               OvernightIndex overnightIndex,
+               double gearing,
+               double spread
+               )
+         : this(paymentDate,
+                nominal,
+                startDate,
+                endDate,
+                overnightIndex,
+                gearing,
+                spread,
+                null,
+                null,
+                new DayCounter()) { }
+
+      public OvernightIndexedCoupon(
+               Date paymentDate,
+               double nominal,
+               Date startDate,
+               Date endDate,
+               OvernightIndex overnightIndex,
+               double gearing,
+               double spread,
+               Date refPeriodStart,
                Date refPeriodEnd,
                DayCounter dayCounter)
          : base(nominal, paymentDate,startDate, endDate,
@@ -143,11 +206,15 @@ namespace QLNet
                          dayCounter, false) 
       {
          // value dates
-         Schedule sch = new MakeSchedule(startDate,
-                                         endDate,
-                                         new Period(1,TimeUnit.Days),
-                                         overnightIndex.fixingCalendar(),
-                                         overnightIndex.businessDayConvention()).backwards().value();
+         Schedule sch = new MakeSchedule()
+                      .from(startDate)
+                      .to(endDate)
+                      .withTenor(new Period(1,TimeUnit.Days))
+                      .withCalendar(overnightIndex.fixingCalendar())
+                      .withConvention(overnightIndex.businessDayConvention())
+                      .backwards()
+                      .value();
+            
          valueDates_ = sch.dates();
          if (valueDates_.Count < 2)
             throw new ArgumentException("degenerate schedule");

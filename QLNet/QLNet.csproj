@@ -46,6 +46,7 @@
     <Compile Include="Cashflow.cs" />
     <Compile Include="Cashflows\averagebmacoupon.cs" />
     <Compile Include="Cashflows\CappedFlooredCoupon.cs" />
+    <Compile Include="Cashflows\CappedFlooredYoYInflationCoupon.cs" />
     <Compile Include="Cashflows\CashFlows.cs" />
     <Compile Include="Cashflows\Cashflowvectors.cs" />
     <Compile Include="Cashflows\CmsCoupon.cs" />
@@ -60,10 +61,13 @@
     <Compile Include="Cashflows\FloatingRateCoupon.cs" />
     <Compile Include="Cashflows\Iborcoupon.cs" />
     <Compile Include="Cashflows\IndexedCashFlow.cs" />
+    <Compile Include="Cashflows\InflationCoupon.cs" />
+    <Compile Include="Cashflows\InflationCouponPricer.cs" />
     <Compile Include="Cashflows\OvernightIndexedCoupon.cs" />
     <Compile Include="Cashflows\RateLegBase.cs" />
     <Compile Include="Cashflows\Replication.cs" />
     <Compile Include="Cashflows\SimpleCashFlow.cs" />
+    <Compile Include="Cashflows\YoYInflationCoupon.cs" />
     <Compile Include="Currencies\Africa.cs" />
     <Compile Include="Currencies\America.cs" />
     <Compile Include="Currencies\Asia.cs" />
@@ -100,7 +104,11 @@
     <Compile Include="Indexes\Ibor\Usdlibor.cs" />
     <Compile Include="Indexes\Ibor\Zibor.cs" />
     <Compile Include="Indexes\Indexmanager.cs" />
+    <Compile Include="Indexes\InflationIndex.cs" />
+    <Compile Include="Indexes\Inflation\EUHICP.cs" />
+    <Compile Include="Indexes\Inflation\UKRPI.cs" />
     <Compile Include="Indexes\InterestRateIndex.cs" />
+    <Compile Include="Indexes\Region.cs" />
     <Compile Include="Indexes\Swapindex.cs" />
     <Compile Include="Indexes\swap\EuriborSwapFixA.cs" />
     <Compile Include="Indexes\swap\EuriborSwapFixB.cs" />
@@ -138,6 +146,7 @@
     <Compile Include="Instruments\Swaption.cs" />
     <Compile Include="Instruments\VanillaOption.cs" />
     <Compile Include="Instruments\VanillaSwap.cs" />
+    <Compile Include="Instruments\ZeroCouponInflationSwap.cs" />
     <Compile Include="InterestRate.cs" />
     <Compile Include="legacy\libormarketmodels\lfmcovarparam.cs" />
     <Compile Include="legacy\libormarketmodels\lfmcovarproxy.cs" />
@@ -351,10 +360,13 @@
     <Compile Include="Termstructures\Bootstraphelper.cs" />
     <Compile Include="Termstructures\DefaultProbabilityTermStructure.cs" />
     <Compile Include="Termstructures\InflationTermStructure.cs" />
+    <Compile Include="Termstructures\Inflation\InflationHelpers.cs" />
+    <Compile Include="Termstructures\Inflation\Seasonality.cs" />
     <Compile Include="Termstructures\interpolatedcurve.cs" />
     <Compile Include="Termstructures\Iterativebootstrap.cs" />
     <Compile Include="Termstructures\localbootstrap.cs" />
     <Compile Include="Termstructures\TermStructure.cs" />
+    <Compile Include="Termstructures\Volatility\Inflation\yoyinflationoptionletvolatilitystructure.cs" />
     <Compile Include="Termstructures\Volatility\Optionlet\capletvariancecurve.cs" />
     <Compile Include="Termstructures\Volatility\swaption\swaptionconstantvol.cs" />
     <Compile Include="Termstructures\Volatility\swaption\swaptionvoldiscrete.cs" />

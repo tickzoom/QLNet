@@ -1,6 +1,6 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
- Copyright (C) 2008 Andrea Maggiulli
+ Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -21,7 +21,8 @@ using System;
 
 namespace QLNet {
     //! Rate helper for bootstrapping over interest-rate futures prices
-    public class FuturesRateHelper : BootstrapHelper {
+   public class FuturesRateHelper : RateHelper
+   {
         private double yearFraction_;
         private Handle<Quote> convAdj_;
 
@@ -108,7 +109,7 @@ namespace QLNet {
 
     // Rate helper with date schedule relative to the global evaluation date
     // This class takes care of rebuilding the date schedule when the global evaluation date changes
-    public abstract class RelativeDateRateHelper : BootstrapHelper {
+    public abstract class RelativeDateRateHelper : RateHelper {
         protected Date evaluationDate_;
 
         ///////////////////////////////////////////
@@ -530,13 +531,20 @@ namespace QLNet {
             // dummy BMA index with curve/swap arguments
             BMAIndex clonedIndex = new BMAIndex(termStructureHandle_);
 
-            Schedule bmaSchedule = new MakeSchedule(earliestDate_, maturity, bmaPeriod_, bmaIndex_.fixingCalendar(),
-                                                    bmaConvention_).backwards().value();
+            Schedule bmaSchedule = new MakeSchedule().from(earliestDate_).to(maturity)
+                          .withTenor(bmaPeriod_)
+                          .withCalendar(bmaIndex_.fixingCalendar())
+                          .withConvention(bmaConvention_)
+                          .backwards()
+                          .value();
 
-            Schedule liborSchedule = new MakeSchedule(earliestDate_, maturity, iborIndex_.tenor(),
-                                                      iborIndex_.fixingCalendar(), iborIndex_.businessDayConvention())
-                                    .endOfMonth(iborIndex_.endOfMonth())
-                                    .backwards().value();
+            Schedule liborSchedule = new MakeSchedule().from(earliestDate_).to(maturity)
+                          .withTenor(iborIndex_.tenor())
+                          .withCalendar(iborIndex_.fixingCalendar())
+                          .withConvention(iborIndex_.businessDayConvention())
+                          .endOfMonth(iborIndex_.endOfMonth())
+                          .backwards()
+                          .value();
 
             swap_ = new BMASwap(BMASwap.Type.Payer, 100.0, liborSchedule, 0.75, // arbitrary
                                 0.0, iborIndex_, iborIndex_.dayCounter(), bmaSchedule, clonedIndex, bmaDayCount_);

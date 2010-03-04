@@ -1,5 +1,6 @@
 ﻿/*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -114,7 +115,7 @@ namespace TestSuite {
 
             public int deposits, fras, swaps, bonds, bmas;
             public List<SimpleQuote> rates, fraRates, prices, fractions;
-            public List<BootstrapHelper> instruments, fraHelpers, bondHelpers, bmaHelpers;
+            public List<RateHelper> instruments, fraHelpers, bondHelpers, bmaHelpers;
             public List<Schedule> schedules;
             public YieldTermStructure termStructure;
 
@@ -176,11 +177,11 @@ namespace TestSuite {
                 }
 
                 // rate helpers
-                instruments = new List<BootstrapHelper>(deposits + swaps);
-                fraHelpers = new List<BootstrapHelper>(fras);
-                bondHelpers = new List<BootstrapHelper>(bonds);
+                instruments = new List<RateHelper>(deposits + swaps);
+                fraHelpers = new List<RateHelper>(fras);
+                bondHelpers = new List<RateHelper>(bonds);
                 schedules = new List<Schedule>(bonds);
-                bmaHelpers = new List<BootstrapHelper>(bmas);
+                bmaHelpers = new List<RateHelper>(bmas);
 
                 IborIndex euribor6m = new Euribor6M();
                 for (int i = 0; i < deposits; i++) {
@@ -392,7 +393,7 @@ namespace TestSuite {
 
             CommonVars vars = new CommonVars();
 
-            var swapHelpers = new InitializedList<BootstrapHelper>();
+            var swapHelpers = new InitializedList<RateHelper>();
             IborIndex euribor6m = new Euribor6M();
 
             for (int i=0; i<vars.swaps; i++) {
@@ -505,7 +506,7 @@ namespace TestSuite {
             }
 
             // rate helpers
-            vars.instruments = new InitializedList<BootstrapHelper>(vars.swaps);
+            vars.instruments = new InitializedList<RateHelper>(vars.swaps);
 
             IborIndex index = new JPYLibor(new Period(6, TimeUnit.Months));
             for (int i=0; i<vars.swaps; i++) {
@@ -748,20 +749,23 @@ namespace TestSuite {
             for (int i = 0; i < vars.bmas; i++) {
                 Period tenor = new Period(vars.bmaData[i].n, vars.bmaData[i].units);
 
-                Schedule bmaSchedule = new MakeSchedule(vars.settlement,
-                                                    vars.settlement + tenor,
-                                                    new Period(vars.bmaFrequency),
-                                                    bma.fixingCalendar(),
-                                                    vars.bmaConvention).backwards().value();
-                Schedule liborSchedule = new MakeSchedule(vars.settlement,
-                                                      vars.settlement + tenor,
-                                                      libor3m.tenor(),
-                                                      libor3m.fixingCalendar(),
-                                                      libor3m.businessDayConvention())
-                                        .endOfMonth(libor3m.endOfMonth())
-                                        .backwards().value();
+                Schedule bmaSchedule = new MakeSchedule().from(vars.settlement)
+                              .to(vars.settlement + tenor)
+                              .withFrequency(vars.bmaFrequency)
+                              .withCalendar(bma.fixingCalendar())
+                              .withConvention(vars.bmaConvention)
+                              .backwards()
+                              .value();
 
-
+                Schedule liborSchedule = new MakeSchedule().from(vars.settlement)
+                               .to(vars.settlement + tenor)
+                               .withTenor(libor3m.tenor())
+                               .withCalendar(libor3m.fixingCalendar())
+                               .withConvention(libor3m.businessDayConvention())
+                               .endOfMonth(libor3m.endOfMonth())
+                               .backwards()
+                               .value();
+                  
                 BMASwap swap = new BMASwap(BMASwap.Type.Payer, 100.0, liborSchedule, 0.75, 0.0,
                                            libor3m, libor3m.dayCounter(), bmaSchedule, bma, vars.bmaDayCounter);
                 swap.setPricingEngine(new DiscountingSwapEngine(libor3m.termStructure()));

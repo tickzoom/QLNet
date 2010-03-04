@@ -93,7 +93,7 @@ namespace QLNet
         /// <summary>
         /// Returns whether or not the calendar is initialized
         /// </summary>
-        public bool empty() { return calendar == null; }				//!  Returns whether or not the calendar is initialized
+        public bool empty() { return (object)calendar == null; }				//!  Returns whether or not the calendar is initialized
         /// <summary>
         /// Returns <tt>true</tt> iff the date is a holiday for the given
         /// market.

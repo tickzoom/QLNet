@@ -1,6 +1,7 @@
 ﻿/*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
-  
+ Copyright (C) 2008, 2009 , 2010 Andrea Maggiulli (a.maggiulli@gmail.com)  
+ * 
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -73,15 +74,15 @@ namespace Bonds {
 
              DayCounter zcBondsDayCounter = new Actual365Fixed();
 
-             BootstrapHelper zc3m = new DepositRateHelper(new Handle<Quote>(zc3mRate),
+             RateHelper zc3m = new DepositRateHelper(new Handle<Quote>(zc3mRate),
                                                           new Period(3, TimeUnit.Months), fixingDays,
                                                           calendar, BusinessDayConvention.ModifiedFollowing,
                                                           true, zcBondsDayCounter);
-             BootstrapHelper zc6m = new DepositRateHelper(new Handle<Quote>(zc6mRate),
+             RateHelper zc6m = new DepositRateHelper(new Handle<Quote>(zc6mRate),
                                                           new Period(6, TimeUnit.Months), fixingDays,
                                                           calendar, BusinessDayConvention.ModifiedFollowing,
                                                           true, zcBondsDayCounter);
-             BootstrapHelper zc1y = new DepositRateHelper(new Handle<Quote>(zc1yRate),
+             RateHelper zc1y = new DepositRateHelper(new Handle<Quote>(zc1yRate),
                                                           new Period(1, TimeUnit.Years), fixingDays,
                                                           calendar, BusinessDayConvention.ModifiedFollowing,
                                                           true, zcBondsDayCounter);
@@ -167,7 +168,7 @@ namespace Bonds {
              double tolerance = 1.0e-15;
 
              // A depo-bond curve
-             List<BootstrapHelper> bondInstruments = new List<BootstrapHelper>();
+             List<RateHelper> bondInstruments = new List<RateHelper>();
 
              // Adding the ZC bonds to the curve for the short end
              bondInstruments.Add(zc3m);
@@ -236,32 +237,32 @@ namespace Bonds {
              // deposits
              DayCounter depositDayCounter = new Actual360();
 
-             BootstrapHelper d1w = new DepositRateHelper(
+             RateHelper d1w = new DepositRateHelper(
                      new Handle<Quote>(d1wRate),
                      new Period(1, TimeUnit.Weeks), fixingDays,
                      calendar, BusinessDayConvention.ModifiedFollowing,
                      true, depositDayCounter);
-             BootstrapHelper d1m = new DepositRateHelper(
+             RateHelper d1m = new DepositRateHelper(
                      new Handle<Quote>(d1mRate),
                      new Period(1, TimeUnit.Months), fixingDays,
                      calendar, BusinessDayConvention.ModifiedFollowing,
                      true, depositDayCounter);
-             BootstrapHelper d3m = new DepositRateHelper(
+             RateHelper d3m = new DepositRateHelper(
                      new Handle<Quote>(d3mRate),
                      new Period(3, TimeUnit.Months), fixingDays,
                      calendar, BusinessDayConvention.ModifiedFollowing,
                      true, depositDayCounter);
-             BootstrapHelper d6m = new DepositRateHelper(
+             RateHelper d6m = new DepositRateHelper(
                      new Handle<Quote>(d6mRate),
                      new Period(6, TimeUnit.Months), fixingDays,
                      calendar, BusinessDayConvention.ModifiedFollowing,
                      true, depositDayCounter);
-             BootstrapHelper d9m = new DepositRateHelper(
+             RateHelper d9m = new DepositRateHelper(
                      new Handle<Quote>(d9mRate),
                      new Period(9, TimeUnit.Months), fixingDays,
                      calendar, BusinessDayConvention.ModifiedFollowing,
                      true, depositDayCounter);
-             BootstrapHelper d1y = new DepositRateHelper(
+             RateHelper d1y = new DepositRateHelper(
                      new Handle<Quote>(d1yRate),
                      new Period(1, TimeUnit.Years), fixingDays,
                      calendar, BusinessDayConvention.ModifiedFollowing,
@@ -275,27 +276,27 @@ namespace Bonds {
 
              Period forwardStart = new Period(1, TimeUnit.Days);
 
-             BootstrapHelper s2y = new SwapRateHelper(
+             RateHelper s2y = new SwapRateHelper(
                      new Handle<Quote>(s2yRate), new Period(2, TimeUnit.Years),
                      calendar, swFixedLegFrequency,
                      swFixedLegConvention, swFixedLegDayCounter,
                      swFloatingLegIndex, new Handle<Quote>(),forwardStart);
-             BootstrapHelper s3y = new SwapRateHelper(
+             RateHelper s3y = new SwapRateHelper(
                      new Handle<Quote>(s3yRate), new Period(3, TimeUnit.Years),
                      calendar, swFixedLegFrequency,
                      swFixedLegConvention, swFixedLegDayCounter,
                      swFloatingLegIndex, new Handle<Quote>(),forwardStart);
-             BootstrapHelper s5y = new SwapRateHelper(
+             RateHelper s5y = new SwapRateHelper(
                      new Handle<Quote>(s5yRate), new Period(5, TimeUnit.Years),
                      calendar, swFixedLegFrequency,
                      swFixedLegConvention, swFixedLegDayCounter,
                      swFloatingLegIndex, new Handle<Quote>(),forwardStart);
-             BootstrapHelper s10y = new SwapRateHelper(
+             RateHelper s10y = new SwapRateHelper(
                      new Handle<Quote>(s10yRate), new Period(10, TimeUnit.Years),
                      calendar, swFixedLegFrequency,
                      swFixedLegConvention, swFixedLegDayCounter,
                      swFloatingLegIndex, new Handle<Quote>(),forwardStart);
-             BootstrapHelper s15y = new SwapRateHelper(
+             RateHelper s15y = new SwapRateHelper(
                      new Handle<Quote>(s15yRate), new Period(15, TimeUnit.Years),
                      calendar, swFixedLegFrequency,
                      swFixedLegConvention, swFixedLegDayCounter,
@@ -310,7 +311,7 @@ namespace Bonds {
              // ActualActual::ISDA ensures that 30 years is 30.0
 
              // A depo-swap curve
-             List<BootstrapHelper> depoSwapInstruments = new List<BootstrapHelper>();
+             List<RateHelper> depoSwapInstruments = new List<RateHelper>();
              depoSwapInstruments.Add(d1w);
              depoSwapInstruments.Add(d1m);
              depoSwapInstruments.Add(d3m);

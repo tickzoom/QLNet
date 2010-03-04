@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -27,9 +28,9 @@ namespace QLNet {
        It is advised that a bootstrap helper for an instrument contains an instance of the actual instrument 
      * class to ensure consistancy between the algorithms used during bootstrapping
        and later instrument pricing. This is not yet fully enforced in the available rate helpers. */
-    public class BootstrapHelper : IObservable, IObserver {
+    public class BootstrapHelper<TS> : IObservable, IObserver {
         protected Handle<Quote> quote_;
-        protected YieldTermStructure termStructure_;
+        protected TS termStructure_;
         protected Date earliestDate_, latestDate_;
 
         public BootstrapHelper() { } // required for generics
@@ -44,6 +45,7 @@ namespace QLNet {
 
 
         //! BootstrapHelper interface
+        Handle<Quote> quote() { return quote_; }
         public double quoteError() { return quote_.link.value() - impliedQuote(); }
         public double quoteValue() { return quote_.link.value(); }
         public bool quoteIsValid() { return quote_.link.isValid(); }
@@ -51,7 +53,16 @@ namespace QLNet {
 
 
         //! sets the term structure to be used for pricing
-        public virtual void setTermStructure(YieldTermStructure ts) {
+        /*! \warning Being a pointer and not a shared_ptr, the term
+                             structure is not guaranteed to remain allocated
+                             for the whole life of the rate helper. It is
+                             responsibility of the programmer to ensure that
+                             the pointer remains valid. It is advised that
+                             this method is called only inside the term
+                             structure being bootstrapped, setting the pointer
+                             to <b>this</b>, i.e., the term structure itself.
+        */
+        public virtual void setTermStructure(TS ts) {
             if (ts == null) throw new ArgumentException("null term structure given");
             termStructure_ = ts;
         }
@@ -79,5 +90,12 @@ namespace QLNet {
 
         public virtual void update() { notifyObservers(); }
         #endregion
+    }
+
+    public class RateHelper : BootstrapHelper<YieldTermStructure>
+    {
+        public RateHelper() : base() { } // required for generics
+        public RateHelper(Handle<Quote> quote) : base(quote) {}
+        public RateHelper(double quote) : base (quote) {}
     }
 }

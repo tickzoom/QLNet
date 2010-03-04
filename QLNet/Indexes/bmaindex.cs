@@ -1,5 +1,6 @@
 ﻿/*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 , 2010 Andrea Maggiulli (a.maggiulli@gmail.com) 
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -66,8 +67,13 @@ namespace QLNet {
         //! \name Date calculations
         /*! This method returns a schedule of fixing dates between start and end. */
         public Schedule fixingSchedule(Date start, Date end) {
-            return new MakeSchedule(Utils.previousWednesday(start), Utils.nextWednesday(end), new Period(1, TimeUnit.Weeks),
-                                    fixingCalendar_, BusinessDayConvention.Following).forwards().value();
+           return new MakeSchedule().from(Utils.previousWednesday(start))
+                             .to(Utils.nextWednesday(end))
+                             .withFrequency(Frequency.Weekly)
+                             .withCalendar(fixingCalendar_)
+                             .withConvention(BusinessDayConvention.Following)
+                             .forwards()
+                             .value();
         }
 
         protected override double forecastFixing(Date fixingDate) {

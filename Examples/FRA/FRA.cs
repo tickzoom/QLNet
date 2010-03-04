@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 , 2010 Andrea Maggiulli (a.maggiulli@gmail.com)  
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -90,23 +91,23 @@ namespace FRA {
             BusinessDayConvention convention = euribor3m.businessDayConvention();
             bool endOfMonth = euribor3m.endOfMonth();
 
-            BootstrapHelper fra1x4 =  new FraRateHelper(h1x4, 1, 4,
+            RateHelper fra1x4 =  new FraRateHelper(h1x4, 1, 4,
                                                  fixingDays, calendar, convention,
                                                  endOfMonth, fraDayCounter);
 
-            BootstrapHelper fra2x5 =  new FraRateHelper(h2x5, 2, 5,
+            RateHelper fra2x5 = new FraRateHelper(h2x5, 2, 5,
                                                  fixingDays, calendar, convention,
                                                  endOfMonth, fraDayCounter);
 
-            BootstrapHelper fra3x6 = new FraRateHelper(h3x6, 3, 6,
+            RateHelper fra3x6 = new FraRateHelper(h3x6, 3, 6,
                                                  fixingDays, calendar, convention,
                                                  endOfMonth, fraDayCounter);
 
-            BootstrapHelper fra6x9 = new FraRateHelper(h6x9, 6, 9,
+            RateHelper fra6x9 = new FraRateHelper(h6x9, 6, 9,
                                                  fixingDays, calendar, convention,
                                                  endOfMonth, fraDayCounter);
 
-            BootstrapHelper fra9x12 = new FraRateHelper(h9x12, 9, 12,
+            RateHelper fra9x12 = new FraRateHelper(h9x12, 9, 12,
                                                  fixingDays, calendar, convention,
                                                  endOfMonth, fraDayCounter);
 
@@ -122,7 +123,7 @@ namespace FRA {
             double tolerance = 1.0e-15;
 
             // A FRA curve
-            List<BootstrapHelper> fraInstruments = new List<BootstrapHelper>();
+            List<RateHelper> fraInstruments = new List<RateHelper>();
 
             fraInstruments.Add(fra1x4);
             fraInstruments.Add(fra2x5);

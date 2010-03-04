@@ -1,6 +1,6 @@
 ﻿/*
  Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
- * 
+  
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -82,7 +82,7 @@ namespace QLNet
 
 
    //! Rate helper for bootstrapping over Overnight Indexed Swap rates
-   public class DatedOISRateHelper : BootstrapHelper
+   public class DatedOISRateHelper : RateHelper
    {
       
       public DatedOISRateHelper(Date startDate,

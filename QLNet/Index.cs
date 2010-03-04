@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -39,7 +40,7 @@ namespace QLNet {
 
         //! returns the fixing at the given date
         /*! the date passed as arguments must be the actual calendar date of the fixing; no settlement days must be used. */
-        public double fixing(Date fixingDate) { return fixing(fixingDate, false); }
+        public virtual double fixing(Date fixingDate) { return fixing(fixingDate, false); }
         public abstract double fixing(Date fixingDate, bool forecastTodaysFixing);
 
         //! returns the fixing TimeSeries
@@ -49,7 +50,7 @@ namespace QLNet {
         public void clearFixings() { IndexManager.instance().clearHistory(name()); }
 
         // stores the historical fixing at the given date
-        public void addFixing(Date d, double v) { addFixing(d, v, false); }
+        public virtual void addFixing(Date d, double v) { addFixing(d, v, false); }
         public virtual void addFixing(Date d, double v, bool forceOverwrite) {
             addFixings(new TimeSeries<double>() { { d, v } }, forceOverwrite);
 	    }
@@ -71,17 +72,19 @@ namespace QLNet {
         public void addFixings(Dictionary<Date, double> source, bool forceOverwrite) {
             ObservableValue<TimeSeries<double>> target = IndexManager.instance().getHistory(name());
             foreach (Date d in source.Keys) {
-                if (isValidFixingDate(d))
-                    if (!target.value().ContainsKey(d))
-                        target.value().Add(d, source[d]);
-                    else
-                        if (forceOverwrite)
-                            target.value()[d] = source[d];
-                        else
-                            throw new ArgumentException("Duplicated fixing provided: " + d + ", " + source[d] + 
-                                                        " while " + target.value()[d] + " value is already present");
-                else
-                    throw new ArgumentException("Invalid fixing provided: " + d.DayOfWeek + " " + d + ", " + source[d]);
+               if (isValidFixingDate(d))
+                  if (!target.value().ContainsKey(d))
+                     target.value().Add(d, source[d]);
+                  else
+                     if (forceOverwrite)
+                        target.value()[d] = source[d];
+                     else if (Utils.close(target.value()[d], source[d]))
+                        continue;
+                     else
+                        throw new ArgumentException("Duplicated fixing provided: " + d + ", " + source[d] +
+                                                    " while " + target.value()[d] + " value is already present");
+               else
+                  throw new ArgumentException("Invalid fixing provided: " + d.DayOfWeek + " " + d + ", " + source[d]);
             }
 
             IndexManager.instance().setHistory(name(), target);

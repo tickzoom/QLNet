@@ -143,6 +143,114 @@ namespace QLNet {
                 }
         }
 
+       public static Period operator+(Period p1,Period p2) 
+       {
+           int length_ = p1.length();
+           TimeUnit units_ = p1.units();
+
+          if (length_==0) 
+          {
+             length_ = p2.length();
+             units_ = p2.units();
+          } 
+          else if (units_== p2.units()) 
+          {
+             // no conversion needed
+             length_ += p2.length();
+          } 
+          else 
+          {
+             switch (units_) 
+             {
+                case TimeUnit.Years:
+                switch (p2.units()) 
+                {
+                   case TimeUnit.Months:
+                      units_ = TimeUnit.Months;
+                      length_ = length_*12 + p2.length();
+                      break;
+                   case TimeUnit.Weeks:
+                   case TimeUnit.Days:
+                      if ( p1.length() != 0 )
+                         throw new ApplicationException(
+                               "impossible addition between " + p1 +
+                               " and " + p2);
+                      break;
+                   default:
+                      throw new ApplicationException("unknown time unit (" 
+                            + p2.units() + ")");
+                }
+                break;
+
+                case TimeUnit.Months:
+                switch (p2.units()) 
+                {
+                   case TimeUnit.Years:
+                    length_ += p2.length()*12;
+                    break;
+                  case TimeUnit.Weeks:
+                  case TimeUnit.Days:
+                    if (p1.length() != 0)
+                       throw new ApplicationException(
+                             "impossible addition between " + p1 +
+                             " and " + p2);
+                    break;
+                  default:
+                    throw new ApplicationException("unknown time unit ("
+                          + p2.units() + ")");
+                }
+                break;
+
+              case TimeUnit.Weeks:
+                switch (p2.units()) 
+                {
+                   case TimeUnit.Days:
+                      units_ = TimeUnit.Days;
+                      length_ = length_*7 + p2.length();
+                    break;
+                  case TimeUnit.Years:
+                  case TimeUnit.Months:
+                    if (p1.length() != 0)
+                       throw new ApplicationException(
+                             "impossible addition between " + p1 +
+                             " and " + p2);
+                    break;
+                  default:
+                    throw new ApplicationException("unknown time unit ("
+                          + p2.units() + ")");
+                }
+                break;
+
+              case TimeUnit.Days:
+                switch (p2.units()) 
+                {
+                   case TimeUnit.Weeks:
+                    length_ += p2.length()*7;
+                    break;
+                  case TimeUnit.Years:
+                  case TimeUnit.Months:
+                    if (p1.length() != 0)
+                       throw new ApplicationException(
+                             "impossible addition between " + p1 +
+                             " and " + p2);
+                    break;
+                  default:
+                    throw new ApplicationException("unknown time unit ("
+                          + p2.units() + ")");
+                }
+                break;
+
+              default:
+                throw new ApplicationException("unknown time unit (" + units_ + ")");
+             }
+          }
+          return new Period(length_,units_);
+       }
+       public static Period operator -(Period p1, Period p2)
+       {
+          return p1 +(-p2);
+       }
+
         public static Period operator -(Period p) { return new Period(-p.length(), p.units()); }
         public static Period operator *(int n, Period p) { return new Period(n * p.length(), p.units()); }
         public static Period operator *(Period p, int n) { return new Period(n * p.length(), p.units()); }
