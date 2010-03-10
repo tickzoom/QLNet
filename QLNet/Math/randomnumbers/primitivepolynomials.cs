@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+
 namespace QLNet {
 /* this file is a slightly edited version of
  * PrimitivePolynomialsModuloTwoUpToDegree27.h
@@ -113,7 +114,19 @@ namespace QLNet {
  * N_PRIMITIVES_UP_TO_DEGREE_XX
  * below.
  */
-    public partial class SobolRsg {
+
+   #if NOPOLY
+   public partial class SobolRsg
+   {
+      public const long PPMT_MAX_DIM = 0;
+      public const int N_MAX_DEGREE = 0;
+
+      public static long[][] PrimitivePolynomials;
+   }
+
+#else
+
+   public partial class SobolRsg {
        
         public const long PPMT_MAX_DIM = 21200;
         public const int N_MAX_DEGREE = 18;
@@ -21469,4 +21482,8 @@ namespace QLNet {
         };
 
     }
+
+#endif
+
+
 }
