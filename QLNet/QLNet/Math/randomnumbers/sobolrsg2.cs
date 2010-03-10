@@ -22,7 +22,27 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    public partial class SobolRsg {
+
+#if NOPOLY
+   public partial class SobolRsg
+   {
+      const uint maxAltDegree = 0;
+      static long[][] AltPrimitivePolynomials;
+      static ulong[][] initializers;
+      static ulong[][] SLinitializers;
+      static ulong[][] Linitializers;
+      static ulong[][] JoeKuoD5initializers;
+      static ulong[][] JoeKuoD6initializers;
+      static ulong[][] JoeKuoD7initializers;
+      static ulong[][] Kuoinitializers;
+      static ulong[][] Kuo2initializers;
+      static ulong[][] Kuo3initializers;
+   }
+
+#else
+
+
+   public partial class SobolRsg {
         // number of dimensions in the alternative primitive polynomials
         const uint maxAltDegree = 52;
 
@@ -39296,4 +39316,7 @@ namespace QLNet {
                 dim3946Kuo2Init,
             };
     }
+
+#endif
+
 }
