@@ -1,5 +1,5 @@
 ﻿/*
- Copyright (C) 2009 Philippe double (ph_real@hotmail.com)
+ Copyright (C) 2009 Philippe Real (ph_real@hotmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -201,9 +201,7 @@ namespace TestSuite
                             + "\n    expected:   " + expected);
         }
     
-        //calibration is not OK for the momment ther is a pb at the end when calling
-        //model.calibrate() with optimisation method LevenbergMarquardt
-        //[TestMethod()]
+        [TestMethod()]
         public void testCalibration()
         {
             //("Testing calibration of a Libor forward model...");
