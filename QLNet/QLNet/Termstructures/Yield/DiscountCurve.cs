@@ -80,7 +80,7 @@ namespace QLNet {
             if (data_[0] != 1.0) throw new ApplicationException("the first discount must be == 1.0 " +
                                                                 "to flag the corrsponding date as settlement date");
 
-            times_ = new List<double>(dates_.Count);
+            times_ = new InitializedList<double>(dates_.Count - 1);
             times_.Add(0.0);
             for (int i = 1; i < dates_.Count; i++) {
                 if (!(dates_[i] > dates_[i - 1]))

@@ -47,7 +47,7 @@ namespace QLNet {
 
     //Affince Model Interface used for multihritage in 
     //liborforwardmodel.cs & analyticcapfloorengine.cs
-    public interface IAffineModel
+    public interface IAffineModel : IObservable
     {
         double discount(double t);
         double discountBond(double now, double maturity, Vector factors);
@@ -84,6 +84,18 @@ namespace QLNet {
         public void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
     }
 
+    //ITermStructureConsistentModel used ins shortratemodel blackkarasinski.cs/hullwhite.cs
+    public interface ITermStructureConsistentModel
+    {
+        Handle<YieldTermStructure> termStructure();
+        Handle<YieldTermStructure> termStructure_ { get; set; }
+        void notifyObservers();
+        event Callback notifyObserversEvent;
+        void registerWith(Callback handler);
+        void unregisterWith(Callback handler);
+        void update();
+    }
+    
     //! Calibrated model class
     public class CalibratedModel : IObserver, IObservable {
         protected List<Parameter> arguments_;

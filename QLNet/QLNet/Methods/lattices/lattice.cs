@@ -44,7 +44,17 @@ namespace QLNet {
 
         \ingroup lattices
     */
-    public class TreeLattice<T> : Lattice where T : BlackScholesLattice {
+    public interface IGenericLattice
+    {
+        int size(int i);
+        double discount(int i, int j);
+        void stepback(int i, Vector values, Vector newValues);
+        double underlying(int i, int index);
+        int descendant(int i, int index, int branch);
+        double probability(int i, int index, int branch);
+    }
+
+    public class TreeLattice<T> : Lattice where T : IGenericLattice{
         // this should be overriden in the dering class
         protected virtual T impl() { throw new NotSupportedException(); }
 

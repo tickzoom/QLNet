@@ -67,6 +67,7 @@
     <Compile Include="T_RNGTraits.cs" />
     <Compile Include="T_Rounding.cs" />
     <Compile Include="T_SampledCurve.cs" />
+    <Compile Include="T_ShortRateModels.cs" />
     <Compile Include="T_Solvers.cs" />
     <Compile Include="T_Stats.cs" />
     <Compile Include="T_Swaps.cs" />
