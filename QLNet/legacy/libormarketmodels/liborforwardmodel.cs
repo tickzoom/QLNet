@@ -70,7 +70,7 @@ namespace QLNet
         covarProxy_.volatilityModel().setParams(new List<Parameter>(arguments_.GetRange(0, k)));
         covarProxy_.correlationModel().setParams(new List<Parameter>(arguments_.GetRange(k, arguments_.Count-k)));
 
-        swaptionVola = getSwaptionVolatilityMatrix();
+        swaptionVola = null;
     }
 
 
