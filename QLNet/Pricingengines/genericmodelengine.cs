@@ -24,23 +24,41 @@ namespace QLNet
         :  GenericEngine<ArgumentsType, ResultsType>
         where ArgumentsType : IPricingEngineArguments, new()
         where ResultsType : IPricingEngineResults, new()
+        where ModelType : IObservable
     {
             public GenericModelEngine() {}
             public GenericModelEngine(ModelType model)
             {
                 model_=model;
-                this.registerWith(update);
+                model_.registerWith(update);
             }
 
             public void setModel(ModelType model) {
                 if (model_ != null)
-                    this.unregisterWith(update);
+                    model_.unregisterWith(update);
                 model_ = model;
                 if (model_ != null)
-                    this.registerWith(update);
-                this.update();
+                    model_.registerWith(update);
+                update();
             }
 
             protected ModelType model_;
-        }
+            
+        #region Observer & Observable
+            // observable interface
+            public event Callback notifyObserversEvent;
+            public void registerWith(Callback handler) { notifyObserversEvent += handler; }
+            public void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
+            protected void notifyObservers()
+            {
+                Callback handler = notifyObserversEvent;
+                if (handler != null)
+                {
+                    handler();
+                }
+            }
+            //Philippe 2010 to override in LatticeShortRateModelEngine
+            public virtual void update() { notifyObservers(); }
+            #endregion
+    }
     }

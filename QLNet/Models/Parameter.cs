@@ -134,66 +134,68 @@ namespace QLNet
         }
     }
 
-    ////! Deterministic time-dependent parameter used for yield-curve fitting
-    //public class TermStructureFittingParameter : Parameter
-    //{
-    //    private class NumericalImpl : Parameter.Impl
-    //    {
-    //        public NumericalImpl(Handle<YieldTermStructure> termStructure)
-    //        {
-    //            times_ = null;
-    //            values_ = null;
-    //            termStructure_ = termStructure;
-    //        }
+    //! Deterministic time-dependent parameter used for yield-curve fitting
+    public class TermStructureFittingParameter : Parameter
+    {
+        public class NumericalImpl : Parameter.Impl
+        {
+            private List<double> times_;
+            private List<double> values_;
+            private Handle<YieldTermStructure> termStructure_;
 
-    //        public void setvalue(double t, double x)
-    //        {
-    //            times_.Add(t);
-    //            values_.Add(x);
-    //        }
-    //        public void change(double x)
-    //        {
-    //            values_[values_.Count-1] = x;
-    //        }
-    //        public void reset()
-    //        {
-    //            times_.Clear();
-    //            values_.Clear();
-    //        }
-    //        public override double value(Vector UnnamedParameter1, double t)
-    //        {
-    //           //std::vector<Time>::const_iterator result =
-    //           //     std::find(times_.begin(), times_.end(), t);
-    //           // QL_REQUIRE(result!=times_.end(),
-    //           //            "fitting parameter not set!");
-    //           // return values_[result - times_.begin()];
+            public NumericalImpl(Handle<YieldTermStructure> termStructure)
+            {
+                times_ = new List<double>();
+                values_ = new List<double>();
+                termStructure_ = termStructure;
+            }
 
-    //            throw new NotImplementedException("Need to implement the FindIndex method()");
+            public void setvalue(double t, double x)
+            {
+                times_.Add(t);
+                values_.Add(x);
+            }
 
-    //            //int nIndex = times_.FindIndex( delegate(double val) { return val == locVal; });
-    //            //if (nIndex == -1)
-    //            //    throw new ApplicationException("fitting parameter not set!");
+            public void change(double x)
+            {
+                values_[values_.Count - 1] = x;
+            }
 
-    //            //return values_[nIndex];
-    //        }
+            public void reset()
+            {
+                times_.Clear();
+                values_.Clear();
+            }
+            public override double value(Vector UnnamedParameter1, double t)
+            {
+                //std::vector<Time>::const_iterator result =
+                //     std::find(times_.begin(), times_.end(), t);
+                // QL_REQUIRE(result!=times_.end(),
+                //            "fitting parameter not set!");
+                // return values_[result - times_.begin()];
 
-    //        public Handle<YieldTermStructure> termStructure()
-    //        {
-    //            return termStructure_;
-    //        }
-    //        private List<double> times_;
-    //        private List<double> values_;
-    //        private Handle<YieldTermStructure> termStructure_;
-    //    }
+                //throw new NotImplementedException("Need to implement the FindIndex method()");
 
-    //    public TermStructureFittingParameter(Parameter.Impl impl)
-    //        : base(0, impl, new NoConstraint())
-    //    {
-    //    }
+                //int nIndex = times_.FindIndex( delegate(double val) { return val == locVal; });
+                int nIndex = times_.FindIndex(val => val == t);
+                if (nIndex == -1)
+                    throw new ApplicationException("fitting parameter not set!");
 
-    //    public TermStructureFittingParameter(Handle<YieldTermStructure> term)
-    //        : base(0, new NumericalImpl(term), new NoConstraint())
-    //    {
-    //    }
-    //}
+                return values_[nIndex];
+            }
+
+            public Handle<YieldTermStructure> termStructure() { return termStructure_; }
+        }
+
+        public TermStructureFittingParameter(Parameter.Impl impl)
+            : base(0, impl, new NoConstraint())
+        {
+        }
+
+        public TermStructureFittingParameter(Handle<YieldTermStructure> term)
+            : base(0, new NumericalImpl(term), new NoConstraint())
+        {
+        }
+    }
+
 }

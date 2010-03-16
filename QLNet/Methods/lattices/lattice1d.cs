@@ -29,7 +29,7 @@ namespace QLNet {
         \endcode
 
         \ingroup lattices */
-    public class TreeLattice1D<T> : TreeLattice<T> where T : BlackScholesLattice {
+    public class TreeLattice1D<T> : TreeLattice<T> where T : IGenericLattice{
         public TreeLattice1D(TimeGrid timeGrid, int n) : base(timeGrid, n) { }
 
         public override Vector grid(double t) {
