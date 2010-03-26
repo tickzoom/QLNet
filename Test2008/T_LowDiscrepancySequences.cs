@@ -501,7 +501,7 @@ using QLNet;
             dimensionality = 33;
             rsg = new HaltonRsg(dimensionality, 0, false, false);
             SequenceStatistics stat = new SequenceStatistics(dimensionality);
-            List<double> mean, stdev, variance, skewness, kurtosis;
+            List<double> mean; //, stdev, variance, skewness, kurtosis;
             k = 0;
             int j;
             for (j = 1; j < 5; j++)
@@ -553,9 +553,7 @@ using QLNet;
 
         public void testGeneratorDiscrepancy(IRNGFactory generatorFactory, double[][] discrepancy)
         {
-
             //QL_TEST_START_TIMING
-            string fileName, arrayName;
             double tolerance = 1.0e-2;
             List<double> point;
             int dim;

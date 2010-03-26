@@ -71,8 +71,6 @@ namespace TestSuite
       public void testZeroIndex()
       {
          // Testing zero inflation indices...
-         SavedSettings backup;
-
          EUHICP euhicp = new EUHICP(true);
 
          if (euhicp.name() != "EU HICP"

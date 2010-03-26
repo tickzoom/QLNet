@@ -124,6 +124,7 @@
     <Compile Include="Instruments\AverageType.cs" />
     <Compile Include="Instruments\BarrierOption.cs" />
     <Compile Include="Instruments\BarrierType.cs" />
+    <Compile Include="Instruments\BasisSwap.cs" />
     <Compile Include="Instruments\BasketOption.cs" />
     <Compile Include="Instruments\bmaswap.cs" />
     <Compile Include="Instruments\Bond.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="Instruments\forwardrateagreement.cs" />
     <Compile Include="Instruments\ImpliedVolatility.cs" />
     <Compile Include="Instruments\Instrument.cs" />
+    <Compile Include="Instruments\MakeBasisSwap.cs" />
     <Compile Include="Instruments\MakeOIS.cs" />
     <Compile Include="Instruments\Makeswaption.cs" />
     <Compile Include="Instruments\Makevanillaswap.cs" />
@@ -337,6 +339,7 @@
     <Compile Include="Pricingengines\swaption\g2swaptionengine.cs" />
     <Compile Include="Pricingengines\swaption\jamshidianswaptionengine.cs" />
     <Compile Include="Pricingengines\swaption\treeswaptionengine.cs" />
+    <Compile Include="Pricingengines\Swap\DiscountingBasisSwapEngine.cs" />
     <Compile Include="Pricingengines\Swap\Discountingswapengine.cs" />
     <Compile Include="Pricingengines\Swap\discretizedswap.cs" />
     <Compile Include="Pricingengines\Swap\treeswapengine.cs" />

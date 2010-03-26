@@ -47,9 +47,6 @@ namespace TestSuite
         public void testCachedHullWhite() {
             //("Testing Hull-White calibration against cached values...");
 
-            SavedSettings backup;
-            IndexHistoryCleaner cleaner;
-
             Date today=new Date(15, Month.February, 2002);
             Date settlement=new Date(19, Month.February, 2002);
             Settings.setEvaluationDate(today);
@@ -128,9 +125,6 @@ namespace TestSuite
         [TestMethod()]
         public void testSwaps() {
             //BOOST_MESSAGE("Testing Hull-White swap pricing against known values...");
-
-            SavedSettings backup;
-            IndexHistoryCleaner cleaner;
 
             Date today;  //=Settings::instance().evaluationDate();;
             

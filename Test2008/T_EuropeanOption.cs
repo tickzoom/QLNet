@@ -29,19 +29,6 @@ namespace TestSuite
    public class T_EuropeanOption
    {
 
-      struct EuropeanOptionData
-      {
-         Option.Type type;
-         double strike;
-         double s;        // spot
-         double q;        // dividend
-         double r;        // risk-free rate
-         double t;        // time to maturity
-         double v;  // volatility
-         double result;   // expected result
-         double tol;      // tolerance
-      }
-
       enum EngineType
       {
          Analytic,
