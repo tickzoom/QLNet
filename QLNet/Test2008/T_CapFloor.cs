@@ -38,9 +38,6 @@ namespace TestSuite {
             public int fixingDays;
             public RelinkableHandle<YieldTermStructure> termStructure = new RelinkableHandle<YieldTermStructure>();
 
-            // cleanup
-            public SavedSettings backup;
-
             // setup
             public CommonVars() {
                 nominals = new List<double>() { 100 };

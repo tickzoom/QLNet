@@ -30,8 +30,6 @@ namespace TestSuite
     public class T_LiborMarketModel
     {
 
-        int len = 10;
-
         IborIndex makeIndex(List<Date> dates,
                             List<double> rates)
         {

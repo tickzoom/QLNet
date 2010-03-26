@@ -97,12 +97,10 @@ namespace TestSuite
         class CommonVars
         {
             // global data
-            public Date referenceDate;
             public SwaptionMarketConventions conventions;
             public AtmVolatility atm;
             public RelinkableHandle<YieldTermStructure> termStructure;
             public RelinkableHandle<SwaptionVolatilityStructure> atmVolMatrix;
-            double tolerance;
 
             // cleanup
             //SavedSettings backup;
