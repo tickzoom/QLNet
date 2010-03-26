@@ -110,12 +110,16 @@
     <Compile Include="Indexes\InterestRateIndex.cs" />
     <Compile Include="Indexes\Region.cs" />
     <Compile Include="Indexes\Swapindex.cs" />
+    <Compile Include="Indexes\swap\ChfLiborSwapIsdaFix.cs" />
     <Compile Include="Indexes\swap\EuriborSwapFixA.cs" />
     <Compile Include="Indexes\swap\EuriborSwapFixB.cs" />
     <Compile Include="Indexes\swap\EuriborSwapFixIFR.cs" />
     <Compile Include="Indexes\swap\EurliborSwapFixA.cs" />
     <Compile Include="Indexes\swap\EurliborSwapFixB.cs" />
     <Compile Include="Indexes\swap\EurliborSwapFixIFR.cs" />
+    <Compile Include="Indexes\swap\GbpLiborSwapIsdaFix.cs" />
+    <Compile Include="Indexes\swap\JpyLiborSwapIsdaFix.cs" />
+    <Compile Include="Indexes\swap\UsdLiborSwapIsdaFix.cs" />
     <Compile Include="Instruments\AsianOption.cs" />
     <Compile Include="Instruments\AverageType.cs" />
     <Compile Include="Instruments\BarrierOption.cs" />
