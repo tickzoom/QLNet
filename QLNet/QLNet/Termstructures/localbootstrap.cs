@@ -24,7 +24,8 @@ using System.Text;
 
 namespace QLNet {
     // penalty function class for solving using a multi-dimensional solver
-    public class PenaltyFunction<Curve> : CostFunction where Curve : PiecewiseYieldCurve {
+    public class PenaltyFunction<Curve,TS> : CostFunction where Curve : IGenericCurve<TS>
+    {
         //typedef typename Curve::traits_type Traits;
         //typedef typename Traits::helper helper;
         //typedef typename std::vector< boost::shared_ptr<helper> >::const_iterator helper_iterator;
@@ -32,9 +33,9 @@ namespace QLNet {
         private Curve curve_;
         private int initialIndex_;
         private int localisation_, start_, end_;
-        private List<RateHelper> rateHelpers_;
+        private List<BootstrapHelper<TS>> rateHelpers_;
 
-        public PenaltyFunction(Curve curve, int initialIndex, List<RateHelper> rateHelpers, int start, int end)
+        public PenaltyFunction(Curve curve, int initialIndex, List<BootstrapHelper<TS>> rateHelpers, int start, int end)
         {
             curve_ = curve;
             initialIndex_ = initialIndex;
@@ -64,7 +65,6 @@ namespace QLNet {
         }
     }
 
-
     //! Localised-term-structure bootstrapper for most curve types.
     /*! This algorithm enables a localised fitting for non-local
         interpolation methods.
@@ -82,12 +82,13 @@ namespace QLNet {
         whilst using a smoother interpolation method. Particularly
         good for the convex-monotone spline method.
     */
-    public class LocalBootstrap : IBootStrap {
+    public class LocalBootstrap<TS> : IBootStrap<TS> where TS : class
+    {
         //typedef typename Curve::traits_type Traits;
         //typedef typename Curve::interpolator_type Interpolator;
       
         private bool validCurve_;
-        private PiecewiseYieldCurve ts_; // yes, it is a workaround
+        private IGenericCurve<TS> ts_; // yes, it is a workaround
         int localisation_;
         bool forcePositive_;
         
@@ -98,10 +99,11 @@ namespace QLNet {
             forcePositive_ = forcePositive;
         }
 
-        public void setup(PiecewiseYieldCurve ts) {
+        public void setup(IGenericCurve<TS> ts)
+        {
             ts_ = ts;
 
-            int n = ts_.instruments_.Count;
+            int n = ts_.instruments().Count;
             if (!(n >= ts_.interpolator_.requiredPoints))
                 throw new ArgumentException("not enough instruments: " + n + " provided, " +
                        (ts_.interpolator_.requiredPoints) + " required");
@@ -109,31 +111,31 @@ namespace QLNet {
             if (!(n > localisation_))
                 throw new ApplicationException("not enough instruments: " + n + " provided, " + localisation_ + " required.");
 
-            ts_.instruments_.ForEach(i => i.registerWith(ts_.update));
+            ts_.instruments().ForEach(i => i.registerWith(ts_.update));
         }
-
+        
         public void calculate() {
 
             validCurve_ = false;
-            int nInsts = ts_.instruments_.Count, i;
+            int nInsts = ts_.instruments().Count, i;
 
             // ensure rate helpers are sorted
-            ts_.instruments_.Sort((x, y) => x.latestDate().CompareTo(y.latestDate()));
+            ts_.instruments().Sort((x, y) => x.latestDate().CompareTo(y.latestDate()));
 
             // check that there is no instruments with the same maturity
             for (i = 1; i < nInsts; ++i) {
-                Date m1 = ts_.instruments_[i - 1].latestDate(),
-                     m2 = ts_.instruments_[i].latestDate();
+                Date m1 = ts_.instruments()[i - 1].latestDate(),
+                     m2 = ts_.instruments()[i].latestDate();
                 if (m1 == m2) throw new ArgumentException("two instruments have the same maturity (" + m1 + ")");
             }
 
             // check that there is no instruments with invalid quote
-            if ((i = ts_.instruments_.FindIndex(x => !x.quoteIsValid())) != -1)
-                throw new ArgumentException("instrument " + i + " (maturity: " + ts_.instruments_[i].latestDate() +
+            if ((i = ts_.instruments().FindIndex(x => !x.quoteIsValid())) != -1)
+                throw new ArgumentException("instrument " + i + " (maturity: " + ts_.instruments()[i].latestDate() +
                        ") has an invalid quote");
 
             // setup instruments and register with them
-            ts_.instruments_.ForEach(j => j.setTermStructure(ts_));
+            ts_.instruments().ForEach(j => j.setTermStructure(ts_ as TS));
 
             // set initial guess only if the current curve cannot be used as guess
             if (validCurve_) {
@@ -141,23 +143,23 @@ namespace QLNet {
                     throw new ArgumentException("dimension mismatch: expected " + nInsts + 1 + ", actual " + ts_.data_.Count);
             } else {
                 ts_.data_ = new InitializedList<double>(nInsts + 1);
-                ts_.data_[0] = ts_.initialValue(ts_);
+                ts_.data_[0] = ts_.initialValue(ts_ as TS);
             }
 
             // calculate dates and times
             ts_.dates_ = new InitializedList<Date>(nInsts + 1);
             ts_.times_ = new InitializedList<double>(nInsts + 1);
-            ts_.dates_[0] = ts_.initialDate(ts_);
+            ts_.dates_[0] = ts_.initialDate(ts_ as TS);
             ts_.times_[0] = ts_.timeFromReference(ts_.dates_[0]);
             for (i = 0; i < nInsts; ++i) {
-                ts_.dates_[i + 1] = ts_.instruments_[i].latestDate();
+                ts_.dates_[i + 1] = ts_.instruments()[i].latestDate();
                 ts_.times_[i + 1] = ts_.timeFromReference(ts_.dates_[i + 1]);
                 if (!validCurve_)
                     ts_.data_[i+1] = ts_.data_[i];
             }
 
-            LevenbergMarquardt solver = new LevenbergMarquardt(ts_.accuracy_, ts_.accuracy_, ts_.accuracy_);
-            EndCriteria endCriteria = new EndCriteria(100, 10, 0.00, ts_.accuracy_, 0.00);
+            LevenbergMarquardt solver = new LevenbergMarquardt(ts_.accuracy(), ts_.accuracy(), ts_.accuracy());
+            EndCriteria endCriteria = new EndCriteria(100, 10, 0.00, ts_.accuracy(), 0.00);
             PositiveConstraint posConstraint = new PositiveConstraint();
             NoConstraint noConstraint = new NoConstraint();
             Constraint solverConstraint = forcePositive_ ? (Constraint)posConstraint : (Constraint)noConstraint;
@@ -184,13 +186,13 @@ namespace QLNet {
                                                 localisation_, ts_.interpolation_ as ConvexMonotoneInterpolation, nInsts + 1);
 
                 if (iInst >= localisation_) {
-                    startArray[localisation_-dataAdjust] = ts_.guess(ts_, ts_.dates_[iInst]);
+                    startArray[localisation_ - dataAdjust] = ts_.guess(ts_ as TS, ts_.dates_[iInst]);
                 } else {
                     startArray[localisation_-dataAdjust] = ts_.data_[0];
                 }
 
-                var currentCost = new PenaltyFunction<PiecewiseYieldCurve>(ts_, initialDataPt, ts_.instruments_, 
-                                                                            iInst - localisation_ + 1, iInst + 1);
+                var currentCost = new PenaltyFunction<IGenericCurve<TS>,TS>(ts_, initialDataPt, ts_.instruments(), 
+                                                                   iInst - localisation_ + 1, iInst + 1);
                 Problem toSolve = new Problem(currentCost, solverConstraint, startArray);
                 EndCriteria.Type endType = solver.minimize(toSolve, endCriteria);
 

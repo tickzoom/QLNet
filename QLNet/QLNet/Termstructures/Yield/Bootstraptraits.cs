@@ -29,12 +29,12 @@ namespace QLNet {
     // and same for other traits. This should make things consistent with reliance on inheritance
     // However such inheritance can conflict with PiecewiseYieldCurve inheritance
 
-    public interface BootstrapTraits {
-        Date initialDate(YieldTermStructure c);     // start of curve data
-        double initialValue(YieldTermStructure c);   // value at reference date
+    public interface BootstrapTraits<TS> {
+        Date initialDate(TS c);     // start of curve data
+        double initialValue(TS c);   // value at reference date
         bool dummyInitialValue();                    // true if the initialValue is just a dummy value
         double initialGuess();                       // initial guess
-        double guess(YieldTermStructure c, Date d); // further guesses
+        double guess(TS c, Date d); // further guesses
         // possible constraints based on previous values
         double minValueAfter(int s, List<double> l);
         double maxValueAfter(int i, List<double> data);
@@ -48,7 +48,7 @@ namespace QLNet {
         double forwardImpl(Interpolation i, double t);
     }
 
-    public class Discount : BootstrapTraits {
+    public class Discount : BootstrapTraits<YieldTermStructure> {
         public Date initialDate(YieldTermStructure c) { return c.referenceDate(); }   // start of curve data
         public double initialValue(YieldTermStructure c) { return 1; }    // value at reference date
         public bool dummyInitialValue() { return false; }   // true if the initialValue is just a dummy value
@@ -70,7 +70,7 @@ namespace QLNet {
     }
 
     //! Zero-curve traits
-    public class ZeroYield : BootstrapTraits {
+    public class ZeroYield : BootstrapTraits<YieldTermStructure> {
         const double avgRate = 0.05;
 
         public Date initialDate(YieldTermStructure c) { return c.referenceDate(); }   // start of curve data
@@ -112,7 +112,7 @@ namespace QLNet {
     }
 
     //! Forward-curve traits
-    public class ForwardRate : BootstrapTraits {
+    public class ForwardRate : BootstrapTraits<YieldTermStructure> {
         const double avgRate = 0.05;
 
         public Date initialDate(YieldTermStructure c) { return c.referenceDate(); }   // start of curve data

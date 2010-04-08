@@ -20,20 +20,21 @@
 
 namespace QLNet {
     //! bootstrap error
-    public class BootstrapError : ISolver1d {
+    public class BootstrapError<TS> : ISolver1d {
 
-        private PiecewiseYieldCurve curve_;
-        private RateHelper helper_;
+        private IGenericCurve<TS> curve_;
+        private BootstrapHelper<TS> helper_;
         private int segment_;
 
-        public BootstrapError(PiecewiseYieldCurve curve, RateHelper helper, int segment)
+        public BootstrapError(IGenericCurve<TS> curve, BootstrapHelper<TS> helper, int segment)
         {
             curve_ = curve;
             helper_ = helper;
-            segment_ = segment; 
+            segment_ = segment;
         }
 
-        public override double value(double guess) {
+        public override double value(double guess)
+        {
             curve_.updateGuess(curve_.data(), guess, segment_);
             curve_.interpolation_.update();
             return helper_.quoteError();
