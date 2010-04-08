@@ -113,7 +113,7 @@ namespace QLNet
                        + " versus obs lag = " + observationLag_);
          }
 
-         if (infCalendar == null) infCalendar = fixCalendar;
+         if (infCalendar.empty()) infCalendar = fixCalendar;
          if (infConvention == new BusinessDayConvention()) infConvention = fixConvention;
 
          if (adjustInfObsDates) 
