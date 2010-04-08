@@ -36,7 +36,16 @@ namespace QLNet
         // should be immediate
         public static Date initialDate(ZeroInflationTermStructure t)
         {
-            return t.referenceDate() - t.observationLag();
+            if (t.indexIsInterpolated())
+            {
+                return t.referenceDate() - t.observationLag();
+            }
+            else
+            {
+                return Utils.inflationPeriod(t.referenceDate() - t.observationLag(),
+                                       t.frequency()).Key;
+            }
+
         }
         
         public static bool dummyInitialValue() { return false; }
@@ -172,9 +181,10 @@ namespace QLNet
                                             DayCounter dayCounter,
                                             Period lag,
                                             Frequency frequency,
+                                            bool indexIsInterpolated,
                                             double baseZeroRate,
                                             Handle<YieldTermStructure> nominalTS, Interpolator i)
-            : base(referenceDate, calendar, dayCounter, lag, frequency, baseZeroRate, nominalTS,i) { }
+            : base(referenceDate, calendar, dayCounter, lag, frequency,indexIsInterpolated, baseZeroRate, nominalTS,i) { }
 
     }
 
@@ -191,12 +201,13 @@ namespace QLNet
                  DayCounter dayCounter,
                  Period lag,
                  Frequency frequency,
+                 bool indexIsInterpolated,
                  double baseZeroRate,
                  Handle<YieldTermStructure> nominalTS,
                  List<BootstrapHelper<ZeroInflationTermStructure>> instruments,
                  double accuracy,
                  Interpolator i)
-        : base(referenceDate, calendar, dayCounter,lag, frequency, baseZeroRate,nominalTS,i)
+        : base(referenceDate, calendar, dayCounter,lag, frequency,indexIsInterpolated, baseZeroRate,nominalTS,i)
         {
             interpolator_ = i;
             instruments_ = instruments;
@@ -206,12 +217,13 @@ namespace QLNet
             bootstrap_.setup(this);
         }
 
-        public PiecewiseZeroInflationCurve(
+        /*public PiecewiseZeroInflationCurve(
                  Date referenceDate,
                  Calendar calendar,
                  DayCounter dayCounter,
                  Period lag,
                  Frequency frequency,
+                 bool indexIsInterpolated,
                  double baseZeroRate,
                  Handle<YieldTermStructure> nominalTS,
                  List<BootstrapHelper<ZeroInflationTermStructure>> instruments,
@@ -246,9 +258,14 @@ namespace QLNet
             : this(referenceDate, calendar, dayCounter, lag, frequency, baseZeroRate, nominalTS,
                 instruments, 1.0e-12, new Interpolator())
         { }
+        */
 
         protected override void performCalculations(){
             bootstrap_.calculate();
+        }
+        public override void update()
+        {
+            base.update();
         }
     }
 
@@ -264,12 +281,13 @@ namespace QLNet
                  DayCounter dayCounter,
                  Period lag,
                  Frequency frequency,
+                 bool indexIsInterpolated,
                  double baseZeroRate,
                  Handle<YieldTermStructure> nominalTS,
                  List<BootstrapHelper<ZeroInflationTermStructure>> instruments,
                  double accuracy,
                  Interpolator i)
-            : base(referenceDate, calendar, dayCounter, lag, frequency, baseZeroRate, nominalTS,
+            : base(referenceDate, calendar, dayCounter, lag, frequency,indexIsInterpolated, baseZeroRate, nominalTS,
                 instruments, accuracy, i)
         {}
 
@@ -279,14 +297,15 @@ namespace QLNet
          DayCounter dayCounter,
          Period lag,
          Frequency frequency,
+         bool indexIsInterpolated,
          double baseZeroRate,
          Handle<YieldTermStructure> nominalTS,
          List<BootstrapHelper<ZeroInflationTermStructure>> instruments,
          Interpolator i)
-                : this(referenceDate, calendar, dayCounter, lag, frequency, baseZeroRate, nominalTS,
+                : this(referenceDate, calendar, dayCounter, lag, frequency,indexIsInterpolated, baseZeroRate, nominalTS,
                     instruments, 1.0e-12, i)
         { }
-
+        /*
         public PiecewiseZeroInflationCurve(
              Date referenceDate,
              Calendar calendar,
@@ -313,6 +332,7 @@ namespace QLNet
             : this(referenceDate, calendar, dayCounter, lag, frequency, baseZeroRate, nominalTS,
                 instruments, 1.0e-12, new Interpolator())
         { }
+        */
     }
 }
 

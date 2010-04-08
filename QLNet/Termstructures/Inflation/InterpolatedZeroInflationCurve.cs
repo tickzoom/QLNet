@@ -96,11 +96,13 @@ namespace QLNet
                                        DayCounter dayCounter,
                                        Period lag,
                                        Frequency frequency,
+                                       bool indexIsInterpolated,
                                        Handle<YieldTermStructure> yTS,
                                        List<Date> dates,
                                        List<double> rates,
                                        Interpolator interpolator)
-            : base(referenceDate, calendar, dayCounter, rates[0], lag, frequency, true, yTS) {
+            : base(referenceDate, calendar, dayCounter, rates[0],
+                                 lag, frequency, indexIsInterpolated, yTS) {
             dates_ = dates;
             data_ = rates;
             interpolator_ = interpolator;
@@ -115,13 +117,24 @@ namespace QLNet
             if (!(lim.Key <= dates_[0] && dates_[0] <= lim.Value))
                 throw new ApplicationException("first data date is not in base period, date: " 
                                             + (dates_[0])+ " not within [" + lim.Key + "," + lim.Value + "]");
-            
+
+            // by convention, if the index is not interpolated we pull all the dates
+            // back to the start of their inflationPeriods
+            // otherwise the time calculations will be inconsistent
+            if (!indexIsInterpolated_)
+            {
+                for (int i = 0; i < dates_.Count; i++)
+                {
+                    dates_[i] = Utils.inflationPeriod(dates_[i], frequency).Key;
+                }
+            }
+
+
             if(!(data_.Count == dates_.Count))
                 throw new ApplicationException("indices/dates count mismatch: "
                                                 + data_.Count + " vs " + dates_.Count);
             //times_.resize(dates_.Count);
             times_.Capacity = dates_.Count;
-
             times_[0] = timeFromReference(dates_[0]);
             for (int i = 1; i < dates_.Count; i++)
             {
@@ -148,10 +161,12 @@ namespace QLNet
                                        DayCounter dayCounter,
                                        Period lag,
                                        Frequency frequency,
+                                       bool indexIsInterpolated,
                                        double baseZeroRate,
                                        Handle<YieldTermStructure> yTS,
                                        Interpolator interpolator)
-            : base(referenceDate, calendar, dayCounter, baseZeroRate, lag, frequency, true, yTS){
+            : base(referenceDate, calendar, dayCounter, baseZeroRate, lag, frequency, indexIsInterpolated, yTS)
+        {
            interpolator_ = interpolator;
         }
 
@@ -210,7 +225,19 @@ namespace QLNet
 
         public override Date baseDate(){return dates_[0];}
 
-        public override Date maxDate(){return dates_[dates_.Count - 1];}
+        public override Date maxDate(){
+            Date d;
+            if (indexIsInterpolated_)
+            {
+                d = dates_[dates_.Count - 1];
+            }
+            else
+            {
+                d = Utils.inflationPeriod(dates_[dates_.Count - 1], frequency()).Value;
+            }
+            return d;
+            //return dates_[dates_.Count - 1];
+        }
         
     }
 }
