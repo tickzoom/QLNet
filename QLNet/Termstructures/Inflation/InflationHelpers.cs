@@ -27,30 +27,6 @@ namespace QLNet
     //! Zero-coupon inflation-swap bootstrap helper
     public class ZeroCouponInflationSwapHelper : BootstrapHelper<ZeroInflationTermStructure> 
     {
-      public ZeroCouponInflationSwapHelper(
-          Handle<Quote> quote,
-          Period lag,   // lag on swap observation of index
-          int settlementDays,
-          Date maturity,
-          Calendar calendar,   // index may have null calendar as valid on every day
-          BusinessDayConvention paymentConvention,
-          DayCounter dayCounter,
-          Frequency frequency)
-            : base(quote)
-        {
-            swapObsLag_ = lag;
-            settlementDays_ = settlementDays;
-            maturity_ = maturity;
-            calendar_ = calendar;
-            paymentConvention_ = paymentConvention;
-            dayCounter_ = dayCounter;
-            frequency_ = frequency;
-            earliestDate_ = maturity_ - swapObsLag_;
-            latestDate_ = maturity_ - swapObsLag_;
-
-            Settings.registerWith(update);
-        }
-
        public ZeroCouponInflationSwapHelper(
             Handle<Quote> quote,
             Period swapObsLag,   // lag on swap observation of index
@@ -110,39 +86,29 @@ namespace QLNet
        public override void setTermStructure(ZeroInflationTermStructure z)
        {
 
-           base.setTermStructure(z);
+            base.setTermStructure(z);
 
-           // set up a new ZCIIS
-           // but this one does NOT own its inflation term structure
-           bool own = false;
-           double K = quote().link.value();
+            // set up a new ZCIIS
+            // but this one does NOT own its inflation term structure
+            bool own = false;
+            double K = quote().link.value();
 
-           // The effect of the new inflation term structure is
-           // felt via the effect on the inflation index
-           Handle<ZeroInflationTermStructure> zits = new Handle<ZeroInflationTermStructure>(z, own);
+            // The effect of the new inflation term structure is
+            // felt via the effect on the inflation index
+            Handle<ZeroInflationTermStructure> zits = new Handle<ZeroInflationTermStructure>(z, own);
 
-           //ZeroInflationIndex new_zii = zii_.clone(zits);
+            ZeroInflationIndex new_zii = zii_.clone(zits);
 
-           double nominal = 1000000.0;   // has to be something but doesn't matter what
-           Date start = z.nominalTermStructure().link.referenceDate();
-
-           zciis_ = new QuantLib.ZeroCouponInflationSwap(start, maturity_, swapObsLag_, K,
-                                               calendar_, paymentConvention_,
-                                               dayCounter_,
-                                               z.nominalTermStructure(),
-                                               zits);
-
-           /*new ZeroCouponInflationSwap(
-                                  ZeroCouponInflationSwap.Type.Payer,
-                                  nominal, start, maturity_,
-                                  calendar_, paymentConvention_, dayCounter_, K, // fixed side & fixed rate
-                                  new_zii, swapObsLag_);*/
-
-
-           // Because very simple instrument only takes
-           // standard discounting swap engine.
-           zciis_.setPricingEngine(new DiscountingSwapEngine(z.nominalTermStructure()));
-           //zciis_.registerWith(update);
+            double nominal = 1000000.0;   // has to be something but doesn't matter what
+            Date start = z.nominalTermStructure().link.referenceDate();
+            zciis_ = new ZeroCouponInflationSwap(
+                                   ZeroCouponInflationSwap.Type.Payer,
+                                   nominal, start, maturity_,
+                                   calendar_, paymentConvention_, dayCounter_, K, // fixed side & fixed rate
+                                   new_zii, swapObsLag_);
+            // Because very simple instrument only takes
+            // standard discounting swap engine.
+            zciis_.setPricingEngine(new DiscountingSwapEngine(z.nominalTermStructure()));
        }
 
        public override double impliedQuote() 
@@ -161,8 +127,6 @@ namespace QLNet
        protected BusinessDayConvention paymentConvention_;
        protected DayCounter dayCounter_;
        protected ZeroInflationIndex zii_;
-       protected QuantLib.ZeroCouponInflationSwap zciis_;
-       protected int settlementDays_;
-       protected Frequency frequency_;
+       protected ZeroCouponInflationSwap zciis_;
     }
 }
