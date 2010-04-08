@@ -252,7 +252,7 @@ namespace QLNet {
       {
          // always reset, whether with null or new pointer
          seasonality_ = seasonality;
-         if (seasonality_ == null) 
+         if (seasonality_ != null) 
          {
             if (!seasonality_.isConsistent(this))
                throw new ApplicationException("Seasonality inconsistent with " +
@@ -279,7 +279,7 @@ namespace QLNet {
       protected virtual void setBaseRate(double r){ baseRate_ = r; }
 
       // range-checking
-      void checkRange(Date d,bool extrapolate)
+      protected override void checkRange(Date d,bool extrapolate)
       {
          if (d < baseDate())
             throw new ApplicationException("date (" + d + ") is before base date");
@@ -333,7 +333,8 @@ namespace QLNet {
                                          bool indexIsInterpolated,
                                          Handle<YieldTermStructure> yTS)
           :this(referenceDate,calendar,dayCounter,baseZeroRate,lag,frequency,
-                indexIsInterpolated,yTS,new Seasonality())  {}
+                indexIsInterpolated,yTS,/*new Seasonality()*/null)  {}
+        //It necessary in that case to have null seasonalyti for : hasseasonality return false
 
        public ZeroInflationTermStructure(Date referenceDate,
                                           Calendar calendar,

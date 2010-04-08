@@ -23,58 +23,102 @@ using System.Linq;
 using System.Text;
 
 namespace QLNet {
-    public interface IBootStrap {
-        void setup(PiecewiseYieldCurve ts);
+
+    public interface ITermStructure : IObservable, IObserver
+    {
+        // fields
+        Date referenceDate();
+        bool updated();
+        int settlementDays();
+        DayCounter dayCounter();
+        bool moving();
+        Calendar calendar();
+        //! the latest time for which the curve can return values
+        double maxTime();
+        //! the latest date for which the curve can return values. should be overridden later
+        Date maxDate();
+        double timeFromReference(Date d);
+    }
+
+    public interface IGenericCurve<TS> : ITermStructure, InterpolatedCurve, BootstrapTraits<TS>
+    {       
+        #region InterpolatedCurve
+        List<double> times_ { get; set; }
+        List<double> times();
+        List<Date> dates_ { get; set; }
+        List<Date> dates();
+        Date maxDate();
+        List<double> data_ { get; set; }
+        List<double> data();
+        #endregion
+
+        #region BootstrapTraits
+        Date initialDate(TS c);
+        double initialValue(TS c);
+        double guess(TS c, Date d);
+        #endregion
+        
+        #region Properties
+        double accuracy();
+        List<BootstrapHelper<TS>> instruments();
+        #endregion
+    }
+
+    public interface IBootStrap<TS>
+    {
+        void setup(IGenericCurve<TS> ts);
         void calculate();
     }
 
     //! Universal piecewise-term-structure boostrapper.
-    public class IterativeBootstrap : IBootStrap {
-        
+    public class IterativeBootstrap<TS> : IBootStrap<TS> where TS : class
+    {
         private bool validCurve_ = false;
-        private PiecewiseYieldCurve ts_; // yes, it is a workaround
 
-        public void setup(PiecewiseYieldCurve ts) {
+        private IGenericCurve<TS> ts_;
+
+        public void setup(IGenericCurve<TS> ts)
+        {
             ts_ = ts;
 
-            int n = ts_.instruments_.Count;
+            int n = ts_.instruments().Count;
             if (!(n+1 >= ts_.interpolator_.requiredPoints))
                 throw new ArgumentException("not enough instruments: " + n + " provided, " +
                        (ts_.interpolator_.requiredPoints-1) + " required");
 
-            ts_.instruments_.ForEach(x => x.registerWith(ts_.update));
+            ts_.instruments().ForEach(x => x.registerWith(ts_.update));
         }
 
         public void calculate() {
 
             //prepare instruments
-            int n = ts_.instruments_.Count, i;
+            int n = ts_.instruments().Count, i;
 
             // ensure rate helpers are sorted
-            ts_.instruments_.Sort((x, y) => x.latestDate().CompareTo(y.latestDate()));
+            ts_.instruments().Sort((x, y) => x.latestDate().CompareTo(y.latestDate()));
 
             // check that there is no instruments with the same maturity
             for (i = 1; i < n; ++i) {
-                Date m1 = ts_.instruments_[i - 1].latestDate(),
-                     m2 = ts_.instruments_[i].latestDate();
+                Date m1 = ts_.instruments()[i - 1].latestDate(),
+                     m2 = ts_.instruments()[i].latestDate();
                 if (m1 == m2) throw new ArgumentException("two instruments have the same maturity (" + m1 + ")");
             }
 
             // check that there is no instruments with invalid quote
-            if ((i = ts_.instruments_.FindIndex(x => !x.quoteIsValid())) != -1)
-                throw new ArgumentException("instrument " + i + " (maturity: " + ts_.instruments_[i].latestDate() +
+            if ((i = ts_.instruments().FindIndex(x => !x.quoteIsValid())) != -1)
+                throw new ArgumentException("instrument " + i + " (maturity: " + ts_.instruments()[i].latestDate() +
                        ") has an invalid quote");
 
             // setup instruments and register with them
-            ts_.instruments_.ForEach(x => x.setTermStructure(ts_));
+            ts_.instruments().ForEach(x => x.setTermStructure(ts_ as TS ));
 
             // calculate dates and times
             ts_.dates_ = new InitializedList<Date>(n + 1);
             ts_.times_ = new InitializedList<double>(n + 1);
-            ts_.dates_[0] = ts_.initialDate(ts_);
+            ts_.dates_[0] = ts_.initialDate(ts_ as TS);
             ts_.times_[0] = ts_.timeFromReference(ts_.dates_[0]);
             for (i = 0; i < n; ++i) {
-                ts_.dates_[i + 1] = ts_.instruments_[i].latestDate();
+                ts_.dates_[i + 1] = ts_.instruments()[i].latestDate();
                 ts_.times_[i + 1] = ts_.timeFromReference(ts_.dates_[i + 1]);
             }
 
@@ -84,7 +128,7 @@ namespace QLNet {
                     throw new ArgumentException("dimension mismatch: expected " + n + 1 + ", actual " + ts_.data_.Count);
             } else {
                 ts_.data_ = new InitializedList<double>(n + 1);
-                ts_.data_[0] = ts_.initialValue(ts_);
+                ts_.data_[0] = ts_.initialValue(ts_ as TS);
                 for (i=0; i<n; ++i)
                     ts_.data_[i+1] = ts_.initialGuess();
             }
@@ -101,7 +145,7 @@ namespace QLNet {
                 for (i=1; i<n+1; ++i) {
                     // calculate guess before extending interpolation to ensure that any extrapolation is performed
                     // using the curve bootstrapped so far and no more
-                    RateHelper instrument = ts_.instruments_[i-1];
+                    BootstrapHelper<TS> instrument = ts_.instruments()[i - 1];
                     double guess = 0;
                     if (validCurve_ || iteration>0) {
                         guess = ts_.data_[i];
@@ -109,7 +153,7 @@ namespace QLNet {
                         guess = ts_.initialGuess();
                     } else {
                         // most traits extrapolate
-                        guess = ts_.guess(ts_, ts_.dates_[i]);
+                        guess = ts_.guess(ts_ as TS, ts_.dates_[i]);
                     }
 
                     // bracket
@@ -136,8 +180,8 @@ namespace QLNet {
                     ts_.interpolation_.update();
 
                     try {
-                        var error = new BootstrapError(ts_, instrument, i);
-                        double r = solver.solve(error, ts_.accuracy_, guess, min, max);
+                        var error = new BootstrapError<TS>(ts_, instrument, i);
+                        double r = solver.solve(error, ts_.accuracy(), guess, min, max);
                         // redundant assignment (as it has been already performed by BootstrapError in solve procedure), but safe
                         ts_.data_[i] = r;
                     } catch (Exception e) {
@@ -161,12 +205,12 @@ namespace QLNet {
                 double improvement = 0.0;
                 for (i=1; i<n+1; ++i)
                     improvement = Math.Max(improvement, Math.Abs(ts_.data_[i]-previousData[i]));
-                if (improvement<=ts_.accuracy_)  // convergence reached
+                if (improvement<=ts_.accuracy())  // convergence reached
                     break;
 
                 if (!(iteration+1 < maxIterations))
                     throw new ArgumentException("convergence not reached after " + iteration+1 + " iterations; last improvement " +
-                        improvement + ", required accuracy " + ts_.accuracy_);
+                        improvement + ", required accuracy " + ts_.accuracy());
             }
             validCurve_ = true;
         }
