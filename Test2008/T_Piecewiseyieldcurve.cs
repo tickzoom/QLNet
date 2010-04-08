@@ -228,11 +228,11 @@ namespace TestSuite {
 
             CommonVars vars = new CommonVars();
 
-            testCurveConsistency<Discount, LogCubic, IterativeBootstrap>(vars,
+            testCurveConsistency<Discount, LogCubic, IterativeBootstrap<YieldTermStructure>>(vars,
                         new LogCubic(CubicInterpolation.DerivativeApprox.Spline, true,
                             CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
                             CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0));
-            testBMACurveConsistency<Discount, LogCubic, IterativeBootstrap>(vars,
+            testBMACurveConsistency<Discount, LogCubic, IterativeBootstrap<YieldTermStructure>>(vars,
                         new LogCubic(CubicInterpolation.DerivativeApprox.Spline, true,
                             CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
                             CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0));
@@ -244,8 +244,8 @@ namespace TestSuite {
 
             CommonVars vars = new CommonVars();
 
-            testCurveConsistency<Discount, LogLinear, IterativeBootstrap>(vars);
-            testBMACurveConsistency<Discount, LogLinear, IterativeBootstrap>(vars);
+            testCurveConsistency<Discount, LogLinear, IterativeBootstrap<YieldTermStructure>>(vars);
+            testBMACurveConsistency<Discount, LogLinear, IterativeBootstrap<YieldTermStructure>>(vars);
         }
 
         [TestMethod()]
@@ -254,8 +254,8 @@ namespace TestSuite {
 
             CommonVars vars = new CommonVars();
 
-            testCurveConsistency<Discount, Linear, IterativeBootstrap>(vars);
-            testBMACurveConsistency<Discount, Linear, IterativeBootstrap>(vars);
+            testCurveConsistency<Discount, Linear, IterativeBootstrap<YieldTermStructure>>(vars);
+            testBMACurveConsistency<Discount, Linear, IterativeBootstrap<YieldTermStructure>>(vars);
         }
 
         [TestMethod()]
@@ -264,8 +264,8 @@ namespace TestSuite {
 
             CommonVars vars = new CommonVars();
 
-            testCurveConsistency<ZeroYield, LogLinear, IterativeBootstrap>(vars);
-            testBMACurveConsistency<ZeroYield, LogLinear, IterativeBootstrap>(vars);
+            testCurveConsistency<ZeroYield, LogLinear, IterativeBootstrap<YieldTermStructure>>(vars);
+            testBMACurveConsistency<ZeroYield, LogLinear, IterativeBootstrap<YieldTermStructure>>(vars);
         }
 
         [TestMethod()]
@@ -274,8 +274,8 @@ namespace TestSuite {
 
             CommonVars vars = new CommonVars();
 
-            testCurveConsistency<ZeroYield, Linear, IterativeBootstrap>(vars);
-            testBMACurveConsistency<ZeroYield, Linear, IterativeBootstrap>(vars);
+            testCurveConsistency<ZeroYield, Linear, IterativeBootstrap<YieldTermStructure>>(vars);
+            testBMACurveConsistency<ZeroYield, Linear, IterativeBootstrap<YieldTermStructure>>(vars);
         }
 
         [TestMethod()]
@@ -285,12 +285,12 @@ namespace TestSuite {
 
             CommonVars vars = new CommonVars();
 
-            testCurveConsistency<ZeroYield,Cubic,IterativeBootstrap>(
+            testCurveConsistency<ZeroYield, Cubic, IterativeBootstrap<YieldTermStructure>>(
                            vars,
                            new Cubic(CubicInterpolation.DerivativeApprox.Spline, true,
                                  CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
                                  CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0));
-            testBMACurveConsistency<ZeroYield,Cubic,IterativeBootstrap>(
+            testBMACurveConsistency<ZeroYield, Cubic, IterativeBootstrap<YieldTermStructure>>(
                            vars,
                            new Cubic(CubicInterpolation.DerivativeApprox.Spline, true,
                                  CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
@@ -303,8 +303,8 @@ namespace TestSuite {
 
             CommonVars vars = new CommonVars();
 
-            testCurveConsistency<ForwardRate, Linear, IterativeBootstrap>(vars);
-            testBMACurveConsistency<ForwardRate, Linear, IterativeBootstrap>(vars);
+            testCurveConsistency<ForwardRate, Linear, IterativeBootstrap<YieldTermStructure>>(vars);
+            testBMACurveConsistency<ForwardRate, Linear, IterativeBootstrap<YieldTermStructure>>(vars);
         }
 
         [TestMethod()]
@@ -314,8 +314,8 @@ namespace TestSuite {
 
             CommonVars vars = new CommonVars();
 
-            testCurveConsistency<ForwardRate,BackwardFlat,IterativeBootstrap>(vars);
-            testBMACurveConsistency<ForwardRate,BackwardFlat,IterativeBootstrap>(vars);
+            testCurveConsistency<ForwardRate, BackwardFlat, IterativeBootstrap<YieldTermStructure>>(vars);
+            testBMACurveConsistency<ForwardRate, BackwardFlat, IterativeBootstrap<YieldTermStructure>>(vars);
         }
 
         //[TestMethod()]
@@ -325,12 +325,12 @@ namespace TestSuite {
 
             CommonVars vars = new CommonVars();
 
-            testCurveConsistency<ForwardRate,Cubic,IterativeBootstrap>(
+            testCurveConsistency<ForwardRate, Cubic, IterativeBootstrap<YieldTermStructure>>(
                            vars,
                            new Cubic(CubicInterpolation.DerivativeApprox.Spline, true,
                                  CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
                                  CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0));
-            testBMACurveConsistency<ForwardRate,Cubic,IterativeBootstrap>(
+            testBMACurveConsistency<ForwardRate, Cubic, IterativeBootstrap<YieldTermStructure>>(
                            vars,
                            new Cubic(CubicInterpolation.DerivativeApprox.Spline, true,
                                  CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
@@ -343,8 +343,8 @@ namespace TestSuite {
 
             CommonVars vars = new CommonVars();
 
-            testCurveConsistency<ForwardRate,ConvexMonotone,IterativeBootstrap>(vars);
-            testBMACurveConsistency<ForwardRate,ConvexMonotone,IterativeBootstrap>(vars);
+            testCurveConsistency<ForwardRate, ConvexMonotone, IterativeBootstrap<YieldTermStructure>>(vars);
+            testBMACurveConsistency<ForwardRate, ConvexMonotone, IterativeBootstrap<YieldTermStructure>>(vars);
         }
 
         [TestMethod()]
@@ -352,8 +352,8 @@ namespace TestSuite {
             //"Testing consistency of local-bootstrap algorithm...");
 
             CommonVars vars = new CommonVars();
-            testCurveConsistency<ForwardRate,ConvexMonotone,LocalBootstrap>(vars, new ConvexMonotone(), 1.0e-7);
-            testBMACurveConsistency<ForwardRate,ConvexMonotone,LocalBootstrap>(vars, new ConvexMonotone(), 1.0e-9);
+            testCurveConsistency<ForwardRate, ConvexMonotone, LocalBootstrap<YieldTermStructure>>(vars, new ConvexMonotone(), 1.0e-7);
+            testBMACurveConsistency<ForwardRate, ConvexMonotone, LocalBootstrap<YieldTermStructure>>(vars, new ConvexMonotone(), 1.0e-9);
         }
 
         [TestMethod()]
@@ -583,17 +583,18 @@ namespace TestSuite {
 
 
         public void testCurveConsistency<T, I, B>(CommonVars vars)
-            where T : BootstrapTraits, new()
+            where T : BootstrapTraits<YieldTermStructure>, new()
             where I : IInterpolationFactory, new()
-            where B : IBootStrap, new() { testCurveConsistency<T, I, B>(vars, new I(), 1.0e-9); }
+            where B : IBootStrap<YieldTermStructure>, new() { testCurveConsistency<T, I, B>(vars, new I(), 1.0e-9); }
         public void testCurveConsistency<T, I, B>(CommonVars vars, I interpolator)
-            where T : BootstrapTraits, new()
+            where T : BootstrapTraits<YieldTermStructure>, new()
             where I : IInterpolationFactory, new()
-            where B : IBootStrap, new() { testCurveConsistency<T, I, B>(vars, new I(), 1.0e-9); }
+            where B : IBootStrap<YieldTermStructure>, new() { testCurveConsistency<T, I, B>(vars, new I(), 1.0e-9); }
         public void testCurveConsistency<T, I, B>(CommonVars vars, I interpolator, double tolerance)
-            where T : BootstrapTraits, new()
+            where T : BootstrapTraits<YieldTermStructure>, new()
             where I : IInterpolationFactory, new()
-            where B : IBootStrap, new() {
+            where B : IBootStrap<YieldTermStructure>, new()
+        {
 
             vars.termStructure = new PiecewiseYieldCurve<T, I, B>(vars.settlement, vars.instruments,
                                     new Actual360(), new List<Handle<Quote>>(), new List<Date>(), 1.0e-12, interpolator);
@@ -695,17 +696,18 @@ namespace TestSuite {
         }
 
         public void testBMACurveConsistency<T, I, B>(CommonVars vars)
-            where T : BootstrapTraits, new()
+            where T : BootstrapTraits<YieldTermStructure>, new()
             where I : IInterpolationFactory, new()
-            where B : IBootStrap, new() { testBMACurveConsistency<T, I, B>(vars, new I(), 1.0e-7); }
+            where B : IBootStrap<YieldTermStructure>, new() { testBMACurveConsistency<T, I, B>(vars, new I(), 1.0e-7); }
         public void testBMACurveConsistency<T, I, B>(CommonVars vars, I interpolator)
-            where T : BootstrapTraits, new()
+            where T : BootstrapTraits<YieldTermStructure>, new()
             where I : IInterpolationFactory, new()
-            where B : IBootStrap, new() { testBMACurveConsistency<T, I, B>(vars, interpolator, 1.0e-7); }
+            where B : IBootStrap<YieldTermStructure>, new() { testBMACurveConsistency<T, I, B>(vars, interpolator, 1.0e-7); }
         public void testBMACurveConsistency<T, I, B>(CommonVars vars, I interpolator, double tolerance)
-            where T : BootstrapTraits, new()
+            where T : BootstrapTraits<YieldTermStructure>, new()
             where I : IInterpolationFactory, new()
-            where B : IBootStrap, new() {
+            where B : IBootStrap<YieldTermStructure>, new()
+        {
 
             // readjust settlement
             vars.calendar = new JointCalendar(new BMAIndex().fixingCalendar(),
@@ -787,13 +789,13 @@ namespace TestSuite {
             IndexManager.instance().clearHistories();
         }
 
-        public void testCurveCopy<T, I>(CommonVars vars)             
-            where T : BootstrapTraits, new()
+        public void testCurveCopy<T, I>(CommonVars vars)
+            where T : BootstrapTraits<YieldTermStructure>, new()
             where I : IInterpolationFactory, new() {
             testCurveCopy<T, I>(vars, new I());
         }
-        public void testCurveCopy<T, I>(CommonVars vars, I interpolator) 
-            where T : BootstrapTraits, new()
+        public void testCurveCopy<T, I>(CommonVars vars, I interpolator)
+            where T : BootstrapTraits<YieldTermStructure>, new()
             where I : IInterpolationFactory, new() {
 
             PiecewiseYieldCurve<T,I> curve = new PiecewiseYieldCurve<T,I>(vars.settlement, vars.instruments,
