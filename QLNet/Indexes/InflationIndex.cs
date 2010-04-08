@@ -176,11 +176,11 @@ namespace QLNet
         /*! \warning the forecastTodaysFixing parameter (required by
                      the Index interface) is currently ignored.
         */
-        public double fixing(Date fixingDate)
+      public override double fixing(Date fixingDate)
         {
            return fixing(fixingDate,false);
         }
-        public double fixing(Date aFixingDate, bool forecastTodaysFixing)
+      public override double fixing(Date aFixingDate, bool forecastTodaysFixing)
         {
            // Stored fixings are always non-interpolated.
            // If an interpolated fixing is required then
@@ -312,8 +312,8 @@ namespace QLNet
       /*! \warning the forecastTodaysFixing parameter (required by
            the Index interface) is currently ignored.
       */
-      public double fixing(Date fixingDate) { return fixing(fixingDate,false); }
-      public double fixing(Date fixingDate, bool forecastTodaysFixing)
+      public override double fixing(Date fixingDate) { return fixing(fixingDate, false); }
+      public override double fixing(Date fixingDate, bool forecastTodaysFixing)
       {
          Date today = Settings.evaluationDate();
          Date todayMinusLag = today - availabilityLag_;
