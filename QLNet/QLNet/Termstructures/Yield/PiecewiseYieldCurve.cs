@@ -24,7 +24,7 @@ using System.Text;
 
 namespace QLNet {
     // this is an abstract class to give access to all properties and methods of PiecewiseYieldCurve and avoiding generics
-    public abstract class PiecewiseYieldCurve : YieldTermStructure, InterpolatedCurve, BootstrapTraits<YieldTermStructure>, IGenericCurve<YieldTermStructure> {
+    public abstract class PiecewiseYieldCurve : YieldTermStructure, InterpolatedCurve, BootstrapTraits {
 
         #region InterpolatedCurve
         public List<double> times_ { get; set; }
@@ -64,7 +64,7 @@ namespace QLNet {
 
 
         #region BootstrapTraits
-        protected BootstrapTraits<YieldTermStructure> traits_;
+        protected BootstrapTraits traits_;
 
         public Date initialDate(YieldTermStructure c) { return traits_.initialDate(c); }
         public double initialValue(YieldTermStructure c) { return traits_.initialValue(c); }
@@ -106,7 +106,7 @@ namespace QLNet {
         #region Properties
         public double accuracy_;
 
-        public List<BootstrapHelper<YieldTermStructure>>/*List<RateHelper>*/ instruments_;
+        public List<RateHelper> instruments_;
 
         protected List<Handle<Quote>> jumps_;
         protected List<Date> jumpDates_;
@@ -115,15 +115,10 @@ namespace QLNet {
 
         protected Date latestReference_;
 
-        protected IBootStrap<YieldTermStructure> bootstrap_;
+        protected IBootStrap bootstrap_;
         #endregion
 
-        #region IGenericCurve
-        public bool updated() {throw new NotImplementedException();}
-        public bool moving() {throw new NotImplementedException();}
-        public double accuracy() {return accuracy_;}
-        public List<BootstrapHelper<YieldTermStructure>> instruments() {return instruments_;}
-        #endregion
+
         // two constructors to forward down the ctor chain
         public PiecewiseYieldCurve(Date referenceDate, Calendar cal, DayCounter dc) : base(referenceDate, cal, dc) { }
         public PiecewiseYieldCurve(int settlementDays, Calendar cal, DayCounter dc) : base(settlementDays, cal, dc) { }
@@ -131,9 +126,9 @@ namespace QLNet {
 
 
     public class PiecewiseYieldCurve<Traits, Interpolator, BootStrap> : PiecewiseYieldCurve
-        where Traits : BootstrapTraits<YieldTermStructure>, new()
+        where Traits : BootstrapTraits, new()
         where Interpolator : IInterpolationFactory, new()
-        where BootStrap : IBootStrap<YieldTermStructure>, new() {
+        where BootStrap : IBootStrap, new() {
 
 
         #region Constructors
@@ -156,13 +151,7 @@ namespace QLNet {
                                    double accuracy, Interpolator i, BootStrap bootstrap)
             : base(referenceDate, new Calendar(), dayCounter) {
 
-            List<BootstrapHelper<YieldTermStructure>> insts = new List<BootstrapHelper<YieldTermStructure>>();
-            foreach (RateHelper instrument in instruments)
-            {
-                BootstrapHelper<YieldTermStructure> inst = instrument as BootstrapHelper<YieldTermStructure>;
-                insts.Add(inst);
-            }
-            instruments_ = insts;// instruments as List<BootstrapHelper<YieldTermStructure>>;
+            instruments_ = instruments;
 
             jumps_ = jumps;
             jumpDates_ = jumpDates;
@@ -180,10 +169,10 @@ namespace QLNet {
             bootstrap_.setup(this);
         }
 
-        //public InterpolatedYieldCurve(int settlementDays, Calendar calendar, List<RateHelper> instruments,
+        //public InterpolatedYieldCurve(int settlementDays, Calendar calendar, List<BootstrapHelper<YieldTermStructure>> instruments,
         //                              DayCounter dayCounter) :
         //    this(settlementDays, calendar, instruments, dayCounter, new SimpleQuote()) { }
-        //public InterpolatedYieldCurve(int settlementDays, Calendar calendar, List<RateHelper> instruments,
+        //public InterpolatedYieldCurve(int settlementDays, Calendar calendar, List<BootstrapHelper<YieldTermStructure>> instruments,
         //                              DayCounter dayCounter, Quote turnOfYearEffect) :
         //    this(settlementDays, calendar, instruments, dayCounter, turnOfYearEffect, 1.0e-12) { }
                                    //List<Handle<Quote>> jumps = std::vector<Handle<Quote> >(),
@@ -196,14 +185,8 @@ namespace QLNet {
                                    DayCounter dayCounter,  List<Handle<Quote>> jumps, List<Date> jumpDates, double accuracy,
                                    Interpolator i, BootStrap bootstrap)
             : base(settlementDays, calendar, dayCounter) {
-            //instruments_ = instruments;
-            List<BootstrapHelper<YieldTermStructure>> insts = new List<BootstrapHelper<YieldTermStructure>>();
-            foreach (RateHelper instrument in instruments)
-            {
-                BootstrapHelper<YieldTermStructure> inst = instrument as BootstrapHelper<YieldTermStructure>;
-                insts.Add(inst);
-            }
-            instruments_ = insts;// instruments as List<BootstrapHelper<YieldTermStructure>>;
+            instruments_ = instruments;
+
             jumps_ = jumps;
             jumpDates_ = jumpDates;
             jumpTimes_ = new InitializedList<double>(jumpDates.Count);
@@ -265,8 +248,8 @@ namespace QLNet {
     }
 
     // Allows for optional 3rd generic parameter defaulted to IterativeBootstrap
-    public class PiecewiseYieldCurve<Traits, Interpolator> : PiecewiseYieldCurve<Traits, Interpolator, IterativeBootstrap<YieldTermStructure>>
-        where Traits : BootstrapTraits<YieldTermStructure>, new()
+    public class PiecewiseYieldCurve<Traits, Interpolator> : PiecewiseYieldCurve<Traits, Interpolator, IterativeBootstrap>
+        where Traits : BootstrapTraits, new()
         where Interpolator : IInterpolationFactory, new() {
 
         public PiecewiseYieldCurve(Date referenceDate, List<RateHelper> instruments, DayCounter dayCounter)
@@ -284,7 +267,7 @@ namespace QLNet {
         public PiecewiseYieldCurve(int settlementDays, Calendar calendar, List<RateHelper> instruments,
                                    DayCounter dayCounter)
             : this(settlementDays, calendar, instruments, dayCounter, new List<Handle<Quote>>(), new List<Date>(), 1.0e-12) { }
-        //public InterpolatedYieldCurve(int settlementDays, Calendar calendar, List<RateHelper> instruments,
+        //public InterpolatedYieldCurve(int settlementDays, Calendar calendar, List<BootstrapHelper<YieldTermStructure>> instruments,
         //                              DayCounter dayCounter, Quote turnOfYearEffect) :
         //    this(settlementDays, calendar, instruments, dayCounter, turnOfYearEffect, 1.0e-12) { }
         public PiecewiseYieldCurve(int settlementDays, Calendar calendar, List<RateHelper> instruments,
