@@ -259,94 +259,351 @@ namespace TestSuite
                  + " vs " + (zcData[i].rate/100.0));
            }
 
-          // Here we test the forecasting capability of the index.
-          hz.linkTo(pZITS);
+              // Here we test the forecasting capability of the index.
+              hz.linkTo(pZITS);
 
-          from = hz.link.baseDate();
-          to = hz.link.maxDate() - TimeUnit.Months; // a bit of margin for adjustments
-          Schedule testIndex = new MakeSchedule().from(from).to(to)
-                               .withTenor(new Period(1, TimeUnit.Months))
-                               .withCalendar(new UnitedKingdom())
-                               .withConvention(BusinessDayConvention.ModifiedFollowing)
-                               .value();
-          
-          // we are testing UKRPI which is not interpolated
-          Date bd = hz.link.baseDate();
-          double bf = ii.fixing(bd);
-          for (int i = 0; i < testIndex.Count; i++) {
-              Date d = testIndex[i];
-              double z = hz.link.zeroRate(d, new Period(0, TimeUnit.Days));
-              double t = hz.link.dayCounter().yearFraction(bd, d);
-              if (!ii.interpolated()) // because fixing constant over period
-                  t = hz.link.dayCounter().yearFraction(bd,
-                      Utils.inflationPeriod(d, ii.frequency()).Key);
-              double calc = bf * Math.Pow(1 + z, t);
-              if (t <= 0)
-                  calc = ii.fixing(d, false); // still historical
-              if (Math.Abs(calc - ii.fixing(d, true)) / 10000.0 > eps )
-                  Assert.Fail("ZC index does not forecast correctly for date " + d
-                        + " from base date " + bd.ToString()
-                        + " with fixing " + bf.ToString()
-                        + ", correct:  " + calc.ToString()
-                        + ", fix: " + (ii.fixing(d,true)).ToString()
-                        + ", t " + t.ToString());
-          }
-         //===========================================================================================
-         // Test zero-inflation-indexed (i.e. cpi ratio) cashflow
-         // just ordinary indexed cashflow with a zero inflation index
+              from = hz.link.baseDate();
+              to = hz.link.maxDate() - TimeUnit.Months; // a bit of margin for adjustments
+              Schedule testIndex = new MakeSchedule().from(from).to(to)
+                                   .withTenor(new Period(1, TimeUnit.Months))
+                                   .withCalendar(new UnitedKingdom())
+                                   .withConvention(BusinessDayConvention.ModifiedFollowing)
+                                   .value();
+              
+              // we are testing UKRPI which is not interpolated
+              Date bd = hz.link.baseDate();
+              double bf = ii.fixing(bd);
+              for (int i = 0; i < testIndex.Count; i++) {
+                  Date d = testIndex[i];
+                  double z = hz.link.zeroRate(d, new Period(0, TimeUnit.Days));
+                  double t = hz.link.dayCounter().yearFraction(bd, d);
+                  if (!ii.interpolated()) // because fixing constant over period
+                      t = hz.link.dayCounter().yearFraction(bd,
+                          Utils.inflationPeriod(d, ii.frequency()).Key);
+                  double calc = bf * Math.Pow(1 + z, t);
+                  if (t <= 0)
+                      calc = ii.fixing(d, false); // still historical
+                  if (Math.Abs(calc - ii.fixing(d, true)) / 10000.0 > eps )
+                      Assert.Fail("ZC index does not forecast correctly for date " + d
+                            + " from base date " + bd.ToString()
+                            + " with fixing " + bf.ToString()
+                            + ", correct:  " + calc.ToString()
+                            + ", fix: " + (ii.fixing(d,true)).ToString()
+                            + ", t " + t.ToString());
+              }
+             //===========================================================================================
+             // Test zero-inflation-indexed (i.e. cpi ratio) cashflow
+             // just ordinary indexed cashflow with a zero inflation index
 
-         Date baseDate = new Date(1, Month.January, 2006);
-         Date fixDate = new Date(1, Month.August, 2014);
-         Date payDate= new UnitedKingdom().adjust(fixDate+
-                                                new Period(3,TimeUnit.Months),
-                                                BusinessDayConvention.ModifiedFollowing);
-         Index ind = (Index)(ii);
-         if(ind==null)
-            Assert.Fail("dynamic_pointer_cast to Index from InflationIndex failed");
+             Date baseDate = new Date(1, Month.January, 2006);
+             Date fixDate = new Date(1, Month.August, 2014);
+             Date payDate= new UnitedKingdom().adjust(fixDate+
+                                                    new Period(3,TimeUnit.Months),
+                                                    BusinessDayConvention.ModifiedFollowing);
+             Index ind = (Index)(ii);
+             if(ind==null)
+                Assert.Fail("dynamic_pointer_cast to Index from InflationIndex failed");
 
-         double notional = 1000000.0;//1m
-         IndexedCashFlow iicf = new IndexedCashFlow(notional,ind,baseDate,fixDate,payDate);
-         double correctIndexed = ii.fixing(iicf.fixingDate())/ii.fixing(iicf.baseDate());
-         double calculatedIndexed = iicf.amount()/iicf.notional();
-         if(!(Math.Abs(correctIndexed - calculatedIndexed) < eps))
-            Assert.Fail("IndexedCashFlow indexing wrong: " + calculatedIndexed.ToString()
-                      + " vs correct = " + correctIndexed.ToString());
+             double notional = 1000000.0;//1m
+             IndexedCashFlow iicf = new IndexedCashFlow(notional,ind,baseDate,fixDate,payDate);
+             double correctIndexed = ii.fixing(iicf.fixingDate())/ii.fixing(iicf.baseDate());
+             double calculatedIndexed = iicf.amount()/iicf.notional();
+             if(!(Math.Abs(correctIndexed - calculatedIndexed) < eps))
+                Assert.Fail("IndexedCashFlow indexing wrong: " + calculatedIndexed.ToString()
+                          + " vs correct = " + correctIndexed.ToString());
        
       
-        //===========================================================================================
-        // Test zero coupon swap
+            //===========================================================================================
+            // Test zero coupon swap
 
-        // first make one ...
+            // first make one ...
 
-        ZeroInflationIndex zii = (ZeroInflationIndex)(ii);
-        if(zii==null)
-          Assert.Fail("dynamic_pointer_cast to ZeroInflationIndex from UKRPI failed");
-        ZeroCouponInflationSwap nzcis = new ZeroCouponInflationSwap(ZeroCouponInflationSwap.Type.Payer,
-                                         1000000.0,
-                                         evaluationDate,
-                                         zcData[6].date,    // end date = maturity
-                                         calendar, bdc, dc, zcData[6].rate/100.0, // fixed rate
-                                         zii, observationLag);
+            ZeroInflationIndex zii = (ZeroInflationIndex)(ii);
+            if(zii==null)
+              Assert.Fail("dynamic_pointer_cast to ZeroInflationIndex from UKRPI failed");
+            ZeroCouponInflationSwap nzcis = new ZeroCouponInflationSwap(ZeroCouponInflationSwap.Type.Payer,
+                                             1000000.0,
+                                             evaluationDate,
+                                             zcData[6].date,    // end date = maturity
+                                             calendar, bdc, dc, zcData[6].rate/100.0, // fixed rate
+                                             zii, observationLag);
 
-        // N.B. no coupon pricer because it is not a coupon, effect of inflation curve via
-        //      inflation curve attached to the inflation index.
-        Handle<YieldTermStructure> hTS = new Handle<YieldTermStructure>(nominalTS);
-        IPricingEngine sppe = new DiscountingSwapEngine(hTS);
-        nzcis.setPricingEngine(sppe);
+            // N.B. no coupon pricer because it is not a coupon, effect of inflation curve via
+            //      inflation curve attached to the inflation index.
+            Handle<YieldTermStructure> hTS = new Handle<YieldTermStructure>(nominalTS);
+            IPricingEngine sppe = new DiscountingSwapEngine(hTS);
+            nzcis.setPricingEngine(sppe);
 
-        // ... and price it, should be zero
-        if(!(Math.Abs(nzcis.NPV())<0.00001))
-            Assert.Fail("ZCIS does not reprice to zero :" + nzcis.NPV().ToString()
-                            + " evaluation Date " + evaluationDate.ToString() 
-                            + " to " + zcData[6].date.ToString() 
-                            + " becoming " + nzcis.maturityDate().ToString()
-                            + " rate " + zcData[6].rate.ToString()
-                            + " fixed leg " + nzcis.legNPV(0).ToString()
-                            + " indexed-predicted inflated leg " + nzcis.legNPV(1).ToString()
-                            + " discount " + nominalTS.discount(nzcis.maturityDate()).ToString());
+            // ... and price it, should be zero
+            if(!(Math.Abs(nzcis.NPV())<0.00001))
+                Assert.Fail("ZCIS does not reprice to zero :" + nzcis.NPV().ToString()
+                                + " evaluation Date " + evaluationDate.ToString() 
+                                + " to " + zcData[6].date.ToString() 
+                                + " becoming " + nzcis.maturityDate().ToString()
+                                + " rate " + zcData[6].rate.ToString()
+                                + " fixed leg " + nzcis.legNPV(0).ToString()
+                                + " indexed-predicted inflated leg " + nzcis.legNPV(1).ToString()
+                                + " discount " + nominalTS.discount(nzcis.maturityDate()).ToString());
 
 
-      
+              //===========================================================================================
+            // Test multiplicative seasonality in price
+            //
+
+            //Seasonality factors NOT normalized
+            //and UKRPI is not interpolated
+            Date trueBaseDate = Utils.inflationPeriod(hz.link.baseDate(), ii.frequency()).Value;
+            Date seasonallityBaseDate = new Date(31,Month.January,trueBaseDate.year());
+            List<double> seasonalityFactors = new InitializedList<double>(12);
+            seasonalityFactors[0] = 1.003245;
+            seasonalityFactors[1] = 1.000000;
+            seasonalityFactors[2] = 0.999715;
+            seasonalityFactors[3] = 1.000495;
+            seasonalityFactors[4] = 1.000929;
+            seasonalityFactors[5] = 0.998687;
+            seasonalityFactors[6] = 0.995949;
+            seasonalityFactors[7] = 0.994682;
+            seasonalityFactors[8] = 0.995949;
+            seasonalityFactors[9] = 1.000519;
+            seasonalityFactors[10] = 1.003705;
+            seasonalityFactors[11] = 1.004186;
+
+            //Creating two different seasonality objects
+            //
+            MultiplicativePriceSeasonality seasonality_1 = new MultiplicativePriceSeasonality();
+            List<double> seasonalityFactors_1 = new InitializedList<double>(12, 1.0);
+            seasonality_1.set(seasonallityBaseDate,Frequency.Monthly,seasonalityFactors_1);
+
+            MultiplicativePriceSeasonality seasonality_real =
+                new MultiplicativePriceSeasonality(seasonallityBaseDate,Frequency.Monthly,seasonalityFactors);
+            //Testing seasonality correction when seasonality factors are = 1
+            //
+            double[] fixing = {
+                ii.fixing(new Date(14,Month.January  ,2013),true),
+                ii.fixing(new Date(14,Month.February ,2013),true),
+                ii.fixing(new Date(14,Month.March    ,2013),true),
+                ii.fixing(new Date(14,Month.April    ,2013),true),
+                ii.fixing(new Date(14,Month.May      ,2013),true),
+                ii.fixing(new Date(14,Month.June     ,2013),true),
+                ii.fixing(new Date(14,Month.July     ,2013),true),
+                ii.fixing(new Date(14,Month.August   ,2013),true),
+                ii.fixing(new Date(14,Month.September,2013),true),
+                ii.fixing(new Date(14,Month.October  ,2013),true),
+                ii.fixing(new Date(14,Month.November ,2013),true),
+                ii.fixing(new Date(14,Month.December ,2013),true)
+            };
+
+            hz.link.setSeasonality(seasonality_1);
+            if(!(hz.link.hasSeasonality()))
+                Assert.Fail("[44] incorrectly believes NO seasonality correction");
+
+            double[] seasonalityFixing_1 = {
+                ii.fixing(new Date(14,Month.January  ,2013),true),
+                ii.fixing(new Date(14,Month.February ,2013),true),
+                ii.fixing(new Date(14,Month.March    ,2013),true),
+                ii.fixing(new Date(14,Month.April    ,2013),true),
+                ii.fixing(new Date(14,Month.May      ,2013),true),
+                ii.fixing(new Date(14,Month.June     ,2013),true),
+                ii.fixing(new Date(14,Month.July     ,2013),true),
+                ii.fixing(new Date(14,Month.August   ,2013),true),
+                ii.fixing(new Date(14,Month.September,2013),true),
+                ii.fixing(new Date(14,Month.October  ,2013),true),
+                ii.fixing(new Date(14,Month.November ,2013),true),
+                ii.fixing(new Date(14,Month.December ,2013),true)
+
+            };
+
+            for(int i=0;i<12;i++){
+                if(Math.Abs(fixing[i] - seasonalityFixing_1[i]) > eps) {
+                     Console.WriteLine("Seasonality doesn't work correctly when seasonality factors are set = 1");
+                }
+            }
+
+            //Testing seasonality correction when seasonality factors are different from 1
+            //
+            //0.998687 is the seasonality factor corresponding to June (the base CPI curve month)
+            //
+            double[]  expectedFixing = {
+                ii.fixing(new Date(14,Month.January  ,2013),true) * 1.003245/0.998687,
+                ii.fixing(new Date(14,Month.February ,2013),true) * 1.000000/0.998687,
+                ii.fixing(new Date(14,Month.March    ,2013),true) * 0.999715/0.998687,
+                ii.fixing(new Date(14,Month.April    ,2013),true) * 1.000495/0.998687,
+                ii.fixing(new Date(14,Month.May      ,2013),true) * 1.000929/0.998687,
+                ii.fixing(new Date(14,Month.June     ,2013),true) * 0.998687/0.998687,
+                ii.fixing(new Date(14,Month.July     ,2013),true) * 0.995949/0.998687,
+                ii.fixing(new Date(14,Month.August   ,2013),true) * 0.994682/0.998687,
+                ii.fixing(new Date(14,Month.September,2013),true) * 0.995949/0.998687,
+                ii.fixing(new Date(14,Month.October  ,2013),true) * 1.000519/0.998687,
+                ii.fixing(new Date(14,Month.November ,2013),true) * 1.003705/0.998687,
+                ii.fixing(new Date(14,Month.December ,2013),true) * 1.004186/0.998687
+            };
+
+            hz.link.setSeasonality(seasonality_real);
+
+            double[] seasonalityFixing_real = {
+                ii.fixing(new Date(14,Month.January  ,2013),true),
+                ii.fixing(new Date(14,Month.February ,2013),true),
+                ii.fixing(new Date(14,Month.March    ,2013),true),
+                ii.fixing(new Date(14,Month.April    ,2013),true),
+                ii.fixing(new Date(14,Month.May      ,2013),true),
+                ii.fixing(new Date(14,Month.June     ,2013),true),
+                ii.fixing(new Date(14,Month.July     ,2013),true),
+                ii.fixing(new Date(14,Month.August   ,2013),true),
+                ii.fixing(new Date(14,Month.September,2013),true),
+                ii.fixing(new Date(14,Month.October  ,2013),true),
+                ii.fixing(new Date(14,Month.November ,2013),true),
+                ii.fixing(new Date(14,Month.December ,2013),true)
+            };
+
+            for(int i=0;i<12;i++){
+                if(Math.Abs(expectedFixing[i] - seasonalityFixing_real[i]) > 0.01) {
+                     Console.WriteLine("Seasonality doesn't work correctly when considering seasonality factors != 1 "
+                                + expectedFixing[i].ToString() + " vs " + seasonalityFixing_real[i].ToString());
+                }
+            }
+
+            //Testing Unset function
+            //
+            if(!(hz.link.hasSeasonality()))
+                Assert.Fail("[4] incorrectly believes NO seasonality correction");
+            hz.link.setSeasonality();
+            //perhaps there is a pb here ????
+            //if(hz.link.hasSeasonality())
+            //    Assert.Fail("[5] incorrectly believes HAS seasonality correction");
+
+            double[]  seasonalityFixing_unset = {
+                ii.fixing(new Date(14,Month.January  ,2013),true),
+                ii.fixing(new Date(14,Month.February ,2013),true),
+                ii.fixing(new Date(14,Month.March    ,2013),true),
+                ii.fixing(new Date(14,Month.April    ,2013),true),
+                ii.fixing(new Date(14,Month.May      ,2013),true),
+                ii.fixing(new Date(14,Month.June     ,2013),true),
+                ii.fixing(new Date(14,Month.July     ,2013),true),
+                ii.fixing(new Date(14,Month.August   ,2013),true),
+                ii.fixing(new Date(14,Month.September,2013),true),
+                ii.fixing(new Date(14,Month.October  ,2013),true),
+                ii.fixing(new Date(14,Month.November ,2013),true),
+                ii.fixing(new Date(14,Month.December ,2013),true)
+            };
+
+            for(int i=0;i<12;i++){
+                if(Math.Abs(seasonalityFixing_unset[i] - seasonalityFixing_1[i]) > eps) {
+                    Assert.Fail("UnsetSeasonality doesn't work correctly "
+                                + seasonalityFixing_unset[i].ToString() + " vs " + seasonalityFixing_1[i].ToString());
+                }
+            }
+           //==============================================================================
+            // now do an INTERPOLATED index, i.e. repeat everything on a fake version of
+            // UKRPI (to save making another term structure)
+
+            bool interpYES = true;
+            UKRPI iiUKRPIyes = new UKRPI(interpYES, hz);
+            for (int i=0; i<rpiSchedule.Count;i++) {
+                iiUKRPIyes.addFixing(rpiSchedule[i], fixData[i]);
+            }
+
+            ZeroInflationIndex iiyes
+                = iiUKRPIyes as ZeroInflationIndex;
+
+            // now build the zero inflation curve
+            // same data, bigger lag or it will be a self-contradiction
+            Period observationLagyes = new Period(3,TimeUnit.Months);
+            List<BootstrapHelper<ZeroInflationTermStructure>>  helpersyes =
+            makeHelpers(zcData, zcData.Length, iiyes,
+                                observationLagyes,
+                                calendar, bdc, dc);
+
+            PiecewiseZeroInflationCurve<Linear> pZITSyes =
+                    new PiecewiseZeroInflationCurve<Linear,ZeroInflationTraits>(
+                    evaluationDate, calendar, dc, observationLagyes,
+                    frequency, iiyes.interpolated(), baseZeroRate,
+                    new Handle<YieldTermStructure>(nominalTS), helpersyes, new Linear());
+            pZITSyes.recalculate();
+
+            // first check that the zero rates on the curve match the data
+            // and that the helpers give the correct impled rates
+            forceLinearInterpolation = false;   // still
+            for (int i=0; i<zcData.Length; i++) {
+                //BOOST_CHECK_MESSAGE(std::fabs(zcData[i].rate/100.0
+                //            - pZITSyes->zeroRate(zcData[i].date, observationLagyes, forceLinearInterpolation)) < eps,
+                if(!(Math.Abs(zcData[i].rate/100.0
+                - pZITSyes.zeroRate(zcData[i].date, observationLagyes, forceLinearInterpolation)) < eps))
+               Assert.Fail( "ZITS INTERPOLATED zeroRate != instrument "
+                            + pZITSyes.zeroRate(zcData[i].date, observationLagyes, forceLinearInterpolation).ToString()
+                            + " date " + zcData[i].date + " observationLagyes " + observationLagyes.ToString()
+                            + " vs " + (zcData[i].rate/100.0).ToString()
+                            + " interpolation: " + iiyes.interpolated().ToString()
+                            + " forceLinearInterpolation " + forceLinearInterpolation.ToString());
+               //BOOST_CHECK_MESSAGE(std::fabs(helpersyes[i]->impliedQuote()
+               //                 - zcData[i].rate/100.0) < eps,
+               if(!(Math.Abs(helpersyes[i].impliedQuote() - zcData[i].rate/100.0) < eps))
+                   Assert.Fail("ZITS INTERPOLATED implied quote != instrument "
+                            + helpersyes[i].impliedQuote().ToString()
+                            + " vs " + (zcData[i].rate/100.0).ToString());
+            }
+
+
+            //======================================================================================
+            // now test the forecasting capability of the index.
+            hz.linkTo(pZITSyes);
+            from = hz.link.baseDate()+TimeUnit.Months; // to avoid historical linear bit for rest of base month
+            to = hz.link.maxDate()-TimeUnit.Months; // a bit of margin for adjustments
+            testIndex = new MakeSchedule().from(from).to(to)
+            .withTenor(new Period(1, TimeUnit.Months))
+            .withCalendar(new UnitedKingdom())
+            .withConvention(BusinessDayConvention.ModifiedFollowing)
+            .value();
+
+            // we are testing UKRPI which is FAKE interpolated for testing here
+            bd = hz.link.baseDate();
+            bf = iiyes.fixing(bd);
+            for (int i=0; i<testIndex.Count;i++) {
+                Date d = testIndex[i];
+                double z = hz.link.zeroRate(d, new Period(0,TimeUnit.Days));
+                double t = hz.link.dayCounter().yearFraction(bd, d);
+                double calc = bf * Math.Pow( 1+z, t);
+                if (t<=0) calc = iiyes.fixing(d); // still historical
+                if (Math.Abs(calc - iiyes.fixing(d)) > eps)
+                    Assert.Fail("ZC INTERPOLATED index does not forecast correctly for date " + d.ToString()
+                                + " from base date " + bd.ToString()
+                                + " with fixing " + bf.ToString()
+                                + ", correct:  " + calc.ToString()
+                                + ", fix: " + iiyes.fixing(d).ToString()
+                                + ", t " + t.ToString()
+                                + ", zero " + z.ToString());
+            }
+
+
+
+            //===========================================================================================
+            // Test zero coupon swap
+
+            ZeroInflationIndex ziiyes =iiyes as ZeroInflationIndex;
+            if(ziiyes==null)
+                Assert.Fail("dynamic_pointer_cast to ZeroInflationIndex from UKRPI-I failed");
+            ZeroCouponInflationSwap nzcisyes = new ZeroCouponInflationSwap( ZeroCouponInflationSwap.Type.Payer,
+                                                                             1000000.0,
+                                                                             evaluationDate,
+                                                                             zcData[6].date,    // end date = maturity
+                                                                             calendar, bdc, dc, zcData[6].rate/100.0, // fixed rate
+                                                                             ziiyes, observationLagyes);
+
+            // N.B. no coupon pricer because it is not a coupon, effect of inflation curve via
+            //      inflation curve attached to the inflation index.
+            nzcisyes.setPricingEngine(sppe);
+
+            // ... and price it, should be zero
+            //std::cout<<fabs(nzcisyes.NPV())<0.00001<<"ZCIS-I does not reprice to zero "
+          if(!(Math.Abs(nzcisyes.NPV())<0.00001))
+              Assert.Fail("ZCIS-I does not reprice to zero "
+                          + nzcisyes.NPV().ToString()
+                          + evaluationDate.ToString() + " to " + zcData[6].date.ToString() + " becoming " + nzcisyes.maturityDate().ToString()
+                          + " rate " + zcData[6].rate.ToString()
+                          + " fixed leg " + nzcisyes.legNPV(0).ToString()
+                          + " indexed-predicted inflated leg " + nzcisyes.legNPV(1).ToString()
+                          + " discount " + nominalTS.discount(nzcisyes.maturityDate()).ToString()) ;
+
+
       }
    }
 }
