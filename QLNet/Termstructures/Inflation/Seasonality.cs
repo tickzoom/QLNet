@@ -137,7 +137,7 @@ namespace QLNet
       {
 
          frequency_ = frequency;
-         seasonalityFactors_ = new List<double>(seasonalityFactors.Count);
+         seasonalityFactors_ = new InitializedList<double>(seasonalityFactors.Count);
         
          for(int i=0; i<seasonalityFactors.Count; i++) 
          {
