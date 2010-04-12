@@ -1,6 +1,7 @@
 ﻿/*
  Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
-  
+ Copyright (C) 2010 Philippe Real (ph_real@hotmail.com)
+
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -16,6 +17,7 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
+
 /*! \file piecewisezeroinflationcurve.hpp
     \brief Piecewise zero-inflation term structure
 */
