@@ -1,5 +1,6 @@
 ﻿/*
  Copyright (C) 2008, 2009 , 2010 Andrea Maggiulli (a.maggiulli@gmail.com)
+ Copyright (C) 2010 Philippe Real (ph_real@hotmail.com)
 
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -25,32 +26,33 @@ using QLNet;
 
 namespace TestSuite
 {
-   struct Datum
-   {
-      public Date date;
-      public double rate;
-      public Datum(Date d , double r )
-      {
-         date = d;
-         rate = r;
-      }
-   };
+    
+    struct Datum
+    {
+        public Date date;
+        public double rate;
+        public Datum(Date d , double r )
+        {
+            date = d;
+            rate = r;
+        }
+    };
 
-   //===========================================================================================
-   // zero inflation tests, index, termstructure, and swaps
-   //===========================================================================================
+    //===========================================================================================
+    // zero inflation tests, index, termstructure, and swaps
+    //===========================================================================================
 
-   [TestClass()]
-   public class T_Inflation
-   {
+    [TestClass()]
+    public class T_Inflation
+    {
 
-      private YieldTermStructure nominalTermStructure() 
+        private YieldTermStructure nominalTermStructure() 
       {
         Date evaluationDate = new Date(13, Month.August, 2007);
         return new FlatForward(evaluationDate, 0.05, new Actual360());
       }
 
-      private List<BootstrapHelper<ZeroInflationTermStructure>> makeHelpers(Datum[] iiData, int N,
+        private List<BootstrapHelper<ZeroInflationTermStructure>> makeHelpers(Datum[] iiData, int N,
                                                 ZeroInflationIndex ii, Period observationLag,
                                                 Calendar calendar,
                                                 BusinessDayConvention bdc,
@@ -68,9 +70,9 @@ namespace TestSuite
          return instruments;
       }
 
-       [TestMethod()]
+        [TestMethod()]
         public void testZeroIndex()
-      {
+        {
          // Testing zero inflation indices...
          EUHICP euhicp = new EUHICP(true);
 
@@ -160,155 +162,320 @@ namespace TestSuite
          }
       }
 
-      [TestMethod()]
-      public void testZeroTermStructure()
-      {
-          // Testing zero inflation term structure...
 
-          SavedSettings backup;
+        [TestMethod()]
+        public void testYYTermStructure() {
+            //("Testing year-on-year inflation term structure...");
 
-          // try the Zero UK
-          Calendar calendar = new UnitedKingdom();
-          BusinessDayConvention bdc = BusinessDayConvention.ModifiedFollowing;
-          Date evaluationDate = new Date(13, Month.August, 2007);
-          evaluationDate = calendar.adjust(evaluationDate);
-          Settings.setEvaluationDate(evaluationDate);
+            SavedSettings backup;
 
-          // fixing data
-          Date from = new Date(1, Month.January, 2005);
-          Date to = new Date(13, Month.August, 2007);
-          Schedule rpiSchedule = new MakeSchedule().from(from).to(to)
-                                 .withTenor(new Period(1, TimeUnit.Months))
-                                 .withCalendar(new UnitedKingdom())
-                                 .withConvention(BusinessDayConvention.ModifiedFollowing)
-                                 .value();
-
-          double[] fixData = { 189.9, 189.9, 189.6, 190.5, 191.6, 192.0,
-                              192.2, 192.2, 192.6, 193.1, 193.3, 193.6,
-                              194.1, 193.4, 194.2, 195.0, 196.5, 197.7,
-                              198.5, 198.5, 199.2, 200.1, 200.4, 201.1,
-                              202.7, 201.6, 203.1, 204.4, 205.4, 206.2,
-                              207.3, 206.1,  -999.0 };
-
-          RelinkableHandle<ZeroInflationTermStructure> hz = new RelinkableHandle<ZeroInflationTermStructure>();
-          bool interp = false;
-          UKRPI iiUKRPI = new UKRPI(interp, hz);
-          for (int i = 0; i < rpiSchedule.Count; i++)
-          {
-              iiUKRPI.addFixing(rpiSchedule[i], fixData[i]);
-          }
-
-          ZeroInflationIndex ii = iiUKRPI as ZeroInflationIndex;
-
-          YieldTermStructure nominalTS = nominalTermStructure();
+            // try the YY UK
+            Calendar calendar = new UnitedKingdom();
+            BusinessDayConvention bdc = BusinessDayConvention.ModifiedFollowing;
+            Date evaluationDate = new Date(13, Month.August, 2007);
+            evaluationDate = calendar.adjust(evaluationDate);
+            Settings.setEvaluationDate(evaluationDate);
 
 
-          // now build the zero inflation curve
+            // fixing data
+            Date from = new Date(1, Month.January, 2005);
+            Date to = new Date(13, Month.August, 2007);
+            Schedule rpiSchedule = new MakeSchedule().from(from).to(to)
+            .withTenor(new Period(1, TimeUnit.Months))
+            .withCalendar(new UnitedKingdom())
+            .withConvention(BusinessDayConvention.ModifiedFollowing)
+            .value();
+ 
+            double[] fixData = { 189.9, 189.9, 189.6, 190.5, 191.6, 192.0,
+                192.2, 192.2, 192.6, 193.1, 193.3, 193.6,
+                194.1, 193.4, 194.2, 195.0, 196.5, 197.7,
+                198.5, 198.5, 199.2, 200.1, 200.4, 201.1,
+                202.7, 201.6, 203.1, 204.4, 205.4, 206.2,
+                207.3, -999.0, -999 };
 
-          Datum[] zcData = {
-           new Datum( new Date(13, Month.August, 2008), 2.93 ),
-           new Datum( new Date(13, Month.August, 2009), 2.95 ),
-           new Datum( new Date(13, Month.August, 2010), 2.965 ),
-           new Datum( new Date(15, Month.August, 2011), 2.98 ),
-           new Datum( new Date(13, Month.August, 2012), 3.0 ),
-           new Datum( new Date(13, Month.August, 2014), 3.06 ),
-           new Datum( new Date(13, Month.August, 2017), 3.175 ),
-           new Datum( new Date(13, Month.August, 2019), 3.243 ),
-           new Datum( new Date(15, Month.August, 2022), 3.293 ),
-           new Datum( new Date(14, Month.August, 2027), 3.338 ),
-           new Datum( new Date(13, Month.August, 2032), 3.348 ),
-           new Datum( new Date(15, Month.August, 2037), 3.348 ),
-           new Datum( new Date(13, Month.August, 2047), 3.308 ),
-           new Datum( new Date(13, Month.August, 2057), 3.228 )};
+            RelinkableHandle<YoYInflationTermStructure> hy = new RelinkableHandle<YoYInflationTermStructure>();
+            bool interp = false;
+            YYUKRPIr iir = new YYUKRPIr(interp, hy);
+            for (int i=0; i<rpiSchedule.Count ;i++) {
+                iir.addFixing(rpiSchedule[i], fixData[i]);
+            }
 
 
-          Period observationLag = new Period(2, TimeUnit.Months);
-          DayCounter dc = new Thirty360();
-          Frequency frequency = Frequency.Monthly;
+
+            YieldTermStructure nominalTS = nominalTermStructure();
+
+            // now build the YoY inflation curve
+            Datum[] yyData = {
+                new Datum(new  Date(13, Month.August, 2008), 2.95  ),
+                new Datum(new  Date(13, Month.August, 2009), 2.95  ),
+                new Datum(new  Date(13, Month.August, 2010), 2.93  ),
+                new Datum(new  Date(15, Month.August, 2011), 2.955 ),
+                new Datum(new  Date(13, Month.August, 2012), 2.945 ),
+                new Datum(new  Date(13, Month.August, 2013), 2.985 ),
+                new Datum(new  Date(13, Month.August, 2014), 3.01  ),
+                new Datum(new  Date(13, Month.August, 2015), 3.035 ),
+                new Datum(new  Date(13, Month.August, 2016), 3.055 ),  // note that
+                new Datum(new  Date(13, Month.August, 2017), 3.075 ),  // some dates will be on
+                new Datum(new  Date(13, Month.August, 2019), 3.105 ),  // holidays but the payment
+                new Datum(new  Date(15, Month.August, 2022), 3.135 ),  // calendar will roll them
+                new Datum(new  Date(13, Month.August, 2027), 3.155 ),
+                new Datum(new  Date(13, Month.August, 2032), 3.145 ),
+                new Datum(new  Date(13, Month.August, 2037), 3.145 ) 
+                             };
+
+            Period observationLag = new Period(2,TimeUnit.Months);
+            DayCounter dc = new Thirty360();
+
+            //// now build the helpers ...
+            //List<BootstrapHelper<YoYInflationTermStructure>> helpers =
+            //new makeHelpers<YoYInflationTermStructure,YearOnYearInflationSwapHelper,
+            //YoYInflationIndex>(yyData, yyData.Length, iir,
+            //                    observationLag,
+            //                    calendar, bdc, dc);
+
+            //double baseYYRate = yyData[0].rate/100.0;
+            //PiecewiseYoYInflationCurve<Linear> pYYTS = 
+            //    new PiecewiseYoYInflationCurve<Linear>(
+            //            evaluationDate, calendar, dc, observationLag,
+            //            iir.frequency(),iir.interpolated(), baseYYRate,
+            //            new Handle<YieldTermStructure>(nominalTS), helpers,new Linear());
+            //pYYTS.recalculate();
+            
+            //// validation
+            //// yoy swaps should reprice to zero
+            //// yy rates should not equal yySwap rates
+            //double eps = 0.000001;
+            //// usual swap engine
+            //Handle<YieldTermStructure> hTS = new Handle<YieldTermStructure>(nominalTS);
+            //IPricingEngine sppe = new DiscountingSwapEngine(hTS);
+
+            //// make sure that the index has the latest yoy term structure
+            //hy.linkTo(pYYTS);
+            
+            //for (int j = 1; j < yyData.Length ; j++) {
+
+            //    from = nominalTS.referenceDate();
+            //    to = yyData[j].date;
+            //    Schedule yoySchedule = new MakeSchedule().from(from).to(to)
+            //    .withConvention(BusinessDayConvention.Unadjusted) // fixed leg gets calendar from
+            //    .withCalendar(calendar)     // schedule
+            //    .withTenor(new Period(1, TimeUnit.Months))
+            //    .backwards()
+            //    .value();
+                
+            //    YearOnYearInflationSwap yyS2 = new YearOnYearInflationSwap(
+            //                                    YearOnYearInflationSwap.Type.Payer,
+            //                                    1000000.0,
+            //                                    yoySchedule,//fixed schedule, but same as yoy
+            //                                    yyData[j].rate/100.0,
+            //                                    dc,
+            //                                    yoySchedule,
+            //                                    iir,
+            //                                    observationLag,
+            //                                    0.0,        //spread on index
+            //                                    dc,
+            //                                    new UnitedKingdom());
+
+            //    yyS2.setPricingEngine(sppe);
+
+
+
+            //     if(!(Math.Abs(yyS2.NPV())<eps))
+            //        Assert.Fail("fresh yoy swap NPV!=0 from TS "
+            //                    + "swap quote for pt " + j
+            //                    + ", is " + yyData[j].rate/100.0
+            //                    + " vs YoY rate " + pYYTS.yoyRate(yyData[j].date-observationLag)
+            //                    + " at quote date " + (yyData[j].date-observationLag)
+            //                    + ", NPV of a fresh yoy swap is " + yyS2.NPV()
+            //                    + "\n      fair rate " + yyS2.fairRate()
+            //                    + " payment " + yyS2.paymentConvention());
+            //}
+
+            //int jj=3;
+            //for (int k = 0; k < 14; k++) {
+
+            //    from = nominalTS.referenceDate() - k*Months;
+            //    to = yyData[jj].date - k*Months;
+            //    Schedule yoySchedule = MakeSchedule().from(from).to(to)
+            //    .withConvention(BusinessDayConvention.Unadjusted) // fixed leg gets calendar from
+            //    .withCalendar(calendar)     // schedule
+            //    .withTenor(new Period(1, TimeUnit.Months))
+            //    .backwards()
+            //    .value();
+
+            //    YearOnYearInflationSwap yyS3 = new YearOnYearInflationSwap(
+            //                                YearOnYearInflationSwap.Type.Payer,
+            //                                1000000.0,
+            //                                yoySchedule,//fixed schedule, but same as yoy
+            //                                yyData[jj].rate/100.0,
+            //                                dc,
+            //                                yoySchedule,
+            //                                iir,
+            //                                observationLag,
+            //                                0.0,        //spread on index
+            //                                dc,
+            //                                new UnitedKingdom());
+
+            //    yyS3.setPricingEngine(sppe);
+
+            //    if(!(Math.Abs(yyS3.NPV())< 20000.0))
+            //        Assert.Fail ("unexpected size of aged YoY swap, aged "
+            //                        + k +" months: YY aged NPV = " + yyS3.NPV()
+            //                        + ", legs "+ yyS3.legNPV(0) + " and " + yyS3.legNPV(1));
+            //    
+            //}
+
+        }
+
+        [TestMethod()]
+        public void testZeroTermStructure()
+        {
+            // Testing zero inflation term structure...
+
+            SavedSettings backup;
+
+            // try the Zero UK
+            Calendar calendar = new UnitedKingdom();
+            BusinessDayConvention bdc = BusinessDayConvention.ModifiedFollowing;
+            Date evaluationDate = new Date(13, Month.August, 2007);
+            evaluationDate = calendar.adjust(evaluationDate);
+            Settings.setEvaluationDate(evaluationDate);
+
+            // fixing data
+            Date from = new Date(1, Month.January, 2005);
+            Date to = new Date(13, Month.August, 2007);
+            Schedule rpiSchedule = new MakeSchedule().from(from).to(to)
+                                     .withTenor(new Period(1, TimeUnit.Months))
+                                     .withCalendar(new UnitedKingdom())
+                                     .withConvention(BusinessDayConvention.ModifiedFollowing)
+                                     .value();
+
+            double[] fixData = { 189.9, 189.9, 189.6, 190.5, 191.6, 192.0,
+                                  192.2, 192.2, 192.6, 193.1, 193.3, 193.6,
+                                  194.1, 193.4, 194.2, 195.0, 196.5, 197.7,
+                                  198.5, 198.5, 199.2, 200.1, 200.4, 201.1,
+                                  202.7, 201.6, 203.1, 204.4, 205.4, 206.2,
+                                  207.3, 206.1,  -999.0 };
+
+            RelinkableHandle<ZeroInflationTermStructure> hz = new RelinkableHandle<ZeroInflationTermStructure>();
+            bool interp = false;
+            UKRPI iiUKRPI = new UKRPI(interp, hz);
+            for (int i = 0; i < rpiSchedule.Count; i++)
+            {
+                iiUKRPI.addFixing(rpiSchedule[i], fixData[i]);
+            }
+
+            ZeroInflationIndex ii = iiUKRPI as ZeroInflationIndex;
+
+            YieldTermStructure nominalTS = nominalTermStructure();
+
+
+            // now build the zero inflation curve
+
+            Datum[] zcData = {
+            new Datum( new Date(13, Month.August, 2008), 2.93 ),
+            new Datum( new Date(13, Month.August, 2009), 2.95 ),
+            new Datum( new Date(13, Month.August, 2010), 2.965 ),
+            new Datum( new Date(15, Month.August, 2011), 2.98 ),
+            new Datum( new Date(13, Month.August, 2012), 3.0 ),
+            new Datum( new Date(13, Month.August, 2014), 3.06 ),
+            new Datum( new Date(13, Month.August, 2017), 3.175 ),
+            new Datum( new Date(13, Month.August, 2019), 3.243 ),
+            new Datum( new Date(15, Month.August, 2022), 3.293 ),
+            new Datum( new Date(14, Month.August, 2027), 3.338 ),
+            new Datum( new Date(13, Month.August, 2032), 3.348 ),
+            new Datum( new Date(15, Month.August, 2037), 3.348 ),
+            new Datum( new Date(13, Month.August, 2047), 3.308 ),
+            new Datum( new Date(13, Month.August, 2057), 3.228 )};
+
+
+            Period observationLag = new Period(2, TimeUnit.Months);
+            DayCounter dc = new Thirty360();
+            Frequency frequency = Frequency.Monthly;
           
-          List<BootstrapHelper<ZeroInflationTermStructure>> helpers =
-              makeHelpers(zcData, zcData.Length,ii,
-                          observationLag,
-                          calendar,bdc,dc);
+            List<BootstrapHelper<ZeroInflationTermStructure>> helpers =
+                makeHelpers(zcData, zcData.Length,ii,
+                            observationLag,
+                            calendar,bdc,dc);
 
-          double baseZeroRate = zcData[0].rate / 100.0;
-          var
-          pZITS =
-          new PiecewiseZeroInflationCurve<Linear,ZeroInflationTraits>
+            double baseZeroRate = zcData[0].rate / 100.0;
+            var
+            pZITS =
+            new PiecewiseZeroInflationCurve<Linear,ZeroInflationTraits>
                                         (evaluationDate, calendar, dc, observationLag, 
                                         frequency, ii.interpolated(), baseZeroRate, 
                                         new Handle<YieldTermStructure>(nominalTS), helpers, new Linear());
-          pZITS.recalculate();
+            pZITS.recalculate();
 
-          // first check that the zero rates on the curve match the data
-          // and that the helpers give the correct impled rates
-          const double eps = 0.00000001;
-          bool forceLinearInterpolation = false;
+            // first check that the zero rates on the curve match the data
+            // and that the helpers give the correct impled rates
+            const double eps = 0.00000001;
+            bool forceLinearInterpolation = false;
 
-          for (int i=0; i<zcData.Length; i++) {
-            if (!(Math.Abs(zcData[i].rate/100.0 - 
-                pZITS.zeroRate(zcData[i].date, observationLag, forceLinearInterpolation)) < eps))
-                Assert.Fail("ZITS zeroRate != instrument "
-                + pZITS.zeroRate(zcData[i].date, observationLag, forceLinearInterpolation).ToString()
-                + " vs " + (zcData[i].rate/100.0)
-                + " interpolation: " + ii.interpolated().ToString()
-                + " forceLinearInterpolation " + forceLinearInterpolation.ToString());
-            if (!(Math.Abs(helpers[i].impliedQuote() - zcData[i].rate/100.0) < eps))
-                 Assert.Fail("ZITS implied quote != instrument "
-                 + helpers[i].impliedQuote().ToString()
-                 + " vs " + (zcData[i].rate/100.0));
-           }
+            for (int i=0; i<zcData.Length; i++) {
+                if (!(Math.Abs(zcData[i].rate/100.0 - 
+                    pZITS.zeroRate(zcData[i].date, observationLag, forceLinearInterpolation)) < eps))
+                    Assert.Fail("ZITS zeroRate != instrument "
+                    + pZITS.zeroRate(zcData[i].date, observationLag, forceLinearInterpolation).ToString()
+                    + " vs " + (zcData[i].rate/100.0)
+                    + " interpolation: " + ii.interpolated().ToString()
+                    + " forceLinearInterpolation " + forceLinearInterpolation.ToString());
+                if (!(Math.Abs(helpers[i].impliedQuote() - zcData[i].rate/100.0) < eps))
+                    Assert.Fail("ZITS implied quote != instrument "
+                    + helpers[i].impliedQuote().ToString()
+                    + " vs " + (zcData[i].rate/100.0));
+            }
 
-              // Here we test the forecasting capability of the index.
-              hz.linkTo(pZITS);
+            // Here we test the forecasting capability of the index.
+            hz.linkTo(pZITS);
 
-              from = hz.link.baseDate();
-              to = hz.link.maxDate() - TimeUnit.Months; // a bit of margin for adjustments
-              Schedule testIndex = new MakeSchedule().from(from).to(to)
+            from = hz.link.baseDate();
+            to = hz.link.maxDate() - TimeUnit.Months; // a bit of margin for adjustments
+            Schedule testIndex = new MakeSchedule().from(from).to(to)
                                    .withTenor(new Period(1, TimeUnit.Months))
                                    .withCalendar(new UnitedKingdom())
                                    .withConvention(BusinessDayConvention.ModifiedFollowing)
                                    .value();
               
-              // we are testing UKRPI which is not interpolated
-              Date bd = hz.link.baseDate();
-              double bf = ii.fixing(bd);
-              for (int i = 0; i < testIndex.Count; i++) {
-                  Date d = testIndex[i];
-                  double z = hz.link.zeroRate(d, new Period(0, TimeUnit.Days));
-                  double t = hz.link.dayCounter().yearFraction(bd, d);
-                  if (!ii.interpolated()) // because fixing constant over period
-                      t = hz.link.dayCounter().yearFraction(bd,
-                          Utils.inflationPeriod(d, ii.frequency()).Key);
-                  double calc = bf * Math.Pow(1 + z, t);
-                  if (t <= 0)
-                      calc = ii.fixing(d, false); // still historical
-                  if (Math.Abs(calc - ii.fixing(d, true)) / 10000.0 > eps )
-                      Assert.Fail("ZC index does not forecast correctly for date " + d
+            // we are testing UKRPI which is not interpolated
+            Date bd = hz.link.baseDate();
+            double bf = ii.fixing(bd);
+            for (int i = 0; i < testIndex.Count; i++) {
+                Date d = testIndex[i];
+                double z = hz.link.zeroRate(d, new Period(0, TimeUnit.Days));
+                double t = hz.link.dayCounter().yearFraction(bd, d);
+                if (!ii.interpolated()) // because fixing constant over period
+                    t = hz.link.dayCounter().yearFraction(bd,
+                        Utils.inflationPeriod(d, ii.frequency()).Key);
+                    double calc = bf * Math.Pow(1 + z, t);
+                if (t <= 0)
+                    calc = ii.fixing(d, false); // still historical
+                if (Math.Abs(calc - ii.fixing(d, true)) / 10000.0 > eps )
+                    Assert.Fail("ZC index does not forecast correctly for date " + d
                             + " from base date " + bd.ToString()
                             + " with fixing " + bf.ToString()
                             + ", correct:  " + calc.ToString()
                             + ", fix: " + (ii.fixing(d,true)).ToString()
                             + ", t " + t.ToString());
-              }
-             //===========================================================================================
-             // Test zero-inflation-indexed (i.e. cpi ratio) cashflow
-             // just ordinary indexed cashflow with a zero inflation index
+            }
+            //===========================================================================================
+            // Test zero-inflation-indexed (i.e. cpi ratio) cashflow
+            // just ordinary indexed cashflow with a zero inflation index
 
-             Date baseDate = new Date(1, Month.January, 2006);
-             Date fixDate = new Date(1, Month.August, 2014);
-             Date payDate= new UnitedKingdom().adjust(fixDate+
+            Date baseDate = new Date(1, Month.January, 2006);
+            Date fixDate = new Date(1, Month.August, 2014);
+            Date payDate= new UnitedKingdom().adjust(fixDate+
                                                     new Period(3,TimeUnit.Months),
                                                     BusinessDayConvention.ModifiedFollowing);
-             Index ind = (Index)(ii);
-             if(ind==null)
+            Index ind = (Index)(ii);
+            if(ind==null)
                 Assert.Fail("dynamic_pointer_cast to Index from InflationIndex failed");
 
-             double notional = 1000000.0;//1m
-             IndexedCashFlow iicf = new IndexedCashFlow(notional,ind,baseDate,fixDate,payDate);
-             double correctIndexed = ii.fixing(iicf.fixingDate())/ii.fixing(iicf.baseDate());
-             double calculatedIndexed = iicf.amount()/iicf.notional();
-             if(!(Math.Abs(correctIndexed - calculatedIndexed) < eps))
+            double notional = 1000000.0;//1m
+            IndexedCashFlow iicf = new IndexedCashFlow(notional,ind,baseDate,fixDate,payDate);
+            double correctIndexed = ii.fixing(iicf.fixingDate())/ii.fixing(iicf.baseDate());
+            double calculatedIndexed = iicf.amount()/iicf.notional();
+            if(!(Math.Abs(correctIndexed - calculatedIndexed) < eps))
                 Assert.Fail("IndexedCashFlow indexing wrong: " + calculatedIndexed.ToString()
                           + " vs correct = " + correctIndexed.ToString());
        
@@ -605,5 +772,165 @@ namespace TestSuite
 
 
       }
-   }
+   
+   
+        //===========================================================================================
+        // year on year tests, index, termstructure, and swaps
+        //===========================================================================================
+        [TestMethod()]
+        public void testYYIndex() {
+            //BOOST_MESSAGE("Testing year-on-year inflation indices...");
+
+            SavedSettings backup;
+
+            YYEUHICP yyeuhicp = new YYEUHICP(true);
+            if (yyeuhicp.name() != "EU YY_HICP"
+                || yyeuhicp.frequency() != Frequency.Monthly
+                || yyeuhicp.revised()
+                || !yyeuhicp.interpolated()
+                || yyeuhicp.ratio()
+                || yyeuhicp.availabilityLag() != new Period(1, TimeUnit.Months))
+            {
+                Assert.Fail ("wrong year-on-year EU HICP data ("
+                            + yyeuhicp.name() + ", "
+                            + yyeuhicp.frequency() + ", "
+                            + yyeuhicp.revised() + ", "
+                            + yyeuhicp.interpolated() + ", "
+                            + yyeuhicp.ratio() + ", "
+                            + yyeuhicp.availabilityLag() + ")");
+            }
+
+            YYEUHICPr yyeuhicpr = new YYEUHICPr(true);
+            if (yyeuhicpr.name() != "EU YYR_HICP"
+                || yyeuhicpr.frequency() != Frequency.Monthly
+                || yyeuhicpr.revised()
+                || !yyeuhicpr.interpolated()
+                || !yyeuhicpr.ratio()
+                || yyeuhicpr.availabilityLag() != new Period(1, TimeUnit.Months))
+            {
+                 Assert.Fail("wrong year-on-year EU HICPr data ("
+                            + yyeuhicpr.name() + ", "
+                            + yyeuhicpr.frequency() + ", "
+                            + yyeuhicpr.revised() + ", "
+                            + yyeuhicpr.interpolated() + ", "
+                            + yyeuhicpr.ratio() + ", "
+                            + yyeuhicpr.availabilityLag() + ")");
+            }
+
+            YYUKRPI yyukrpi = new YYUKRPI(false);
+            if (yyukrpi.name() != "UK YY_RPI"
+                || yyukrpi.frequency() != Frequency.Monthly
+                || yyukrpi.revised()
+                || yyukrpi.interpolated()
+                || yyukrpi.ratio()
+                || yyukrpi.availabilityLag() != new Period(1, TimeUnit.Months)){
+                 Assert.Fail("wrong year-on-year UK RPI data ("
+                            + yyukrpi.name() + ", "
+                            + yyukrpi.frequency() + ", "
+                            + yyukrpi.revised() + ", "
+                            + yyukrpi.interpolated() + ", "
+                            + yyukrpi.ratio() + ", "
+                            + yyukrpi.availabilityLag() + ")");
+            }
+
+            YYUKRPIr yyukrpir = new YYUKRPIr(false);
+            if (yyukrpir.name() != "UK YYR_RPI"
+                || yyukrpir.frequency() != Frequency.Monthly
+                || yyukrpir.revised()
+                || yyukrpir.interpolated()
+                || !yyukrpir.ratio()
+                || yyukrpir.availabilityLag() != new Period(1, TimeUnit.Months))
+            {
+                 Assert.Fail("wrong year-on-year UK RPIr data ("
+                            + yyukrpir.name() + ", "
+                            + yyukrpir.frequency() + ", "
+                            + yyukrpir.revised() + ", "
+                            + yyukrpir.interpolated() + ", "
+                            + yyukrpir.ratio() + ", "
+                            + yyukrpir.availabilityLag() + ")");
+            }
+
+
+            // Retrieval test.
+            //----------------
+            // make sure of the evaluation date
+            Date evaluationDate = new Date(13, Month.August, 2007);
+            evaluationDate = new UnitedKingdom().adjust(evaluationDate);
+            Settings.setEvaluationDate(evaluationDate);
+
+            // fixing data
+            Date from = new Date(1, Month.January, 2005);
+            Date to = new Date(13, Month.August, 2007);
+            Schedule rpiSchedule = new MakeSchedule().from(from).to(to)
+            .withTenor(new Period(1, TimeUnit.Months))
+            .withCalendar(new UnitedKingdom())
+            .withConvention(BusinessDayConvention.ModifiedFollowing)
+            .value();
+
+            double[]  fixData = { 189.9, 189.9, 189.6, 190.5, 191.6, 192.0,
+                192.2, 192.2, 192.6, 193.1, 193.3, 193.6,
+                194.1, 193.4, 194.2, 195.0, 196.5, 197.7,
+                198.5, 198.5, 199.2, 200.1, 200.4, 201.1,
+                202.7, 201.6, 203.1, 204.4, 205.4, 206.2,
+                207.3, -999.0, -999.0 };
+
+            bool interp = false;
+            YYUKRPIr iir = new YYUKRPIr(interp);
+            YYUKRPIr iirYES = new YYUKRPIr(true);
+            for (int i=0; i<rpiSchedule.Count;i++) {
+                iir.addFixing(rpiSchedule[i], fixData[i]);
+                iirYES.addFixing(rpiSchedule[i], fixData[i]);
+            }
+
+            Date todayMinusLag = evaluationDate - iir.availabilityLag();
+            KeyValuePair<Date,Date> Lim = Utils.inflationPeriod(todayMinusLag, iir.frequency());
+            todayMinusLag = Lim.Value + 1 - 2 * (new Period(iir.frequency()));
+
+            double eps = 1.0e-8;
+
+            // Interpolation tests
+            //--------------------
+            // (no TS so can't forecast).
+            for (int i=13; i<rpiSchedule.Count;i++) {
+                KeyValuePair<Date,Date> lim = Utils.inflationPeriod(rpiSchedule[i],
+                                                           iir.frequency());
+                KeyValuePair<Date,Date> limBef = Utils.inflationPeriod(rpiSchedule[i-12],
+                                                              iir.frequency());
+                for (Date d=lim.Key; d<=lim.Value; d++) {
+                    if (d < todayMinusLag) {
+                        double expected = fixData[i]/fixData[i-12] - 1.0;
+                        double calculated = iir.fixing(d);
+                        if(!(Math.Abs(calculated - expected) < eps))
+                              Assert.Fail("Non-interpolated fixings not constant within a period: "
+                                            + calculated
+                                            + ", should be "
+                                            + expected);
+
+                        double dp= lim.Value + 1- lim.Key;
+                        double dpBef=limBef.Value + 1 - limBef.Key;
+                        double dl = d-lim.Key;
+                        // potentially does not work on 29th Feb
+                        double dlBef = new NullCalendar().advance(d, new Period(-1, TimeUnit.Years),BusinessDayConvention.ModifiedFollowing)
+                        -limBef.Key;
+
+                        double linearNow = fixData[i] + (fixData[i+1]-fixData[i])*dl/dp;
+                        double linearBef = fixData[i-12] + (fixData[i+1-12]-fixData[i-12])*dlBef/dpBef;
+                        double expectedYES = linearNow / linearBef - 1.0;
+                        double calculatedYES = iirYES.fixing(d);
+                        if(!(Math.Abs(expectedYES-calculatedYES)<eps))
+                            Assert.Fail("Error in interpolated fixings: expect " + expectedYES
+                                            + " see " + calculatedYES
+                                            + " flat " + calculated
+                                            + ", data: " + fixData[i-12] + ", " + fixData[i+1-12]
+                                            + ", " +    fixData[i] +", " + fixData[i+1]
+                                            + ", fac: " + dp + ", " + dl
+                                            + ", " + dpBef + ", " + dlBef
+                                            + ", to: " + linearNow + ", " + linearBef
+                                            );
+                    }
+                }
+            }
+        }
+
+    }
 }
