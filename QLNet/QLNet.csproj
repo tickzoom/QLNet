@@ -382,7 +382,9 @@
     <Compile Include="Termstructures\DefaultProbabilityTermStructure.cs" />
     <Compile Include="Termstructures\InflationTermStructure.cs" />
     <Compile Include="Termstructures\Inflation\InflationHelpers.cs" />
+    <Compile Include="Termstructures\Inflation\Interpolatedyoyinflationcurve.cs" />
     <Compile Include="Termstructures\Inflation\InterpolatedZeroInflationCurve.cs" />
+    <Compile Include="Termstructures\Inflation\Piecewiseyoyinflationcurve.cs" />
     <Compile Include="Termstructures\Inflation\PiecewiseZeroInflationCurve.cs" />
     <Compile Include="Termstructures\Inflation\Seasonality.cs" />
     <Compile Include="Termstructures\interpolatedcurve.cs" />
