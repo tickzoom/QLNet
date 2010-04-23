@@ -28,7 +28,8 @@ namespace QLNet
       protected Schedule schedule_;
       protected List<double> notionals_;
       protected BusinessDayConvention paymentAdjustment_;
-
+      protected DayCounter dayCounter_;
+      protected int sign_;
       public static implicit operator List<CashFlow>(PrincipalLegBase o) { return o.value(); }
       public abstract List<CashFlow> value();
 
@@ -49,16 +50,29 @@ namespace QLNet
          paymentAdjustment_ = convention;
          return this;
       }
+      public PrincipalLegBase withPaymentDayCounter(DayCounter dayCounter)
+      {
+         dayCounter_ = dayCounter;
+         return this;
+      }
+
+      public PrincipalLegBase withSign(int sign)
+      {
+         sign_ = sign;
+         return this;
+      }
+
    }
 
    //! helper class building a Bullet Principal leg
    public class PricipalLeg : PrincipalLegBase
    {
       // constructor
-      public PricipalLeg(Schedule schedule)
+      public PricipalLeg(Schedule schedule, DayCounter paymentDayCounter)
       {
          schedule_ = schedule;
          paymentAdjustment_ = BusinessDayConvention.Following;
+         dayCounter_ = paymentDayCounter;
       }
 
       // creator
@@ -75,12 +89,12 @@ namespace QLNet
          double nominal = notionals_[0];
          double quota = nominal / (schedule_.Count - 1);
 
-         leg.Add(new Principal(nominal, nominal, paymentDate, start, end, start, end));
+         leg.Add(new Principal(nominal * sign_, nominal, paymentDate, start, end, dayCounter_,  start, end));
 
          if (schedule_.Count == 2)
          {
             paymentDate = calendar.adjust(end, paymentAdjustment_);
-            leg.Add(new Principal(nominal*-1, 0, paymentDate, start, end, start, end));
+            leg.Add(new Principal(nominal * sign_ * -1, 0, paymentDate, start, end, dayCounter_, start, end));
          }
          else
          {
@@ -92,27 +106,10 @@ namespace QLNet
                paymentDate = calendar.adjust(start, paymentAdjustment_);
                nominal -= quota;
 
-               leg.Add(new Principal(quota, nominal, paymentDate, start, end, start, end));
+               leg.Add(new Principal(quota * sign_ * -1, nominal, paymentDate, start, end, dayCounter_, start, end));
             }
          }
 
-         //if (schedule_.Count > 2) 
-         //{
-         //   // last period might be short or long
-         //   int N = schedule_.Count;
-         //   start = end; end = schedule_[N-1];
-         //   paymentDate = calendar.adjust(end, paymentAdjustment_);
-
-         //   if (schedule_.isRegular(N-1))
-         //      leg.Add(new Principal(quota, nominal, paymentDate, start, end, start, end));
-         //   else 
-         //   {
-         //      Date refer = start + schedule_.tenor();
-         //      refer = calendar.adjust(refer, schedule_.businessDayConvention());
-         //      leg.Add(new Principal(quota, nominal, paymentDate, start, end, start, refer));
-         //    }
-         //}
-         
          return leg;
       }
    }
@@ -140,10 +137,10 @@ namespace QLNet
          Date paymentDate = calendar.adjust(start, paymentAdjustment_);
          double nominal = notionals_[0];
 
-         leg.Add(new Principal(nominal , nominal, paymentDate, start, end, start, end));
+         leg.Add(new Principal(nominal, nominal, paymentDate, start, end, dayCounter_, start, end));
 
          paymentDate = calendar.adjust(end, paymentAdjustment_);
-         leg.Add(new Principal(nominal*-1,0, paymentDate, start, end, start, end));
+         leg.Add(new Principal(nominal * -1, 0, paymentDate, start, end, dayCounter_, start, end));
 
          return leg;
       }

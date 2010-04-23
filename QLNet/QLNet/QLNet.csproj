@@ -64,6 +64,8 @@
     <Compile Include="Cashflows\InflationCoupon.cs" />
     <Compile Include="Cashflows\InflationCouponPricer.cs" />
     <Compile Include="Cashflows\OvernightIndexedCoupon.cs" />
+    <Compile Include="Cashflows\Principal.cs" />
+    <Compile Include="Cashflows\PrincipalLegBase.cs" />
     <Compile Include="Cashflows\RateLegBase.cs" />
     <Compile Include="Cashflows\Replication.cs" />
     <Compile Include="Cashflows\SimpleCashFlow.cs" />
@@ -139,7 +141,9 @@
     <Compile Include="Instruments\forwardrateagreement.cs" />
     <Compile Include="Instruments\ImpliedVolatility.cs" />
     <Compile Include="Instruments\Instrument.cs" />
+    <Compile Include="Instruments\Loan.cs" />
     <Compile Include="Instruments\MakeBasisSwap.cs" />
+    <Compile Include="Instruments\MakeLoans.cs" />
     <Compile Include="Instruments\MakeOIS.cs" />
     <Compile Include="Instruments\Makeswaption.cs" />
     <Compile Include="Instruments\Makevanillaswap.cs" />
@@ -332,6 +336,7 @@
     <Compile Include="Pricingengines\genericmodelengine.cs" />
     <Compile Include="Pricingengines\Greeks.cs" />
     <Compile Include="Pricingengines\latticeshortratemodelengine.cs" />
+    <Compile Include="Pricingengines\Loan\DiscountingLoanEngine.cs" />
     <Compile Include="Pricingengines\mclongstaffschwartzengine.cs" />
     <Compile Include="Pricingengines\mcsimulation.cs" />
     <Compile Include="Pricingengines\swaption\blackswaptionengine.cs" />

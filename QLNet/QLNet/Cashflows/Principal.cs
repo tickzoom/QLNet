@@ -30,7 +30,7 @@ namespace QLNet
    {
       protected double nominal_;
       protected double amount_;
-
+      protected DayCounter dayCounter_;
       protected Date paymentDate_, accrualStartDate_, accrualEndDate_, refPeriodStart_, refPeriodEnd_;
 
       // access to properties
@@ -41,15 +41,16 @@ namespace QLNet
       public Date refPeriodStart { get { return refPeriodStart_; } }
       public Date refPeriodEnd { get { return refPeriodEnd_; } }
       public override double amount() { return amount_; }
+      public void setAmount( double amount ) { amount_ = amount; }
+      public DayCounter dayCounter() { return dayCounter_; }
 
       // Constructors
       public Principal() { }       // default constructor
-      // coupon does not adjust the payment date which must already be a business day
-      public Principal(double amount, double nominal, Date paymentDate, Date accrualStartDate, Date accrualEndDate) :
-         this(amount, nominal, paymentDate, accrualStartDate, accrualEndDate, null, null) { }
-      public Principal(double amount, double nominal, Date paymentDate, Date accrualStartDate, Date accrualEndDate, Date refPeriodStart) :
-         this(amount, nominal, paymentDate, accrualStartDate, accrualEndDate, refPeriodStart, null) { }
-      public Principal(double amount, double nominal, Date paymentDate, Date accrualStartDate, Date accrualEndDate, Date refPeriodStart, Date refPeriodEnd)
+      public Principal(double amount, double nominal, Date paymentDate, Date accrualStartDate, Date accrualEndDate, DayCounter dayCounter) :
+         this(amount, nominal, paymentDate, accrualStartDate, accrualEndDate, dayCounter, null, null) { }
+      public Principal(double amount, double nominal, Date paymentDate, Date accrualStartDate, Date accrualEndDate, DayCounter dayCounter, Date refPeriodStart) :
+         this(amount, nominal, paymentDate, accrualStartDate, accrualEndDate, dayCounter , refPeriodStart, null) { }
+      public Principal(double amount, double nominal, Date paymentDate, Date accrualStartDate, Date accrualEndDate, DayCounter dayCounter, Date refPeriodStart, Date refPeriodEnd)
       {
          amount_ = amount;
          nominal_ = nominal;
@@ -58,7 +59,7 @@ namespace QLNet
          accrualEndDate_ = accrualEndDate;
          refPeriodStart_ = refPeriodStart;
          refPeriodEnd_ = refPeriodEnd;
-
+         dayCounter_ = dayCounter;
          if (refPeriodStart_ == null) refPeriodStart_ = accrualStartDate_;
          if (refPeriodEnd_ == null) refPeriodEnd_ = accrualEndDate_;
       }
