@@ -131,7 +131,7 @@ namespace QLNet
                     // count how many regular periods are in [refPeriodEnd, d2], then add the remaining time
                     int i = 0;
                     Date newRefStart, newRefEnd;
-                    do
+                    for(;;)
                     {
                         newRefStart = refPeriodEnd + new Period(months * i, TimeUnit.Months);
                         newRefEnd = refPeriodEnd + new Period(months * (i + 1), TimeUnit.Months);
@@ -144,7 +144,7 @@ namespace QLNet
                             sum += period;
                             i++;
                         }
-                    } while (true);
+                    } 
                     sum += yearFraction(newRefStart, d2, newRefStart, newRefEnd);
                     return sum;
                 }

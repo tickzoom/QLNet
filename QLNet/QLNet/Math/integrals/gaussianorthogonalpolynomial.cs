@@ -175,8 +175,8 @@ namespace QLNet {
     }
 
     //! Gauss-Chebyshev polynomial (second kind)
-    public class GaussChebyshev2thPolynomial : GaussJacobiPolynomial {
-        public GaussChebyshev2thPolynomial() : base(0.5, 0.5) { }
+    public class GaussChebyshev2ndPolynomial : GaussJacobiPolynomial {
+        public GaussChebyshev2ndPolynomial() : base(0.5, 0.5) { }
     }
 
     //! Gauss-Gegenbauer polynomial
