@@ -178,7 +178,7 @@ namespace QLNet {
             Date seed = new Date(), exitDate;
             switch (rule_) {
                 case DateGeneration.Rule.Zero:
-                    tenor_ = new Period(0, TimeUnit.Days);
+                    tenor_ = new Period(0, TimeUnit.Years);
                     originalDates_.Add(effectiveDate__);
                     originalDates_.Add(terminationDate__);
                     isRegular_.Add(true);

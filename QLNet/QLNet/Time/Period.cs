@@ -33,9 +33,12 @@ namespace QLNet {
         public Period(int n, TimeUnit u) { length_ = n; unit_ = u; }
         public Period(Frequency f) {
             switch (f) {
-                case Frequency.Once:
                 case Frequency.NoFrequency:
                     unit_ = TimeUnit.Days;	// same as Period()
+                    length_ = 0;
+                    break;
+                case Frequency.Once:
+                    unit_ = TimeUnit.Years;
                     length_ = 0;
                     break;
                 case Frequency.Annual:
@@ -95,7 +98,11 @@ namespace QLNet {
         public Frequency frequency() {
             int length = System.Math.Abs(length_);	// unsigned version
 
-            if (length == 0) return Frequency.NoFrequency;
+            if (length == 0)
+            {
+               if (unit_ == TimeUnit.Years) return Frequency.Once;
+               return Frequency.NoFrequency;
+            }
             switch (unit_) {
                 case TimeUnit.Years:
                     return (length == 1) ? Frequency.Annual : Frequency.OtherFrequency;
