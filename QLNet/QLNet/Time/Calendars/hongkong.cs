@@ -1,7 +1,8 @@
 /*
  Copyright (C) 2008 Alessandro Duci
  Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
-
+ Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
+  
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -40,7 +41,7 @@ namespace QLNet {
         </ul>
 
         Other holidays for which no rule is given
-        (data available for 2004-2009 only:)
+        (data available for 2004-2010 only:)
         <ul>
         <li>Lunar New Year</li>
         <li>Chinese New Year</li>
@@ -179,6 +180,23 @@ namespace QLNet {
                         || (d == 26 && m == Month.October))
                         return false;
                 }
+
+                if (y == 2010)
+                {
+                   if (// Lunar New Year
+                       ((d == 15 || d == 16) && m == Month.February)
+                      // Ching Ming Festival
+                       || (d == 6 && m == Month.April)
+                      // Buddha's birthday
+                       || (d == 21 && m == Month.May)
+                      // Tuen NG festival
+                       || (d == 16 && m == Month.June)
+                      // Mid-autumn festival
+                       || (d == 23 && m == Month.September))
+                      return false;
+                }
+
+
 
                 return true;
             }

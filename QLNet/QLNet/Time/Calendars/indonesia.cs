@@ -1,7 +1,8 @@
 /*
  Copyright (C) 2008 Alessandro Duci
  Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
-
+ Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
+  
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -24,43 +25,44 @@ using System.Text;
 
 namespace QLNet {
     //! %Indonesian calendars
-    /*! Holidays for the Jakarta stock exchange
-        (data from <http://www.jsx.co.id/>):
-        <ul>
-        <li>Saturdays</li>
-        <li>Sundays</li>
-        <li>New Year's Day, January 1st</li>
-        <li>Good Friday</li>
-        <li>Ascension of Jesus Christ</li>
-        <li>Independence Day, August 17th</li>
-        <li>Christmas, December 25th</li>
-        </ul>
+   /*! Holidays for the Indonesia stock exchange
+       (data from <http://www.idx.co.id/>):
+       <ul>
+       <li>Saturdays</li>
+       <li>Sundays</li>
+       <li>New Year's Day, January 1st</li>
+       <li>Good Friday</li>
+       <li>Ascension of Jesus Christ</li>
+       <li>Independence Day, August 17th</li>
+       <li>Christmas, December 25th</li>
+       </ul>
 
-        Other holidays for which no rule is given
-        (data available for 2005-2009 only:)
-        <ul>
-        <li>Idul Adha</li>
-        <li>Ied Adha</li>
-        <li>Imlek</li>
-        <li>Moslem's New Year Day</li>
-        <li>Chinese New Year</li>
-        <li>Nyepi (Saka's New Year)</li>
-        <li>Birthday of Prophet Muhammad SAW</li>
-        <li>Waisak</li>
-        <li>Ascension of Prophet Muhammad SAW</li>
-        <li>Idul Fitri</li>
-        <li>Ied Fitri</li>
-        <li>Other national leaves</li>
-        </ul>
-        \ingroup calendars
-    */
+       Other holidays for which no rule is given
+       (data available for 2005-2010 only:)
+       <ul>
+       <li>Idul Adha</li>
+       <li>Ied Adha</li>
+       <li>Imlek</li>
+       <li>Moslem's New Year Day</li>
+       <li>Chinese New Year</li>
+       <li>Nyepi (Saka's New Year)</li>
+       <li>Birthday of Prophet Muhammad SAW</li>
+       <li>Waisak</li>
+       <li>Ascension of Prophet Muhammad SAW</li>
+       <li>Idul Fitri</li>
+       <li>Ied Fitri</li>
+       <li>Other national leaves</li>
+       </ul>
+       \ingroup calendars
+   */
     public class Indonesia : Calendar {
         public enum Market {
-            BEJ,  //!< Jakarta stock exchange
-            JSX   //!< Jakarta stock exchange
+           BEJ,  //!< Jakarta stock exchange (merged into IDX)
+           JSX,  //!< Jakarta stock exchange (merged into IDX)
+           IDX   //!< Indonesia stock exchange
         };
 
-        public Indonesia() : this(Market.BEJ) { }
+        public Indonesia() : this(Market.IDX) { }
         public Indonesia(Market m)
             : base() {
             // all calendar instances on the same market share the same
@@ -68,7 +70,8 @@ namespace QLNet {
             switch (m) {
                 case Market.BEJ:
                 case Market.JSX:
-                    calendar_ = BEJ.Singleton;
+                case Market.IDX:
+                   calendar_ = BEJ.Singleton;
                     break;
                 default:
                     throw new ArgumentException("Unknown market: " + m); ;
@@ -212,6 +215,28 @@ namespace QLNet {
                         || (d == 31 && m == Month.December)
                         )
                         return false;
+                }
+
+                if (y == 2010)
+                {
+                   if (// Birthday of the prophet Muhammad SAW
+                       (d == 26 && m == Month.February)
+                       // Saka's New Year
+                       || (d == 16 && m == Month.March)
+                       // Birth of Buddha
+                       || (d == 28 && m == Month.May)
+                       // Ied Fitr
+                       || (d >= 8 && d <= 14 && m == Month.September)
+                       // Ied Adha
+                       || (d == 17 && m == Month.November)
+                       // Islamic New Year
+                       || (d == 7 && m == Month.December)
+                       // Public Holiday
+                       || (d == 24 && m == Month.December)
+                       // Trading holiday
+                       || (d == 31 && m == Month.December)
+                       )
+                      return false;
                 }
 
                 return true;

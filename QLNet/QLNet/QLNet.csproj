@@ -465,6 +465,7 @@
     <Compile Include="Time\Calendars\turkey.cs" />
     <Compile Include="Time\Calendars\UnitedKingdom.cs" />
     <Compile Include="Time\Calendars\UnitedStates.cs" />
+    <Compile Include="Time\Calendars\WeekendsOnly.cs" />
     <Compile Include="Time\Date.cs" />
     <Compile Include="Time\DayCounter.cs" />
     <Compile Include="Time\DayCounters\Actual360.cs" />

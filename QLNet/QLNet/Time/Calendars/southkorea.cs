@@ -1,7 +1,8 @@
 /*
  Copyright (C) 2008 Alessandro Duci
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
-
+ Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
+  
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -129,11 +130,12 @@ namespace QLNet {
                     || ((d == 6 || d == 7 || d == 8) && m == Month.February && y == 2008)
                     || ((d == 25 || d == 26 || d == 27) && m == Month.January && y == 2009)
                     || ((d == 13 || d == 14 || d == 15) && m == Month.February && y == 2010)
-                    // Election Day 2004
+                    // Election Days
                     || (d == 15 && m == Month.April && y == 2004)    // National Assembly
                     || (d == 31 && m == Month.May && y == 2006)      // Regional election
                     || (d == 19 && m == Month.December && y == 2007) // Presidency
-                    || (d == 9 && m == Month.April && y == 2008)
+                    || (d == 9 && m == Month.April && y == 2008)    // National Assembly
+                    || (d == 2 && m == Month.June && y == 2010)     // Local election
                     // Buddha's birthday
                     || (d == 26 && m == Month.May && y == 2004)
                     || (d == 15 && m == Month.May && y == 2005)
@@ -176,6 +178,9 @@ namespace QLNet {
                     || (d == 30 && m == Month.December && y == 2005)
                     || (d == 29 && m == Month.December && y == 2006)
                     || (d == 31 && m == Month.December && y == 2007)
+                    || (d == 31 && m == Month.December && y == 2008)
+                    || (d == 31 && m == Month.December && y == 2009)
+                    || (d == 31 && m == Month.December && y == 2010)
                     )
                     return false;
 

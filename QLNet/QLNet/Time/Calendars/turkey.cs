@@ -1,6 +1,6 @@
 /*
  Copyright (C) 2008 Alessandro Duci
- Copyright (C) 2008 Andrea Maggiulli
+ Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
 
  This file is part of QLNet Project http://www.qlnet.org
@@ -24,19 +24,22 @@ using System.Collections.Generic;
 
 namespace QLNet {
     //! Turkish calendar
-    /*! Holidays:
-        <ul>
-        <li>Saturdays</li>
-        <li>Sundays</li>
-        <li>New Year's Day, January 1st</li>
-        <li>National Holidays (April 23rd, May 19th, August 30th,
-            October 29th</li>
-        <li>Local Holidays (Kurban, Ramadan; 2004 to 2009 only) </li>
-        </ul>
+   /*! Holidays for the Istanbul Stock Exchange:
+       (data from <http://www.ise.org/Markets/OfficialHolidays.aspx?sflang=en>):
+       <ul>
+       <li>Saturdays</li>
+       <li>Sundays</li>
+       <li>New Year's Day, January 1st</li>
+       <li>National Sovereignty and Children’s Day, April 23rd</li>
+       <li>Youth and Sports Day, May 19th</li>
+       <li>Victory Day, August 30th</li>
+       <li>Republic Day, October 29th</li>
+       <li>Local Holidays (Kurban, Ramadan; 2004 to 2010 only) </li>
+       </ul>
 
-        \ingroup calendars
-    */
-    public class Turkey :  Calendar {
+       \ingroup calendars
+   */
+   public class Turkey :  Calendar {
         public Turkey() : base(Impl.Singleton) { }
 
         class Impl : Calendar {
@@ -69,40 +72,56 @@ namespace QLNet {
 
                 // Local Holidays
                 if (y == 2004) {
-                    // kurban
+                    // Kurban
                     if ((m == Month.February && d <= 4)
-                    // ramazan
+                    // Ramadan
                         || (m == Month.November && d >= 14 && d <= 16))
                         return false;
                 } else if (y == 2005) {
-                    // kurban
+                    // Kurban
                     if ((m == Month.January && d >= 19 && d <= 21)
-                    // ramazan
+                    // Ramadan
                         || (m == Month.November && d >= 2 && d <= 5))
                         return false;
                 } else if (y == 2006) {
-                    // kurban
-                    if ((m == Month.January && d >= 9 && d <= 13)
-                    // ramazan
+                    // Kurban
+                    if ((m == Month.January && d >= 10 && d <= 13)
+                    // Ramadan
                         || (m == Month.October && d >= 23 && d <= 25)
-                    // kurban
-                        || (m == Month.December && d >= 30))
+                    // Kurban
+                        || (m == Month.December && d == 31))
                         return false;
                 } else if (y == 2007) {
-                    // kurban
-                    if ((m == Month.January && d <= 4)
-                    // ramazan
-                        || (m == Month.October && d >= 11 && d <= 14)
-                    // kurban
-                        || (m == Month.December && d >= 19 && d <= 23))
+                    // Kurban
+                    if ((m == Month.January && d <= 3)
+                    // Ramadan
+                        || (m == Month.October && d >= 12 && d <= 14)
+                    // Kurban
+                        || (m == Month.December && d >= 20 && d <= 23))
                         return false;
                 } else if (y == 2008) {
-                    // ramazan
-                    if ((m == Month.September && d >= 29)
+                    // Ramadan
+                    if ((m == Month.September && d == 30)
                         || (m == Month.October && d <= 2)
-                        // kurban
-                        || (m == Month.December && d >= 7 && d <= 11))
+                        // Kurban
+                        || (m == Month.December && d >= 8 && d <= 11))
                         return false;
+                }
+                else if (y == 2009)
+                {
+                   // Ramadan
+                   if ((m == Month.September && d >= 20 && d <= 22)
+                      // Kurban
+                       || (m == Month.November && d >= 27 && d <= 30))
+                      return false;
+                }
+                else if (y == 2010)
+                {
+                   // Ramadan
+                   if ((m == Month.September && d >= 9 && d <= 11)
+                      // Kurban
+                       || (m == Month.November && d >= 16 && d <= 19))
+                      return false;
                 }
                 return true;
             }

@@ -1,7 +1,8 @@
 /*
  Copyright (C) 2008 Alessandro Duci
  Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
-
+ Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
+  
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -37,8 +38,8 @@ namespace QLNet {
         <li>Christmas, December 25th</li>
         </ul>
 
-        Other holidays for which no rule is given (data available for
-        2005-2009 only:)
+        Other holidays for which no rule is given 
+        (data available for 2005-2010 only:)
         <ul>
         <li>Bakri Id</li>
         <li>Moharram</li>
@@ -208,6 +209,30 @@ namespace QLNet {
                         )
                         return false;
                 }
+
+               if (y == 2010)
+                {
+                   if (// New Year's Day
+                       (d == 1 && m == Month.January)
+                      // Mahashivratri
+                       || (d == 12 && m == Month.February)
+                      // Holi
+                       || (d == 1 && m == Month.March)
+                      // Ram Navmi
+                       || (d == 24 && m == Month.March)
+                      // Ramzan Id
+                       || (d == 10 && m == Month.September)
+                      // Laxmi Puja
+                       || (d == 5 && m == Month.November)
+                      // Bakri Id
+                       || (d == 17 && m == Month.November)
+                      // Moharram
+                       || (d == 17 && m == Month.December)
+                       )
+                      return false;
+                }
+
+
 
                 return true;
             }

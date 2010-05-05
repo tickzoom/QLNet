@@ -1,7 +1,8 @@
 /*
  Copyright (C) 2008 Alessandro Duci
  Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
-
+ Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
+  
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -35,7 +36,7 @@ namespace QLNet {
         </ul>
 
         Other holidays for which no rule is given (data available for
-        2004-2009 only):
+        2004-2010 only):
         <ul>
         <li>Chinese New Year</li>
         <li>Ching Ming Festival</li>
@@ -43,7 +44,7 @@ namespace QLNet {
         <li>Mid-Autumn Festival</li>
         </ul>
 
-        Data from <http://www.sse.com.cn/sseportal/en_us/ps/home.shtml>
+        Data from <http://www.sse.com.cn/sseportal/en/home/home.shtml>
 
         \ingroup calendars
     */
@@ -71,9 +72,8 @@ namespace QLNet {
                     || (y == 2006 && (d == 2 || d == 3) && m == Month.January)
                     || (y == 2007 && d <= 3 && m == Month.January)
                     || (y == 2007 && d == 31 && m == Month.December)
-                    || (y == 2008 && d == 1 && m == Month.January)
-                    || (y == 2009 && (d == 1 || d == 2) && m == Month.January)
-                            // Chinese New Year
+                    || (y == 2009 && d == 2 && m == Month.January)
+                    // Chinese New Year
                     || (y == 2004 && d >= 19 && d <= 28 && m == Month.January)
                     || (y == 2005 && d >= 7 && d <= 15 && m == Month.February)
                     || (y == 2006 && ((d >= 26 && m == Month.January) ||
@@ -81,23 +81,29 @@ namespace QLNet {
                     || (y == 2007 && d >= 17 && d <= 25 && m == Month.February)
                     || (y == 2008 && d >= 6 && d <= 12 && m == Month.February)
                     || (y == 2009 && d >= 26 && d <= 30 && m == Month.January)
-                            // Ching Ming Festival
+                    || (y == 2010 && d >= 15 && d <= 19 && m == Month.January)
+                    // Ching Ming Festival
                     || (y <= 2008 && d == 4 && m == Month.April)
                     || (y == 2009 && d == 6 && m == Month.April)
-                            // Labor Day
+                    || (y == 2010 && d == 5 && m == Month.April)
+                    // Labor Day
                     || (y <= 2007 && d >= 1 && d <= 7 && m == Month.May)
                     || (y == 2008 && d >= 1 && d <= 2 && m == Month.May)
                     || (y == 2009 && d == 1 && m == Month.May)
-                            // Tuen Ng Festival
+                    || (y == 2010 && d == 3 && m == Month.May)
+                    // Tuen Ng Festival
                     || (y <= 2008 && d == 9 && m == Month.June)
                     || (y == 2009 && (d == 28 || d == 29) && m == Month.May)
-                            // Mid-Autumn Festival
+                    || (y == 2010 && d >= 14 && d <= 16 && m == Month.June)
+                    // Mid-Autumn Festival
                     || (y <= 2008 && d == 15 && m == Month.September)
-                            // National Day
+                    || (y == 2010 && d >= 22 && d <= 24 && m == Month.September)
+                    // National Day
                     || (y <= 2007 && d >= 1 && d <= 7 && m == Month.October)
                     || (y == 2008 && ((d >= 29 && m == Month.September) ||
                                       (d <= 3 && m == Month.October)))
                     || (y == 2009 && d >= 1 && d <= 8 && m == Month.October)
+                    || (y == 2010 && d >= 1 && d <= 7 && m == Month.October)
                     )
                     return false;
                 return true;
