@@ -36,13 +36,14 @@ namespace QLNet
       {
          if (discountCurve_.empty()) throw new ArgumentException("no discounting term structure set");
 
-         results_.value = 0;
+         results_.value = results_.cash = 0;
          results_.errorEstimate = null;
          results_.legNPV = new InitializedList<double?>(arguments_.legs.Count);
          for (int i = 0; i < arguments_.legs.Count; ++i)
          {
             results_.legNPV[i] = arguments_.payer[i] * CashFlows.npv(arguments_.legs[i], discountCurve_);
             results_.value += results_.legNPV[i];
+            results_.cash += arguments_.payer[i] * CashFlows.cash(arguments_.legs[i]);
          }
       }
    }

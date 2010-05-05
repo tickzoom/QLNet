@@ -34,7 +34,7 @@ namespace QLNet {
         public override void calculate() {
             if (discountCurve_.empty()) throw new ArgumentException("no discounting term structure set");
 
-            results_.value = 0;
+            results_.value = results_.cash = 0;
             results_.errorEstimate = null;
             results_.legNPV = new InitializedList<double?>(arguments_.legs.Count);
             results_.legBPS = new InitializedList<double?>(arguments_.legs.Count);
@@ -43,6 +43,7 @@ namespace QLNet {
                 results_.legNPV[i] = arguments_.payer[i] * CashFlows.npv(arguments_.legs[i], discountCurve_);
                 results_.legBPS[i] = arguments_.payer[i] * CashFlows.bps(arguments_.legs[i], discountCurve_);
                 results_.value += results_.legNPV[i];
+                results_.cash += arguments_.payer[i] * CashFlows.cash(arguments_.legs[i]);
                 try {
                     Date d = CashFlows.startDate(arguments_.legs[i]);
                     startDiscounts[i] = discountCurve_.link.discount(d);
