@@ -140,6 +140,8 @@ namespace QLNet {
                     case DateGeneration.Rule.Zero:
                     case DateGeneration.Rule.Twentieth:
                     case DateGeneration.Rule.TwentiethIMM:
+                    case DateGeneration.Rule.OldCDS:
+                    case DateGeneration.Rule.CDS:
                         throw new ArgumentException("First date is incompatible with " + rule_ + " date generation rule");
                     default:
                         throw new ArgumentException("Unknown DateGeneration rule: " + rule_);
@@ -162,6 +164,8 @@ namespace QLNet {
                     case DateGeneration.Rule.Zero:
                     case DateGeneration.Rule.Twentieth:
                     case DateGeneration.Rule.TwentiethIMM:
+                    case DateGeneration.Rule.OldCDS:
+                    case DateGeneration.Rule.CDS:
                         throw new ArgumentException("next to last is incompatible with " + rule_ + " date generation rule");
                     default:
                         throw new ArgumentException("Unknown DateGeneration rule: " + rule_);
@@ -171,7 +175,7 @@ namespace QLNet {
             // calendar needed for endOfMonth adjustment
             Calendar nullCalendar = new NullCalendar();
             int periods = 1;
-            Date seed, exitDate;
+            Date seed = new Date(), exitDate;
             switch (rule_) {
                 case DateGeneration.Rule.Zero:
                     tenor_ = new Period(0, TimeUnit.Days);
@@ -218,20 +222,39 @@ namespace QLNet {
                 case DateGeneration.Rule.Twentieth:
                 case DateGeneration.Rule.TwentiethIMM:
                 case DateGeneration.Rule.ThirdWednesday:
+                case DateGeneration.Rule.OldCDS:
+                case DateGeneration.Rule.CDS:
                     if (endOfMonth_) 
                         throw new ArgumentException("endOfMonth convention is incompatible with " + rule_ + " date generation rule");
                     goto case DateGeneration.Rule.Forward;			// fall through
 
                 case DateGeneration.Rule.Forward:
-                    originalDates_.Add(effectiveDate__);
+                    if (rule_ == DateGeneration.Rule.CDS) {
+                       originalDates_.Add(previousTwentieth(effectiveDate__,DateGeneration.Rule.CDS));
+                    } else {
+                       originalDates_.Add(effectiveDate__);
+                    }
+                    
                     seed = effectiveDate__;
                     if (firstDate_ != null) {
                         originalDates_.Add(firstDate_);
                         Date temp = nullCalendar.advance(seed, periods * tenor_, convention_, endOfMonth_);
                         isRegular_.Add(temp == firstDate_);
                         seed = firstDate_;
-                    } else if (rule_ == DateGeneration.Rule.Twentieth || rule_ == DateGeneration.Rule.TwentiethIMM) {
+                    } else if (rule_ == DateGeneration.Rule.Twentieth ||
+                               rule_ == DateGeneration.Rule.TwentiethIMM ||
+                               rule_ == DateGeneration.Rule.OldCDS ||
+                               rule_ == DateGeneration.Rule.CDS)
+                    {
                         Date next20th = nextTwentieth(effectiveDate__, rule_);
+                        if (rule_ == DateGeneration.Rule.OldCDS) {
+                           // distance rule inforced in natural days
+                           long stubDays = 30;
+                           if (next20th - effectiveDate__ < stubDays) {
+                              // +1 will skip this one and get the next
+                              next20th = nextTwentieth(next20th + 1, rule_);
+                           }
+                        }
                         if (next20th != effectiveDate__) {
                             originalDates_.Add(next20th);
                             isRegular_.Add(false);
@@ -262,7 +285,10 @@ namespace QLNet {
                         convention_ = BusinessDayConvention.Preceding;
 
                     if (calendar_.adjust(originalDates_.Last(), terminationDateConvention_) != calendar_.adjust(terminationDate__, terminationDateConvention_)) {
-                        if (rule_ == DateGeneration.Rule.Twentieth || rule_ == DateGeneration.Rule.TwentiethIMM) {
+                        if (rule_ == DateGeneration.Rule.Twentieth || 
+                            rule_ == DateGeneration.Rule.TwentiethIMM ||
+                            rule_ == DateGeneration.Rule.OldCDS ||
+                            rule_ == DateGeneration.Rule.CDS ) {
                             originalDates_.Add(nextTwentieth(terminationDate__, rule_));
                             isRegular_.Add(true);
                         } else {
@@ -281,15 +307,44 @@ namespace QLNet {
                 for (int i = 1; i < originalDates_.Count; ++i)
                     originalDates_[i] = Date.nthWeekday(3, DayOfWeek.Wednesday, originalDates_[i].Month, originalDates_[i].Year);
 
-            foreach (Date d in originalDates_)
-                adjustedDates_.Add(calendar_.adjust(d, convention_));
+            if (endOfMonth && calendar_.isEndOfMonth(seed))
+            {
+               // adjust to end of month
+               if (convention_ == BusinessDayConvention.Unadjusted)
+               {
+                  for (int i = 0; i < originalDates_.Count; ++i)
+                     originalDates_[i] = Date.endOfMonth(originalDates_[i]);
+               }
+               else
+               {
+                  for (int i = 0; i < originalDates_.Count; ++i)
+                     originalDates_[i] = calendar_.endOfMonth(originalDates_[i]);
+               }
+               if (terminationDateConvention_ == BusinessDayConvention.Unadjusted)
+                  originalDates_[originalDates_.Count - 1] = Date.endOfMonth(originalDates_.Last());
+               else
+                  originalDates_[originalDates_.Count - 1] = calendar_.endOfMonth(originalDates_.Last());
+            }
+            else
+            {
+               // first date not adjusted for CDS schedules
+               if (rule_ != DateGeneration.Rule.OldCDS)
+                  originalDates_[0] = calendar_.adjust(originalDates_[0], convention_);
+               for (int i = 1; i < originalDates_.Count; ++i)
+                  originalDates_[i] = calendar_.adjust(originalDates_[i], convention_);
 
-            // termination date is NOT adjusted as per ISDA specifications, unless otherwise specified in the
-            // confirmation of the deal or unless we're creating a CDS schedule
-            if (terminationDateConvention_ != BusinessDayConvention.Unadjusted 
-                || rule_ == DateGeneration.Rule.Twentieth
-                || rule_ == DateGeneration.Rule.TwentiethIMM)
-                adjustedDates_[adjustedDates_.Count - 1] = calendar_.adjust(originalDates_.Last(), terminationDateConvention_);
+               foreach (Date d in originalDates_)
+                  adjustedDates_.Add(d);
+
+               // termination date is NOT adjusted as per ISDA specifications, unless otherwise specified in the
+               // confirmation of the deal or unless we're creating a CDS schedule
+               if (terminationDateConvention_ != BusinessDayConvention.Unadjusted
+                   || rule_ == DateGeneration.Rule.Twentieth
+                   || rule_ == DateGeneration.Rule.TwentiethIMM
+                   || rule_ == DateGeneration.Rule.OldCDS
+                   || rule_ == DateGeneration.Rule.CDS)
+                  adjustedDates_[adjustedDates_.Count - 1] = calendar_.adjust(originalDates_.Last(), terminationDateConvention_);
+            }
         } 
         #endregion
 
@@ -332,11 +387,31 @@ namespace QLNet {
             Date result = new Date(20, d.month(), d.year());
             if (result < d)
                 result += new Period(1, TimeUnit.Months);
-            if (rule == DateGeneration.Rule.TwentiethIMM) {
+            if (rule == DateGeneration.Rule.TwentiethIMM ||
+                rule == DateGeneration.Rule.OldCDS ||
+                rule == DateGeneration.Rule.CDS)
+            {
                 int m = result.month();
                 if (m % 3 != 0) { // not a main IMM nmonth
                     int skip = 3 - m % 3;
                     result += new Period(skip, TimeUnit.Months);
+                }
+            }
+            return result;
+        }
+
+       Date previousTwentieth(Date d, DateGeneration.Rule rule) {
+            Date result = new Date(20, d.month(), d.year());
+            if (result > d)
+                result -= new Period(1,TimeUnit.Months);
+            if (rule == DateGeneration.Rule.TwentiethIMM ||
+                rule == DateGeneration.Rule.OldCDS ||
+                rule == DateGeneration.Rule.CDS)
+            {
+                int m = result.month();
+                if (m % 3 != 0) { // not a main IMM nmonth
+                    int skip = m%3;
+                    result -= new Period(skip,TimeUnit.Months);
                 }
             }
             return result;
