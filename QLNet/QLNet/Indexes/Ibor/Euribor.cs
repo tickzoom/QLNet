@@ -83,37 +83,6 @@ namespace QLNet {
         }
     }
 
-
-    //! Daily tenor %Euribor index
-    /*! Euribor rate fixed by the ECB.
-
-        \warning This is the rate fixed by the ECB. Use EurLibor
-                 if you're interested in the London fixing by BBA.
-    */
-    public class DailyTenorEuribor : IborIndex {
-        public DailyTenorEuribor(int settlementDays) : this(settlementDays, new Handle<YieldTermStructure>()) { }
-        public DailyTenorEuribor(int settlementDays, Handle<YieldTermStructure> h)
-            : base("Euribor", new Period(1, TimeUnit.Days), settlementDays,
-                    new EURCurrency(), new TARGET(),
-                    Utils.euriborConvention(new Period(1, TimeUnit.Days)), Utils.euriborEOM(new Period(1, TimeUnit.Days)),
-                    new Actual360(), h) { }
-    }
-
-    //! Daily tenor Actual/365 %Euribor index
-    /*! Euribor rate adjusted for the mismatch between the actual/360
-        convention used for Euribor and the actual/365 convention
-        previously used by a few pre-EUR currencies.
-    */
-    public class DailyTenorEuribor365 : IborIndex {
-        public DailyTenorEuribor365(int settlementDays) : this(settlementDays, new Handle<YieldTermStructure>()) { }
-        public DailyTenorEuribor365(int settlementDays, Handle<YieldTermStructure> h) 
-            : base("Euribor365", new Period(1, TimeUnit.Days),
-                    settlementDays,
-                    new EURCurrency(), new TARGET(),
-                    Utils.euriborConvention(new Period(1, TimeUnit.Days)), Utils.euriborEOM(new Period(1, TimeUnit.Days)),
-                    new Actual365Fixed(), h) {}
-    }
-
     //! 1-week %Euribor index
     public class EuriborSW : Euribor {
         public EuriborSW() : this(new Handle<YieldTermStructure>()) { }

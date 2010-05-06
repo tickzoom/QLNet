@@ -1,6 +1,6 @@
 ﻿/*
- Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
-  
+ Copyright (C) 2008, 2009 , 2010 Andrea Maggiulli (a.maggiulli@gmail.com)
+
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -16,46 +16,44 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace QLNet.Indexes.swap
+namespace QLNet
 {
-   public class UsdLiborSwapIsdaFixAm : SwapIndex
+   public class JpyLiborSwapIsdaFixAm : SwapIndex
    {
-      public UsdLiborSwapIsdaFixAm(Period tenor)
-         : this(tenor,new Handle<YieldTermStructure>()) {}
-
-      public UsdLiborSwapIsdaFixAm(Period tenor, Handle<YieldTermStructure> h)
-         : base("UsdLiborSwapIsdaFixAm", // familyName
-                tenor,
-                2, // settlementDays
-                new USDCurrency(),
-                new TARGET(),
-                new Period(6, TimeUnit.Months), // fixedLegTenor
-                BusinessDayConvention.ModifiedFollowing, // fixedLegConvention
-                new Thirty360(Thirty360.Thirty360Convention.BondBasis), // fixedLegDaycounter
-                new USDLibor(new Period(3, TimeUnit.Months), h)) { }
-   }
-
-   public class UsdLiborSwapIsdaFixPm : SwapIndex
-   {
-      public UsdLiborSwapIsdaFixPm(Period tenor)
+      public JpyLiborSwapIsdaFixAm(Period tenor)
          : this(tenor, new Handle<YieldTermStructure>()) { }
 
-      public UsdLiborSwapIsdaFixPm(Period tenor, Handle<YieldTermStructure> h)
-         : base("UsdLiborSwapIsdaFixPm", // familyName
+      public JpyLiborSwapIsdaFixAm(Period tenor, Handle<YieldTermStructure> h)
+         : base("JpyLiborSwapIsdaFixAm", // familyName
                 tenor,
                 2, // settlementDays
-                new USDCurrency(),
+                new JPYCurrency(),
                 new TARGET(),
                 new Period(6, TimeUnit.Months), // fixedLegTenor
                 BusinessDayConvention.ModifiedFollowing, // fixedLegConvention
-                new Thirty360(Thirty360.Thirty360Convention.BondBasis), // fixedLegDaycounter
-                new USDLibor(new Period(3, TimeUnit.Months), h)) { }
+                new ActualActual(ActualActual.Convention.ISDA), // fixedLegDaycounter
+                new JPYLibor(new Period(6, TimeUnit.Months), h)) { }
    }
 
+   public class JpyLiborSwapIsdaFixPm : SwapIndex
+   {
+      public JpyLiborSwapIsdaFixPm(Period tenor)
+         : this(tenor, new Handle<YieldTermStructure>()) { }
+
+      public JpyLiborSwapIsdaFixPm(Period tenor, Handle<YieldTermStructure> h)
+         : base("JpyLiborSwapIsdaFixPm", // familyName
+                tenor,
+                2, // settlementDays
+                new JPYCurrency(),
+                new TARGET(),
+                new Period(6, TimeUnit.Months), // fixedLegTenor
+                BusinessDayConvention.ModifiedFollowing, // fixedLegConvention
+                new ActualActual(ActualActual.Convention.ISDA), // fixedLegDaycounter
+                new JPYLibor(new Period(6, TimeUnit.Months), h)) { }
+   }
 }

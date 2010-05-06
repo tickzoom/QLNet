@@ -206,7 +206,7 @@ namespace TestSuite
                                    "\n actual swap length: " + swapLength +
                                    "\n   exp. swap length: " + atm.tenors.swaps[j].length());
 
-                    SwapIndex swapIndex=new EuriborSwapFixA(atm.tenors.swaps[j], termStructure);
+                    SwapIndex swapIndex = new EuriborSwapIsdaFixA(atm.tenors.swaps[j], termStructure);
 
                     for (int i=0; i<atm.tenors.options.Count; ++i) {
                         double error, tolerance = 1.0e-16;

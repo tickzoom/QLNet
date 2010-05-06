@@ -73,7 +73,7 @@ namespace QLNet
             double strike = swap.fixedRate;
 
             // using the forecasting curve
-            swap.setPricingEngine(new DiscountingSwapEngine(swap.iborIndex().termStructure()));
+            swap.setPricingEngine(new DiscountingSwapEngine(swap.iborIndex().forwardingTermStructure()));
             double atmForward = swap.fairRate();
 
             // Volatilities are quoted for zero-spreaded swaps.

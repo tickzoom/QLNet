@@ -72,7 +72,7 @@ namespace QLNet
          float1DayCount_ = index1.dayCounter();
          float2DayCount_ = index2.dayCounter();
 
-         engine_ = new DiscountingBasisSwapEngine(index1.termStructure(), index2.termStructure());
+         engine_ = new DiscountingBasisSwapEngine(index1.forwardingTermStructure(), index2.forwardingTermStructure());
       }
 
       public MakeBasisSwap receiveFixed() { return receiveFixed(true); }

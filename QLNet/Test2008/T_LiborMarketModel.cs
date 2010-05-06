@@ -182,7 +182,7 @@ namespace TestSuite
 
             IAffineModel model = (IAffineModel)(new LiborForwardModel(process, volaModel, corrModel));
 
-            Handle<YieldTermStructure> termStructure = process.index().termStructure();
+            Handle<YieldTermStructure> termStructure = process.index().forwardingTermStructure();
 
             AnalyticCapFloorEngine engine1 = new AnalyticCapFloorEngine(model, termStructure);
 
@@ -229,7 +229,7 @@ namespace TestSuite
 
             IborIndex index = makeIndex();
             LiborForwardModelProcess process = new LiborForwardModelProcess(size, index);
-            Handle<YieldTermStructure> termStructure = index.termStructure();
+            Handle<YieldTermStructure> termStructure = index.forwardingTermStructure();
 
             // set-up the model
             LmVolatilityModel volaModel = new LmExtLinearExponentialVolModel(process.fixingTimes(),
@@ -240,7 +240,7 @@ namespace TestSuite
             LiborForwardModel  model = new LiborForwardModel(process, volaModel, corrModel);
 
             int swapVolIndex = 0;
-            DayCounter dayCounter=index.termStructure().link.dayCounter();
+            DayCounter dayCounter = index.forwardingTermStructure().link.dayCounter();
 
             // set-up calibration helper
             List<CalibrationHelper> calibrationHelper = new List<CalibrationHelper>();
@@ -361,10 +361,10 @@ namespace TestSuite
             LiborForwardModel liborModel = new LiborForwardModel(process, volaModel, corrModel);
 
             Calendar calendar = index.fixingCalendar();
-            DayCounter dayCounter = index.termStructure().link.dayCounter();
+            DayCounter dayCounter = index.forwardingTermStructure().link.dayCounter();
             BusinessDayConvention convention = index.businessDayConvention();
 
-            Date settlement  = index.termStructure().link.referenceDate();
+            Date settlement = index.forwardingTermStructure().link.referenceDate();
 
             SwaptionVolatilityMatrix m = liborModel.getSwaptionVolatilityMatrix();
 
@@ -380,7 +380,7 @@ namespace TestSuite
                     VanillaSwap forwardSwap = new VanillaSwap(VanillaSwap.Type.Receiver, 1.0,
                                                                 schedule, swapRate, dayCounter,
                                                                 schedule, index, 0.0, index.dayCounter());
-                    forwardSwap.setPricingEngine(new DiscountingSwapEngine(index.termStructure()));
+                    forwardSwap.setPricingEngine(new DiscountingSwapEngine(index.forwardingTermStructure()));
 
                     // check forward pricing first
                     double expected = forwardSwap.fairRate();
@@ -396,11 +396,11 @@ namespace TestSuite
                         new VanillaSwap(VanillaSwap.Type.Receiver, 1.0,
                                         schedule, swapRate, dayCounter,
                                         schedule, index, 0.0, index.dayCounter());
-                    forwardSwap.setPricingEngine( new DiscountingSwapEngine(index.termStructure()));
+                    forwardSwap.setPricingEngine(new DiscountingSwapEngine(index.forwardingTermStructure()));
 
                     if (i == j && i<=size/2) {
-                        IPricingEngine engine = 
-                            new LfmSwaptionEngine(liborModel,index.termStructure());
+                        IPricingEngine engine =
+                            new LfmSwaptionEngine(liborModel, index.forwardingTermStructure());
                         Exercise exercise =
                             new EuropeanExercise(process.fixingDates()[i]);
 

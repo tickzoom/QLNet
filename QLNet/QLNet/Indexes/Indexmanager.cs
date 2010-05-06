@@ -64,13 +64,12 @@ namespace QLNet {
 
         //! clears the historical fixings of the index
         public void clearHistory(string name) {
-            data_[name].Assign(new TimeSeries<double>());
+           data_.Remove(name.ToUpper());
         }
 
         //! clears all stored fixings
         public void clearHistories() {
-            foreach (string s in data_.Keys)
-                clearHistory(s);
+           data_.Clear();
         }
 
         // checks whether index exists and adds it otherwise; for interal use only

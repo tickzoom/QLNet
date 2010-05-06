@@ -98,13 +98,13 @@ namespace QLNet
             double usedStrike = strike_;
             if (strike_ == null) {
                 // ATM on the forecasting curve
-                if(!swapIndex_.termStructure().empty())
+               if (!swapIndex_.forwardingTermStructure().empty())
                     throw new ArgumentException(
                            "no forecasting term structure set to "+swapIndex_.name());
                 VanillaSwap temp =
                     swapIndex_.underlyingSwap(fixingDate_);
                 temp.setPricingEngine(new DiscountingSwapEngine(
-                                            swapIndex_.termStructure()));
+                                            swapIndex_.forwardingTermStructure()));
                 usedStrike = temp.fairRate();
             }
 

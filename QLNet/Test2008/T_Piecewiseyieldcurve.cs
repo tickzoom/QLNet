@@ -768,7 +768,7 @@ namespace TestSuite {
                   
                 BMASwap swap = new BMASwap(BMASwap.Type.Payer, 100.0, liborSchedule, 0.75, 0.0,
                                            libor3m, libor3m.dayCounter(), bmaSchedule, bma, vars.bmaDayCounter);
-                swap.setPricingEngine(new DiscountingSwapEngine(libor3m.termStructure()));
+                swap.setPricingEngine(new DiscountingSwapEngine(libor3m.forwardingTermStructure()));
 
                 double expectedFraction = vars.bmaData[i].rate / 100,
                      estimatedFraction = swap.fairLiborFraction();

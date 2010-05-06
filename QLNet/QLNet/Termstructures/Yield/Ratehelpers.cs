@@ -548,7 +548,7 @@ namespace QLNet {
 
             swap_ = new BMASwap(BMASwap.Type.Payer, 100.0, liborSchedule, 0.75, // arbitrary
                                 0.0, iborIndex_, iborIndex_.dayCounter(), bmaSchedule, clonedIndex, bmaDayCount_);
-            swap_.setPricingEngine(new DiscountingSwapEngine(iborIndex_.termStructure()));
+            swap_.setPricingEngine(new DiscountingSwapEngine(iborIndex_.forwardingTermStructure()));
 
             Date d = calendar_.adjust(swap_.maturityDate(), BusinessDayConvention.Following);
             int w = d.weekday();

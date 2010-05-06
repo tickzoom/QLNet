@@ -48,8 +48,6 @@ namespace QLNet {
             if (isInArrears()) {
                 return index_.fixing(fixingDate());
             } else {
-                Handle<YieldTermStructure> termStructure = index_.termStructure();
-                if (termStructure.empty()) throw new ArgumentException("null term structure set to par coupon");
                 Date today = Settings.evaluationDate();
                 Date fixingDate = this.fixingDate();
 
@@ -75,6 +73,11 @@ namespace QLNet {
                     }
                 }
 
+               // forecast: 0) forecasting curve
+                Handle<YieldTermStructure> termStructure = iborIndex_.forwardingTermStructure();
+                if (termStructure.empty())
+                   throw new ApplicationException("null term structure set to this instance of " +
+                                                  index_.name());
                 // forecast: 1) startDiscount
                 Date fixingValueDate = index_.fixingCalendar().advance(fixingDate, index_.fixingDays(), TimeUnit.Days);
                 double startDiscount = termStructure.link.discount(fixingValueDate);

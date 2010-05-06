@@ -92,7 +92,7 @@ namespace QLNet
          // to avoid the evaluation of multiple forward fixings
          if (i<n) 
          {
-            Handle<YieldTermStructure> curve = index.termStructure();
+            Handle<YieldTermStructure> curve = index.forwardingTermStructure();
             if (curve.empty())
                throw new ArgumentException("null term structure set to this instance of" +
                                            index.name());

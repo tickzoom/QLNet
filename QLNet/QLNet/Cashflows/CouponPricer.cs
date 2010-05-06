@@ -1,7 +1,8 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
  Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
-  
+ Copyright (C) 2008, 2009 , 2010 Andrea Maggiulli (a.maggiulli@gmail.com) 
+ 
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -95,11 +96,12 @@ namespace QLNet {
 
         public override void initialize(FloatingRateCoupon coupon) {
             coupon_ = coupon as IborCoupon;
+            if (coupon_ == null) throw new ApplicationException("Libor coupon required");
             gearing_ = coupon_.gearing();
             spread_ = coupon_.spread();
             Date paymentDate = coupon_.date();
-            InterestRateIndex index = coupon_.index();
-            Handle<YieldTermStructure> rateCurve = index.termStructure();
+            IborIndex index = coupon_.index() as IborIndex;
+            Handle<YieldTermStructure> rateCurve = index.forwardingTermStructure();
 
             if (paymentDate > rateCurve.link.referenceDate())
                 discount_ = rateCurve.link.discount(paymentDate);
@@ -148,12 +150,13 @@ namespace QLNet {
                 }
                 return Math.Max(a - b, 0.0) * coupon_.accrualPeriod() * discount_;
             } else {
+                // not yet determined, use Black model
                 if (!(!capletVolatility().empty()))
                     throw new ApplicationException("missing optionlet volatility");
 
-                // not yet determined, use Black model
-                double variance = Math.Sqrt(capletVolatility().link.blackVariance(fixingDate, effStrike));
-                double fixing = Utils.blackFormula(optionType, effStrike, adjustedFixing(), variance);
+
+                double stdDev = Math.Sqrt(capletVolatility().link.blackVariance(fixingDate, effStrike));
+                double fixing = Utils.blackFormula(optionType, effStrike, adjustedFixing(), stdDev);
                 return fixing * coupon_.accrualPeriod() * discount_;
             }
         }

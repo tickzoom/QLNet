@@ -144,7 +144,7 @@ namespace QLNet {
                 VanillaSwap swap = swapIndex.underlyingSwap(coupon.fixingDate());
 
                 Schedule schedule = swap.fixedSchedule();
-                Handle<YieldTermStructure> rateCurve = swapIndex.termStructure();
+                Handle<YieldTermStructure> rateCurve = swapIndex.forwardingTermStructure();
 
                 DayCounter dc = swapIndex.dayCounter();
 
@@ -415,7 +415,7 @@ namespace QLNet {
                 objectiveFunction_ = new ObjectiveFunction(this, swapRateValue_);
 
                 Schedule schedule = swap.fixedSchedule();
-                Handle<YieldTermStructure> rateCurve = swapIndex.termStructure();
+                Handle<YieldTermStructure> rateCurve = swapIndex.forwardingTermStructure();
                 DayCounter dc = swapIndex.dayCounter();
 
                 swapStartTime_ = dc.yearFraction(rateCurve.link.referenceDate(), schedule.startDate());
@@ -550,7 +550,7 @@ namespace QLNet {
             fixingDate_ = coupon_.fixingDate();
             paymentDate_ = coupon_.date();
             SwapIndex swapIndex = coupon_.swapIndex();
-            rateCurve_ = swapIndex.termStructure().link;
+            rateCurve_ = swapIndex.forwardingTermStructure().link;
 
             Date today = Settings.evaluationDate();
 

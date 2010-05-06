@@ -136,6 +136,6 @@ namespace QLNet {
 
         // //////////////////////////////////////////////////////////
         protected abstract double forecastFixing(Date fixingDate);
-        public abstract Handle<YieldTermStructure> termStructure();
+        //public abstract Handle<YieldTermStructure> termStructure();
     }
 }

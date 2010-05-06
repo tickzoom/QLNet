@@ -16,7 +16,6 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,22 +23,37 @@ using System.Text;
 
 namespace QLNet
 {
-   public class ChfLiborSwapIsdaFix : SwapIndex
+   public class UsdLiborSwapIsdaFixAm : SwapIndex
    {
-      public ChfLiborSwapIsdaFix(Period tenor)
-         : this(tenor,new Handle<YieldTermStructure>()) {}
+      public UsdLiborSwapIsdaFixAm(Period tenor)
+         : this(tenor, new Handle<YieldTermStructure>()) { }
 
-      public ChfLiborSwapIsdaFix(Period tenor, Handle<YieldTermStructure> h)
-         : base("ChfLiborSwapIsdaFix", // familyName
+      public UsdLiborSwapIsdaFixAm(Period tenor, Handle<YieldTermStructure> h)
+         : base("UsdLiborSwapIsdaFixAm", // familyName
                 tenor,
                 2, // settlementDays
-                new CHFCurrency(),
+                new USDCurrency(),
                 new TARGET(),
-                new Period(1,TimeUnit.Years), // fixedLegTenor
+                new Period(6, TimeUnit.Months), // fixedLegTenor
                 BusinessDayConvention.ModifiedFollowing, // fixedLegConvention
                 new Thirty360(Thirty360.Thirty360Convention.BondBasis), // fixedLegDaycounter
-                tenor > new Period(1,TimeUnit.Years) ?
-                    new CHFLibor(new Period(6,TimeUnit.Months), h) :
-                    new CHFLibor(new Period(3,TimeUnit.Months), h)) {}
+                new USDLibor(new Period(3, TimeUnit.Months), h)) { }
+   }
+
+   public class UsdLiborSwapIsdaFixPm : SwapIndex
+   {
+      public UsdLiborSwapIsdaFixPm(Period tenor)
+         : this(tenor, new Handle<YieldTermStructure>()) { }
+
+      public UsdLiborSwapIsdaFixPm(Period tenor, Handle<YieldTermStructure> h)
+         : base("UsdLiborSwapIsdaFixPm", // familyName
+                tenor,
+                2, // settlementDays
+                new USDCurrency(),
+                new TARGET(),
+                new Period(6, TimeUnit.Months), // fixedLegTenor
+                BusinessDayConvention.ModifiedFollowing, // fixedLegConvention
+                new Thirty360(Thirty360.Thirty360Convention.BondBasis), // fixedLegDaycounter
+                new USDLibor(new Period(3, TimeUnit.Months), h)) { }
    }
 }

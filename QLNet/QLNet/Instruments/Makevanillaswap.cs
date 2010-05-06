@@ -72,7 +72,7 @@ namespace QLNet {
             fixedDayCount_ = new Thirty360(Thirty360.Thirty360Convention.BondBasis);
             floatDayCount_ = index.dayCounter();
 
-            engine_ = new DiscountingSwapEngine(index.termStructure());
+            engine_ = new DiscountingSwapEngine(index.forwardingTermStructure());
         }
 
         public MakeVanillaSwap receiveFixed() { return receiveFixed(true); }
@@ -225,11 +225,11 @@ namespace QLNet {
 
             double? usedFixedRate = fixedRate_;
             if (fixedRate_ == null) {       // calculate a fair fixed rate if no fixed rate is provided
-                if (iborIndex_.termStructure().empty())
+               if (iborIndex_.forwardingTermStructure().empty())
                     throw new ArgumentException("no forecasting term structure set to " + iborIndex_.name());
                 VanillaSwap temp = new VanillaSwap(type_, nominal_, fixedSchedule, 0.0, fixedDayCount_,
                                                    floatSchedule, iborIndex_, floatSpread_, floatDayCount_);
-                temp.setPricingEngine(new DiscountingSwapEngine(iborIndex_.termStructure()));
+                temp.setPricingEngine(new DiscountingSwapEngine(iborIndex_.forwardingTermStructure()));
                 usedFixedRate = temp.fairRate();
             }
 

@@ -1,6 +1,6 @@
 ﻿/*
- Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
-  
+ Copyright (C) 2008, 2009 , 2010 Andrea Maggiulli (a.maggiulli@gmail.com)
+
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -27,7 +27,7 @@ namespace QLNet
    public class GbpLiborSwapIsdaFix : SwapIndex
    {
       public GbpLiborSwapIsdaFix(Period tenor)
-         : this(tenor,new Handle<YieldTermStructure>()) {}
+         : this(tenor, new Handle<YieldTermStructure>()) { }
 
       public GbpLiborSwapIsdaFix(Period tenor, Handle<YieldTermStructure> h)
          : base("GbpLiborSwapIsdaFix", // familyName
@@ -35,11 +35,11 @@ namespace QLNet
                 2, // settlementDays
                 new GBPCurrency(),
                 new TARGET(),
-                tenor > new Period(1, TimeUnit.Years) ? 
+                tenor > new Period(1, TimeUnit.Years) ?
                    new Period(6, TimeUnit.Months) : new Period(1, TimeUnit.Years), // fixedLegTenor
                 BusinessDayConvention.ModifiedFollowing, // fixedLegConvention
                 new Actual365Fixed(), // fixedLegDaycounter
-                tenor > new Period(1,TimeUnit.Years) ?
+                tenor > new Period(1, TimeUnit.Years) ?
                     new GBPLibor(new Period(6, TimeUnit.Months), h) :
                     new GBPLibor(new Period(3, TimeUnit.Months), h)) { }
    }

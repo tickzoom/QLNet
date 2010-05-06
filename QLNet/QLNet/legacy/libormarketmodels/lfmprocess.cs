@@ -56,7 +56,7 @@ namespace QLNet
             if(!(size_ == flows.Count))
                     throw new ArgumentException( "wrong number of cashflows");
 
-            Date settlement = index_.termStructure().link.referenceDate();
+            Date settlement = index_.forwardingTermStructure().link.referenceDate();
             Date startDate;
             IborCoupon iborcoupon = (IborCoupon)flows[0];
             startDate = iborcoupon.fixingDate();
@@ -189,7 +189,7 @@ namespace QLNet
 
         public List<CashFlow> cashFlows(double amount) 
         {
-            Date refDate = index_.termStructure().link.referenceDate();
+           Date refDate = index_.forwardingTermStructure().link.referenceDate();
             
             Schedule schedule = new Schedule(refDate,
                               refDate + new Period(index_.tenor().length() * size_,

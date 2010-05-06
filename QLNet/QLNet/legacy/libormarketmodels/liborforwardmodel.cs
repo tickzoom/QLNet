@@ -105,7 +105,7 @@ namespace QLNet
             double forward   = process_.initialValues()[i];
             double capRate   = (1.0/strike - 1.0)/tenor;
             double var = covarProxy_.integratedCovariance(i, i, process_.fixingTimes()[i] );
-            double dis = process_.index().termStructure().link.discount(bondMaturity);
+            double dis = process_.index().forwardingTermStructure().link.discount(bondMaturity);
 
             double black = Utils.blackFormula(
                 (type == Option.Type.Put ? Option.Type.Call : Option.Type.Put),
@@ -117,7 +117,7 @@ namespace QLNet
         }
 
         public double discount(double t) {
-            return process_.index().termStructure().link.discount(t);
+           return process_.index().forwardingTermStructure().link.discount(t);
         }
 
         public double discountBond(double t,double maturity,Vector v) {

@@ -31,7 +31,7 @@ namespace QLNet {
 
         protected Handle<YieldTermStructure> termStructure_;
         // InterestRateIndex interface
-        public override Handle<YieldTermStructure> termStructure() { return termStructure_; }
+        public Handle<YieldTermStructure> forwardingTermStructure() { return termStructure_; }
 
         bool endOfMonth_;
         public bool endOfMonth() { return endOfMonth_; }
@@ -59,11 +59,6 @@ namespace QLNet {
                 termStructure_.registerWith(update);
         }
 
-       public Handle<YieldTermStructure> forwardingTermStructure() 
-       {
-         return termStructure_;
-       }
-
         //! Date calculations
         public override Date maturityDate(Date valueDate) {
             return fixingCalendar().advance(valueDate, tenor_, convention_, endOfMonth_);
@@ -71,20 +66,21 @@ namespace QLNet {
 
         protected override double forecastFixing(Date fixingDate) {
             if (termStructure_.empty())
-                throw new ArgumentException("no forecasting term structure set to " + name());
+               throw new ArgumentException("null term structure set to this instance of " + name());
 
             Date fixingValueDate = valueDate(fixingDate);
             Date endValueDate = maturityDate(fixingValueDate);
-            double fixingDiscount = termStructure().link.discount(fixingValueDate);
-            double endDiscount = termStructure().link.discount(endValueDate);
+            double fixingDiscount = termStructure_.link.discount(fixingValueDate);
+            double endDiscount = termStructure_.link.discount(endValueDate);
             double fixingPeriod = dayCounter().yearFraction(fixingValueDate, endValueDate);
             return (fixingDiscount / endDiscount - 1.0) / fixingPeriod;
         }
 
-        //! returns a copy of itself linked to a different forecast curve
-        public IborIndex clone(Handle<YieldTermStructure> h) {
+        //! returns a copy of itself linked to a different forwarding curve
+        public IborIndex clone(Handle<YieldTermStructure> forwarding)
+        {
             return new IborIndex(familyName(), tenor(), fixingDays(), currency(), fixingCalendar(),
-                                 businessDayConvention(), endOfMonth(), dayCounter(), h);
+                                 businessDayConvention(), endOfMonth(), dayCounter(), forwarding);
         }
     }
    

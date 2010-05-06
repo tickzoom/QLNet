@@ -32,7 +32,7 @@ namespace QLNet {
     */
     public class BMAIndex : InterestRateIndex {
         protected Handle<YieldTermStructure> termStructure_;
-        public override Handle<YieldTermStructure> termStructure() { return termStructure_; }
+        public Handle<YieldTermStructure> forwardingTermStructure() { return termStructure_; }
 
         public BMAIndex() : this(new Handle<YieldTermStructure>()) { }
         public BMAIndex(Handle<YieldTermStructure> h)
@@ -78,7 +78,7 @@ namespace QLNet {
 
         protected override double forecastFixing(Date fixingDate) {
             if (termStructure_.empty())
-                throw new ApplicationException("no forecasting term structure set to " + name());
+               throw new ApplicationException("null term structure set to this instance of " + name());
             Date start = fixingCalendar_.advance(fixingDate,1,TimeUnit.Days);
             Date end = maturityDate(start);
             return termStructure_.link.forwardRate(start, end, dayCounter_, Compounding.Simple).rate();
