@@ -157,8 +157,8 @@ namespace QLNet
             notionals_.Add(p.nominal());
          }
 
-         List<CashFlow> fixedLeg = new FixedRateLeg(fixedSchedule, fixedDayCount)
-                                     .withCouponRates(fixedRate)
+         List<CashFlow> fixedLeg = new FixedRateLeg(fixedSchedule)
+                                     .withCouponRates(fixedRate, fixedDayCount)
                                      .withPaymentAdjustment(paymentConvention_)
                                      .withNotionals(notionals_);
 
@@ -288,8 +288,8 @@ namespace QLNet
             notionals_.Add(p.nominal());
          }
 
-         List<CashFlow> fixedLeg = new FixedRateLeg(fixedSchedule, fixedDayCount)
-                                     .withCouponRates(fixedRate)
+         List<CashFlow> fixedLeg = new FixedRateLeg(fixedSchedule)
+                                     .withCouponRates(fixedRate, fixedDayCount)
                                      .withPaymentAdjustment(paymentConvention_)
                                      .withNotionals(notionals_);
 
@@ -304,8 +304,8 @@ namespace QLNet
          }
 
          // New Leg
-         List<CashFlow> discountedFixedLeg = new FixedRateLeg(fixedSchedule, fixedDayCount)
-                                              .withCouponRates(fixedRate)
+         List<CashFlow> discountedFixedLeg = new FixedRateLeg(fixedSchedule)
+                                              .withCouponRates(fixedRate, fixedDayCount)
                                               .withPaymentAdjustment(paymentConvention_)
                                               .withNotionals(notionals_);
          // Adjust Principal

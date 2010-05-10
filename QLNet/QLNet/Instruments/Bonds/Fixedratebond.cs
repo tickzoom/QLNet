@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com) 
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -19,94 +20,175 @@
 using System;
 using System.Collections.Generic;
 
-namespace QLNet {
-    public class FixedRateBond : Bond {
-        protected Frequency frequency_;
-        protected DayCounter dayCounter_;
+namespace QLNet 
+{
+   public class FixedRateBond : Bond 
+   {
+      //! fixed-rate bond
+      /*! \ingroup instruments
 
-                      //BusinessDayConvention paymentConvention = Following,
-                      //Real redemption = 100.0,
-                      //const Date& issueDate = Date());
-        public FixedRateBond(int settlementDays, double faceAmount, Schedule schedule, List<double> coupons,
-                             DayCounter accrualDayCounter)
-            : this(settlementDays, faceAmount, schedule, coupons, accrualDayCounter, BusinessDayConvention.Following, 100, null) { }
-        public FixedRateBond(int settlementDays, double faceAmount, Schedule schedule, List<double> coupons,
-                             DayCounter accrualDayCounter, BusinessDayConvention paymentConvention,
-                             double redemption, Date issueDate)
-                : base(settlementDays, schedule.calendar(), issueDate) {
-            frequency_ = schedule.tenor().frequency();
-            dayCounter_ = accrualDayCounter;
-            maturityDate_ = schedule.endDate();
+          \test calculations are tested by checking results against
+                cached values.
+      */
+      public FixedRateBond(int settlementDays, double faceAmount, Schedule schedule, 
+                           List<double> coupons,DayCounter accrualDayCounter)
+            : this(settlementDays, faceAmount, schedule, coupons, accrualDayCounter, 
+                   BusinessDayConvention.Following, 100, null, new Calendar()) { }
 
-            cashflows_ = new FixedRateLeg(schedule, accrualDayCounter)
-                                         .withCouponRates(coupons)
-                                         .withPaymentAdjustment(paymentConvention)
-                                         .withNotionals(faceAmount);
+      public FixedRateBond(int settlementDays, double faceAmount, Schedule schedule,
+                           List<double> coupons, DayCounter accrualDayCounter, 
+                           BusinessDayConvention paymentConvention,double redemption, Date issueDate)
+         : this(settlementDays, faceAmount, schedule, coupons, accrualDayCounter,
+                paymentConvention, redemption, issueDate, new Calendar()) { }
 
-            addRedemptionsToCashflows(new List<double>() { redemption });
+      //! simple annual compounding coupon rates      
+      public FixedRateBond(int settlementDays, double faceAmount, Schedule schedule,List<double> coupons, 
+                           DayCounter accrualDayCounter, BusinessDayConvention paymentConvention,
+                           double redemption, Date issueDate,Calendar paymentCalendar)
+         : base(settlementDays, paymentCalendar == new Calendar() ? schedule.calendar() : paymentCalendar, 
+                issueDate) 
+      {
+         frequency_ = schedule.tenor().frequency();
+         dayCounter_ = accrualDayCounter;
+         maturityDate_ = schedule.endDate();
 
-            if (cashflows().Count == 0)
-                throw new ApplicationException("bond with no cashflows!");
-            if (redemptions_.Count != 1)
-                throw new ApplicationException("multiple redemptions created");
-        }
+         cashflows_ = new FixedRateLeg(schedule)
+            .withCouponRates(coupons, accrualDayCounter)
+            .withPaymentCalendar(calendar_)
+            .withNotionals(faceAmount)
+            .withPaymentAdjustment(paymentConvention);
 
-        public FixedRateBond(int settlementDays, Calendar calendar,
-                             double faceAmount,
-                             Date startDate,
-                             Date maturityDate,
-                             Period tenor,
-                             List<double> coupons,
-                             DayCounter accrualDayCounter,
-                             BusinessDayConvention accrualConvention,
-                             BusinessDayConvention paymentConvention,
-                             double redemption,
-                             Date issueDate,
-                             Date stubDate,
-                             DateGeneration.Rule rule,
-                             bool endOfMonth)
-            : base(settlementDays, calendar, issueDate) {
+         addRedemptionsToCashflows(new List<double>() { redemption });
 
-            frequency_ = tenor.frequency();
-            dayCounter_ = accrualDayCounter;
+         if (cashflows().Count == 0)
+            throw new ApplicationException("bond with no cashflows!");
 
-            maturityDate_     = maturityDate;
+         if (redemptions_.Count != 1)
+            throw new ApplicationException("multiple redemptions created");
+      }
+      
+      /*! simple annual compounding coupon rates
+          with internal schedule calculation */
+      public FixedRateBond(int settlementDays, 
+                           Calendar calendar,
+                           double faceAmount,
+                           Date startDate,
+                           Date maturityDate,
+                           Period tenor,
+                           List<double> coupons,
+                           DayCounter accrualDayCounter,
+                           BusinessDayConvention accrualConvention,
+                           BusinessDayConvention paymentConvention,
+                           double redemption,
+                           Date issueDate,
+                           Date stubDate,
+                           DateGeneration.Rule rule,
+                           bool endOfMonth,
+                           Calendar paymentCalendar)
+         : base(settlementDays, paymentCalendar == new Calendar() ? calendar : paymentCalendar, 
+                issueDate) 
+      {
 
-            Date firstDate, nextToLastDate;
-            switch (rule) {
-              case DateGeneration.Rule.Backward:
-                firstDate = null;
-                nextToLastDate = stubDate;
-                break;
-              case DateGeneration.Rule.Forward:
-                firstDate = stubDate;
-                nextToLastDate = null;
-                break;
-              case DateGeneration.Rule.Zero:
-              case DateGeneration.Rule.ThirdWednesday:
-              case DateGeneration.Rule.Twentieth:
-              case DateGeneration.Rule.TwentiethIMM:
-                    throw new ApplicationException("stub date (" + stubDate + ") not allowed with " + rule + " DateGeneration::Rule");
-              default:
-                    throw new ApplicationException("unknown DateGeneration::Rule (" + rule + ")");
-            }
+         frequency_ = tenor.frequency();
+         dayCounter_ = accrualDayCounter;
+         maturityDate_     = maturityDate;
 
-            Schedule schedule = new Schedule(startDate, maturityDate_, tenor,
-                                             calendar_, accrualConvention, accrualConvention,
-                                             rule, endOfMonth,
-                                             firstDate, nextToLastDate);
+         Date firstDate, nextToLastDate;
 
-            cashflows_ = new FixedRateLeg(schedule, accrualDayCounter)
-                            .withCouponRates(coupons)
-                            .withPaymentAdjustment(paymentConvention)
-                            .withNotionals(faceAmount);
+         switch (rule) 
+         {
+         
+            case DateGeneration.Rule.Backward:
+               firstDate = null;
+               nextToLastDate = stubDate;
+               break;
 
-            addRedemptionsToCashflows(new List<double>() { redemption });
+            case DateGeneration.Rule.Forward:
+               firstDate = stubDate;
+               nextToLastDate = null;
+               break;
 
-            if (cashflows().Count == 0)
-                throw new ApplicationException("bond with no cashflows!");
-            if (redemptions_.Count != 1)
-                throw new ApplicationException("multiple redemptions created");
-        }
+            case DateGeneration.Rule.Zero:
+            case DateGeneration.Rule.ThirdWednesday:
+            case DateGeneration.Rule.Twentieth:
+            case DateGeneration.Rule.TwentiethIMM:
+               throw new ApplicationException("stub date (" + stubDate + ") not allowed with " + rule + " DateGeneration::Rule");
+              
+            default:
+               throw new ApplicationException("unknown DateGeneration::Rule (" + rule + ")");
+         }
+
+
+         Schedule schedule = new Schedule(startDate, maturityDate_, tenor,
+                                          calendar, accrualConvention, accrualConvention,
+                                          rule, endOfMonth,
+                                          firstDate, nextToLastDate);
+
+            
+         cashflows_ = new FixedRateLeg(schedule)
+            .withCouponRates(coupons, accrualDayCounter)
+            .withPaymentCalendar(calendar_)
+            .withNotionals(faceAmount)
+            .withPaymentAdjustment(paymentConvention);
+
+         addRedemptionsToCashflows(new List<double>() { redemption });
+
+
+         if (cashflows().Count == 0)
+            throw new ApplicationException("bond with no cashflows!");
+         
+         if (redemptions_.Count != 1)
+            throw new ApplicationException("multiple redemptions created");
+      }
+
+      //! generic compounding and frequency InterestRate coupons 
+      public FixedRateBond(int settlementDays,
+                           double faceAmount,
+                           Schedule schedule,
+                           List<InterestRate> coupons,
+                           BusinessDayConvention paymentConvention,
+                           double redemption,
+                           Date issueDate)
+         : this(settlementDays, faceAmount, schedule, coupons, paymentConvention, redemption, issueDate, new Calendar()) { }
+
+      public FixedRateBond(int settlementDays,
+                           double faceAmount,
+                           Schedule schedule,
+                           List<InterestRate> coupons,
+                           BusinessDayConvention paymentConvention,
+                           double redemption,
+                           Date issueDate,
+                           Calendar paymentCalendar)
+
+         : base(settlementDays,paymentCalendar == new Calendar() ? schedule.calendar() : paymentCalendar,
+                issueDate)
+      {
+      
+         frequency_ = schedule.tenor().frequency();
+         dayCounter_ = coupons[0].dayCounter();
+         maturityDate_ = schedule.endDate();
+
+        cashflows_ = new FixedRateLeg(schedule)
+                    .withCouponRates(coupons)
+                    .withPaymentCalendar(calendar_)
+                    .withNotionals(faceAmount)
+                    .withPaymentAdjustment(paymentConvention);
+
+        addRedemptionsToCashflows(new List<double>() { redemption });
+
+
+        if (cashflows().Count == 0)
+         throw new ApplicationException("bond with no cashflows!");
+        
+        if (redemptions_.Count != 1)
+           throw new ApplicationException("multiple redemptions created");
     }
+      
+      Frequency frequency() { return frequency_; }
+      DayCounter dayCounter() { return dayCounter_; }
+
+      protected Frequency frequency_;
+      protected DayCounter dayCounter_;
+
+   }
 }

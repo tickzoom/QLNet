@@ -88,8 +88,8 @@ namespace QLNet {
             else
                 paymentConvention_ = floatingSchedule_.businessDayConvention();
 
-            List<CashFlow> fixedLeg = new FixedRateLeg(fixedSchedule, fixedDayCount)
-                                        .withCouponRates(fixedRate)
+            List<CashFlow> fixedLeg = new FixedRateLeg(fixedSchedule)
+                                        .withCouponRates(fixedRate, fixedDayCount)
                                         .withPaymentAdjustment(paymentConvention_)
                                         .withNotionals(nominal);
 

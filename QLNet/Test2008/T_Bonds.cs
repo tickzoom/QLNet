@@ -693,6 +693,10 @@ namespace TestSuite
 
          CommonVars vars = new CommonVars();
 
+         double faceAmount = 1000.0;
+         double redemption = 100.0;
+         Date issueDate = new Date(1,Month.January,2007);
+
          Date today = new Date(6, Month.June, 2007);
          Settings.setEvaluationDate(today);
 
@@ -745,25 +749,22 @@ namespace TestSuite
                               BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted,
                               DateGeneration.Rule.Backward, false);
 
-            // fixed coupons
-            List<CashFlow> cashflows = new FixedRateLeg(schedule, new Actual360())
-                            .withCouponRates(couponRates)
-                            .withPaymentAdjustment(BusinessDayConvention.ModifiedFollowing)
-                            .withNotionals(vars.faceAmount);
-            // redemption
-            cashflows.Add(new SimpleCashFlow(vars.faceAmount, cashflows.Last().date()));
 
-            Bond bond = new Bond(settlementDays, new Brazil(Brazil.Market.Settlement),
-                                 vars.faceAmount, cashflows.Last().date(),
-                                 new Date(1, Month.January, 2007), cashflows);
+            FixedRateBond bond = new FixedRateBond(settlementDays,
+                                                   faceAmount,
+                                                   schedule,
+                                                   couponRates,
+                                                   BusinessDayConvention.Following,
+                                                   redemption,
+                                                   issueDate);
 
             double cachedPrice = prices[bondIndex];
 
-            double price = vars.faceAmount * bond.dirtyPrice(yield.rate(),
+            double price = vars.faceAmount * (bond.cleanPrice(yield.rate(),
                                                          yield.dayCounter(),
                                                          yield.compounding(),
                                                          yield.frequency(),
-                                                         today) / 100;
+                                                         today) + bond.accruedAmount(today)) / 100;
             if (Math.Abs(price - cachedPrice) > tolerance)
             {
                Assert.Fail("failed to reproduce cached price:\n"

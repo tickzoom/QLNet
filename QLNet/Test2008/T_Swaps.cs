@@ -241,8 +241,8 @@ namespace TestSuite
          vars.termStructure.linkTo(Utilities.flatRate(vars.today, r, dayCounter));
 
          List<double> coupons = new List<double>() { oneYear };
-         List<CashFlow> fixedLeg = new FixedRateLeg(schedule, dayCounter)
-                                 .withCouponRates(coupons)
+         List<CashFlow> fixedLeg = new FixedRateLeg(schedule)
+                                 .withCouponRates(coupons, dayCounter)
                                  .withNotionals(nominals);
 
          List<double> gearings = new List<double>();

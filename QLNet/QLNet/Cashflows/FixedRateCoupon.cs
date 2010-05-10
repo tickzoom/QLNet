@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008, 2009 Siarhei Novik (snovik@gmail.com)
+ Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -21,148 +22,205 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace QLNet {
-    public class FixedRateCoupon : Coupon {
-        private InterestRate rate_;
-        private DayCounter dayCounter_;
+namespace QLNet 
+{
+   //! %Coupon paying a fixed interest rate
+   public class FixedRateCoupon : Coupon 
+   {
+      // constructors
+      public FixedRateCoupon(double nominal, Date paymentDate, double rate, DayCounter dayCounter,
+                             Date accrualStartDate, Date accrualEndDate) 
+         : this(nominal, paymentDate, rate, dayCounter, accrualStartDate, accrualEndDate, null, null) { }
+
+      public FixedRateCoupon(double nominal, Date paymentDate, double rate, DayCounter dayCounter,
+                             Date accrualStartDate, Date accrualEndDate, Date refPeriodStart, 
+                             Date refPeriodEnd) 
+         : base(nominal, paymentDate, accrualStartDate, accrualEndDate, refPeriodStart, refPeriodEnd) 
+      {
+         rate_ = new InterestRate(rate, dayCounter, Compounding.Simple,Frequency.Annual);
+      }
 
 
-        // constructors
-        public FixedRateCoupon(double nominal, Date paymentDate, double rate, DayCounter dayCounter,
-                                Date accrualStartDate, Date accrualEndDate) :
-            this(nominal, paymentDate, rate, dayCounter, accrualStartDate, accrualEndDate, null, null) { }
-        public FixedRateCoupon(double nominal, Date paymentDate, double rate, DayCounter dayCounter,
-                               Date accrualStartDate, Date accrualEndDate, Date refPeriodStart, Date refPeriodEnd) :
-            base(nominal, paymentDate, accrualStartDate, accrualEndDate, refPeriodStart, refPeriodEnd) {
-            rate_ = new InterestRate(rate, dayCounter, Compounding.Simple);
-            dayCounter_ = dayCounter; 
-        }
+      public FixedRateCoupon(double nominal, Date paymentDate, InterestRate interestRate, 
+                             Date accrualStartDate, Date accrualEndDate) 
+         : this(nominal, paymentDate, interestRate, accrualStartDate, accrualEndDate,
+                null, null) { }
 
-        public FixedRateCoupon(double nominal, Date paymentDate, InterestRate interestRate, DayCounter dayCounter, Date accrualStartDate, Date accrualEndDate) :
-            this(nominal, paymentDate, interestRate, dayCounter, accrualStartDate, accrualEndDate, null, null) { }
-        public FixedRateCoupon(double nominal, Date paymentDate, InterestRate interestRate, DayCounter dayCounter,
-                               Date accrualStartDate, Date accrualEndDate, Date refPeriodStart, Date refPeriodEnd) :
-            base(nominal, paymentDate, accrualStartDate, accrualEndDate, refPeriodStart, refPeriodEnd) {
-            rate_ = interestRate;
-            dayCounter_ = dayCounter; 
-        }
+      public FixedRateCoupon(double nominal, Date paymentDate, InterestRate interestRate, 
+                             Date accrualStartDate, Date accrualEndDate, 
+                             Date refPeriodStart, Date refPeriodEnd) 
+         : base(nominal, paymentDate, accrualStartDate, accrualEndDate, refPeriodStart, refPeriodEnd) 
+      {
+         rate_ = interestRate;
+      }
 
-        //! CashFlow interface
-        public override double amount() {
+      //! CashFlow interface
+      public override double amount() 
+      {
             return nominal()*(rate_.compoundFactor(accrualStartDate_,
-                                                       accrualEndDate_, refPeriodStart_, refPeriodEnd_) - 1.0); }
+                                                   accrualEndDate_, refPeriodStart_, refPeriodEnd_) - 1.0); 
+      }
 
-        //! Coupon interface
-        public override double rate() { return rate_.rate(); }
-        public InterestRate interestRate() { return rate_; }
-        public override DayCounter dayCounter() { return dayCounter_; }
-        public override double accruedAmount(Date d) {
-            if (d <= accrualStartDate_ || d > paymentDate_)
-                return 0;
-            else
-                return nominal() * (rate_.compoundFactor(accrualStartDate_, Date.Min(d, accrualEndDate_),
+      //! Coupon interface
+      public override double rate() { return rate_.rate(); }
+      public InterestRate interestRate() { return rate_; }
+      public override DayCounter dayCounter() { return rate_.dayCounter(); }
+      public override double accruedAmount(Date d) 
+      {
+         if (d <= accrualStartDate_ || d > paymentDate_)
+            return 0;
+         else
+            return nominal() * (rate_.compoundFactor(accrualStartDate_, Date.Min(d, accrualEndDate_),
                                                      refPeriodStart_, refPeriodEnd_) - 1.0);
-        }
-    }
+      }
 
-    //! helper class building a sequence of fixed rate coupons
-    public class FixedRateLeg : Cashflows.RateLegBase {
-        // properties
-        private List<InterestRate> couponRates_ = new List<InterestRate>();
-        private DayCounter firstPeriodDayCounter_ = null;
+      private InterestRate rate_;
 
-        // constructor
-        public FixedRateLeg(Schedule schedule, DayCounter paymentDayCounter) {
-            schedule_ = schedule;
-            paymentDayCounter_ = paymentDayCounter;
-            paymentAdjustment_ = BusinessDayConvention.Following;
-        }
+   }
 
-        // other initializers
-        public FixedRateLeg withCouponRates(double couponRate) {
-            couponRates_.Clear();
-            couponRates_.Add(new InterestRate(couponRate, paymentDayCounter_, Compounding.Simple));
-            return this;
-        }
-        public FixedRateLeg withCouponRates(InterestRate couponRate) {
-            couponRates_.Clear();
-            couponRates_.Add(couponRate);
-            return this;
-        }
-        public FixedRateLeg withCouponRates(List<double> couponRates) {
-            couponRates_.Clear();
-            foreach (double r in couponRates)
-                couponRates_.Add(new InterestRate(r, paymentDayCounter_, Compounding.Simple));
-            return this;
-        }
-        public FixedRateLeg withCouponRates(List<InterestRate>couponRates) {
-            couponRates_ = couponRates;
-            return this;
-        }
+   //! helper class building a sequence of fixed rate coupons
+   public class FixedRateLeg : Cashflows.RateLegBase 
+   {
+      // properties
+      private List<InterestRate> couponRates_ = new List<InterestRate>();
+      private DayCounter firstPeriodDC_ = null;
+      private Calendar calendar_;
 
-        public FixedRateLeg withFirstPeriodDayCounter(DayCounter dayCounter) {
-            firstPeriodDayCounter_ = dayCounter;
-            return this;
-        }
+      // constructor
+      public FixedRateLeg(Schedule schedule) 
+      {
+         schedule_ = schedule;
+         calendar_ = schedule.calendar();
+         paymentAdjustment_ = BusinessDayConvention.Following;
+      }
 
-        // creator
-        public override List<CashFlow> value() {
-            if (couponRates_.Count == 0) throw new ArgumentException("no coupon rates given");
-            if (notionals_.Count == 0) throw new ArgumentException("no nominals given");
+      // other initializers
+      public FixedRateLeg withCouponRates(double couponRate,DayCounter paymentDayCounter) 
+      {
+         return withCouponRates(couponRate,paymentDayCounter,Compounding.Simple,Frequency.Annual);
+      }
+      public FixedRateLeg withCouponRates(double couponRate,DayCounter paymentDayCounter,Compounding comp) 
+      {
+         return withCouponRates(couponRate,paymentDayCounter,comp,Frequency.Annual);
+      }
 
-            List<CashFlow> leg = new List<CashFlow>();
+      public FixedRateLeg withCouponRates(double couponRate,DayCounter paymentDayCounter,
+                                          Compounding comp ,Frequency freq) 
+      {
+         couponRates_.Clear();
+         couponRates_.Add(new InterestRate(couponRate, paymentDayCounter, comp, freq));
+         return this;
+      }
 
-            // the following is not always correct
-            Calendar calendar = schedule_.calendar();
 
-            // first period might be short or long
-            Date start = schedule_[0], end = schedule_[1];
-            Date paymentDate = calendar.adjust(end, paymentAdjustment_);
-            InterestRate rate = couponRates_[0];
-            double nominal = notionals_[0];
-            if (schedule_.isRegular(1)) {
-                if (!(firstPeriodDayCounter_ == null || firstPeriodDayCounter_ == paymentDayCounter_))
-                    throw new ArgumentException("regular first coupon does not allow a first-period day count");
-                leg.Add(new FixedRateCoupon(nominal, paymentDate, rate, paymentDayCounter_, start, end, start, end));
-            } else {
-                Date refer = end - schedule_.tenor();
-                refer = calendar.adjust(refer, schedule_.businessDayConvention());
-                DayCounter dc = firstPeriodDayCounter_ == null ? paymentDayCounter_ : firstPeriodDayCounter_;
-                leg.Add(new FixedRateCoupon(nominal, paymentDate, rate, dc, start, end, refer, end));
-            }
+      public FixedRateLeg withCouponRates(List<double> couponRates, DayCounter paymentDayCounter)
+      {
+         return withCouponRates(couponRates, paymentDayCounter, Compounding.Simple, Frequency.Annual);
+      }
+      public FixedRateLeg withCouponRates(List<double> couponRates, DayCounter paymentDayCounter, Compounding comp)
+      {
+         return withCouponRates(couponRates, paymentDayCounter, comp, Frequency.Annual);
+      }
 
-            // regular periods
-            for (int i=2; i<schedule_.Count-1; ++i) {
-				start = end; end = schedule_[i];
-                paymentDate = calendar.adjust(end, paymentAdjustment_);
-                if ((i - 1) < couponRates_.Count) rate = couponRates_[i - 1];
-                else                              rate = couponRates_.Last();
-                if ((i - 1) < notionals_.Count)   nominal = notionals_[i - 1];
-                else                              nominal = notionals_.Last();
+      public FixedRateLeg withCouponRates(List<double> couponRates, DayCounter paymentDayCounter,
+                                          Compounding comp, Frequency freq) 
+      {
+         couponRates_.Clear();
+         foreach (double r in couponRates)
+            couponRates_.Add(new InterestRate(r, paymentDayCounter, comp , freq));
+         return this;
+      }
 
-                leg.Add(new FixedRateCoupon(nominal, paymentDate, rate, paymentDayCounter_, start, end, start, end));
-            }
+      public FixedRateLeg withCouponRates(InterestRate couponRate)
+      {
+         couponRates_.Clear();
+         couponRates_.Add(couponRate);
+         return this;
+      }
 
-            if (schedule_.Count > 2) {
-                // last period might be short or long
-                int N = schedule_.Count;
-                start = end; end = schedule_[N-1];
-                paymentDate = calendar.adjust(end, paymentAdjustment_);
+      public FixedRateLeg withCouponRates(List<InterestRate>couponRates) 
+      {
+         couponRates_ = couponRates;
+         return this;
+      }
 
-                if ((N - 2) < couponRates_.Count) rate = couponRates_[N - 2];
-                else                              rate = couponRates_.Last();
-                if ((N - 2) < notionals_.Count)   nominal = notionals_[N - 2];
-                else                              nominal = notionals_.Last();
+      public FixedRateLeg withFirstPeriodDayCounter(DayCounter dayCounter) 
+      {
+         firstPeriodDC_ = dayCounter;
+         return this;
+      }
 
-                if (schedule_.isRegular(N-1))
-                    leg.Add(new FixedRateCoupon(nominal, paymentDate, rate, paymentDayCounter_, start, end, start, end));
-                else {
-                    Date refer = start + schedule_.tenor();
-                    refer = calendar.adjust(refer, schedule_.businessDayConvention());
-                    leg.Add(new FixedRateCoupon(nominal, paymentDate, rate, paymentDayCounter_, start, end, start, refer));
-                }
-            }
-            return leg;
-        }
+      public FixedRateLeg withPaymentCalendar(Calendar cal) 
+      {
+         calendar_ = cal;
+         return this;
+      }
+
+      // creator
+      public override List<CashFlow> value() 
+      {
+      
+         if (couponRates_.Count == 0) throw new ArgumentException("no coupon rates given");
+         if (notionals_.Count == 0) throw new ArgumentException("no nominals given");
+
+         List<CashFlow> leg = new List<CashFlow>();
+
+         Calendar schCalendar = schedule_.calendar();
+
+         // first period might be short or long
+         Date start = schedule_[0], end = schedule_[1];
+         Date paymentDate = calendar_.adjust(end, paymentAdjustment_);
+         InterestRate rate = couponRates_[0];
+         double nominal = notionals_[0];
+         if (schedule_.isRegular(1)) 
+         {
+            if (!(firstPeriodDC_ == null || firstPeriodDC_ == rate.dayCounter()))
+                throw new ArgumentException("regular first coupon does not allow a first-period day count");
+            leg.Add(new FixedRateCoupon(nominal, paymentDate, rate, start, end, start, end));
+         } 
+         else 
+         {
+             Date refer = end - schedule_.tenor();
+             refer = schCalendar.adjust(refer, schedule_.businessDayConvention());
+             InterestRate r = new InterestRate(rate.rate(),
+                                               (firstPeriodDC_ == null || firstPeriodDC_.empty()) ? rate.dayCounter() : firstPeriodDC_,
+                                               rate.compounding(), rate.frequency());
+             leg.Add(new FixedRateCoupon(nominal, paymentDate, r, start, end, refer, end));
+         }
+
+         // regular periods
+         for (int i=2; i<schedule_.Count-1; ++i) 
+         {
+            start = end; end = schedule_[i];
+            paymentDate = calendar_.adjust(end, paymentAdjustment_);
+            if ((i - 1) < couponRates_.Count) rate = couponRates_[i - 1];
+            else                              rate = couponRates_.Last();
+            if ((i - 1) < notionals_.Count)   nominal = notionals_[i - 1];
+            else                              nominal = notionals_.Last();
+
+            leg.Add(new FixedRateCoupon(nominal, paymentDate, rate, start, end, start, end));
+         }
+
+         if (schedule_.Count > 2) {
+             // last period might be short or long
+             int N = schedule_.Count;
+             start = end; end = schedule_[N-1];
+             paymentDate = calendar_.adjust(end, paymentAdjustment_);
+
+             if ((N - 2) < couponRates_.Count) rate = couponRates_[N - 2];
+             else                              rate = couponRates_.Last();
+             if ((N - 2) < notionals_.Count)   nominal = notionals_[N - 2];
+             else                              nominal = notionals_.Last();
+
+             if (schedule_.isRegular(N-1))
+                 leg.Add(new FixedRateCoupon(nominal, paymentDate, rate, start, end, start, end));
+             else {
+                 Date refer = start + schedule_.tenor();
+                 refer = schCalendar.adjust(refer, schedule_.businessDayConvention());
+                 leg.Add(new FixedRateCoupon(nominal, paymentDate, rate, start, end, start, refer));
+             }
+         }
+         return leg;
+     }
     }
 }
