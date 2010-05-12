@@ -382,7 +382,7 @@ namespace QLNet {
             if (settlement==null)
                 settlement = settlementDate();
 
-            CashFlow cf = CashFlows.nextCashFlow(cashflows_, settlement);
+            CashFlow cf = CashFlows.nextCashFlow(cashflows_,false, settlement);
             if (cf==cashflows_.Last()) return 0.0;
 
             Date paymentDate = cf.date();
@@ -420,7 +420,7 @@ namespace QLNet {
         public double nextCoupon(Date settlement) {
             if (settlement == null)
                 settlement = settlementDate();
-            return CashFlows.nextCouponRate(cashflows_, settlement);
+            return CashFlows.nextCouponRate(cashflows_,false, settlement);
         }
 
         //! Previous coupon already paid at a given date
@@ -432,21 +432,21 @@ namespace QLNet {
         public double previousCoupon(Date settlement) {
             if (settlement == null)
                 settlement = settlementDate();
-            return CashFlows.previousCouponRate(cashflows_, settlement);
+            return CashFlows.previousCouponRate(cashflows_, false, settlement);
         }
 
         public Date nextCouponDate() { return nextCouponDate(null); }
         public Date nextCouponDate(Date settlement) {
             if (settlement == null)
                 settlement = settlementDate();
-            return CashFlows.nextCouponDate(cashflows_, settlement);
+            return CashFlows.nextCouponDate(cashflows_, false, settlement);
         }
 
         public Date previousCouponDate() { return previousCouponDate(null); }
         public Date previousCouponDate(Date settlement) {
             if (settlement == null)
                 settlement = settlementDate();
-            return CashFlows.previousCouponDate(cashflows_, settlement);
+            return CashFlows.previousCouponDate(cashflows_, false, settlement);
         }
 
         protected override void setupExpired() {
