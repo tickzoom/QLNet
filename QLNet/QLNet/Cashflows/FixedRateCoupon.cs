@@ -29,26 +29,16 @@ namespace QLNet
    {
       // constructors
       public FixedRateCoupon(double nominal, Date paymentDate, double rate, DayCounter dayCounter,
-                             Date accrualStartDate, Date accrualEndDate) 
-         : this(nominal, paymentDate, rate, dayCounter, accrualStartDate, accrualEndDate, null, null) { }
-
-      public FixedRateCoupon(double nominal, Date paymentDate, double rate, DayCounter dayCounter,
-                             Date accrualStartDate, Date accrualEndDate, Date refPeriodStart, 
-                             Date refPeriodEnd) 
+                             Date accrualStartDate, Date accrualEndDate, 
+                             Date refPeriodStart = null, Date refPeriodEnd = null) 
          : base(nominal, paymentDate, accrualStartDate, accrualEndDate, refPeriodStart, refPeriodEnd) 
       {
          rate_ = new InterestRate(rate, dayCounter, Compounding.Simple,Frequency.Annual);
       }
 
-
-      public FixedRateCoupon(double nominal, Date paymentDate, InterestRate interestRate, 
-                             Date accrualStartDate, Date accrualEndDate) 
-         : this(nominal, paymentDate, interestRate, accrualStartDate, accrualEndDate,
-                null, null) { }
-
       public FixedRateCoupon(double nominal, Date paymentDate, InterestRate interestRate, 
                              Date accrualStartDate, Date accrualEndDate, 
-                             Date refPeriodStart, Date refPeriodEnd) 
+                             Date refPeriodStart = null, Date refPeriodEnd = null) 
          : base(nominal, paymentDate, accrualStartDate, accrualEndDate, refPeriodStart, refPeriodEnd) 
       {
          rate_ = interestRate;

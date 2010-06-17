@@ -37,21 +37,12 @@ namespace QLNet
    */
    public class IndexedCashFlow : CashFlow
    {
-
-      public IndexedCashFlow(double notional,
-                             Index index,
-                             Date baseDate,
-                             Date fixingDate,
-                             Date paymentDate
-                             ) 
-         : this(notional,index,baseDate,fixingDate,paymentDate,false ){}
-
       public IndexedCashFlow(double notional,
                              Index index,
                              Date baseDate,
                              Date fixingDate,
                              Date paymentDate,
-                             bool growthOnly)
+                             bool growthOnly = false)
       {
          notional_ = notional;
          index_=index;
@@ -62,7 +53,6 @@ namespace QLNet
       }
 
       public override Date date() { return paymentDate_; }
-
       public virtual double notional()  { return notional_; }
       public virtual Date baseDate()  { return baseDate_; }
       public virtual Date fixingDate() { return fixingDate_; }

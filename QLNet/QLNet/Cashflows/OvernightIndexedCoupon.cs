@@ -131,74 +131,11 @@ namespace QLNet
                Date startDate,
                Date endDate,
                OvernightIndex overnightIndex,
-               double gearing,
-               double spread,
-               Date refPeriodStart,
-               Date refPeriodEnd
-               ) 
-         : this(paymentDate,
-                nominal,
-                startDate,
-                endDate,
-                overnightIndex,
-                gearing,
-                spread,
-                refPeriodStart,
-                refPeriodEnd,
-                new DayCounter()){}
-
-      public OvernightIndexedCoupon(
-               Date paymentDate,
-               double nominal,
-               Date startDate,
-               Date endDate,
-               OvernightIndex overnightIndex,
-               double gearing,
-               double spread,
-               Date refPeriodStart
-               )
-         : this(paymentDate,
-                nominal,
-                startDate,
-                endDate,
-                overnightIndex,
-                gearing,
-                spread,
-                refPeriodStart,
-                null,
-                new DayCounter()) { }
-
-      public OvernightIndexedCoupon(
-               Date paymentDate,
-               double nominal,
-               Date startDate,
-               Date endDate,
-               OvernightIndex overnightIndex,
-               double gearing,
-               double spread
-               )
-         : this(paymentDate,
-                nominal,
-                startDate,
-                endDate,
-                overnightIndex,
-                gearing,
-                spread,
-                null,
-                null,
-                new DayCounter()) { }
-
-      public OvernightIndexedCoupon(
-               Date paymentDate,
-               double nominal,
-               Date startDate,
-               Date endDate,
-               OvernightIndex overnightIndex,
-               double gearing,
-               double spread,
-               Date refPeriodStart,
-               Date refPeriodEnd,
-               DayCounter dayCounter)
+               double gearing = 1.0,
+               double spread = 0.0,
+               Date refPeriodStart = null,
+               Date refPeriodEnd = null,
+               DayCounter dayCounter = null)
          : base(nominal, paymentDate,startDate, endDate,
                          overnightIndex.fixingDays(), overnightIndex,
                          gearing, spread,

@@ -1,6 +1,6 @@
 ﻿/*
  Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
- * 
+  
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -27,57 +27,6 @@ namespace QLNet
    //! %Coupon paying a YoY-inflation type index
    public class YoYInflationCoupon : InflationCoupon
    {
-
-      public YoYInflationCoupon(Date paymentDate,
-                                double nominal,
-                                Date startDate,
-                                Date endDate,
-                                int fixingDays,
-                                YoYInflationIndex index,
-                                Period observationLag,
-                                DayCounter dayCounter,
-                                double gearing,
-                                double spread ,
-                                Date refPeriodStart)
-         :this(paymentDate,nominal,startDate,endDate,fixingDays,index,observationLag,
-               dayCounter,gearing,spread ,refPeriodStart,null) {}
-
-      public YoYInflationCoupon(Date paymentDate,
-                                double nominal,
-                                Date startDate,
-                                Date endDate,
-                                int fixingDays,
-                                YoYInflationIndex index,
-                                Period observationLag,
-                                DayCounter dayCounter,
-                                double gearing,
-                                double spread)
-         :this(paymentDate,nominal,startDate,endDate,fixingDays,index,observationLag,
-               dayCounter,gearing,spread ,null,null) {}
-
-      public YoYInflationCoupon(Date paymentDate,
-                                double nominal,
-                                Date startDate,
-                                Date endDate,
-                                int fixingDays,
-                                YoYInflationIndex index,
-                                Period observationLag,
-                                DayCounter dayCounter,
-                                double gearing)
-         :this(paymentDate,nominal,startDate,endDate,fixingDays,index,observationLag,
-               dayCounter,gearing,0.0 ,null,null) {}
-
-      public YoYInflationCoupon(Date paymentDate,
-                                double nominal,
-                                Date startDate,
-                                Date endDate,
-                                int fixingDays,
-                                YoYInflationIndex index,
-                                Period observationLag,
-                                DayCounter dayCounter)
-         :this(paymentDate,nominal,startDate,endDate,fixingDays,index,observationLag,
-               dayCounter,1.0,0.0 ,null,null) {}
-
       public YoYInflationCoupon(Date paymentDate,
                                 double nominal,
                                 Date startDate,
@@ -86,10 +35,10 @@ namespace QLNet
                                 YoYInflationIndex yoyIndex,
                                 Period observationLag,
                                 DayCounter dayCounter,
-                                double gearing,
-                                double spread,
-                                Date refPeriodStart,
-                                Date refPeriodEnd)
+                                double gearing = 1.0,
+                                double spread = 0.0,
+                                Date refPeriodStart = null,
+                                Date refPeriodEnd = null )
          :base(paymentDate, nominal, startDate, endDate,
                fixingDays, yoyIndex, observationLag,
                dayCounter, refPeriodStart, refPeriodEnd)

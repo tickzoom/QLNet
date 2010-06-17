@@ -21,74 +21,89 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace QLNet {
-    //! Predetermined cash flow
-    /*! This cash flow pays a predetermined amount at a given date. */
-    public abstract class Dividend : CashFlow {
-        protected Date date_;
-        //! \name Event interface
-        public override Date date() { return date_; }
+namespace QLNet
+{
+   //! Predetermined cash flow
+   /*! This cash flow pays a predetermined amount at a given date. */
+   public abstract class Dividend : CashFlow
+   {
+      protected Date date_;
+      //! \name Event interface
+      public override Date date() { return date_; }
 
-        public Dividend(Date date) {
-            date_ = date;
-        }
+      public Dividend(Date date)
+      {
+         date_ = date;
+      }
 
-        public abstract double amount(double underlying);
-    }
+      public abstract double amount(double underlying);
+   }
 
-    //! Predetermined cash flow
-    /*! This cash flow pays a predetermined amount at a given date. */
-    public class FixedDividend : Dividend {
-        protected double amount_;
-        public override double amount() { return amount_; }
-        public override double amount(double d) { return amount_; }
-        
-        public FixedDividend(double amount, Date date) : base(date) {
-            amount_ = amount;
-        }
-    }
+   //! Predetermined cash flow
+   /*! This cash flow pays a predetermined amount at a given date. */
+   public class FixedDividend : Dividend
+   {
+      protected double amount_;
+      public override double amount() { return amount_; }
+      public override double amount(double d) { return amount_; }
 
-    //! Predetermined cash flow
-    /*! This cash flow pays a predetermined amount at a given date. */
-    public class FractionalDividend : Dividend {
-        protected double rate_;
-        public double rate() { return rate_; }
+      public FixedDividend(double amount, Date date)
+         : base(date)
+      {
+         amount_ = amount;
+      }
+   }
 
-        protected double? nominal_;
-        public double? nominal() { return nominal_; }
-        
-        public FractionalDividend(double rate, Date date) : base(date) {
-            rate_ = rate;
-            nominal_ = null;
-        }
+   //! Predetermined cash flow
+   /*! This cash flow pays a predetermined amount at a given date. */
+   public class FractionalDividend : Dividend
+   {
+      protected double rate_;
+      public double rate() { return rate_; }
 
-        public FractionalDividend(double rate, double nominal, Date date) : base(date) {
-            rate_ = rate;
-            nominal_ = nominal;
-        }
+      protected double? nominal_;
+      public double? nominal() { return nominal_; }
 
-        //! \name Dividend interface
-        public override double amount() {
-            if (nominal_ == null) throw new ApplicationException("no nominal given");
-            return rate_ * nominal_.GetValueOrDefault();
-        }
+      public FractionalDividend(double rate, Date date)
+         : base(date)
+      {
+         rate_ = rate;
+         nominal_ = null;
+      }
 
-        public override double amount(double underlying) {
-            return rate_ * underlying;
-        }
-    }
+      public FractionalDividend(double rate, double nominal, Date date)
+         : base(date)
+      {
+         rate_ = rate;
+         nominal_ = nominal;
+      }
 
-    public static partial class Utils {
-        //! helper function building a sequence of fixed dividends
-        public static List<Dividend> DividendVector(List<Date> dividendDates, List<double> dividends) {
+      //! \name Dividend interface
+      public override double amount()
+      {
+         if (nominal_ == null) throw new ApplicationException("no nominal given");
+         return rate_ * nominal_.GetValueOrDefault();
+      }
 
-            if (dividendDates.Count != dividends.Count)
-                throw new ApplicationException("size mismatch between dividend dates and amounts");
+      public override double amount(double underlying)
+      {
+         return rate_ * underlying;
+      }
+   }
 
-            List<Dividend> items = new List<Dividend>(dividendDates.Count);
-            for(int i=0; i<dividendDates.Count; i++)
-                items.Add(new FixedDividend(dividends[i], dividendDates[i]));
-            return items;
-        }
-    }
+   public static partial class Utils
+   {
+      //! helper function building a sequence of fixed dividends
+      public static List<Dividend> DividendVector(List<Date> dividendDates, List<double> dividends)
+      {
+
+         if (dividendDates.Count != dividends.Count)
+            throw new ApplicationException("size mismatch between dividend dates and amounts");
+
+         List<Dividend> items = new List<Dividend>(dividendDates.Count);
+         for (int i = 0; i < dividendDates.Count; i++)
+            items.Add(new FixedDividend(dividends[i], dividendDates[i]));
+         return items;
+      }
+   }
 }

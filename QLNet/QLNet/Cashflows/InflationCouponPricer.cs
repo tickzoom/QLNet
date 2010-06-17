@@ -1,6 +1,6 @@
 ﻿/*
  Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
- * 
+  
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -85,10 +85,7 @@ namespace QLNet
     */
    public class YoYInflationCouponPricer : InflationCouponPricer
    {
-      public YoYInflationCouponPricer()
-         : this(null) { }
-
-      public YoYInflationCouponPricer(Handle<YoYOptionletVolatilitySurface> capletVol)
+      public YoYInflationCouponPricer(Handle<YoYOptionletVolatilitySurface> capletVol = null)
       {
          if (capletVol == null)
             capletVol = new Handle<YoYOptionletVolatilitySurface>();
@@ -268,11 +265,7 @@ namespace QLNet
    //! Unit-Displaced-Black-formula pricer for capped/floored yoy inflation coupons
    public class UnitDisplacedBlackYoYInflationCouponPricer : YoYInflationCouponPricer 
    {
-      public UnitDisplacedBlackYoYInflationCouponPricer()
-         :this(null){}
-
-      public UnitDisplacedBlackYoYInflationCouponPricer(Handle<YoYOptionletVolatilitySurface>
-                                                        capletVol)
+      public UnitDisplacedBlackYoYInflationCouponPricer(Handle<YoYOptionletVolatilitySurface> capletVol = null)
          : base(capletVol) 
       {
          if ( capletVol == null )
@@ -294,10 +287,7 @@ namespace QLNet
    //! Bachelier-formula pricer for capped/floored yoy inflation coupons
    public class BachelierYoYInflationCouponPricer : YoYInflationCouponPricer 
    {
-      public BachelierYoYInflationCouponPricer()
-            : this(null) {} 
-
-      public BachelierYoYInflationCouponPricer(Handle<YoYOptionletVolatilitySurface> capletVol)
+      public BachelierYoYInflationCouponPricer(Handle<YoYOptionletVolatilitySurface> capletVol = null)
             : base(capletVol) 
       {
          if (capletVol == null )

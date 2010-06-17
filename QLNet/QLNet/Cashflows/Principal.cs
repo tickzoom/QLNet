@@ -46,11 +46,14 @@ namespace QLNet
 
       // Constructors
       public Principal() { }       // default constructor
-      public Principal(double amount, double nominal, Date paymentDate, Date accrualStartDate, Date accrualEndDate, DayCounter dayCounter) :
-         this(amount, nominal, paymentDate, accrualStartDate, accrualEndDate, dayCounter, null, null) { }
-      public Principal(double amount, double nominal, Date paymentDate, Date accrualStartDate, Date accrualEndDate, DayCounter dayCounter, Date refPeriodStart) :
-         this(amount, nominal, paymentDate, accrualStartDate, accrualEndDate, dayCounter , refPeriodStart, null) { }
-      public Principal(double amount, double nominal, Date paymentDate, Date accrualStartDate, Date accrualEndDate, DayCounter dayCounter, Date refPeriodStart, Date refPeriodEnd)
+      public Principal(double amount, 
+                       double nominal, 
+                       Date paymentDate, 
+                       Date accrualStartDate, 
+                       Date accrualEndDate, 
+                       DayCounter dayCounter, 
+                       Date refPeriodStart = null , 
+                       Date refPeriodEnd = null )
       {
          amount_ = amount;
          nominal_ = nominal;

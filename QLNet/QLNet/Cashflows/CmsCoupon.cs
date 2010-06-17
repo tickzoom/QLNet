@@ -1,7 +1,8 @@
 /*
  Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
  Copyright (C) 2009 Siarhei Novik (snovik@gmail.com)
- * 
+ Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com) 
+  
  This file is part of QLNet Project http://www.qlnet.org
 
  QLNet is free software: you can redistribute it and/or modify it
@@ -32,25 +33,18 @@ namespace QLNet {
         // need by CashFlowVectors
         public CmsCoupon() { }
 
-        public CmsCoupon(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex, double gearing, double spread, Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter)
-            : this(nominal, paymentDate, startDate, endDate, fixingDays, swapIndex, gearing, spread, refPeriodStart, refPeriodEnd, dayCounter, false) {
-        }
-        public CmsCoupon(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex, double gearing, double spread, Date refPeriodStart, Date refPeriodEnd)
-            : this(nominal, paymentDate, startDate, endDate, fixingDays, swapIndex, gearing, spread, refPeriodStart, refPeriodEnd, new DayCounter(), false) {
-        }
-        public CmsCoupon(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex, double gearing, double spread, Date refPeriodStart)
-            : this(nominal, paymentDate, startDate, endDate, fixingDays, swapIndex, gearing, spread, refPeriodStart, new Date(), new DayCounter(), false) {
-        }
-        public CmsCoupon(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex, double gearing, double spread)
-            : this(nominal, paymentDate, startDate, endDate, fixingDays, swapIndex, gearing, spread, new Date(), new Date(), new DayCounter(), false) {
-        }
-        public CmsCoupon(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex, double gearing)
-            : this(nominal, paymentDate, startDate, endDate, fixingDays, swapIndex, gearing, 0.0, new Date(), new Date(), new DayCounter(), false) {
-        }
-        public CmsCoupon(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex)
-            : this(nominal, paymentDate, startDate, endDate, fixingDays, swapIndex, 1.0, 0.0, new Date(), new Date(), new DayCounter(), false) {
-        }
-        public CmsCoupon(double nominal, Date paymentDate, Date startDate, Date endDate, int fixingDays, SwapIndex swapIndex, double gearing, double spread, Date refPeriodStart, Date refPeriodEnd, DayCounter dayCounter, bool isInArrears)
+        public CmsCoupon(double nominal, 
+                         Date paymentDate, 
+                         Date startDate, 
+                         Date endDate, 
+                         int fixingDays, 
+                         SwapIndex swapIndex, 
+                         double gearing = 1.0, 
+                         double spread = 0.0, 
+                         Date refPeriodStart = null, 
+                         Date refPeriodEnd = null, 
+                         DayCounter dayCounter = null, 
+                         bool isInArrears = false )
             : base(nominal, paymentDate, startDate, endDate, fixingDays, swapIndex, gearing, spread, refPeriodStart, refPeriodEnd, dayCounter, isInArrears) {
             swapIndex_ = swapIndex;
         }

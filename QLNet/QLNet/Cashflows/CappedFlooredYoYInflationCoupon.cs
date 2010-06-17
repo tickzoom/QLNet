@@ -62,16 +62,9 @@ namespace QLNet
    public class CappedFlooredYoYInflationCoupon : YoYInflationCoupon
    {
       // we may watch an underlying coupon ...
-      public CappedFlooredYoYInflationCoupon(YoYInflationCoupon underlying)
-         :this(underlying,null,null) {}
-
       public CappedFlooredYoYInflationCoupon(YoYInflationCoupon underlying,
-                                             double? cap )
-         :this(underlying,cap,null) {}
-
-      public CappedFlooredYoYInflationCoupon(YoYInflationCoupon underlying,
-                                             double? cap ,
-                                             double? floor)
+                                             double? cap = null,
+                                             double? floor = null)
          :base(underlying.date(),
                underlying.nominal(),
                underlying.accrualStartDate(),
@@ -103,93 +96,12 @@ namespace QLNet
                                              YoYInflationIndex index,
                                              Period observationLag,
                                              DayCounter dayCounter,
-                                             double gearing ,
-                                             double spread,
-                                             double cap,
-                                             double floor,
-                                             Date refPeriodStart)
-         :this(paymentDate,nominal,startDate,endDate,fixingDays,index,observationLag,
-               dayCounter,gearing,spread,cap,floor,refPeriodStart,null) {}
-                                             
-      public CappedFlooredYoYInflationCoupon(Date paymentDate,
-                                             double nominal,
-                                             Date startDate,
-                                             Date endDate,
-                                             int fixingDays,
-                                             YoYInflationIndex index,
-                                             Period observationLag,
-                                             DayCounter dayCounter,
-                                             double gearing ,
-                                             double spread,
-                                             double cap,
-                                             double floor)
-         :this(paymentDate,nominal,startDate,endDate,fixingDays,index,observationLag,
-               dayCounter,gearing,spread,cap,floor,null,null) {}
-
-      public CappedFlooredYoYInflationCoupon(Date paymentDate,
-                                             double nominal,
-                                             Date startDate,
-                                             Date endDate,
-                                             int fixingDays,
-                                             YoYInflationIndex index,
-                                             Period observationLag,
-                                             DayCounter dayCounter,
-                                             double gearing ,
-                                             double spread,
-                                             double cap)
-         :this(paymentDate,nominal,startDate,endDate,fixingDays,index,observationLag,
-               dayCounter,gearing,spread,cap,null,null,null) {}
-
-      public CappedFlooredYoYInflationCoupon(Date paymentDate,
-                                             double nominal,
-                                             Date startDate,
-                                             Date endDate,
-                                             int fixingDays,
-                                             YoYInflationIndex index,
-                                             Period observationLag,
-                                             DayCounter dayCounter,
-                                             double gearing ,
-                                             double spread)
-         :this(paymentDate,nominal,startDate,endDate,fixingDays,index,observationLag,
-               dayCounter,gearing,spread,null,null,null,null) {}
-
-      public CappedFlooredYoYInflationCoupon(Date paymentDate,
-                                             double nominal,
-                                             Date startDate,
-                                             Date endDate,
-                                             int fixingDays,
-                                             YoYInflationIndex index,
-                                             Period observationLag,
-                                             DayCounter dayCounter,
-                                             double gearing)
-         :this(paymentDate,nominal,startDate,endDate,fixingDays,index,observationLag,
-               dayCounter,gearing,0.0,null,null,null,null) {}
-
-      public CappedFlooredYoYInflationCoupon(Date paymentDate,
-                                             double nominal,
-                                             Date startDate,
-                                             Date endDate,
-                                             int fixingDays,
-                                             YoYInflationIndex index,
-                                             Period observationLag,
-                                             DayCounter dayCounter)
-         :this(paymentDate,nominal,startDate,endDate,fixingDays,index,observationLag,
-               dayCounter,1.0,0.0,null,null,null,null) {}
-
-      public CappedFlooredYoYInflationCoupon(Date paymentDate,
-                                             double nominal,
-                                             Date startDate,
-                                             Date endDate,
-                                             int fixingDays,
-                                             YoYInflationIndex index,
-                                             Period observationLag,
-                                             DayCounter dayCounter,
-                                             double gearing,
-                                             double spread,
-                                             double? cap,
-                                             double? floor,
-                                             Date refPeriodStart,
-                                             Date refPeriodEnd)
+                                             double gearing = 1.0,
+                                             double spread = 0.0,
+                                             double? cap = null,
+                                             double? floor = null,
+                                             Date refPeriodStart = null,
+                                             Date refPeriodEnd = null)
         : base(paymentDate, nominal, startDate, endDate,
                fixingDays, index, observationLag,  dayCounter,
                gearing, spread, refPeriodStart, refPeriodEnd)

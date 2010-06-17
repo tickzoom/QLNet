@@ -1,5 +1,7 @@
 /*
  Copyright (C) 2008 Toyin Akin (toyin_akin@hotmail.com)
+ Copyright (C) 2008, 2009 , 2010  Andrea Maggiulli (a.maggiulli@gmail.com)
+
   
  This file is part of QLNet Project http://www.qlnet.org
 
@@ -39,22 +41,16 @@ namespace QLNet {
 
 	public class DigitalReplication
 	{
-        private double gap_;
-        private Replication.Type replicationType_;
+      private double gap_;
+      private Replication.Type replicationType_;
 
-		public DigitalReplication(Replication.Type t) : this(t, 1e-4)
+      public DigitalReplication(Replication.Type t = Replication.Type.Central, double gap = 1e-4)
 		{
-		}
-		public DigitalReplication() : this(Replication.Type.Central, 1e-4)
-		{
-		}
-		public DigitalReplication(Replication.Type t, double gap)
-		{
-			gap_ = gap;
+         gap_ = gap;
 			replicationType_ = t;
 		}
 
-        public Replication.Type replicationType() { return replicationType_; }
-        public double gap() { return gap_; }
+      public Replication.Type replicationType() { return replicationType_; }
+      public double gap() { return gap_; }
 	}
 }
