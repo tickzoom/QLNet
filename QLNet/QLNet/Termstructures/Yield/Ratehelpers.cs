@@ -435,7 +435,7 @@ namespace QLNet {
             // ...but due to adjustments, the last floating coupon might
             // need a later date for fixing
             #if QL_USE_INDEXED_COUPON
-            FloatingRateCoupon lastFloating = (FloatingRateCoupon)swap_.floatingLeg.Last();
+            FloatingRateCoupon lastFloating = (FloatingRateCoupon)swap_.floatingLeg()[swap_.floatingLeg().Count - 1];
             Date fixingValueDate = iborIndex_.valueDate(lastFloating.fixingDate());
             Date endValueDate = iborIndex_.maturityDate(fixingValueDate);
             latestDate_ = Date.Max(latestDate_, endValueDate);
