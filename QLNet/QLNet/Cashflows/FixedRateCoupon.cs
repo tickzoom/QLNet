@@ -30,16 +30,16 @@ namespace QLNet
       // constructors
       public FixedRateCoupon(double nominal, Date paymentDate, double rate, DayCounter dayCounter,
                              Date accrualStartDate, Date accrualEndDate, 
-                             Date refPeriodStart = null, Date refPeriodEnd = null) 
-         : base(nominal, paymentDate, accrualStartDate, accrualEndDate, refPeriodStart, refPeriodEnd) 
+                             Date refPeriodStart = null, Date refPeriodEnd = null,double? amount = null) 
+         : base(nominal, paymentDate, accrualStartDate, accrualEndDate, refPeriodStart, refPeriodEnd, amount) 
       {
          rate_ = new InterestRate(rate, dayCounter, Compounding.Simple,Frequency.Annual);
       }
 
       public FixedRateCoupon(double nominal, Date paymentDate, InterestRate interestRate, 
                              Date accrualStartDate, Date accrualEndDate, 
-                             Date refPeriodStart = null, Date refPeriodEnd = null) 
-         : base(nominal, paymentDate, accrualStartDate, accrualEndDate, refPeriodStart, refPeriodEnd) 
+                             Date refPeriodStart = null, Date refPeriodEnd = null,double? amount = null) 
+         : base(nominal, paymentDate, accrualStartDate, accrualEndDate, refPeriodStart, refPeriodEnd, amount) 
       {
          rate_ = interestRate;
       }
@@ -47,6 +47,9 @@ namespace QLNet
       //! CashFlow interface
       public override double amount() 
       {
+         if (amount_ != null)
+            return amount_.Value;
+
             return nominal()*(rate_.compoundFactor(accrualStartDate_,
                                                    accrualEndDate_, refPeriodStart_, refPeriodEnd_) - 1.0); 
       }
