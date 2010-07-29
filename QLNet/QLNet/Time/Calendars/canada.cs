@@ -76,10 +76,10 @@ namespace QLNet {
             // implementation instance
             switch (m) {
                 case Market.Settlement:
-                    calendar_ = Settlement.Singleton;
+                    calendar = Settlement.Singleton;
                     break;
                 case Market.TSX:
-                    calendar_ = TSX.Singleton;
+                    calendar = TSX.Singleton;
                     break;
                 default:
                     throw new ArgumentException("Unknown market: " + m); ;

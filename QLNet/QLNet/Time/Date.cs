@@ -21,7 +21,7 @@ using System;
 using QLNet;
 
 namespace QLNet {
-    public class Date : IComparable {
+    public class Date : IComparable<Date> {
         private DateTime date;
 
         public Date() { }							//! Default constructor returning a null date.
@@ -93,7 +93,6 @@ namespace QLNet {
             }
         }
 
-
         // operator overloads
         public static int operator -(Date d1, Date d2) { return (d1.date - d2.date).Days; }
         public static Date operator +(Date d, int days) { DateTime t = d.date; return new Date(t.AddDays(days)); }
@@ -107,35 +106,78 @@ namespace QLNet {
         public static Date Min(Date d1, Date d2) { return d1 < d2 ? d1 : d2; }
         public static Date Max(Date d1, Date d2) { return d1 > d2 ? d1 : d2; }
 
-        // this is the overload for DateTime operations
-        public static implicit operator DateTime(Date d) { return d.date; }
-        public static implicit operator Date(DateTime d) { return new Date(d.Day, d.Month, d.Year); }
-
-        public static bool operator ==(Date d1, Date d2) {
-            return ((Object)d1 == null || (Object)d2 == null) ?
-                   ((Object)d1 == null && (Object)d2 == null) :
-                   d1.date == d2.date;
+        public static implicit operator DateTime(Date d)
+        {
+        	return d.date;
         }
-        public static bool operator !=(Date d1, Date d2) { return (!(d1 == d2)); }
-        public static bool operator <(Date d1, Date d2) { return (d1.date < d2.date); }
-        public static bool operator <=(Date d1, Date d2) { return (d1.date <= d2.date); }
-        public static bool operator >(Date d1, Date d2) { return (d1.date > d2.date); }
-        public static bool operator >=(Date d1, Date d2) { return (d1.date >= d2.date); }
+
+        public static implicit operator Date(DateTime d)
+        {
+        	return new Date(d.Day, d.Month, d.Year);
+        }
+
+        public static bool operator ==(Date d1, Date d2)
+		{
+			return Equals(d1, d2);
+        }
+
+		public static bool operator !=(Date d1, Date d2) 
+		{ 
+			return !Equals(d1, d2);
+		}
+        
+		public static bool operator <(Date d1, Date d2) { return (d1.date < d2.date); }
+        
+		public static bool operator <=(Date d1, Date d2) { return (d1.date <= d2.date); }
+        
+		public static bool operator >(Date d1, Date d2) { return (d1.date > d2.date); }
+        
+		public static bool operator >=(Date d1, Date d2) { return (d1.date >= d2.date); }
 
         public string ToLongDateString() { return date.ToLongDateString(); }
-        public string ToShortDateString() { return date.ToShortDateString(); }
-        public override string ToString() { return this.ToShortDateString(); }
-        public override bool Equals(object o) { return (this == (Date)o); }
-        public override int GetHashCode() { return 0; }
+        
+		public string ToShortDateString() { return date.ToShortDateString(); }
+        
+		public override string ToString() { return date.ToString(); }
 
-        // IComparable interface
-        public int CompareTo(object obj) {
-            if (this < (Date)obj)
-                return -1;
-            else if (this == (Date)obj)
-                return 0;
-            else return 1;
+		public string ToString(IFormatProvider provider)
+		{
+			return date.ToString(provider);
+		}
+
+		public string ToString(string format)
+		{
+			return date.ToString(format);
+		}
+
+		public string ToString(string format, IFormatProvider provider)
+		{
+			return date.ToString(format, provider);
+		}
+
+    	public bool Equals(Date other)
+    	{
+    		if (ReferenceEquals(null, other)) return false;
+    		if (ReferenceEquals(this, other)) return true;
+    		return other.date.Equals(date);
+    	}
+
+    	public override bool Equals(object obj)
+    	{
+    		if (ReferenceEquals(null, obj)) return false;
+    		if (ReferenceEquals(this, obj)) return true;
+    		if (obj.GetType() != typeof (Date)) return false;
+    		return Equals((Date) obj);
+    	}
+
+    	public override int GetHashCode()
+    	{
+    		return date.GetHashCode();
+    	}
+
+        public int CompareTo(Date obj)
+        {
+        	return date.CompareTo(obj);
         }
     }
 }
-

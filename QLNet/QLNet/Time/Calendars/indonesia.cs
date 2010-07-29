@@ -71,7 +71,7 @@ namespace QLNet {
                 case Market.BEJ:
                 case Market.JSX:
                 case Market.IDX:
-                   calendar_ = BEJ.Singleton;
+                   calendar = BEJ.Singleton;
                     break;
                 default:
                     throw new ArgumentException("Unknown market: " + m); ;

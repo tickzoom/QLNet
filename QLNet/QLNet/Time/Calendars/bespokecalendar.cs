@@ -45,8 +45,9 @@ namespace QLNet {
         }
 
         //! marks the passed day as part of the weekend
-        public void addWeekend(DayOfWeek w) {
-            (calendar_ as Impl).addWeekend(w);
+        public void addWeekend(DayOfWeek w) 
+		{
+            (calendar as Impl).addWeekend(w);
         }
 
         // here implementation does not follow a singleton pattern

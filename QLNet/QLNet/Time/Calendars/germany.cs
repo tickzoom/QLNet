@@ -125,19 +125,19 @@ namespace QLNet {
             // implementation instance
             switch (m) {
                 case Market.Settlement:
-                    calendar_ = Settlement.Singleton;
+                    calendar = Settlement.Singleton;
                     break;
                 case Market.FrankfurtStockExchange:
-                    calendar_ = FrankfurtStockExchange.Singleton;
+                    calendar = FrankfurtStockExchange.Singleton;
                     break;
                 case Market.Xetra:
-                    calendar_ = Xetra.Singleton;
+                    calendar = Xetra.Singleton;
                     break;
                 case Market.Eurex:
-                    calendar_ = Eurex.Singleton;
+                    calendar = Eurex.Singleton;
                     break;
                 case Market.Euwax:
-                    calendar_ = Euwax.Singleton;
+                    calendar = Euwax.Singleton;
                     break;
                 default:
                     throw new ArgumentException("Unknown market: " + m); ;

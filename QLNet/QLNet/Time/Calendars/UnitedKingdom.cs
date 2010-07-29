@@ -80,13 +80,13 @@ namespace QLNet {
         public UnitedKingdom(Market m) : base() { 
             switch (m) {
                 case Market.Settlement:
-                    calendar_ = Settlement.Singleton;
+                    calendar = Settlement.Singleton;
                     break;
                 case Market.Exchange:
-                    calendar_ = Exchange.Singleton;
+                    calendar = Exchange.Singleton;
                     break;
                 case Market.Metals:
-                    calendar_ = Metals.Singleton;
+                    calendar = Metals.Singleton;
                     break;
                 default:
                     throw new ArgumentException("Unknown market: " + m); ;

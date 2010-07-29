@@ -122,16 +122,16 @@ namespace QLNet {
         public UnitedStates(Market m) : base() {
             switch (m) {
                 case Market.Settlement:
-                    calendar_ = Settlement.Singleton;
+                    calendar = Settlement.Singleton;
                     break;
                 case Market.NYSE:
-                    calendar_ = NYSE.Singleton;
+                    calendar = NYSE.Singleton;
                     break;
                 case Market.GovernmentBond:
-                    calendar_ = GovernmentBond.Singleton;
+                    calendar = GovernmentBond.Singleton;
                     break;
                 case Market.NERC:
-                    calendar_ = NERC.Singleton;
+                    calendar = NERC.Singleton;
                     break;
                 default:
                     throw new ArgumentException("Unknown market: " + m); ;
