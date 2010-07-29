@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using QLNet.Time;
 
 namespace QLNet {
     // this is an abstract class to give access to all properties and methods of PiecewiseYieldCurve and avoiding generics

@@ -19,6 +19,7 @@
 */
 using System;
 using System.Collections.Generic;
+using QLNet.Time;
 
 namespace QLNet {
     //! base class for interest rate indexes

@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using QLNet.Time;
 
 namespace QLNet {
     //! Bjerksund and Stensland pricing engine for American options (1993)

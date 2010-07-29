@@ -18,6 +18,7 @@
 */
 using System;
 using System.Collections.Generic;
+using QLNet.Time;
 
 namespace QLNet {
     //! floating-rate bond (possibly capped and/or floored)

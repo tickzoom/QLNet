@@ -23,6 +23,8 @@ using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QLNet;
 using System.Diagnostics;
+using QLNet.Time;
+using QLNet.Time.DayCounters;
 
 namespace TestSuite
 {

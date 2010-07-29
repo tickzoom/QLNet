@@ -18,6 +18,7 @@
 */
 using System;
 using QLNet;
+using QLNet.Time;
 
 namespace QLNet
 {

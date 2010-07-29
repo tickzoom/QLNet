@@ -16,24 +16,17 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-using System.Collections.Generic;
 
-namespace QLNet {
-    //! zero-coupon bond
-    /*! \ingroup instruments
-
-        \test calculations are tested by checking results against cached values.
-    */
-    public class ZeroCouponBond : Bond {
-
-        //public ZeroCouponBond(int settlementDays, Calendar calendar, double faceAmount, Date maturityDate,
-        //               BusinessDayConvention paymentConvention = Following,
-        //               double redemption = 100.0,
-        //               Date issueDate = Date());
-        public ZeroCouponBond(int settlementDays, Calendar calendar, double faceAmount, Date maturityDate,
-                              BusinessDayConvention paymentConvention, double redemption, Date issueDate)
-            : base(settlementDays, calendar, issueDate) {
-
+namespace QLNet
+{
+    /// <summary>
+	/// Zero-coupon bond
+    /// </summary>
+    public class ZeroCouponBond : Bond
+	{
+        public ZeroCouponBond(int settlementDays, Calendar calendar, double faceAmount, Date maturityDate, BusinessDayConvention paymentConvention, double redemption, Date issueDate)
+            : base(settlementDays, calendar, issueDate)
+		{
             maturityDate_ = maturityDate;
             Date redemptionDate = calendar_.adjust(maturityDate, paymentConvention);
             setSingleRedemption(faceAmount, redemption, redemptionDate);

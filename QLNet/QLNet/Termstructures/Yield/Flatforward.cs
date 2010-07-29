@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using QLNet;
+using QLNet.Time;
 
 namespace QLNet
 {

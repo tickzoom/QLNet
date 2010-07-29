@@ -21,6 +21,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QLNet;
+using QLNet.Time;
+using QLNet.Time.DayCounters;
 
 namespace TestSuite {
     [TestClass()]

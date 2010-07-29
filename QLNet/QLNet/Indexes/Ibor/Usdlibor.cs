@@ -17,6 +17,8 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
+using QLNet.Time.DayCounters;
+
 namespace QLNet {
     //! %USD %LIBOR rate
     /*! US Dollar LIBOR fixed by BBA.

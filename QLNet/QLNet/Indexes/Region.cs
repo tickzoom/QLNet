@@ -17,106 +17,142 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace QLNet
 {
-   //! Region class, used for inflation applicability.
-   public class Region
-   {
+	/// <summary>
+	/// Region class, used for inflation applicability.
+	/// </summary>
+	public class Region
+	{
+		public string name()
+		{
+			return data_.name;
+		}
 
-      //! \name Inspectors
-      //@{
-      public string name() 
-      {
-         return data_.name;
-      }
-      public string code()
-      {
-         return data_.code;
-      }
-      //@}
-      
-      protected  Region() {}
-      protected struct Data
-      {
-        public string name;
-        public string code;
-        public Data(string Name, string Code)
-        {
-           name = Name;
-           code = Code;
-        }
-      }
-      protected Data data_;
+		public string code()
+		{
+			return data_.code;
+		}
 
-      public static bool operator ==(Region r1, Region r2) 
-      {
-        return r1.name() == r2.name();
-    
-      }
+		protected Region() { }
 
-      public static bool operator !=(Region r1, Region r2)
-      {
-         return !(r1.name() == r2.name());
-      }
+		protected Data data_;
 
-   }
+		public bool Equals(Region other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+			return other.data_.Equals(data_);
+		}
 
-   //! Australia as geographical/economic region
-   public class AustraliaRegion : Region 
-   {
-      public AustraliaRegion()
-      {
-        Data AUdata = new Data("Australia","AU");
-        data_ = AUdata;
-      }
-    
-   }
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (obj.GetType() != typeof (Region)) return false;
+			return Equals((Region) obj);
+		}
 
-   //! European Union as geographical/economic region
-   public class EURegion : Region 
-   {
-      public EURegion()
-      {
-          Data EUdata = new Data("EU","EU");
-          data_ = EUdata;
-      }
-   }
+		public override int GetHashCode()
+		{
+			return data_.GetHashCode();
+		}
 
-   //! France as geographical/economic region
-   public class FranceRegion : Region 
-   {
-      public FranceRegion()
-      {
-         Data FRdata = new Data("France","FR");
-         data_ = FRdata;
-      }
-   }
+		public static bool operator ==(Region r1, Region r2)
+		{
+			return Equals(r1, r2);
+		}
 
-    
-   //! United Kingdom as geographical/economic region
-   public class UKRegion : Region 
-   {
-      public UKRegion()
-      {
-         Data UKdata = new Data("UK","UK");
-         data_ = UKdata;
-      }
-   }
+		public static bool operator !=(Region r1, Region r2)
+		{
+			return !Equals(r1, r2);
+		}
 
-   //! USA as geographical/economic region
-   public class USRegion : Region 
-   {
-      public USRegion()
-      {
-         Data UKdata = new Data("USA","US");
-         data_ = UKdata;
-      }
-   }
+		protected struct Data
+		{
+			public string name;
+			public string code;
 
+			public Data(string Name, string Code)
+			{
+				name = Name;
+				code = Code;
+			}
 
+			public bool Equals(Data other)
+			{
+				return Equals(other.name, name) && Equals(other.code, code);
+			}
+
+			public override bool Equals(object obj)
+			{
+				if (ReferenceEquals(null, obj)) return false;
+				if (obj.GetType() != typeof (Data)) return false;
+				return Equals((Data) obj);
+			}
+
+			public override int GetHashCode()
+			{
+				unchecked
+				{
+					return ((name != null ? name.GetHashCode() : 0)*397) ^ (code != null ? code.GetHashCode() : 0);
+				}
+			}
+		}
+	}
+
+	/// <summary>
+	/// Australia as geographical/economic region
+	/// </summary>
+	public class AustraliaRegion : Region
+	{
+		public AustraliaRegion()
+		{
+			data_ = new Data("Australia", "AU");
+		}
+	}
+
+	/// <summary>
+	/// European Union as geographical/economic region.
+	/// </summary>
+	public class EURegion : Region
+	{
+		public EURegion()
+		{
+			data_ = new Data("EU", "EU");
+		}
+	}
+
+	/// <summary>
+	/// France as geographical/economic region.
+	/// </summary>
+	public class FranceRegion : Region
+	{
+		public FranceRegion()
+		{
+			data_ = new Data("France", "FR");
+		}
+	}
+
+	/// <summary>
+	/// United Kingdom as geographical/economic region.
+	/// </summary>
+	public class UKRegion : Region
+	{
+		public UKRegion()
+		{
+			data_ = new Data("UK", "UK");
+		}
+	}
+
+	/// <summary>
+	/// USA as geographical/economic region.
+	/// </summary>
+	public class USRegion : Region
+	{
+		public USRegion()
+		{
+			data_ = new Data("USA", "US");
+		}
+	}
 }

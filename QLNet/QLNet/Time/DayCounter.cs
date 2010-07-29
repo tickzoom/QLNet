@@ -16,63 +16,128 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
+
 using System;
-using System.Collections.Generic;
 
-namespace QLNet
+namespace QLNet.Time
 {
-    // This class provides methods for determining the length of a time period according to given market convention,
-    // both as a number of days and as a year fraction.
-    public class DayCounter
-    {
-        // this is a placeholder for actual day counters for Singleton pattern use
-        protected DayCounter dayCounter_;
-        public DayCounter dayCounter
-        {
-            get { return dayCounter_; }
-            set { dayCounter_ = value; }
-        }
+	/// <summary>
+	/// This class provides methods for determining the length of a time period according to given market convention,
+	/// both as a number of days and as a year fraction.
+	/// </summary>
+	public class DayCounter
+	{
+		private DayCounter _dayCounter;
 
-        // constructors
-        /*! The default constructor returns a day counter with a null implementation, which is therefore unusable except as a
-            placeholder. */
-        public DayCounter() { }
-        public DayCounter(DayCounter d) { dayCounter_ = d; }
+		public DayCounter dayCounter
+		{
+			get { return _dayCounter; }
+			protected set { _dayCounter = value; }
+		}
 
-        // comparison based on name
-        // Returns <tt>true</tt> iff the two day counters belong to the same derived class.
-        public static bool operator ==(DayCounter d1, DayCounter d2)
-        {
-            return ((Object)d1 == null || (Object)d2 == null) ?
-                   ((Object)d1 == null && (Object)d2 == null) :
-                   (d1.empty() && d2.empty()) || (!d1.empty() && !d2.empty() && d1.name() == d2.name());
-        }
-        public static bool operator !=(DayCounter d1, DayCounter d2) { return !(d1 == d2); }
+		/// <summary>
+		/// The default constructor returns a day counter with a null implementation, 
+		/// which is therefore unusable except as a placeholder.
+		/// </summary>
+		public DayCounter()
+		{
+		}
 
+		protected DayCounter(DayCounter dayCounter)
+		{
+			_dayCounter = dayCounter;
+		}
 
-        public bool empty() { return dayCounter_ == null; }
+		public bool IsEmpty
+		{
+			get { return _dayCounter == null; }
+		}
 
-        public virtual string name()
-        {
-            if (empty()) return "No implementation provided";
-            else return dayCounter_.name();
-        }
+		[Obsolete("Use IsEmpty property instead.")]
+		public bool empty()
+		{
+			return _dayCounter == null;
+		}
+		
+		[Obsolete("Use Name property instead.")]
+		public virtual string name()
+		{
+			if (empty()) return "No implementation provided";
 
-        public virtual int dayCount(Date d1, Date d2)
-        {
-            if (empty()) throw Error.MissingImplementation();
-            return dayCounter_.dayCount(d1, d2);
-        }
+			return _dayCounter.name();
+		}
 
-        public double yearFraction(Date d1, Date d2) { return yearFraction(d1, d2, d1, d2); }
-        public virtual double yearFraction(Date d1, Date d2, Date refPeriodStart, Date refPeriodEnd)
-        {
-            if (empty()) throw Error.MissingImplementation();
-            return dayCounter_.yearFraction(d1, d2, refPeriodStart, refPeriodEnd);
-        }
+		public virtual string Name
+		{
+			get
+			{
+				if (IsEmpty)
+				{
+					return "No implementation provided";
+				}
 
-        public override bool Equals(object o) { return this == (DayCounter)o; }
-        public override int GetHashCode() { return 0; }
-        public override string ToString() { return this.name(); }
-    }
+				return _dayCounter.Name;
+			}
+		}
+
+		public virtual int dayCount(Date d1, Date d2)
+		{
+			if (IsEmpty)
+			{
+				throw Error.MissingImplementation();
+			}
+
+			return _dayCounter.dayCount(d1, d2);
+		}
+
+		public double yearFraction(Date d1, Date d2)
+		{
+			return yearFraction(d1, d2, d1, d2);
+		}
+
+		public virtual double yearFraction(Date d1, Date d2, Date refPeriodStart, Date refPeriodEnd)
+		{
+			if (IsEmpty)
+			{
+				throw Error.MissingImplementation();
+			}
+
+			return _dayCounter.yearFraction(d1, d2, refPeriodStart, refPeriodEnd);
+		}
+
+		public override string ToString()
+		{
+			return name();
+		}
+
+		public bool Equals(DayCounter other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+			return Equals(other.name(), name());
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (obj.GetType() != typeof(DayCounter)) return false;
+			return Equals((DayCounter)obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return (_dayCounter != null && _dayCounter.name() != null ? _dayCounter.name().GetHashCode() : 0);
+		}
+
+		public static bool operator ==(DayCounter d1, DayCounter d2)
+		{
+			return Equals(d1, d2);
+		}
+
+		public static bool operator !=(DayCounter d1, DayCounter d2)
+		{
+			return !Equals(d1, d2);
+		}
+	}
 }

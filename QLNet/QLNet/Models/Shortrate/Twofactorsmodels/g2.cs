@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using QLNet.Time;
 
 /*! \file g2.hpp
     \brief Two-factor additive Gaussian Model G2++

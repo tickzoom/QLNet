@@ -18,6 +18,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 using System;
+using QLNet.Time.DayCounters;
 
 namespace QLNet {
     public static partial class Utils {

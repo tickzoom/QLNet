@@ -18,6 +18,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 using System;
+using QLNet.Time;
 
 namespace QLNet {
     //! Rate helper for bootstrapping over interest-rate futures prices

@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using QLNet.Time;
 
 namespace QLNet {
     //! Term structure with an added spread on the zero yield rate

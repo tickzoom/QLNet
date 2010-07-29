@@ -16,28 +16,41 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-using System;
 
-namespace QLNet
+namespace QLNet.Time.DayCounters
 {
-    //! Actual/360 day count convention
-    /*! Actual/360 day count convention, also known as "Act/360", or "A/360". */
-    public class Actual360 : DayCounter
-    {
-        public Actual360() : base(Impl.Singleton) { }
+	/// <summary>
+	/// Actual/360 day count convention, also known as "Act/360", or "A/360".
+	/// </summary>
+	public class Actual360 : DayCounter
+	{
+		public Actual360() 
+			: base(Actual360Impl.Singleton)
+		{
+		}
 
-        class Impl : DayCounter
-        {
-            public static readonly Impl Singleton = new Impl();
-            private Impl() { }
+		class Actual360Impl : DayCounter
+		{
+			public static readonly Actual360Impl Singleton = new Actual360Impl();
 
-            public override string name() { return "Actual/360"; }
-            public override int dayCount(Date d1, Date d2) { return (d2 - d1); }
-            public override double yearFraction(Date d1, Date d2, Date refPeriodStart, Date refPeriodEnd)
-            {
-                return dayCount(d1, d2) / 360.0;
-            }
+			private Actual360Impl()
+			{
+			}
 
-        }
-    }
+			public override string name()
+			{
+				return "Actual/360";
+			}
+
+			public override int dayCount(Date d1, Date d2)
+			{
+				return (d2 - d1);
+			}
+
+			public override double yearFraction(Date d1, Date d2, Date refPeriodStart, Date refPeriodEnd)
+			{
+				return dayCount(d1, d2) / 360.0;
+			}
+		}
+	}
 }

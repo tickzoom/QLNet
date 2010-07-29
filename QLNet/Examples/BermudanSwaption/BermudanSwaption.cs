@@ -20,6 +20,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using QLNet;
+using QLNet.Time;
+using QLNet.Time.DayCounters;
 
 namespace BermudanSwaption
 {

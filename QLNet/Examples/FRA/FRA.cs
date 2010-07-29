@@ -22,6 +22,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using QLNet;
+using QLNet.Time;
+using QLNet.Time.DayCounters;
 
 namespace FRA {
     class FRA {
