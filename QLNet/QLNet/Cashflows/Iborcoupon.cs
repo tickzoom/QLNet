@@ -113,7 +113,7 @@ namespace QLNet
             if (!(spanningTime > 0.0))
                throw new ApplicationException("cannot calculate forward rate between " +
                       fixingValueDate + " and " + nextFixingValueDate +
-                      ": non positive time using " + index_.dayCounter().name());
+                      ": non positive time using " + index_.dayCounter().Name);
             // forecast: 4) implied fixing
             return (startDiscount / endDiscount - 1.0) / spanningTime;
          }

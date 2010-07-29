@@ -24,7 +24,7 @@ namespace QLNet.Time.DayCounters
 	/// </summary>
 	public class Actual360 : DayCounter
 	{
-		public Actual360() 
+		public Actual360()
 			: base(Actual360Impl.Singleton)
 		{
 		}
@@ -37,9 +37,9 @@ namespace QLNet.Time.DayCounters
 			{
 			}
 
-			public override string name()
+			public override string Name
 			{
-				return "Actual/360";
+				get { return "Actual/360"; }
 			}
 
 			public override int dayCount(Date d1, Date d2)

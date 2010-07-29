@@ -481,10 +481,10 @@ namespace TestSuite {
 
             InterestRate ir = vars.termStructure.forwardRate(vars.settlement, vars.settlement + 30, d1, Compounding.Simple);
 
-            if (ir.dayCounter().name() != d1.name())
+            if (ir.dayCounter().Name != d1.Name)
                 Assert.Fail("PiecewiseYieldCurve forwardRate dayCounter error" +
-                            " Actual daycounter : " + vars.termStructure.dayCounter().name() +
-                            " Expetced DayCounter : " + d1.name());
+                            " Actual daycounter : " + vars.termStructure.dayCounter().Name +
+                            " Expetced DayCounter : " + d1.Name);
 
 
         }

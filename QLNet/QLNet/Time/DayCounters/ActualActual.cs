@@ -85,9 +85,9 @@ namespace QLNet.Time.DayCounters
 			{
 			}
 
-			public override string name()
+			public override string Name
 			{
-				return "Actual/Actual (ISMA)";
+				get { return "Actual/Actual (ISMA)"; }
 			}
 
 			public override int dayCount(Date d1, Date d2)
@@ -188,9 +188,9 @@ namespace QLNet.Time.DayCounters
 			{
 			}
 
-			public override string name()
+			public override string Name
 			{
-				return "Actual/Actual (ISDA)";
+				get { return "Actual/Actual (ISDA)"; }
 			}
 
 			public override int dayCount(Date d1, Date d2) { return (d2 - d1); }
@@ -219,9 +219,9 @@ namespace QLNet.Time.DayCounters
 			{
 			}
 
-			public override string name()
+			public override string Name
 			{
-				return "Actual/Actual (AFB)";
+				get { return "Actual/Actual (AFB)"; }
 			}
 
 			public override int dayCount(Date d1, Date d2)

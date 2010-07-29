@@ -177,7 +177,7 @@ namespace QLNet
              Date refer = end - schedule_.tenor();
              refer = schCalendar.adjust(refer, schedule_.businessDayConvention());
              InterestRate r = new InterestRate(rate.rate(),
-                                               (firstPeriodDC_ == null || firstPeriodDC_.empty()) ? rate.dayCounter() : firstPeriodDC_,
+                                               (firstPeriodDC_ == null || firstPeriodDC_.IsEmpty) ? rate.dayCounter() : firstPeriodDC_,
                                                rate.compounding(), rate.frequency());
              leg.Add(new FixedRateCoupon(nominal, paymentDate, r, start, end, refer, end));
          }

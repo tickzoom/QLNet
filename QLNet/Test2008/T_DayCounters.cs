@@ -155,7 +155,7 @@ namespace TestSuite
 
             if (Math.Abs(calculated - testCases[i]._result) > 1.0e-10)
             {
-               Assert.Fail(dayCounter.name() + "period: " + d1 + " to " + d2 +
+               Assert.Fail(dayCounter.Name + "period: " + d1 + " to " + d2 +
                            "    calculated: " + calculated + "    expected:   " + testCases[i]._result); 
             }
          }

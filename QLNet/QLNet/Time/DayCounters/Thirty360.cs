@@ -101,9 +101,9 @@ namespace QLNet.Time.DayCounters
 			{
 			}
 
-			public override string name()
+			public override string Name
 			{
-				return "30/360 (Bond Basis)";
+				get { return "30/360 (Bond Basis)"; }
 			}
 
 			public override int dayCount(Date d1, Date d2)
@@ -131,9 +131,9 @@ namespace QLNet.Time.DayCounters
 			{
 			}
 
-			public override string name()
+			public override string Name
 			{
-				return "30E/360 (Eurobond Basis)";
+				get { return "30E/360 (Eurobond Basis)"; }
 			}
 
 			public override int dayCount(Date d1, Date d2)
@@ -159,9 +159,9 @@ namespace QLNet.Time.DayCounters
 			{
 			}
 
-			public override string name()
+			public override string Name
 			{
-				return "30/360 (Italian)";
+				get { return "30/360 (Italian)"; }
 			}
 
 			public override int dayCount(Date d1, Date d2)

@@ -29,10 +29,9 @@ namespace QLNet.Time
 	{
 		private DayCounter _dayCounter;
 
-		public DayCounter dayCounter
+		protected DayCounter DayCounterImplementation
 		{
-			get { return _dayCounter; }
-			protected set { _dayCounter = value; }
+			set { _dayCounter = value; }
 		}
 
 		/// <summary>
@@ -51,20 +50,6 @@ namespace QLNet.Time
 		public bool IsEmpty
 		{
 			get { return _dayCounter == null; }
-		}
-
-		[Obsolete("Use IsEmpty property instead.")]
-		public bool empty()
-		{
-			return _dayCounter == null;
-		}
-		
-		[Obsolete("Use Name property instead.")]
-		public virtual string name()
-		{
-			if (empty()) return "No implementation provided";
-
-			return _dayCounter.name();
 		}
 
 		public virtual string Name
@@ -107,14 +92,14 @@ namespace QLNet.Time
 
 		public override string ToString()
 		{
-			return name();
+			return Name;
 		}
 
 		public bool Equals(DayCounter other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
-			return Equals(other.name(), name());
+			return Equals(other.Name, Name);
 		}
 
 		public override bool Equals(object obj)
@@ -127,7 +112,7 @@ namespace QLNet.Time
 
 		public override int GetHashCode()
 		{
-			return (_dayCounter != null && _dayCounter.name() != null ? _dayCounter.name().GetHashCode() : 0);
+			return (_dayCounter != null && _dayCounter.Name != null ? _dayCounter.Name.GetHashCode() : 0);
 		}
 
 		public static bool operator ==(DayCounter d1, DayCounter d2)

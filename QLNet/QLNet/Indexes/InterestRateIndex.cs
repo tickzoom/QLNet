@@ -80,7 +80,7 @@ namespace QLNet {
                     res += tenor_.ToShortString();
             } else
                 res += tenor_.ToShortString();
-            res = res + " " + dayCounter_.name();
+            res = res + " " + dayCounter_.Name;
             return res;
         }
 

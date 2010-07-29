@@ -33,7 +33,7 @@ namespace QLNet.Time.DayCounters
 		{
 		}
 
-		class Actual365Impl : DayCounter
+		private class Actual365Impl : DayCounter
 		{
 			public static readonly Actual365Impl Singleton = new Actual365Impl();
 
@@ -41,9 +41,9 @@ namespace QLNet.Time.DayCounters
 			{
 			}
 
-			public override string name()
+			public override string Name
 			{
-				return "Actual/365 (Fixed)";
+				get { return "Actual/365 (Fixed)"; }
 			}
 
 			public override int dayCount(Date d1, Date d2)

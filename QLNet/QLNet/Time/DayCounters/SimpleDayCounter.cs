@@ -43,9 +43,9 @@ namespace QLNet.Time.DayCounters
 			{
 			}
 
-			public override string name()
+			public override string Name
 			{
-				return "Simple";
+				get { return "Simple"; }
 			}
 
 			public override int dayCount(Date d1, Date d2)
