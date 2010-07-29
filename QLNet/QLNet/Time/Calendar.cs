@@ -318,7 +318,7 @@ namespace QLNet
 		{
 			// if d was a genuine holiday previously removed, revert the change
 			calendar.removedHolidays.Remove(d);
-			
+
 			// if it's already a holiday, leave the calendar alone.
 			// Otherwise, add it.
 			if (isBusinessDay(d))
@@ -334,7 +334,7 @@ namespace QLNet
 		{
 			// if d was an artificially-added holiday, revert the change
 			calendar.addedHolidays.Remove(d);
-			
+
 			// if it's already a business day, leave the calendar alone.
 			// Otherwise, add it.
 			if (!isBusinessDay(d))
@@ -479,20 +479,6 @@ namespace QLNet
 			}
 		}
 
-		//! \name Operators
-		//@{
-		
-		public static bool operator ==(Calendar c1, Calendar c2)
-		{
-			return (c1.empty() && c2.empty())
-		   || (!c1.empty() && !c2.empty() && c1.name() == c2.name());
-		}
-
-		public static bool operator !=(Calendar c1, Calendar c2)
-		{
-			return !(c1 == c2);
-		}
-
 		public bool Equals(Calendar other)
 		{
 			if (ReferenceEquals(null, other)) return false;
@@ -504,13 +490,23 @@ namespace QLNet
 		{
 			if (ReferenceEquals(null, obj)) return false;
 			if (ReferenceEquals(this, obj)) return true;
-			if (obj.GetType() != typeof (Calendar)) return false;
-			return Equals((Calendar) obj);
+			if (obj.GetType() != typeof(Calendar)) return false;
+			return Equals((Calendar)obj);
 		}
 
 		public override int GetHashCode()
 		{
 			return (calendar_ != null ? calendar_.GetHashCode() : 0);
+		}
+
+		public static bool operator ==(Calendar c1, Calendar c2)
+		{
+			return Equals(c1, c2);
+		}
+
+		public static bool operator !=(Calendar c1, Calendar c2)
+		{
+			return !Equals(c1, c2);
 		}
 	}
 }
