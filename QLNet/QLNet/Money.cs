@@ -19,215 +19,242 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 
 namespace QLNet
 {
-   /// <summary>
-   /// Amount of cash
-   /// Money arithmetic is tested with and without currency conversions.
-   /// </summary>
-   public class Money
-   {
-      #region Define
-      
-      public enum ConversionType : int
-      {
-         /// <summary>
-         /// do not perform conversions
-         /// </summary>
-         NoConversion,
-         /// <summary>
-         /// convert both operands to the base currency before converting
-         /// </summary>
-         BaseCurrencyConversion, 
-         /// <summary>
-         /// return the result in the currency of the first operand
-         /// </summary>
-         AutomatedConversion
-      }
-         
-      #endregion
+	/// <summary>
+	/// Amount of cash
+	/// Money arithmetic is tested with and without currency conversions.
+	/// </summary>
+	public class Money
+	{
+		#region Define
 
-      #region Attributes
+		public enum ConversionType
+		{
+			/// <summary>
+			/// do not perform conversions
+			/// </summary>
+			NoConversion,
 
-      [ThreadStatic]
-      public static ConversionType conversionType;
+			/// <summary>
+			/// convert both operands to the base currency before converting
+			/// </summary>
+			BaseCurrencyConversion,
 
-      [ThreadStatic]
-      public static Currency baseCurrency;
+			/// <summary>
+			/// return the result in the currency of the first operand
+			/// </summary>
+			AutomatedConversion
+		}
 
-      private double value_;
-      private Currency currency_;
+		#endregion
 
-      #endregion
+		#region Attributes
 
-      #region Constructor
+		[ThreadStatic]
+		public static ConversionType conversionType;
 
-      public Money()
-      {
-         value_ = 0.0;
-      }
+		[ThreadStatic]
+		public static Currency baseCurrency;
 
-      public Money(Currency currency, double value)
-      {
-         value_ = value;
-         currency_ = currency;
-      }
+		private double value_;
+		private Currency currency_;
 
-      public Money(double value, Currency currency) :this(currency,value) { }
+		#endregion
 
-      #endregion
+		#region Constructor
 
-      #region Get/Set
+		public Money()
+		{
+			value_ = 0.0;
+		}
 
-      public Currency currency
-      {
-         get { return currency_; }
-      }
-      public double value
-      {
-         get { return value_; }
-      }
+		public Money(Currency currency, double value)
+		{
+			value_ = value;
+			currency_ = currency;
+		}
 
-      #endregion 
+		public Money(double value, Currency currency)
+			: this(currency, value)
+		{
+		}
 
-      #region Methods
+		#endregion
 
-      public static void convertTo(ref Money m, Currency target)
-      {
-         if (m.currency != target)
-         {
-            ExchangeRate rate = ExchangeRateManager.Instance.lookup(m.currency, target);
-            m = rate.exchange(m).rounded();
-         }
-      }
-      public static void convertToBase(ref Money m)
-      {
-         if (Money.baseCurrency.empty())
-            throw new Exception("no base currency set");
-         convertTo(ref m, Money.baseCurrency);
-      }
-      public Money rounded()
-      {
-         return new Money(currency_.rounding.Round(value_), currency_);
-      }
-      public override String ToString() 
-      {
-        return this.rounded().value +  "-" + this.currency.code + "-"  + this.currency.symbol ;
-      }
-      #endregion
+		#region Get/Set
 
-      #region Operators
-      
-      public static Money operator * (Money m , double x) 
-      {
-         return new Money(m.value_ * x, m.currency);
-      }
-      public static Money operator *(double x, Money m) 
-      {
-         return m*x;
-      }
-      public static Money operator / (Money m, double x)
-      {
-         return new Money(m.value_ / x,m.currency);
-      }
+		public Currency currency
+		{
+			get { return currency_; }
+		}
 
-      public static Money operator+(Money m1,Money m2) 
-      {
-         Money m = new Money (m1.currency ,m1.value );
+		public double value
+		{
+			get { return value_; }
+		}
 
-         if (m1.currency_ == m2.currency_) 
-         {
-            m.value_ += m2.value_;
-         } 
-         else if (Money.conversionType == Money.ConversionType.BaseCurrencyConversion) 
-         {
-            Money.convertToBase(ref m);
-            Money tmp = m2;
-            Money.convertToBase(ref tmp);
-            m += tmp;
-        } 
-        else if (Money.conversionType == Money.ConversionType.AutomatedConversion) 
-        {
-            Money tmp = m2;
-            Money.convertTo(ref tmp, m.currency_);
-            m += tmp;
-        } 
-        else 
-        {
-         throw new Exception("currency mismatch and no conversion specified");
-        }
+		#endregion
 
-        return m;
-     }
-      public static Money operator-(Money m1, Money m2) 
-      {
-         Money m = new Money ( m1.currency ,m1.value );
+		#region Methods
 
-         if (m.currency_ == m2.currency_) 
-         {
-            m.value_ -= m2.value_;
-         } 
-         else if (Money.conversionType == Money.ConversionType.BaseCurrencyConversion) 
-         {
-            convertToBase(ref m);
-            Money tmp = m2;
-            convertToBase(ref tmp);
-            m -= tmp;
-         } 
-         else if (Money.conversionType == Money.ConversionType.AutomatedConversion) 
-         {
-            Money tmp = m2;
-            convertTo(ref tmp, m.currency_);
-            m -= tmp;
-         } 
-         else 
-         {
-            throw new Exception ("currency mismatch and no conversion specified");
-         }
-         
-         return m;
-      }
+		public static void convertTo(ref Money m, Currency target)
+		{
+			if (m.currency != target)
+			{
+				ExchangeRate rate = ExchangeRateManager.Instance.lookup(m.currency, target);
+				m = rate.exchange(m).rounded();
+			}
+		}
 
-      public static bool  operator ==(Money m1,Money m2) 
-      {
-          if ((object)m1 == null && (object)m2 == null) 
-            return true;
-          else if ((object)m1 == null || (object)m2 == null) 
-            return false;
-         else if (m1.currency == m2.currency) 
-         {
-            return m1.value == m2.value;
-         } 
-         else if (Money.conversionType == Money.ConversionType.BaseCurrencyConversion) 
-         {
-            Money tmp1 = m1;
-            convertToBase(ref tmp1);
-            Money tmp2 = m2;
-            convertToBase(ref tmp2);
-            return tmp1 == tmp2;
-         }    
-         else if (Money.conversionType == Money.ConversionType.AutomatedConversion) 
-         {
-            Money tmp = m2;
-            convertTo(ref tmp, m1.currency);
-            return m1 == tmp;
-         } 
-         else 
-         {
-           throw new Exception ("currency mismatch and no conversion specified");
-         }
-      }
-      public static bool  operator !=(Money m1,Money m2) 
-      {
-         return !( m1 == m2 ) ;
-      }
+		public static void convertToBase(ref Money m)
+		{
+			if (baseCurrency.empty())
+			{
+				throw new Exception("no base currency set");
+			}
 
-      public override bool Equals(object o) { return (this == (Money)o); }
-      public override int GetHashCode() { return 0; }
-    #endregion
-  }
+			convertTo(ref m, baseCurrency);
+		}
+
+		public Money rounded()
+		{
+			return new Money(currency_.rounding.Round(value_), currency_);
+		}
+
+		public override String ToString()
+		{
+			return rounded().value + "-" + currency.code + "-" + currency.symbol;
+		}
+
+		#endregion
+
+		public static Money operator *(Money m, double x)
+		{
+			return new Money(m.value_ * x, m.currency);
+		}
+
+		public static Money operator *(double x, Money m)
+		{
+			return m * x;
+		}
+
+		public static Money operator /(Money m, double x)
+		{
+			return new Money(m.value_ / x, m.currency);
+		}
+
+		public static Money operator +(Money m1, Money m2)
+		{
+			Money m = new Money(m1.currency, m1.value);
+
+			if (m1.currency_ == m2.currency_)
+			{
+				m.value_ += m2.value_;
+			}
+			else if (conversionType == ConversionType.BaseCurrencyConversion)
+			{
+				convertToBase(ref m);
+				Money tmp = m2;
+				convertToBase(ref tmp);
+				m += tmp;
+			}
+			else if (conversionType == ConversionType.AutomatedConversion)
+			{
+				Money tmp = m2;
+				convertTo(ref tmp, m.currency_);
+				m += tmp;
+			}
+			else
+			{
+				throw new Exception("currency mismatch and no conversion specified");
+			}
+
+			return m;
+		}
+
+		public static Money operator -(Money m1, Money m2)
+		{
+			Money m = new Money(m1.currency, m1.value);
+
+			if (m.currency_ == m2.currency_)
+			{
+				m.value_ -= m2.value_;
+			}
+			else if (conversionType == ConversionType.BaseCurrencyConversion)
+			{
+				convertToBase(ref m);
+				Money tmp = m2;
+				convertToBase(ref tmp);
+				m -= tmp;
+			}
+			else if (conversionType == ConversionType.AutomatedConversion)
+			{
+				Money tmp = m2;
+				convertTo(ref tmp, m.currency_);
+				m -= tmp;
+			}
+			else
+			{
+				throw new Exception("currency mismatch and no conversion specified");
+			}
+
+			return m;
+		}
+
+		public static bool operator ==(Money m1, Money m2)
+		{
+			return Equals(m1, m2);
+		}
+
+		public static bool operator !=(Money m1, Money m2)
+		{
+			return !Equals(m1, m2);
+		}
+
+		public bool Equals(Money other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+
+			if (currency_ == other.currency_)
+				return value_ == other.value_;
+
+			if (conversionType == Money.ConversionType.BaseCurrencyConversion)
+			{
+				Money tmp1 = (Money)MemberwiseClone();
+				convertToBase(ref tmp1);
+				Money tmp2 = (Money)other.MemberwiseClone();
+				convertToBase(ref tmp2);
+				// recursive...
+				return tmp1 == tmp2;
+			}
+
+			if (conversionType == ConversionType.AutomatedConversion)
+			{
+				Money tmp = (Money)other.MemberwiseClone();
+				convertTo(ref tmp, currency_);
+				return this == tmp;
+			}
+
+			throw new Exception("currency mismatch and no conversion specified"); // QA:[RG]::verified // TODO: message
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (obj.GetType() != typeof(Money)) return false;
+			return Equals((Money)obj);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return (value_.GetHashCode() * 397) ^ (currency_ != null ? currency_.GetHashCode() : 0);
+			}
+		}
+	}
 }
