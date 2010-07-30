@@ -170,7 +170,8 @@ namespace QLNet
 		Days,
 		Weeks,
 		Months,
-		Years
+		Years,
+		Unknow
 	}
 
 	public enum Frequency

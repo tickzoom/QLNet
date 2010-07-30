@@ -57,7 +57,7 @@ namespace QLNet {
             fixingCalendar_ = fixingCalendar;
             dayCounter_ = dayCounter;
 
-            tenor_.normalize();
+            tenor_.Normalize();
 
             Settings.registerWith(update);
             // recheck

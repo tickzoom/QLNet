@@ -23,18 +23,17 @@ namespace QLNet
 {
 	public struct Period
 	{
-		private const string UNKNOWN_FREQUENCY = "unknown frequency";
-		private const string UNKNOWN_TIME_UNIT = "unknown time unit";
-		private const string INCOMPATIBLE_TIME_UNIT = "incompatible time unit";
-		private const string UNDECIDABLE_COMPARISON = "undecidable comparison";
-		private const string DIVISION_BY_ZERO_ERROR = "cannot be divided by zero";
+		private const string UnknownFrequency = "unknown frequency";
+		private const string UnknownTimeUnit = "unknown time unit";
+		private const string IncompatibleTimeUnit = "incompatible time unit";
+		private const string UndecidableComparison = "undecidable comparison";
 
-		private int length_;
+		private int _length;
 		private TimeUnit _timeUnit;
 
 		public Period(int n, TimeUnit u)
 		{
-			length_ = n; _timeUnit = u;
+			_length = n; _timeUnit = u;
 		}
 
 		public Period(Frequency f)
@@ -42,79 +41,92 @@ namespace QLNet
 			switch (f)
 			{
 				case Frequency.NoFrequency:
-					_timeUnit = TimeUnit.Days;	// same as Period()
-					length_ = 0;
+					_timeUnit = TimeUnit.Days;
+					_length = 0;
 					break;
+
 				case Frequency.Once:
 					_timeUnit = TimeUnit.Years;
-					length_ = 0;
+					_length = 0;
 					break;
+
 				case Frequency.Annual:
 					_timeUnit = TimeUnit.Years;
-					length_ = 1;
+					_length = 1;
 					break;
+
 				case Frequency.Semiannual:
 				case Frequency.EveryFourthMonth:
 				case Frequency.Quarterly:
 				case Frequency.Bimonthly:
 				case Frequency.Monthly:
 					_timeUnit = TimeUnit.Months;
-					length_ = 12 / (int)f;
+					_length = 12 / (int)f;
 					break;
+
 				case Frequency.EveryFourthWeek:
 				case Frequency.Biweekly:
 				case Frequency.Weekly:
 					_timeUnit = TimeUnit.Weeks;
-					length_ = 52 / (int)f;
+					_length = 52 / (int)f;
 					break;
+
 				case Frequency.Daily:
 					_timeUnit = TimeUnit.Days;
-					length_ = 1;
+					_length = 1;
 					break;
-				case Frequency.OtherFrequency:
-					throw Error.UnknownFrequency(f);
+
 				default:
-					throw Error.UnknownFrequency(f);
+					throw new ApplicationException(UnknownFrequency);
 			}
 		}
 
 		/// <summary>
 		/// Create from a string like "1M", "2Y"...
 		/// </summary>
-		/// <param name="periodString"></param>
-		public Period(string periodString)
+		/// <param name="period"></param>
+		public Period(string period)
 		{
-			periodString = periodString.ToUpper();
-			length_ = int.Parse(periodString.Substring(0, periodString.Length - 1));
-
-			string freq = periodString.Substring(periodString.Length - 1, 1);
-			switch (freq)
+			if (string.IsNullOrEmpty(period))
 			{
-				case "D":
-					_timeUnit = TimeUnit.Days;
-					break;
-
-				case "W":
-					_timeUnit = TimeUnit.Weeks;
-					break;
-
-				case "M":
-					_timeUnit = TimeUnit.Months;
-					break;
-
-				case "Y":
-					_timeUnit = TimeUnit.Years;
-					break;
-
-				default:
-					throw new ArgumentException("Unknown TimeUnit: " + freq);
+				throw new ArgumentNullException("period");
 			}
+
+			TimeUnit timeUnit = TimeUnit.Unknow;
+			int index;
+
+			if ((index = period.IndexOf('d')) > 0 || (index = period.IndexOf('D')) > 0)
+			{
+				timeUnit = TimeUnit.Days;
+			}
+			else if ((index = period.IndexOf('w')) > 0 || (index = period.IndexOf('W')) > 0)
+			{
+				timeUnit = TimeUnit.Weeks;
+			}
+			else if ((index = period.IndexOf('m')) > 0 || (index = period.IndexOf('M')) > 0)
+			{
+				timeUnit = TimeUnit.Months;
+			}
+			else if ((index = period.IndexOf('y')) > 0 || (index = period.IndexOf('Y')) > 0)
+			{
+				timeUnit = TimeUnit.Years;
+			}
+
+			if (timeUnit == TimeUnit.Unknow)
+			{
+				throw new InvalidOperationException(UnknownTimeUnit);
+			}
+
+			int periodLength = Convert.ToInt32(period.Substring(0, index).Trim());
+
+			_timeUnit = timeUnit;
+			_length = periodLength;
 		}
 
 		[Obsolete("Use Length property instead.")]
 		public int length()
 		{
-			return length_;
+			return _length;
 		}
 
 		[Obsolete("Use Length property instead.")]
@@ -131,7 +143,7 @@ namespace QLNet
 
 		public int Length
 		{
-			get { return length_; }
+			get { return _length; }
 		}
 
 		public TimeUnit TimeUnit
@@ -143,7 +155,7 @@ namespace QLNet
 		{
 			get
 			{
-				int length = Math.Abs(length_);
+				int length = Math.Abs(_length);
 
 				if (length == 0)
 				{
@@ -169,28 +181,28 @@ namespace QLNet
 						return (length == 1) ? Frequency.Daily : Frequency.OtherFrequency;
 
 					default:
-						throw new ArgumentException(UNKNOWN_TIME_UNIT);
+						throw new ArgumentException(UnknownTimeUnit);
 				}
 			}
 		}
 
-		public void normalize()
+		public void Normalize()
 		{
-			if (length_ != 0)
+			if (_length != 0)
 				switch (_timeUnit)
 				{
 					case TimeUnit.Days:
-						if ((length_ % 7) == 0)
+						if ((_length % 7) == 0)
 						{
-							length_ /= 7;
+							_length /= 7;
 							_timeUnit = TimeUnit.Weeks;
 						}
 						break;
 
 					case TimeUnit.Months:
-						if ((length_ % 12) == 0)
+						if ((_length % 12) == 0)
 						{
-							length_ /= 12;
+							_length /= 12;
 							_timeUnit = TimeUnit.Years;
 						}
 						break;
@@ -200,13 +212,13 @@ namespace QLNet
 						break;
 
 					default:
-						throw new ArgumentException(UNKNOWN_TIME_UNIT);
+						throw new ArgumentException(UnknownTimeUnit);
 				}
 		}
 
 		public override string ToString()
 		{
-			return "TimeUnit: " + _timeUnit + ", length: " + length_;
+			return "TimeUnit: " + _timeUnit + ", length: " + _length;
 		}
 
 		public string ToShortString()
@@ -248,15 +260,12 @@ namespace QLNet
 
 		public bool Equals(Period other)
 		{
-			if (ReferenceEquals(null, other)) return false;
-			if (ReferenceEquals(this, other)) return true;
-			return other.length_ == length_ && Equals(other._timeUnit, _timeUnit);
+			return other._length == _length && Equals(other._timeUnit, _timeUnit);
 		}
 
 		public override bool Equals(object obj)
 		{
 			if (ReferenceEquals(null, obj)) return false;
-			if (ReferenceEquals(this, obj)) return true;
 			if (obj.GetType() != typeof(Period)) return false;
 			return Equals((Period)obj);
 		}
@@ -265,7 +274,7 @@ namespace QLNet
 		{
 			unchecked
 			{
-				return (length_ * 397) ^ _timeUnit.GetHashCode();
+				return (_length * 397) ^ _timeUnit.GetHashCode();
 			}
 		}
 
@@ -344,11 +353,11 @@ namespace QLNet
 							case TimeUnit.Weeks:
 							case TimeUnit.Days:
 								if (p1.Length != 0)
-									throw new InvalidOperationException(INCOMPATIBLE_TIME_UNIT);
+									throw new InvalidOperationException(IncompatibleTimeUnit);
 								break;
 
 							default:
-								throw new ApplicationException(UNKNOWN_TIME_UNIT);
+								throw new ApplicationException(UnknownTimeUnit);
 						}
 						break;
 
@@ -361,10 +370,10 @@ namespace QLNet
 
 							case TimeUnit.Weeks:
 							case TimeUnit.Days:
-								throw new InvalidOperationException(INCOMPATIBLE_TIME_UNIT);
+								throw new InvalidOperationException(IncompatibleTimeUnit);
 
 							default:
-								throw new ApplicationException(UNKNOWN_TIME_UNIT);
+								throw new ApplicationException(UnknownTimeUnit);
 						}
 						break;
 
@@ -378,10 +387,10 @@ namespace QLNet
 
 							case TimeUnit.Years:
 							case TimeUnit.Months:
-								throw new InvalidOperationException(INCOMPATIBLE_TIME_UNIT);
+								throw new InvalidOperationException(IncompatibleTimeUnit);
 
 							default:
-								throw new ApplicationException(UNKNOWN_TIME_UNIT);
+								throw new ApplicationException(UnknownTimeUnit);
 						}
 						break;
 
@@ -394,15 +403,15 @@ namespace QLNet
 
 							case TimeUnit.Years:
 							case TimeUnit.Months:
-								throw new InvalidOperationException(INCOMPATIBLE_TIME_UNIT);
+								throw new InvalidOperationException(IncompatibleTimeUnit);
 
 							default:
-								throw new ApplicationException(UNKNOWN_TIME_UNIT);
+								throw new ApplicationException(UnknownTimeUnit);
 						}
 						break;
 
 					default:
-						throw new ApplicationException(UNKNOWN_TIME_UNIT);
+						throw new ApplicationException(UnknownTimeUnit);
 				}
 			}
 
@@ -434,7 +443,7 @@ namespace QLNet
 			if (period1MinDays > period2MaxDays)
 				return false;
 
-			throw new ApplicationException("Undecidable comparison between " + p1 + " and " + p2);
+			throw new ApplicationException(UndecidableComparison);
 		}
 
 		/// <summary>
@@ -454,7 +463,7 @@ namespace QLNet
 				case TimeUnit.Days:
 					return Length;
 				default:
-					throw new ApplicationException(UNKNOWN_TIME_UNIT);
+					throw new ApplicationException(UnknownTimeUnit);
 			}
 		}
 
@@ -475,7 +484,7 @@ namespace QLNet
 				case TimeUnit.Days:
 					return Length;
 				default:
-					throw new ApplicationException(UNKNOWN_TIME_UNIT);
+					throw new ApplicationException(UnknownTimeUnit);
 			}
 		}
 	}
