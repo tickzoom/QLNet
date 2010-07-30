@@ -16,333 +16,467 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
+
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace QLNet {
-    public class Period {
-        private int length_;
-        private TimeUnit unit_;
+namespace QLNet
+{
+	public struct Period
+	{
+		private const string UNKNOWN_FREQUENCY = "unknown frequency";
+		private const string UNKNOWN_TIME_UNIT = "unknown time unit";
+		private const string INCOMPATIBLE_TIME_UNIT = "incompatible time unit";
+		private const string UNDECIDABLE_COMPARISON = "undecidable comparison";
+		private const string DIVISION_BY_ZERO_ERROR = "cannot be divided by zero";
 
-        // properties
-        public int length() { return length_; }
-        public TimeUnit units() { return unit_; }
+		private int length_;
+		private TimeUnit _timeUnit;
 
-        public Period() { length_ = 0; unit_ = TimeUnit.Days; }
-        public Period(int n, TimeUnit u) { length_ = n; unit_ = u; }
-        public Period(Frequency f) {
-            switch (f) {
-                case Frequency.NoFrequency:
-                    unit_ = TimeUnit.Days;	// same as Period()
-                    length_ = 0;
-                    break;
-                case Frequency.Once:
-                    unit_ = TimeUnit.Years;
-                    length_ = 0;
-                    break;
-                case Frequency.Annual:
-                    unit_ = TimeUnit.Years;
-                    length_ = 1;
-                    break;
-                case Frequency.Semiannual:
-                case Frequency.EveryFourthMonth:
-                case Frequency.Quarterly:
-                case Frequency.Bimonthly:
-                case Frequency.Monthly:
-                    unit_ = TimeUnit.Months;
-                    length_ = 12 / (int)f;
-                    break;
-                case Frequency.EveryFourthWeek:
-                case Frequency.Biweekly:
-                case Frequency.Weekly:
-                    unit_ = TimeUnit.Weeks;
-                    length_ = 52 / (int)f;
-                    break;
-                case Frequency.Daily:
-                    unit_ = TimeUnit.Days;
-                    length_ = 1;
-                    break;
-                case Frequency.OtherFrequency:
-                    throw Error.UnknownFrequency(f);
-                default:
-                    throw Error.UnknownFrequency(f);
-            }
-        }
+		public Period(int n, TimeUnit u)
+		{
+			length_ = n; _timeUnit = u;
+		}
 
-        // Create from a string like "1M", "2Y"...
-        public Period(string periodString)
-        {
-           periodString = periodString.ToUpper();
-           length_ = int.Parse(periodString.Substring(0, periodString.Length - 1));
-           string freq = periodString.Substring(periodString.Length - 1, 1);
-           switch (freq)
-           {
-              case "D":
-                 unit_ = TimeUnit.Days;
-                 break;
-              case "W":
-                 unit_ = TimeUnit.Weeks;
-                 break;
-              case "M":
-                 unit_ = TimeUnit.Months;
-                 break;
-              case "Y":
-                 unit_ = TimeUnit.Years;
-                 break;
-              default:
-                 throw new ArgumentException("Unknown TimeUnit: " + freq);
-           }
-        }
+		public Period(Frequency f)
+		{
+			switch (f)
+			{
+				case Frequency.NoFrequency:
+					_timeUnit = TimeUnit.Days;	// same as Period()
+					length_ = 0;
+					break;
+				case Frequency.Once:
+					_timeUnit = TimeUnit.Years;
+					length_ = 0;
+					break;
+				case Frequency.Annual:
+					_timeUnit = TimeUnit.Years;
+					length_ = 1;
+					break;
+				case Frequency.Semiannual:
+				case Frequency.EveryFourthMonth:
+				case Frequency.Quarterly:
+				case Frequency.Bimonthly:
+				case Frequency.Monthly:
+					_timeUnit = TimeUnit.Months;
+					length_ = 12 / (int)f;
+					break;
+				case Frequency.EveryFourthWeek:
+				case Frequency.Biweekly:
+				case Frequency.Weekly:
+					_timeUnit = TimeUnit.Weeks;
+					length_ = 52 / (int)f;
+					break;
+				case Frequency.Daily:
+					_timeUnit = TimeUnit.Days;
+					length_ = 1;
+					break;
+				case Frequency.OtherFrequency:
+					throw Error.UnknownFrequency(f);
+				default:
+					throw Error.UnknownFrequency(f);
+			}
+		}
 
-        public Frequency frequency() {
-            int length = System.Math.Abs(length_);	// unsigned version
+		/// <summary>
+		/// Create from a string like "1M", "2Y"...
+		/// </summary>
+		/// <param name="periodString"></param>
+		public Period(string periodString)
+		{
+			periodString = periodString.ToUpper();
+			length_ = int.Parse(periodString.Substring(0, periodString.Length - 1));
 
-            if (length == 0)
-            {
-               if (unit_ == TimeUnit.Years) return Frequency.Once;
-               return Frequency.NoFrequency;
-            }
-            switch (unit_) {
-                case TimeUnit.Years:
-                    return (length == 1) ? Frequency.Annual : Frequency.OtherFrequency;
-                case TimeUnit.Months:
-                    if (12 % length == 0 && length <= 12)
-                        return (Frequency)(12 / length);
-                    else
-                        return Frequency.OtherFrequency;
-                case TimeUnit.Weeks:
-                    if (length == 1)
-                        return Frequency.Weekly;
-                    else if (length == 2)
-                        return Frequency.Biweekly;
-                    else if (length == 4)
-                        return Frequency.EveryFourthWeek;
-                    else
-                        return Frequency.OtherFrequency;
-                case TimeUnit.Days:
-                    return (length == 1) ? Frequency.Daily : Frequency.OtherFrequency;
-                default:
-                    throw new ArgumentException("Unknown TimeUnit: " + unit_);
-            }
-        }
+			string freq = periodString.Substring(periodString.Length - 1, 1);
+			switch (freq)
+			{
+				case "D":
+					_timeUnit = TimeUnit.Days;
+					break;
 
-        public void normalize() {
-            if (length_ != 0)
-                switch (unit_) {
-                    case TimeUnit.Days:
-                        if ((length_ % 7) == 0) {
-                            length_ /= 7;
-                            unit_ = TimeUnit.Weeks;
-                        }
-                        break;
-                    case TimeUnit.Months:
-                        if ((length_ % 12) == 0) {
-                            length_ /= 12;
-                            unit_ = TimeUnit.Years;
-                        }
-                        break;
-                    case TimeUnit.Weeks:
-                    case TimeUnit.Years:
-                        break;
-                    default:
-                        throw new ArgumentException("Unknown TimeUnit: " + unit_);
-                }
-        }
+				case "W":
+					_timeUnit = TimeUnit.Weeks;
+					break;
 
-       public static Period operator+(Period p1,Period p2) 
-       {
-           int length_ = p1.length();
-           TimeUnit units_ = p1.units();
+				case "M":
+					_timeUnit = TimeUnit.Months;
+					break;
 
-          if (length_==0) 
-          {
-             length_ = p2.length();
-             units_ = p2.units();
-          } 
-          else if (units_== p2.units()) 
-          {
-             // no conversion needed
-             length_ += p2.length();
-          } 
-          else 
-          {
-             switch (units_) 
-             {
-                case TimeUnit.Years:
-                switch (p2.units()) 
-                {
-                   case TimeUnit.Months:
-                      units_ = TimeUnit.Months;
-                      length_ = length_*12 + p2.length();
-                      break;
-                   case TimeUnit.Weeks:
-                   case TimeUnit.Days:
-                      if ( p1.length() != 0 )
-                         throw new ApplicationException(
-                               "impossible addition between " + p1 +
-                               " and " + p2);
-                      break;
-                   default:
-                      throw new ApplicationException("unknown time unit (" 
-                            + p2.units() + ")");
-                }
-                break;
+				case "Y":
+					_timeUnit = TimeUnit.Years;
+					break;
 
-                case TimeUnit.Months:
-                switch (p2.units()) 
-                {
-                   case TimeUnit.Years:
-                    length_ += p2.length()*12;
-                    break;
-                  case TimeUnit.Weeks:
-                  case TimeUnit.Days:
-                    if (p1.length() != 0)
-                       throw new ApplicationException(
-                             "impossible addition between " + p1 +
-                             " and " + p2);
-                    break;
-                  default:
-                    throw new ApplicationException("unknown time unit ("
-                          + p2.units() + ")");
-                }
-                break;
+				default:
+					throw new ArgumentException("Unknown TimeUnit: " + freq);
+			}
+		}
 
-              case TimeUnit.Weeks:
-                switch (p2.units()) 
-                {
-                   case TimeUnit.Days:
-                      units_ = TimeUnit.Days;
-                      length_ = length_*7 + p2.length();
-                    break;
-                  case TimeUnit.Years:
-                  case TimeUnit.Months:
-                    if (p1.length() != 0)
-                       throw new ApplicationException(
-                             "impossible addition between " + p1 +
-                             " and " + p2);
-                    break;
-                  default:
-                    throw new ApplicationException("unknown time unit ("
-                          + p2.units() + ")");
-                }
-                break;
+		[Obsolete("Use Length property instead.")]
+		public int length()
+		{
+			return length_;
+		}
 
-              case TimeUnit.Days:
-                switch (p2.units()) 
-                {
-                   case TimeUnit.Weeks:
-                    length_ += p2.length()*7;
-                    break;
-                  case TimeUnit.Years:
-                  case TimeUnit.Months:
-                    if (p1.length() != 0)
-                       throw new ApplicationException(
-                             "impossible addition between " + p1 +
-                             " and " + p2);
-                    break;
-                  default:
-                    throw new ApplicationException("unknown time unit ("
-                          + p2.units() + ")");
-                }
-                break;
+		[Obsolete("Use Length property instead.")]
+		public TimeUnit units()
+		{
+			return _timeUnit;
+		}
 
-              default:
-                throw new ApplicationException("unknown time unit (" + units_ + ")");
-             }
-          }
-          return new Period(length_,units_);
-       }
-       public static Period operator -(Period p1, Period p2)
-       {
-          return p1 +(-p2);
-       }
+		[Obsolete("Use Frequency property instead.")]
+		public Frequency frequency()
+		{
+			return Frequency;
+		}
 
-        public static Period operator -(Period p) { return new Period(-p.length(), p.units()); }
-        public static Period operator *(int n, Period p) { return new Period(n * p.length(), p.units()); }
-        public static Period operator *(Period p, int n) { return new Period(n * p.length(), p.units()); }
+		public int Length
+		{
+			get { return length_; }
+		}
 
-        public static bool operator ==(Period p1, Period p2) { return !(p1 < p2 || p2 < p1); }
-        public static bool operator !=(Period p1, Period p2) { return !(p1 == p2); }
-        public static bool operator <=(Period p1, Period p2) { return !(p1 > p2); }
-        public static bool operator >=(Period p1, Period p2) { return !(p1 < p2); }
-        public static bool operator >(Period p1, Period p2) { return p2 < p1; }
-        public static bool operator <(Period p1, Period p2) {
-            // special cases
-            if (p1.length() == 0) return (p2.length() > 0);
-            if (p2.length() == 0) return (p1.length() < 0);
+		public TimeUnit TimeUnit
+		{
+			get { return _timeUnit; }
+		}
 
-            // exact comparisons
-            if (p1.units() == p2.units()) return p1.length() < p2.length();
-            if (p1.units() == TimeUnit.Months && p2.units() == TimeUnit.Years) return p1.length() < 12 * p2.length();
-            if (p1.units() == TimeUnit.Years && p2.units() == TimeUnit.Months) return 12 * p1.length() < p2.length();
-            if (p1.units() == TimeUnit.Days && p2.units() == TimeUnit.Weeks) return p1.length() < 7 * p2.length();
-            if (p1.units() == TimeUnit.Weeks && p2.units() == TimeUnit.Days) return 7 * p1.length() < p2.length();
+		public Frequency Frequency
+		{
+			get
+			{
+				int length = Math.Abs(length_);
 
-            // inexact comparisons (handled by converting to days and using limits)
-            pair p1lim = new pair(p1), p2lim = new pair(p2);
-            if (p1lim.hi < p2lim.lo || p2lim.hi < p1lim.lo)
-                return p1lim.hi < p2lim.lo;
-            else
-                throw new ArgumentException("Undecidable comparison between " + p1.ToString() + " and " + p2.ToString());
-        }
+				if (length == 0)
+				{
+					if (_timeUnit == TimeUnit.Years) return Frequency.Once;
+					return Frequency.NoFrequency;
+				}
 
-        // required by operator <
-        struct pair {
-            public int lo, hi;
-            public pair(Period p) {
-                switch (p.units()) {
-                    case TimeUnit.Days:
-                        lo = hi = p.length(); break;
-                    case TimeUnit.Weeks:
-                        lo = hi = 7 * p.length(); break;
-                    case TimeUnit.Months:
-                        lo = 28 * p.length(); hi = 31 * p.length(); break;
-                    case TimeUnit.Years:
-                        lo = 365 * p.length(); hi = 366 * p.length(); break;
-                    default:
-                        throw new ArgumentException("Unknown TimeUnit: " + p.units());
-                }
-            }
-        }
+				switch (_timeUnit)
+				{
+					case TimeUnit.Years:
+						return (length == 1) ? Frequency.Annual : Frequency.OtherFrequency;
 
-        public override bool Equals(object o) { return this == (Period)o; }
-        public override int GetHashCode() { return 0; }
-        public override string ToString() {
-            return "TimeUnit: " + unit_.ToString() + ", length: " + length_.ToString();
-        }
-        public string ToShortString() {
-            string result = "";
-            int n = length();
-            int m = 0;
-            switch (units()) {
-                case TimeUnit.Days:
-                    if (n >= 7) {
-                        m = n / 7;
-                        result += m + "W";
-                        n = n % 7;
-                    }
-                    if (n != 0 || m == 0)
-                        return result + n + "D";
-                    else
-                        return result;
-                case TimeUnit.Weeks:
-                    return result + n + "W";
-                case TimeUnit.Months:
-                    if (n >= 12) {
-                        m = n / 12;
-                        result += n / 12 + "Y";
-                        n = n % 12;
-                    }
-                    if (n != 0 || m == 0)
-                        return result + n + "M";
-                    else
-                        return result;
-                case TimeUnit.Years:
-                    return result + n + "Y";
-                default:
-                    throw new ApplicationException("unknown time unit (" + units() + ")");
-            }
-        }
-    }
+					case TimeUnit.Months:
+						return (12 % length == 0 && length <= 12) ? (Frequency)(12 / length) : Frequency.OtherFrequency;
+
+					case TimeUnit.Weeks:
+						if (length == 1) return Frequency.Weekly;
+						if (length == 2) return Frequency.Biweekly;
+						if (length == 4) return Frequency.EveryFourthWeek;
+						return Frequency.OtherFrequency;
+
+					case TimeUnit.Days:
+						return (length == 1) ? Frequency.Daily : Frequency.OtherFrequency;
+
+					default:
+						throw new ArgumentException(UNKNOWN_TIME_UNIT);
+				}
+			}
+		}
+
+		public void normalize()
+		{
+			if (length_ != 0)
+				switch (_timeUnit)
+				{
+					case TimeUnit.Days:
+						if ((length_ % 7) == 0)
+						{
+							length_ /= 7;
+							_timeUnit = TimeUnit.Weeks;
+						}
+						break;
+
+					case TimeUnit.Months:
+						if ((length_ % 12) == 0)
+						{
+							length_ /= 12;
+							_timeUnit = TimeUnit.Years;
+						}
+						break;
+
+					case TimeUnit.Weeks:
+					case TimeUnit.Years:
+						break;
+
+					default:
+						throw new ArgumentException(UNKNOWN_TIME_UNIT);
+				}
+		}
+
+		public override string ToString()
+		{
+			return "TimeUnit: " + _timeUnit + ", length: " + length_;
+		}
+
+		public string ToShortString()
+		{
+			string result = string.Empty;
+			int n = Length;
+			int m = 0;
+			switch (TimeUnit)
+			{
+				case TimeUnit.Days:
+					if (n >= 7)
+					{
+						m = n / 7;
+						result += m + "W";
+						n = n % 7;
+					}
+
+					return (n != 0 || m == 0) ? result + n + "D" : result;
+
+				case TimeUnit.Weeks:
+					return result + n + "W";
+
+				case TimeUnit.Months:
+					if (n >= 12)
+					{
+						m = n / 12;
+						result += n / 12 + "Y";
+						n = n % 12;
+					}
+					return (n != 0 || m == 0) ? result + n + "M" : result;
+
+				case TimeUnit.Years:
+					return result + n + "Y";
+
+				default:
+					throw new ApplicationException("unknown time unit (" + TimeUnit + ")");
+			}
+		}
+
+		public bool Equals(Period other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+			return other.length_ == length_ && Equals(other._timeUnit, _timeUnit);
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (obj.GetType() != typeof(Period)) return false;
+			return Equals((Period)obj);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return (length_ * 397) ^ _timeUnit.GetHashCode();
+			}
+		}
+
+		public static bool operator ==(Period p1, Period p2)
+		{
+			return Equals(p1, p2);
+		}
+
+		public static bool operator !=(Period p1, Period p2)
+		{
+			return !Equals(p1, p2);
+		}
+
+		public static Period operator -(Period p)
+		{
+			return new Period(-1 * p.Length, p.TimeUnit);
+		}
+
+		public static Period operator -(Period p1, Period p2)
+		{
+			return p1 + (-1 * p2);
+		}
+
+		public static Period operator *(int n, Period p)
+		{
+			return new Period(n * p.Length, p.TimeUnit);
+		}
+
+		public static Period operator *(Period p, int n)
+		{
+			return new Period(n * p.Length, p.TimeUnit);
+		}
+
+		public static bool operator <=(Period p1, Period p2)
+		{
+			return p1 < p2 || p1 == p2;
+		}
+
+		public static bool operator >=(Period p1, Period p2)
+		{
+			return p2 >= p1;
+		}
+
+		public static bool operator >(Period p1, Period p2)
+		{
+			return p2 < p1;
+		}
+
+		public static Period operator +(Period p1, Period p2)
+		{
+			int newLength = p1.Length;
+			TimeUnit newTimeUnit = p1.TimeUnit;
+
+			if (newLength == 0)
+			{
+				newLength = p2.Length;
+				newTimeUnit = p2.TimeUnit;
+			}
+			else if (newTimeUnit == p2.TimeUnit)
+			{
+				// no conversion needed
+				newLength += p2.Length;
+			}
+			else
+			{
+				switch (newTimeUnit)
+				{
+					case TimeUnit.Years:
+						switch (p2.TimeUnit)
+						{
+							case TimeUnit.Months:
+								newTimeUnit = TimeUnit.Months;
+								newLength = newLength * 12 + p2.Length;
+								break;
+
+							case TimeUnit.Weeks:
+							case TimeUnit.Days:
+								if (p1.Length != 0)
+									throw new InvalidOperationException(INCOMPATIBLE_TIME_UNIT);
+								break;
+
+							default:
+								throw new ApplicationException(UNKNOWN_TIME_UNIT);
+						}
+						break;
+
+					case TimeUnit.Months:
+						switch (p2.TimeUnit)
+						{
+							case TimeUnit.Years:
+								newLength += p2.Length * 12;
+								break;
+
+							case TimeUnit.Weeks:
+							case TimeUnit.Days:
+								throw new InvalidOperationException(INCOMPATIBLE_TIME_UNIT);
+
+							default:
+								throw new ApplicationException(UNKNOWN_TIME_UNIT);
+						}
+						break;
+
+					case TimeUnit.Weeks:
+						switch (p2.TimeUnit)
+						{
+							case TimeUnit.Days:
+								newTimeUnit = TimeUnit.Days;
+								newLength = newLength * 7 + p2.Length;
+								break;
+
+							case TimeUnit.Years:
+							case TimeUnit.Months:
+								throw new InvalidOperationException(INCOMPATIBLE_TIME_UNIT);
+
+							default:
+								throw new ApplicationException(UNKNOWN_TIME_UNIT);
+						}
+						break;
+
+					case TimeUnit.Days:
+						switch (p2.TimeUnit)
+						{
+							case TimeUnit.Weeks:
+								newLength += p2.Length * 7;
+								break;
+
+							case TimeUnit.Years:
+							case TimeUnit.Months:
+								throw new InvalidOperationException(INCOMPATIBLE_TIME_UNIT);
+
+							default:
+								throw new ApplicationException(UNKNOWN_TIME_UNIT);
+						}
+						break;
+
+					default:
+						throw new ApplicationException(UNKNOWN_TIME_UNIT);
+				}
+			}
+
+			return new Period(newLength, newTimeUnit);
+		}
+
+		public static bool operator <(Period p1, Period p2)
+		{
+			// special cases
+			if (p1.Length == 0) return (p2.Length > 0);
+			if (p2.Length == 0) return (p1.Length < 0);
+
+			// exact comparisons
+			if (p1.TimeUnit == p2.TimeUnit) return p1.Length < p2.Length;
+			if (p1.TimeUnit == TimeUnit.Months && p2.TimeUnit == TimeUnit.Years) return p1.Length < 12 * p2.Length;
+			if (p1.TimeUnit == TimeUnit.Years && p2.TimeUnit == TimeUnit.Months) return 12 * p1.Length < p2.Length;
+			if (p1.TimeUnit == TimeUnit.Days && p2.TimeUnit == TimeUnit.Weeks) return p1.Length < 7 * p2.Length;
+			if (p1.TimeUnit == TimeUnit.Weeks && p2.TimeUnit == TimeUnit.Days) return 7 * p1.Length < p2.Length;
+
+			// inexact comparisons (handled by converting to days and using limits)
+			int period1MinDays = p1.GetMinDays();
+			int period1MaxDays = p1.GetMaxDays();
+			int period2MinDays = p2.GetMinDays();
+			int period2MaxDays = p2.GetMaxDays();
+
+			if (period1MaxDays < period2MinDays)
+				return true;
+
+			if (period1MinDays > period2MaxDays)
+				return false;
+
+			throw new ApplicationException("Undecidable comparison between " + p1 + " and " + p2);
+		}
+
+		/// <summary>
+		/// Converts Period to days.
+		/// </summary>
+		/// <returns></returns>
+		private int GetMinDays()
+		{
+			switch (TimeUnit)
+			{
+				case TimeUnit.Years:
+					return Length * 365;
+				case TimeUnit.Months:
+					return Length * 28;
+				case TimeUnit.Weeks:
+					return Length * 7;
+				case TimeUnit.Days:
+					return Length;
+				default:
+					throw new ApplicationException(UNKNOWN_TIME_UNIT);
+			}
+		}
+
+		/// <summary>
+		/// Converts Period to days.
+		/// </summary>
+		/// <returns></returns>
+		private int GetMaxDays()
+		{
+			switch (TimeUnit)
+			{
+				case TimeUnit.Years:
+					return Length * 366;
+				case TimeUnit.Months:
+					return Length * 31;
+				case TimeUnit.Weeks:
+					return Length * 7;
+				case TimeUnit.Days:
+					return Length;
+				default:
+					throw new ApplicationException(UNKNOWN_TIME_UNIT);
+			}
+		}
+	}
 }
