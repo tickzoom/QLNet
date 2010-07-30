@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Calendars\BrazilCalendarTest.cs" />
     <Compile Include="Calendars\CalendarUtil.cs" />
+    <Compile Include="CurrencyTests.cs" />
     <Compile Include="T_AsianOptions.cs" />
     <Compile Include="T_Bermudanswaption.cs" />
     <Compile Include="T_Inflation.cs" />
