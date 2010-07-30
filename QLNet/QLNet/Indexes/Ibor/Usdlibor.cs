@@ -17,6 +17,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
+using QLNet.Currencies;
 using QLNet.Time.DayCounters;
 
 namespace QLNet {
