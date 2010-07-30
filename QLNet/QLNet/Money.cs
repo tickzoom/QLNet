@@ -26,7 +26,7 @@ namespace QLNet
 	/// Amount of cash
 	/// Money arithmetic is tested with and without currency conversions.
 	/// </summary>
-	public class Money
+	public struct Money
 	{
 		#region Define
 
@@ -50,54 +50,39 @@ namespace QLNet
 
 		#endregion
 
-		#region Attributes
-
 		[ThreadStatic]
 		public static ConversionType conversionType;
 
 		[ThreadStatic]
-		public static Currency baseCurrency;
+		public static Currency BaseCurrency;
 
-		private double value_;
-		private Currency currency_;
-
-		#endregion
-
-		#region Constructor
-
-		public Money()
-		{
-			value_ = 0.0;
-		}
-
-		public Money(Currency currency, double value)
-		{
-			value_ = value;
-			currency_ = currency;
-		}
+		private double _value;
+		private readonly Currency _currency;
 
 		public Money(double value, Currency currency)
 			: this(currency, value)
 		{
 		}
 
-		#endregion
+		public Money(Currency currency, double value)
+		{
+			_value = value;
+			_currency = currency;
+		}
 
 		#region Get/Set
 
 		public Currency currency
 		{
-			get { return currency_; }
+			get { return _currency; }
 		}
 
 		public double value
 		{
-			get { return value_; }
+			get { return _value; }
 		}
 
 		#endregion
-
-		#region Methods
 
 		public static void convertTo(ref Money m, Currency target)
 		{
@@ -110,29 +95,27 @@ namespace QLNet
 
 		public static void convertToBase(ref Money m)
 		{
-			if (baseCurrency.empty())
+			if (BaseCurrency.IsEmpty)
 			{
 				throw new Exception("no base currency set");
 			}
 
-			convertTo(ref m, baseCurrency);
+			convertTo(ref m, BaseCurrency);
 		}
 
 		public Money rounded()
 		{
-			return new Money(currency_.rounding.Round(value_), currency_);
+			return new Money(_currency.rounding.Round(_value), _currency);
 		}
 
-		public override String ToString()
+		public override string ToString()
 		{
 			return rounded().value + "-" + currency.code + "-" + currency.symbol;
 		}
 
-		#endregion
-
 		public static Money operator *(Money m, double x)
 		{
-			return new Money(m.value_ * x, m.currency);
+			return new Money(m._value * x, m.currency);
 		}
 
 		public static Money operator *(double x, Money m)
@@ -142,65 +125,65 @@ namespace QLNet
 
 		public static Money operator /(Money m, double x)
 		{
-			return new Money(m.value_ / x, m.currency);
+			return new Money(m._value / x, m.currency);
 		}
 
 		public static Money operator +(Money m1, Money m2)
 		{
-			Money m = new Money(m1.currency, m1.value);
+			Money newInstance = new Money(m1.currency, m1.value);
 
-			if (m1.currency_ == m2.currency_)
+			if (m1._currency == m2._currency)
 			{
-				m.value_ += m2.value_;
+				newInstance._value += m2._value;
 			}
 			else if (conversionType == ConversionType.BaseCurrencyConversion)
 			{
-				convertToBase(ref m);
-				Money tmp = m2;
+				convertToBase(ref newInstance);
+				Money tmp = (Money)m2.MemberwiseClone();
 				convertToBase(ref tmp);
-				m += tmp;
+				newInstance += tmp;
 			}
 			else if (conversionType == ConversionType.AutomatedConversion)
 			{
-				Money tmp = m2;
-				convertTo(ref tmp, m.currency_);
-				m += tmp;
+				Money tmp = (Money)m2.MemberwiseClone();
+				convertTo(ref tmp, newInstance._currency);
+				newInstance += tmp;
 			}
 			else
 			{
 				throw new Exception("currency mismatch and no conversion specified");
 			}
 
-			return m;
+			return newInstance;
 		}
 
 		public static Money operator -(Money m1, Money m2)
 		{
-			Money m = new Money(m1.currency, m1.value);
+			Money newInstance = new Money(m1.currency, m1.value);
 
-			if (m.currency_ == m2.currency_)
+			if (newInstance._currency == m2._currency)
 			{
-				m.value_ -= m2.value_;
+				newInstance._value -= m2._value;
 			}
 			else if (conversionType == ConversionType.BaseCurrencyConversion)
 			{
-				convertToBase(ref m);
-				Money tmp = m2;
+				convertToBase(ref newInstance);
+				Money tmp = (Money)m2.MemberwiseClone();
 				convertToBase(ref tmp);
-				m -= tmp;
+				newInstance -= tmp;
 			}
 			else if (conversionType == ConversionType.AutomatedConversion)
 			{
-				Money tmp = m2;
-				convertTo(ref tmp, m.currency_);
-				m -= tmp;
+				Money tmp = (Money)m2.MemberwiseClone();
+				convertTo(ref tmp, newInstance._currency);
+				newInstance -= tmp;
 			}
 			else
 			{
 				throw new Exception("currency mismatch and no conversion specified");
 			}
 
-			return m;
+			return newInstance;
 		}
 
 		public static bool operator ==(Money m1, Money m2)
@@ -215,13 +198,12 @@ namespace QLNet
 
 		public bool Equals(Money other)
 		{
-			if (ReferenceEquals(null, other)) return false;
-			if (ReferenceEquals(this, other)) return true;
+			if (_currency == other._currency)
+			{
+				return _value == other._value;
+			}
 
-			if (currency_ == other.currency_)
-				return value_ == other.value_;
-
-			if (conversionType == Money.ConversionType.BaseCurrencyConversion)
+			if (conversionType == ConversionType.BaseCurrencyConversion)
 			{
 				Money tmp1 = (Money)MemberwiseClone();
 				convertToBase(ref tmp1);
@@ -234,7 +216,7 @@ namespace QLNet
 			if (conversionType == ConversionType.AutomatedConversion)
 			{
 				Money tmp = (Money)other.MemberwiseClone();
-				convertTo(ref tmp, currency_);
+				convertTo(ref tmp, _currency);
 				return this == tmp;
 			}
 
@@ -244,16 +226,15 @@ namespace QLNet
 		public override bool Equals(object obj)
 		{
 			if (ReferenceEquals(null, obj)) return false;
-			if (ReferenceEquals(this, obj)) return true;
-			if (obj.GetType() != typeof(Money)) return false;
-			return Equals((Money)obj);
+			if (obj.GetType() != typeof (Money)) return false;
+			return Equals((Money) obj);
 		}
 
 		public override int GetHashCode()
 		{
 			unchecked
 			{
-				return (value_.GetHashCode() * 397) ^ (currency_ != null ? currency_.GetHashCode() : 0);
+				return (_value.GetHashCode()*397) ^ (_currency != null ? _currency.GetHashCode() : 0);
 			}
 		}
 	}

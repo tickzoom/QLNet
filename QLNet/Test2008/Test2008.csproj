@@ -85,7 +85,7 @@
     <Compile Include="T_Interpolations.cs" />
     <Compile Include="T_OvernightIndexedSwap.cs" />
     <Compile Include="T_Piecewiseyieldcurve.cs" />
-    <Compile Include="T_Money.cs" />
+    <Compile Include="MoneyTests.cs" />
     <Compile Include="T_Operators.cs" />
     <Compile Include="T_Quotes.cs" />
     <Compile Include="T_RiskStats.cs" />
