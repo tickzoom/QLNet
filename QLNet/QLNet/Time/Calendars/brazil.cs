@@ -201,6 +201,8 @@ namespace QLNet
 					|| (d == 15 && m == Month.November)
 					// Black Consciousness Day
 					|| (d == 20 && m == Month.November && y >= 2007)
+					// Christmas eve
+					|| (d == 24 && m == Month.December)
 					// Christmas
 					|| (d == 25 && m == Month.December)
 					// Passion of Christ
