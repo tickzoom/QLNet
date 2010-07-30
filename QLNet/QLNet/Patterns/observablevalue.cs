@@ -18,9 +18,8 @@
 */
 
 using System;
-using QLNet.Patterns;
 
-namespace QLNet
+namespace QLNet.Patterns
 {
 	//! %observable and assignable proxy to concrete value
 	/*! Observers can be registered with instances of this class so

@@ -336,8 +336,9 @@
     <Compile Include="Patterns\DefaultObservable.cs" />
     <Compile Include="Patterns\IObserver.cs" />
     <Compile Include="Patterns\LazyObject.cs" />
-    <Compile Include="Patterns\observablevalue.cs" />
+    <Compile Include="Patterns\ObservableValue.cs" />
     <Compile Include="Patterns\Observer.cs" />
+    <Compile Include="Patterns\Visitable.cs" />
     <Compile Include="Patterns\Visitor.cs" />
     <Compile Include="payoff.cs" />
     <Compile Include="PricingEngine.cs" />

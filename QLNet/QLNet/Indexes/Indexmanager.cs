@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using QLNet.Patterns;
 
 namespace QLNet {
     //! global repository for past index fixings

@@ -65,6 +65,9 @@
     <Compile Include="Calendars\BrazilCalendarTest.cs" />
     <Compile Include="Calendars\CalendarUtil.cs" />
     <Compile Include="CurrencyTests.cs" />
+    <Compile Include="DateTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Flag.cs" />
     <Compile Include="T_AsianOptions.cs" />
     <Compile Include="T_Bermudanswaption.cs" />
