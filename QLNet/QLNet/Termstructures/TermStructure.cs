@@ -140,7 +140,7 @@ namespace QLNet
                 updated_ = false;
 
             // recheck. this is in order to notify observers in the base method of LazyObject
-            calculated_ = true;
+            Calculated = true;
             base.update();
             // otherwise the following code would be required
             //if (notifyObservers != null)
