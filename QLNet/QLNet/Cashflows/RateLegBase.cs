@@ -121,74 +121,74 @@ namespace QLNet.Cashflows {
         }
     }
 
-    public abstract class yoyInflationLegBase : RateLegBase
+    public abstract class YoYInflationLegBase : RateLegBase
     {
-       public yoyInflationLegBase withPaymentDayCounter(DayCounter dayCounter)
+       public YoYInflationLegBase withPaymentDayCounter(DayCounter dayCounter)
        {
           paymentDayCounter_ = dayCounter;
           return this;
        }
 
-       public yoyInflationLegBase withFixingDays(int fixingDays)
+       public YoYInflationLegBase withFixingDays(int fixingDays)
        {
           fixingDays_ = new List<int>();
           fixingDays_.Add(fixingDays);
           return this;
        }
 
-       public yoyInflationLegBase withFixingDays(List<int> fixingDays)
+       public YoYInflationLegBase withFixingDays(List<int> fixingDays)
        {
           fixingDays_ = fixingDays;
           return this;
        }
 
-       public yoyInflationLegBase withGearings(double gearing)
+       public YoYInflationLegBase withGearings(double gearing)
        {
           gearings_ = new List<double>();
           gearings_.Add(gearing);
           return this;
        }
 
-       public yoyInflationLegBase withGearings(List<double> gearings)
+       public YoYInflationLegBase withGearings(List<double> gearings)
        {
           gearings_ = gearings;
           return this;
        }
 
-       public yoyInflationLegBase withSpreads(double spread)
+       public YoYInflationLegBase withSpreads(double spread)
        {
           spreads_ = new List<double>();
           spreads_.Add(spread);
           return this;
        }
 
-       public yoyInflationLegBase withSpreads(List<double> spreads)
+       public YoYInflationLegBase withSpreads(List<double> spreads)
        {
           spreads_ = spreads;
           return this;
        }
 
-       public yoyInflationLegBase withCaps(double cap)
+       public YoYInflationLegBase withCaps(double cap)
        {
           caps_ = new List<double>();
           caps_.Add(cap);
           return this;
        }
 
-       public yoyInflationLegBase withCaps(List<double> caps)
+       public YoYInflationLegBase withCaps(List<double> caps)
        {
           caps_ = caps;
           return this;
        }
 
-       public yoyInflationLegBase withFloors(double floor)
+       public YoYInflationLegBase withFloors(double floor)
        {
           floors_ = new List<double>();
           floors_.Add(floor);
           return this;
        }
 
-       public yoyInflationLegBase withFloors(List<double> floors)
+       public YoYInflationLegBase withFloors(List<double> floors)
        {
           floors_ = floors;
           return this;

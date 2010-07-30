@@ -177,7 +177,7 @@ namespace TestSuite
               for (int i=0; i<n; i++) 
               {
                   Date end = start + p[i];
-                  double calculated = dayCounter.yearFraction(start,end,null ,null );
+				  double calculated = dayCounter.yearFraction(start, end, null, null);
                   if (Math.Abs(calculated-expected[i]) > 1.0e-12) 
                   {
                       Assert.Fail ("from " + start + " to " + end +
@@ -204,7 +204,7 @@ namespace TestSuite
               for (int i=0; i<n; i++) 
               {
                   Date end = start + p[i];
-                  double calculated = dayCounter.yearFraction(start,end,null,null);
+				  double calculated = dayCounter.yearFraction(start, end, null, null);
                   if (Math.Abs(calculated-expected[i]) > 1.0e-12) 
                   {
                       Assert.Fail("from " + start + " to " + end +

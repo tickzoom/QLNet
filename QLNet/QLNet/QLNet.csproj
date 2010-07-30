@@ -63,7 +63,9 @@
   <ItemGroup>
     <Compile Include="Cashflow.cs" />
     <Compile Include="Cashflows\averagebmacoupon.cs" />
+    <Compile Include="Cashflows\CappedFlooredCmsCoupon.cs" />
     <Compile Include="Cashflows\CappedFlooredCoupon.cs" />
+    <Compile Include="Cashflows\CappedFlooredIborCoupon.cs" />
     <Compile Include="Cashflows\CappedFlooredYoYInflationCoupon.cs" />
     <Compile Include="Cashflows\CashFlows.cs" />
     <Compile Include="Cashflows\Cashflowvectors.cs" />
@@ -82,12 +84,14 @@
     <Compile Include="Cashflows\InflationCoupon.cs" />
     <Compile Include="Cashflows\InflationCouponPricer.cs" />
     <Compile Include="Cashflows\OvernightIndexedCoupon.cs" />
+    <Compile Include="Cashflows\OvernightIndexedCouponPricer.cs" />
     <Compile Include="Cashflows\Principal.cs" />
     <Compile Include="Cashflows\PrincipalLegBase.cs" />
     <Compile Include="Cashflows\RateLegBase.cs" />
     <Compile Include="Cashflows\Replication.cs" />
     <Compile Include="Cashflows\SimpleCashFlow.cs" />
     <Compile Include="Cashflows\YoYInflationCoupon.cs" />
+    <Compile Include="Cashflows\YoYInflationLeg.cs" />
     <Compile Include="Currencies\Africa.cs" />
     <Compile Include="Currencies\America.cs" />
     <Compile Include="Currencies\Asia.cs" />
@@ -173,6 +177,7 @@
     <Compile Include="Instruments\Swaption.cs" />
     <Compile Include="Instruments\VanillaOption.cs" />
     <Compile Include="Instruments\VanillaSwap.cs" />
+    <Compile Include="Instruments\YieldFinder.cs" />
     <Compile Include="Instruments\ZeroCouponInflationSwap.cs" />
     <Compile Include="InterestRate.cs" />
     <Compile Include="legacy\libormarketmodels\lfmcovarparam.cs" />
@@ -328,6 +333,8 @@
     <Compile Include="Money.cs" />
     <Compile Include="numericalmethod.cs" />
     <Compile Include="Option.cs" />
+    <Compile Include="Patterns\DefaultObservable.cs" />
+    <Compile Include="Patterns\IObserver.cs" />
     <Compile Include="Patterns\LazyObject.cs" />
     <Compile Include="Patterns\observablevalue.cs" />
     <Compile Include="Patterns\Observer.cs" />

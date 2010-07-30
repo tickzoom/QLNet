@@ -55,7 +55,7 @@ namespace QLNet {
       /// the type
       /// </summary>
       /// <returns></returns>
-      public ExchangeRate.Type type 
+      public Type type 
       {
          get { return type_;}
       }
@@ -66,7 +66,7 @@ namespace QLNet {
       /// <returns></returns>
       public double rate
       {
-         get { return (double)rate_.Value; }
+         get { return rate_.Value; }
       }
 
       public bool HasValue

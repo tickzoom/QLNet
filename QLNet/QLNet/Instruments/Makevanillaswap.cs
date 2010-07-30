@@ -58,7 +58,7 @@ namespace QLNet {
             iborIndex_ = index;
             fixedRate_ = fixedRate;
             forwardStart_ = forwardStart;
-            effectiveDate_ = null;
+			effectiveDate_ = null;
             fixedCalendar_ = floatCalendar_ = index.fixingCalendar();
             
             type_ = VanillaSwap.Type.Payer;
@@ -69,7 +69,7 @@ namespace QLNet {
             floatConvention_ = floatTerminationDateConvention_ = index.businessDayConvention();
             fixedRule_ = floatRule_ = DateGeneration.Rule.Backward;
             fixedEndOfMonth_ = floatEndOfMonth_ = false;
-            fixedFirstDate_ = fixedNextToLastDate_ = floatFirstDate_ = floatNextToLastDate_ = null;
+			fixedFirstDate_ = fixedNextToLastDate_ = floatFirstDate_ = floatNextToLastDate_ = null;
             floatSpread_ = 0.0;
             fixedDayCount_ = new Thirty360(Thirty360.Thirty360Convention.BondBasis);
             floatDayCount_ = index.dayCounter();

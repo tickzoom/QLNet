@@ -17,67 +17,65 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
+
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 
 namespace QLNet {
-    // we need only one instance of the class
-    // we can not derive it from IObservable because the class is static
-    public static class Settings {
+	// we need only one instance of the class
+	// we can not derive it from IObservable because the class is static
+	public static class Settings {
 
-        [ThreadStatic]
-        private static Date evaluationDate_ = null;
+		[ThreadStatic]
+		private static Date evaluationDate_ = null;
 
-        [ThreadStatic]
-        private static bool enforcesTodaysHistoricFixings_ = false;
+		[ThreadStatic]
+		private static bool enforcesTodaysHistoricFixings_ = false;
 
-        public static Date evaluationDate() 
-        {
-            if (evaluationDate_ == null)
-                evaluationDate_ = Date.Today;
-            return evaluationDate_; 
-        }
+		public static Date evaluationDate() 
+		{
+			if (evaluationDate_ == null)
+				evaluationDate_ = Date.Today;
+			return evaluationDate_; 
+		}
 
-        public static void setEvaluationDate(Date d) {
-            evaluationDate_ = d;
-            notifyObservers();
-        }
+		public static void setEvaluationDate(Date d) {
+			evaluationDate_ = d;
+			notifyObservers();
+		}
 
-        public static bool enforcesTodaysHistoricFixings {
-            get { return enforcesTodaysHistoricFixings_; }
-            set { enforcesTodaysHistoricFixings_ = value; }
-        }
+		public static bool enforcesTodaysHistoricFixings {
+			get { return enforcesTodaysHistoricFixings_; }
+			set { enforcesTodaysHistoricFixings_ = value; }
+		}
 
-        ////////////////////////////////////////////////////
-        // Observable interface
-        private static event Callback notifyObserversEvent;
+		////////////////////////////////////////////////////
+		// Observable interface
+		private static event Action notifyObserversEvent;
 
-        public static void registerWith(Callback handler) { notifyObserversEvent += handler; }
-        public static void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
-        private static void notifyObservers() {
-            Callback handler = notifyObserversEvent;
-            if (handler != null) {
-                handler();
-            }
-        }
-    }
+		public static void registerWith(Action handler) { notifyObserversEvent += handler; }
+		public static void unregisterWith(Action handler) { notifyObserversEvent -= handler; }
+		private static void notifyObservers() {
+			Action handler = notifyObserversEvent;
+			if (handler != null) {
+				handler();
+			}
+		}
+	}
 
-    // helper class to temporarily and safely change the settings
-    public class SavedSettings {
-        private Date evaluationDate_;
-        private bool enforcesTodaysHistoricFixings_;
+	// helper class to temporarily and safely change the settings
+	public class SavedSettings {
+		private Date evaluationDate_;
+		private bool enforcesTodaysHistoricFixings_;
 
-        public SavedSettings() {
-            evaluationDate_ = Settings.evaluationDate();
-            enforcesTodaysHistoricFixings_ = Settings.enforcesTodaysHistoricFixings;
-        }
+		public SavedSettings() {
+			evaluationDate_ = Settings.evaluationDate();
+			enforcesTodaysHistoricFixings_ = Settings.enforcesTodaysHistoricFixings;
+		}
 
-        ~SavedSettings() {
-            if (evaluationDate_ != Settings.evaluationDate())
-                Settings.setEvaluationDate(evaluationDate_);
-            Settings.enforcesTodaysHistoricFixings = enforcesTodaysHistoricFixings_;
-        }
-    }
+		~SavedSettings() {
+			if (evaluationDate_ != Settings.evaluationDate())
+				Settings.setEvaluationDate(evaluationDate_);
+			Settings.enforcesTodaysHistoricFixings = enforcesTodaysHistoricFixings_;
+		}
+	}
 }

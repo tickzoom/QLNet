@@ -97,7 +97,7 @@ namespace QLNet {
                  BusinessDayConvention convention__, BusinessDayConvention terminationDateConvention__,
                  DateGeneration.Rule rule__, bool endOfMonth__)
             : this(effectiveDate__, terminationDate__, tenor__, calendar__,
-                 convention__, terminationDateConvention__, rule__, endOfMonth__, null, null) { }
+				 convention__, terminationDateConvention__, rule__, endOfMonth__, null, null) { }
         public Schedule(Date effectiveDate__, Date terminationDate__, Period tenor__, Calendar calendar__,
                  BusinessDayConvention convention__, BusinessDayConvention terminationDateConvention__,
                  DateGeneration.Rule rule__, bool endOfMonth__,

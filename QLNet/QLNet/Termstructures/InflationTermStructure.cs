@@ -241,7 +241,7 @@ namespace QLNet {
            a not-interpolated curve because interpolation, usually,
            of fixings is forward looking).
       */
-      public virtual Date baseDate() { return null; }
+	  public virtual Date baseDate() { return null; }
       //@}
 
       //! Functions to set and get seasonality.

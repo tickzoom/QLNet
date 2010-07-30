@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using QLNet.Patterns;
 
 namespace QLNet {
     //! Affine model class
@@ -27,22 +28,11 @@ namespace QLNet {
 
         \ingroup shortrate
     */
-    public abstract class AffineModel : IObservable {
+    public abstract class AffineModel : DefaultObservable {
         //! Implied discount curve
         public abstract double discount(double t);
         public abstract double discountBond(double now, double maturity, Vector factors);
         public abstract double discountBondOption(Option.Type type, double strike, double maturity, double bondMaturity);
-
-        public event Callback notifyObserversEvent;
-        // this method is required for calling from derived classes
-        protected void notifyObservers() {
-            Callback handler = notifyObserversEvent;
-            if (handler != null) {
-                handler();
-            }
-        }
-        public void registerWith(Callback handler) { notifyObserversEvent += handler; }
-        public void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
     }
 
     //Affince Model Interface used for multihritage in 
@@ -57,7 +47,7 @@ namespace QLNet {
     }
 
     //TermStructureConsistentModel used in analyticcapfloorengine.cs
-    public class TermStructureConsistentModel : IObservable
+    public class TermStructureConsistentModel : DefaultObservable
     {
         public TermStructureConsistentModel(Handle<YieldTermStructure> termStructure)
         {
@@ -69,35 +59,17 @@ namespace QLNet {
             return termStructure_;
         }
         private Handle<YieldTermStructure> termStructure_;
-
-        public event Callback notifyObserversEvent;
-        // this method is required for calling from derived classes
-        protected void notifyObservers()
-        {
-            Callback handler = notifyObserversEvent;
-            if (handler != null)
-            {
-                handler();
-            }
-        }
-        public void registerWith(Callback handler) { notifyObserversEvent += handler; }
-        public void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
     }
 
     //ITermStructureConsistentModel used ins shortratemodel blackkarasinski.cs/hullwhite.cs
-    public interface ITermStructureConsistentModel
+    public interface ITermStructureConsistentModel : IObservable, IObserver
     {
         Handle<YieldTermStructure> termStructure();
         Handle<YieldTermStructure> termStructure_ { get; set; }
-        void notifyObservers();
-        event Callback notifyObserversEvent;
-        void registerWith(Callback handler);
-        void unregisterWith(Callback handler);
-        void update();
     }
     
     //! Calibrated model class
-    public class CalibratedModel : IObserver, IObservable {
+    public class CalibratedModel : DefaultObservable, IObserver {
         protected List<Parameter> arguments_;
 
         protected Constraint constraint_;
@@ -244,25 +216,10 @@ namespace QLNet {
             public override double finiteDifferenceEpsilon() { return 1e-6; }
         }
 
-
-        #region Observer & Observable
-        public event Callback notifyObserversEvent;
-
-        // this method is required for calling from derived classes
-        protected void notifyObservers() {
-            Callback handler = notifyObserversEvent;
-            if (handler != null) {
-                handler();
-            }
-        }
-        public void registerWith(Callback handler) { notifyObserversEvent += handler; }
-        public void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
-
         public void update() {
             generateArguments();
             notifyObservers();
         } 
-	    #endregion
     }
 
     //! Abstract short-rate model class

@@ -33,8 +33,8 @@ namespace QLNet
       */
       public FixedRateBond(int settlementDays, double faceAmount, Schedule schedule, 
                            List<double> coupons,DayCounter accrualDayCounter)
-            : this(settlementDays, faceAmount, schedule, coupons, accrualDayCounter, 
-                   BusinessDayConvention.Following, 100, null, new Calendar()) { }
+            : this(settlementDays, faceAmount, schedule, coupons, accrualDayCounter,
+				   BusinessDayConvention.Following, 100, null, new Calendar()) { }
 
       public FixedRateBond(int settlementDays, double faceAmount, Schedule schedule,
                            List<double> coupons, DayCounter accrualDayCounter, 
@@ -100,13 +100,13 @@ namespace QLNet
          {
          
             case DateGeneration.Rule.Backward:
-               firstDate = null;
+				 firstDate = null;
                nextToLastDate = stubDate;
                break;
 
             case DateGeneration.Rule.Forward:
                firstDate = stubDate;
-               nextToLastDate = null;
+			   nextToLastDate = null;
                break;
 
             case DateGeneration.Rule.Zero:

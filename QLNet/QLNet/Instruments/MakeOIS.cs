@@ -92,7 +92,7 @@ namespace QLNet
       public MakeOIS withSettlementDays(int fixingDays) 
       {
          fixingDays_ = fixingDays;
-         effectiveDate_ = null; // new Date();
+		 effectiveDate_ = null; // new Date();
          return this;
       }
 

@@ -20,12 +20,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using QLNet.Patterns;
 using QLNet.Time;
 
 namespace QLNet {
     //! interest rate volatility smile section
     /*! This abstract class provides volatility smile section interface */
-    public abstract class SmileSection : IObservable, IObserver {
+    public abstract class SmileSection : DefaultObservable, IObserver {
         private bool isFloating_;
         private Date referenceDate_;
 
@@ -42,12 +43,12 @@ namespace QLNet {
 		public SmileSection() {}
 
         // public SmileSection(Date d, DayCounter dc = DayCounter(), Date referenceDate = Date())
-        public SmileSection(Date d, DayCounter dc) : this(d, dc, null) { }
+		public SmileSection(Date d, DayCounter dc) : this(d, dc, null) { }
         public SmileSection(Date d, DayCounter dc, Date referenceDate) {
             exerciseDate_ = d;
             dc_ = dc;
 
-            isFloating_ = referenceDate == null;
+			isFloating_ = referenceDate == null;
             
             if (isFloating_) {
                 Settings.registerWith(update);
@@ -100,26 +101,14 @@ namespace QLNet {
         protected abstract double volatilityImpl(double k);
 
 
-        #region Observable & Observer
-        public event Callback notifyObserversEvent;
-        public void registerWith(Callback handler) { notifyObserversEvent += handler; }
-        public void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
-        protected void notifyObservers() {
-            Callback handler = notifyObserversEvent;
-            if (handler != null) {
-                handler();
-            }
-        }
-
-        // observer
+    	// observer
         public virtual void update() {
             if (isFloating_) {
                 referenceDate_ = Settings.evaluationDate();
                 initializeExerciseTime();
             }
             //LazyObject::update();
-        } 
-        #endregion
+        }
     }
 
     public class SabrSmileSection : SmileSection {

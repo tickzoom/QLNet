@@ -57,7 +57,7 @@ namespace QLNet
          iborIndex1_ = index1;
          iborIndex2_ = index2;
          forwardStart_ = forwardStart;
-         effectiveDate_ = null;
+		 effectiveDate_ = null;
          float1Calendar_ = float2Calendar_ = index1.fixingCalendar();
 
          type_ = BasisSwap.Type.Payer;
@@ -68,7 +68,7 @@ namespace QLNet
          float2Convention_ = float2TerminationDateConvention_ = index2.businessDayConvention();
          float1Rule_ = float2Rule_ = DateGeneration.Rule.Backward;
          float1EndOfMonth_ = float2EndOfMonth_ = false;
-         float1FirstDate_ = float1NextToLastDate_ = float2FirstDate_ = float2NextToLastDate_ = null;
+		 float1FirstDate_ = float1NextToLastDate_ = float2FirstDate_ = float2NextToLastDate_ = null;
          float1Spread_ = float2Spread_ = 0.0;
          float1DayCount_ = index1.dayCounter();
          float2DayCount_ = index2.dayCounter();

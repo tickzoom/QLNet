@@ -65,6 +65,7 @@
     <Compile Include="Calendars\BrazilCalendarTest.cs" />
     <Compile Include="Calendars\CalendarUtil.cs" />
     <Compile Include="CurrencyTests.cs" />
+    <Compile Include="Flag.cs" />
     <Compile Include="T_AsianOptions.cs" />
     <Compile Include="T_Bermudanswaption.cs" />
     <Compile Include="T_Inflation.cs" />
@@ -77,7 +78,6 @@
     <Compile Include="T_Bonds.cs" />
     <Compile Include="T_Calendars.cs" />
     <Compile Include="T_CapFloor.cs" />
-    <Compile Include="T_Dates.cs" />
     <Compile Include="T_DayCounters.cs" />
     <Compile Include="T_EuropeanOption.cs" />
     <Compile Include="T_ExchangeRate.cs" />

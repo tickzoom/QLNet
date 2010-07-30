@@ -103,7 +103,7 @@ namespace TestSuite
                         {
 
                            double price = bond.cleanPrice(yields[m], bondDayCount, compounding[n], frequencies[l]);
-                           double calculated = bond.yield(price, bondDayCount, compounding[n], frequencies[l], null,
+						   double calculated = bond.yield(price, bondDayCount, compounding[n], frequencies[l], null,
                                                           tolerance, maxEvaluations);
 
                            if (Math.Abs(yields[m] - calculated) > tolerance)
@@ -548,7 +548,7 @@ namespace TestSuite
                        new Date(30, Month.March, 2009), new Period(Frequency.Semiannual),
                        new UnitedStates(UnitedStates.Market.GovernmentBond),
                        BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted, DateGeneration.Rule.Backward, false,
-                       null, new Date(30, Month.November, 2008));
+					   null, new Date(30, Month.November, 2008));
 
          FixedRateBond bond3 = new FixedRateBond(settlementDays, vars.faceAmount, sch3,
                                couponRates, new ActualActual(ActualActual.Convention.ISMA),

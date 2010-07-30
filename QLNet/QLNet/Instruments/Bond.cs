@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using QLNet.Instruments;
 using QLNet.Time;
 
 namespace QLNet {
@@ -101,34 +102,7 @@ namespace QLNet {
     }
 
 
-    public class YieldFinder : ISolver1d {
-        private double faceAmount_;
-        private List<CashFlow> cashflows_;
-        private double dirtyPrice_;
-        private Compounding compounding_;
-        private DayCounter dayCounter_;
-        private Frequency frequency_;
-        private Date settlement_;
-
-        public YieldFinder(double faceAmount, List<CashFlow> cashflows, double dirtyPrice, DayCounter dayCounter,
-                           Compounding compounding, Frequency frequency, Date settlement) {
-            faceAmount_ = faceAmount;
-            cashflows_ = cashflows;
-            dirtyPrice_ = dirtyPrice;
-            compounding_ = compounding;
-            dayCounter_ = dayCounter;
-            frequency_ = frequency;
-            settlement_ = settlement;
-        }
-
-        public override double value(double yield) {
-            return dirtyPrice_
-                 - Utils.dirtyPriceFromYield(faceAmount_, cashflows_, yield, dayCounter_, compounding_, frequency_, settlement_);
-        }
-    }
-
-
-    //! Base bond class
+	//! Base bond class
     /*! Derived classes must fill the unitialized data members.
 
         \warning Most methods assume that the cashflows are stored sorted by date, the redemption being the last one.
@@ -214,7 +188,8 @@ namespace QLNet {
 	    #endregion
 
 
-        public double notional(Date d) {
+        public double notional(Date d)
+		{
             if (d == null)
                 d = settlementDate();
 
@@ -253,14 +228,14 @@ namespace QLNet {
         }
 
 
-        public Date settlementDate() { return settlementDate(null); }
+		public Date settlementDate() { return settlementDate(null); }
         public Date settlementDate(Date date) {
-            Date d = (date==null ? Settings.evaluationDate() : date);
+			Date d = (date == null ? Settings.evaluationDate() : date);
 
             // usually, the settlement is at T+n...
             Date settlement = calendar_.advance(d, settlementDays_, TimeUnit.Days);
             // ...but the bond won't be traded until the issue date (if given.)
-            if (issueDate_ == null)
+			if (issueDate_ == null)
                 return settlement;
             else
                 return Date.Max(settlement, issueDate_);
@@ -301,9 +276,11 @@ namespace QLNet {
         //! clean price given a yield and settlement date
         /*! The default bond settlement is used if no date is given. */
         public double cleanPrice(double yield, DayCounter dc, Compounding comp, Frequency freq) {
-            return cleanPrice(yield, dc, comp, freq, null); }
+			return cleanPrice(yield, dc, comp, freq, null);
+		}
+
         public double cleanPrice(double yield, DayCounter dc, Compounding comp, Frequency freq, Date settlement) {
-            if (settlement == null)
+			if (settlement == null)
                 settlement = settlementDate();
             return dirtyPrice(yield, dc, comp, freq, settlement) - accruedAmount(settlement);
         }
@@ -331,14 +308,15 @@ namespace QLNet {
         }
 
         public double yield(double cleanPrice, DayCounter dc, Compounding comp, Frequency freq) {
-            return yield(cleanPrice, dc, comp, freq, null, 1.0e-8, 100);
+			return yield(cleanPrice, dc, comp, freq, null, 1.0e-8, 100);
         }
         public double yield(double cleanPrice, DayCounter dc, Compounding comp, Frequency freq, Date settlement) {
             return yield(cleanPrice, dc, comp, freq, settlement, 1.0e-8, 100);
         }
         public double yield(double cleanPrice, DayCounter dc, Compounding comp, Frequency freq, Date settlement,
-                            double accuracy, int maxEvaluations) {
-            if (settlement == null)
+                            double accuracy, int maxEvaluations) 
+		{
+			if (settlement == null)
                 settlement = settlementDate();
             Brent solver = new Brent();
             solver.setMaxEvaluations(maxEvaluations);
@@ -378,9 +356,9 @@ namespace QLNet {
 
         //! accrued amount at a given date
         /*! The default bond settlement is used if no date is given. */
-        public double accruedAmount() { return accruedAmount(null); }
+		public double accruedAmount() { return accruedAmount(null); }
         public double accruedAmount(Date settlement) {
-            if (settlement==null)
+			if (settlement == null)
                 settlement = settlementDate();
 
             CashFlow cf = CashFlows.nextCashFlow(cashflows_,false, settlement);
@@ -429,23 +407,23 @@ namespace QLNet {
             or expected in a stochastic sense. When the bond settlement date is used the coupon is the last paid one.
 
             The current bond settlement is used if no date is given. */
-        public double previousCoupon() { return previousCoupon(null); }
+		public double previousCoupon() { return previousCoupon(null); }
         public double previousCoupon(Date settlement) {
-            if (settlement == null)
+			if (settlement == null)
                 settlement = settlementDate();
             return CashFlows.previousCouponRate(cashflows_, false, settlement);
         }
 
-        public Date nextCouponDate() { return nextCouponDate(null); }
+		public Date nextCouponDate() { return nextCouponDate(null); }
         public Date nextCouponDate(Date settlement) {
-            if (settlement == null)
+			if (settlement == null)
                 settlement = settlementDate();
             return CashFlows.nextCouponDate(cashflows_, false, settlement);
         }
 
-        public Date previousCouponDate() { return previousCouponDate(null); }
+		public Date previousCouponDate() { return previousCouponDate(null); }
         public Date previousCouponDate(Date settlement) {
-            if (settlement == null)
+			if (settlement == null)
                 settlement = settlementDate();
             return CashFlows.previousCouponDate(cashflows_, false, settlement);
         }

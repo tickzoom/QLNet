@@ -28,12 +28,12 @@ namespace QLNet {
                                 DayCounter paymentDayCounter)
             : this(settlementDays, faceAmount, schedule, index, paymentDayCounter, BusinessDayConvention.Following,
                    0, new List<double>() { 1 }, new List<double>() { 0 }, new List<double>(), new List<double>(),
-                   false, 100, null) { }
+				   false, 100, null) { }
         public FloatingRateBond(int settlementDays, double faceAmount, Schedule schedule, IborIndex index,
                                 DayCounter paymentDayCounter, BusinessDayConvention paymentConvention, int fixingDays, 
                                 List<double> gearings, List<double> spreads)
             : this(settlementDays, faceAmount, schedule, index, paymentDayCounter, BusinessDayConvention.Following,
-                   fixingDays, gearings, spreads, new List<double>(), new List<double>(), false, 100, null) { }
+				   fixingDays, gearings, spreads, new List<double>(), new List<double>(), false, 100, null) { }
         public FloatingRateBond(int settlementDays, double faceAmount, Schedule schedule, IborIndex index, DayCounter paymentDayCounter,
                                 BusinessDayConvention paymentConvention, int fixingDays, List<double> gearings, List<double> spreads,
                                 List<double> caps, List<double> floors, bool inArrears, double redemption, Date issueDate)
@@ -88,12 +88,12 @@ namespace QLNet {
             Date firstDate, nextToLastDate;
             switch (rule) {
                 case DateGeneration.Rule.Backward:
-                    firstDate = null;
+					firstDate = null;
                     nextToLastDate = stubDate;
                     break;
                 case DateGeneration.Rule.Forward:
                     firstDate = stubDate;
-                    nextToLastDate = null;
+					nextToLastDate = null;
                     break;
               case DateGeneration.Rule.Zero:
               case DateGeneration.Rule.ThirdWednesday:

@@ -16,56 +16,46 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using QLNet.Time;
 
 namespace QLNet
 {
-   //! %principal payment over a fixed period
-   //! This class implements part of the CashFlow interface but it is
-   //  still abstract and provides derived classes with methods for accrual period calculations.
-   public class Principal : CashFlow
-   {
-      protected double nominal_;
-      protected double amount_;
-      protected DayCounter dayCounter_;
-      protected Date paymentDate_, accrualStartDate_, accrualEndDate_, refPeriodStart_, refPeriodEnd_;
+	//! %principal payment over a fixed period
+	//! This class implements part of the CashFlow interface but it is
+	//  still abstract and provides derived classes with methods for accrual period calculations.
+	public class Principal : CashFlow
+	{
+		protected double nominal_;
+		protected double amount_;
+		protected DayCounter dayCounter_;
+		protected Date paymentDate_, accrualStartDate_, accrualEndDate_, refPeriodStart_, refPeriodEnd_;
 
-      // access to properties
-      public double nominal() { return nominal_; }
-      public override Date date() { return paymentDate_; }
-      public Date accrualStartDate() { return accrualStartDate_; }
-      public Date accrualEndDate() { return accrualEndDate_; }
-      public Date refPeriodStart { get { return refPeriodStart_; } }
-      public Date refPeriodEnd { get { return refPeriodEnd_; } }
-      public override double amount() { return amount_; }
-      public void setAmount( double amount ) { amount_ = amount; }
-      public DayCounter dayCounter() { return dayCounter_; }
+		// access to properties
+		public double nominal() { return nominal_; }
+		public override Date date() { return paymentDate_; }
+		public Date accrualStartDate() { return accrualStartDate_; }
+		public Date accrualEndDate() { return accrualEndDate_; }
+		public Date refPeriodStart { get { return refPeriodStart_; } }
+		public Date refPeriodEnd { get { return refPeriodEnd_; } }
+		public override double amount() { return amount_; }
+		public void setAmount(double amount) { amount_ = amount; }
+		public DayCounter dayCounter() { return dayCounter_; }
 
-      // Constructors
-      public Principal() { }       // default constructor
-      public Principal(double amount, 
-                       double nominal, 
-                       Date paymentDate, 
-                       Date accrualStartDate, 
-                       Date accrualEndDate, 
-                       DayCounter dayCounter, 
-                       Date refPeriodStart = null , 
-                       Date refPeriodEnd = null )
-      {
-         amount_ = amount;
-         nominal_ = nominal;
-         paymentDate_ = paymentDate;
-         accrualStartDate_ = accrualStartDate;
-         accrualEndDate_ = accrualEndDate;
-         refPeriodStart_ = refPeriodStart;
-         refPeriodEnd_ = refPeriodEnd;
-         dayCounter_ = dayCounter;
-         if (refPeriodStart_ == null) refPeriodStart_ = accrualStartDate_;
-         if (refPeriodEnd_ == null) refPeriodEnd_ = accrualEndDate_;
-      }
-   }
+		public Principal()
+		{
+		}
+
+		public Principal(double amount, double nominal, Date paymentDate, Date accrualStartDate, Date accrualEndDate, DayCounter dayCounter, Date refPeriodStart = null, Date refPeriodEnd = null)
+		{
+			amount_ = amount;
+			nominal_ = nominal;
+			paymentDate_ = paymentDate;
+			accrualStartDate_ = accrualStartDate;
+			accrualEndDate_ = accrualEndDate;
+			dayCounter_ = dayCounter;
+			refPeriodStart_ = refPeriodStart ?? accrualStartDate_;
+			refPeriodEnd_ = refPeriodEnd ?? accrualEndDate_;
+		}
+	}
 }

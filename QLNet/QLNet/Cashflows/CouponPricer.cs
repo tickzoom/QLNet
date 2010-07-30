@@ -21,13 +21,16 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using QLNet.Patterns;
 
-namespace QLNet {
+namespace QLNet
+{
+    /// <summary>
+	/// generic pricer for floating-rate coupons
+    /// </summary>
+    public abstract class FloatingRateCouponPricer : DefaultObservable, IObserver
+	{
 
-    //! generic pricer for floating-rate coupons
-    public abstract class FloatingRateCouponPricer : IObservable, IObserver {
-        //! \name required interface
-        //@{
         public abstract double swapletPrice();
         public abstract double swapletRate();
         public abstract double capletPrice(double effectiveCap);
@@ -37,48 +40,53 @@ namespace QLNet {
         public abstract void initialize(FloatingRateCoupon coupon);
         protected abstract double optionletPrice(Option.Type optionType, double effStrike);
 
-        #region Observer & observable
-        public event Callback notifyObserversEvent;
-        public void registerWith(Callback handler) { notifyObserversEvent += handler; }
-        public void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
-        protected void notifyObservers() {
-            Callback handler = notifyObserversEvent;
-            if (handler != null) {
-                handler();
-            }
+        public void update()
+        {
+        	notifyObservers();
         }
-
-        // observer interface
-        public void update() { notifyObservers(); }
-        #endregion
     }
 
     //! base pricer for capped/floored Ibor coupons
-    public abstract class IborCouponPricer : FloatingRateCouponPricer {
-        public IborCouponPricer()
-            : this(new Handle<OptionletVolatilityStructure>()) {
-        }
-        public IborCouponPricer(Handle<OptionletVolatilityStructure> v) {
-            capletVol_ = v;
-            if (!capletVol_.empty())
-                capletVol_.registerWith(update);
+    public abstract class IborCouponPricer : FloatingRateCouponPricer
+	{
+		private Handle<OptionletVolatilityStructure> capletVol_;
+
+        protected IborCouponPricer()
+            : this(new Handle<OptionletVolatilityStructure>()) 
+		{
         }
 
-        public Handle<OptionletVolatilityStructure> capletVolatility() {
-            return capletVol_;
-        }
-        public void setCapletVolatility() {
-            setCapletVolatility(new Handle<OptionletVolatilityStructure>());
-        }
-        public void setCapletVolatility(Handle<OptionletVolatilityStructure> v) {
-            capletVol_.unregisterWith(update);
+		protected IborCouponPricer(Handle<OptionletVolatilityStructure> v)
+		{
             capletVol_ = v;
             if (!capletVol_.empty())
-                capletVol_.registerWith(update);
+            {
+            	capletVol_.registerWith(update);
+            }
+        }
+
+        public Handle<OptionletVolatilityStructure> capletVolatility()
+		{
+            return capletVol_;
+        }
+
+        public void setCapletVolatility()
+		{
+            setCapletVolatility(new Handle<OptionletVolatilityStructure>());
+        }
+        
+		public void setCapletVolatility(Handle<OptionletVolatilityStructure> v)
+		{
+            capletVol_.unregisterWith(update);
+            capletVol_ = v;
+        
+			if (!capletVol_.empty())
+			{
+				capletVol_.registerWith(update);
+			}
 
             update();
         }
-        private Handle<OptionletVolatilityStructure> capletVol_;
     }
 
     //! Black-formula pricer for capped/floored Ibor coupons

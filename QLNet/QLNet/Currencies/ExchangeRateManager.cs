@@ -141,12 +141,12 @@ namespace QLNet
 
       public ExchangeRate lookup(Currency source, Currency target)
       {
-         return this.lookup(source, target, new Date(), ExchangeRate.Type.Derived);
+         return lookup(source, target, Settings.evaluationDate(), ExchangeRate.Type.Derived);
       }
 
-      public ExchangeRate lookup(Currency source, Currency target,Date date)
+      public ExchangeRate lookup(Currency source, Currency target, Date date)
       {
-         return this.lookup(source, target, date, ExchangeRate.Type.Derived);
+         return lookup(source, target, date, ExchangeRate.Type.Derived);
       }
 
       /// <summary>
@@ -212,13 +212,13 @@ namespace QLNet
       }
       private ExchangeRate smartLookup(Currency source, Currency target, Date date)
       {
-         return smartLookup(source,target,date, new List<int>() );
+         return smartLookup(source, target, date, new List<int>());
       }      
 
       private ExchangeRate smartLookup(Currency source, Currency target, Date date, List<int> forbidden)
       {
         // direct exchange rates are preferred.
-        ExchangeRate direct = fetch(source,target,date);
+        ExchangeRate direct = fetch(source, target, date);
         if (direct.HasValue)
             return direct;
 

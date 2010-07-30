@@ -17,14 +17,18 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
+
 using System;
-using QLNet;
 
 namespace QLNet {
-    public class Date : IComparable<Date> {
+    public class Date : IComparable<Date>
+    {
         private DateTime date;
 
-        public Date() { }							//! Default constructor returning a null date.
+		public Date()
+		{
+		}
+
         //! Constructor taking a serial number as given by Excel. 
         // Serial numbers in Excel have a known problem with leap year 1900
         public Date(int serialNumber) {			
@@ -51,7 +55,9 @@ namespace QLNet {
         public static Date minDate() { return new Date(1, 1, 1901); }
         public static Date maxDate() { return new Date(31, 12, 2199); }
         public static Date Today { get { return new Date(DateTime.Today); } }
-        public static bool IsLeapYear(int y) { return DateTime.IsLeapYear(y); }
+
+
+    	public static bool IsLeapYear(int y) { return DateTime.IsLeapYear(y); }
         public static int DaysInMonth(int y, int m) { return DateTime.DaysInMonth(y, m); }
 
         public static Date endOfMonth(Date d) { return (d - d.Day + DaysInMonth(d.Year, d.Month)); }

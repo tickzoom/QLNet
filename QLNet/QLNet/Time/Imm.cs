@@ -78,11 +78,11 @@ namespace QLNet {
         }
 
         // returns the IMM date for the given IMM code (e.g. March 20th, 2013 for H3).
-        public static Date date(string immCode) { return date(immCode, null); }
+		public static Date date(string immCode) { return date(immCode, null); }
         public static Date date(string immCode, Date refDate) {
             if (!isIMMcode(immCode, false)) throw new ArgumentException(immCode + " is not a valid IMM code");
 
-            Date referenceDate = (refDate != null ? refDate : Settings.evaluationDate());
+			Date referenceDate = (refDate != null ? refDate : Settings.evaluationDate());
 
             int m = "FGHJKMNQUVXZ".IndexOf(immCode.ToUpper()[0]) + 1;
             if (m == 0)
@@ -108,10 +108,10 @@ namespace QLNet {
         //! next IMM date following the given date
         /*! returns the 1st delivery date for next contract listed in the
             International Money Market section of the Chicago Mercantile Exchange. */
-        public static Date nextDate() { return nextDate((Date)null, true); }
+		public static Date nextDate() { return nextDate((Date)null, true); }
         public static Date nextDate(Date d) { return nextDate(d, true); }
         public static Date nextDate(Date date, bool mainCycle) {
-            Date refDate = (date == null ? Settings.evaluationDate() : date);
+			Date refDate = (date == null ? Settings.evaluationDate() : date);
 
             int y = refDate.Year;
             int m = refDate.Month;
@@ -137,8 +137,8 @@ namespace QLNet {
         //! next IMM date following the given IMM code
         /*! returns the 1st delivery date for next contract listed in the
             International Money Market section of the Chicago Mercantile Exchange. */
-        public static Date nextDate(string immCode) { return nextDate(immCode, true, null); }
-        public static Date nextDate(string immCode, bool mainCycle) { return nextDate(immCode, mainCycle, null); }
+		public static Date nextDate(string immCode) { return nextDate(immCode, true, null); }
+		public static Date nextDate(string immCode, bool mainCycle) { return nextDate(immCode, mainCycle, null); }
         public static Date nextDate(string immCode, bool mainCycle, Date referenceDate) {
             Date immDate = date(immCode, referenceDate);
             return nextDate(immDate+1, mainCycle);
@@ -146,7 +146,7 @@ namespace QLNet {
 
         /*! returns the IMM code for next contract listed in the
             International Money Market section of the Chicago Mercantile Exchange.*/
-        public static string nextCode() { return nextCode((Date)null, true); }
+		public static string nextCode() { return nextCode((Date)null, true); }
         public static string nextCode(Date d) { return nextCode(d, true); }
         public static string nextCode(Date d, bool mainCycle) {
             Date date = nextDate(d, mainCycle);
@@ -155,8 +155,8 @@ namespace QLNet {
 
         /*! returns the IMM code for next contract listed in the
             International Money Market section of the Chicago Mercantile Exchange. */
-        public static string nextCode(string immCode) { return nextCode(immCode, true, null); }
-        public static string nextCode(string immCode, bool mainCycle) { return nextCode(immCode, mainCycle, null); }
+		public static string nextCode(string immCode) { return nextCode(immCode, true, null); }
+		public static string nextCode(string immCode, bool mainCycle) { return nextCode(immCode, mainCycle, null); }
         public static string nextCode(string immCode, bool mainCycle, Date referenceDate) {
             Date date = nextDate(immCode, mainCycle, referenceDate);
             return code(date);

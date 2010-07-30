@@ -17,90 +17,63 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using QLNet.Time;
 
 namespace QLNet
 {
-   //! %Coupon paying a YoY-inflation type index
-   public class YoYInflationCoupon : InflationCoupon
-   {
-      public YoYInflationCoupon(Date paymentDate,
-                                double nominal,
-                                Date startDate,
-                                Date endDate,
-                                int fixingDays,
-                                YoYInflationIndex yoyIndex,
-                                Period observationLag,
-                                DayCounter dayCounter,
-                                double gearing = 1.0,
-                                double spread = 0.0,
-                                Date refPeriodStart = null,
-                                Date refPeriodEnd = null )
-         :base(paymentDate, nominal, startDate, endDate,
-               fixingDays, yoyIndex, observationLag,
-               dayCounter, refPeriodStart, refPeriodEnd)
-      {
-         yoyIndex_ = yoyIndex; 
-         gearing_ = gearing;
-         spread_ = spread;
-      }
- 
-      //! \name Inspectors
-      //@{
-      //! index gearing, i.e. multiplicative coefficient for the index
-      public double gearing() { return gearing_; }
-      //! spread paid over the fixing of the underlying index
-      public double spread() { return spread_; }
-      public double adjustedFixing() { return (rate() - spread()) / gearing(); }
-      public YoYInflationIndex yoyIndex() { return yoyIndex_; }
-      //@}
+	/// <summary>
+	/// Coupon paying a YoY-inflation type index
+	/// </summary>
+	public class YoYInflationCoupon : InflationCoupon
+	{
+		private YoYInflationIndex yoyIndex_;
+		protected double gearing_;
+		protected double spread_;
 
-      private YoYInflationIndex yoyIndex_;
-      protected double gearing_;
-      protected double spread_;
+		public YoYInflationCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays, YoYInflationIndex yoyIndex, Period observationLag, DayCounter dayCounter)
+			: this(paymentDate, nominal, startDate, endDate, fixingDays, yoyIndex, observationLag, dayCounter, 1.0, 0.0, null, null)
+		{
+		}
 
-      protected override bool checkPricerImpl(InflationCouponPricer i)
-      {
-         return (i is YoYInflationCouponPricer);
-      }
-   }
+		public YoYInflationCoupon(Date paymentDate, double nominal, Date startDate, Date endDate, int fixingDays, YoYInflationIndex yoyIndex, Period observationLag, DayCounter dayCounter, double gearing, double spread, Date refPeriodStart, Date refPeriodEnd)
+			: base(paymentDate, nominal, startDate, endDate, fixingDays, yoyIndex, observationLag, dayCounter, refPeriodStart, refPeriodEnd)
+		{
+			yoyIndex_ = yoyIndex;
+			gearing_ = gearing;
+			spread_ = spread;
+		}
 
-
-   //! Helper class building a sequence of capped/floored yoy inflation coupons
-   //! payoff is: spread + gearing x index
-   public class yoyInflationLeg : Cashflows.yoyInflationLegBase
-   {
-      public yoyInflationLeg(Schedule schedule,Calendar cal,
-                             YoYInflationIndex index,
-                             Period observationLag)
-      {
-         schedule_ = schedule;
-         index_ = index;
-         observationLag_ = observationLag;
-         paymentAdjustment_ = BusinessDayConvention.ModifiedFollowing;
-         paymentCalendar_ = cal;
-      }
-
-
-      public override List<CashFlow> value()
-      {
-         return CashFlowVectors.yoyInflationLeg(notionals_, 
-                                                schedule_, 
-                                                paymentAdjustment_, 
-                                                index_, 
-                                                gearings_, 
-                                                spreads_, 
-                                                paymentDayCounter_,
-                                                caps_, 
-                                                floors_ ,
-                                                paymentCalendar_,
-                                                fixingDays_,
-                                                observationLag_);
-      }
-
-    };
+		/// <summary>
+		/// index gearing, i.e. multiplicative coefficient for the index
+		/// </summary>
+		/// <returns></returns>
+		public double gearing()
+		{
+			return gearing_;
+		}
+		
+		/// <summary>
+		/// spread paid over the fixing of the underlying index
+		/// </summary>
+		/// <returns></returns>
+		public double spread()
+		{
+			return spread_;
+		}
+		
+		public double adjustedFixing()
+		{
+			return (rate() - spread()) / gearing();
+		}
+		
+		public YoYInflationIndex yoyIndex()
+		{
+			return yoyIndex_;
+		}
+		
+		protected override bool checkPricerImpl(InflationCouponPricer i)
+		{
+			return (i is YoYInflationCouponPricer);
+		}
+	}
 }

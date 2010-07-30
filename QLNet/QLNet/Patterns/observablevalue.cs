@@ -16,65 +16,70 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using QLNet.Patterns;
 
-namespace QLNet {
-    //! %observable and assignable proxy to concrete value
-    /*! Observers can be registered with instances of this class so
-        that they are notified when a different value is assigned to
-        such instances. Client code can copy the contained value or
-        pass it to functions via implicit conversion.
-        \note it is not possible to call non-const method on the
-              returned value. This is by design, as this possibility
-              would necessarily bypass the notification code; client
-              code should modify the value via re-assignment instead.
-    */
-    public class ObservableValue<T> : IObservable where T : new() {
-        private T value_;
-        
-        public ObservableValue() {
-            value_ = new T();
-        }
+namespace QLNet
+{
+	//! %observable and assignable proxy to concrete value
+	/*! Observers can be registered with instances of this class so
+		that they are notified when a different value is assigned to
+		such instances. Client code can copy the contained value or
+		pass it to functions via implicit conversion.
+		\note it is not possible to call non-const method on the
+			  returned value. This is by design, as this possibility
+			  would necessarily bypass the notification code; client
+			  code should modify the value via re-assignment instead.
+	*/
+	public class ObservableValue<T> : DefaultObservable
+		where T : new()
+	{
+		private T _value;
 
-        public ObservableValue(T t) {
-            value_ = t;
-        }
+		public ObservableValue()
+		{
+			_value = new T();
+		}
 
-        public ObservableValue(ObservableValue<T> t) {
-            value_ = t.value_;
-        }
+		public ObservableValue(T t)
+		{
+			_value = t;
+		}
 
+		public ObservableValue(ObservableValue<T> t)
+		{
+			_value = t._value;
+		}
 
-        //! \name controlled assignment
-        public ObservableValue<T> Assign(T t) {
-            value_ = t;
-            notifyObservers();
-            return this;
-        }
+		public ObservableValue<T> Assign(T t)
+		{
+			_value = t;
+			notifyObservers();
+			return this;
+		}
 
-        public ObservableValue<T> Assign(ObservableValue<T> t) {
-            value_ = t.value_;
-            notifyObservers();
-            return this;
-        }
+		public ObservableValue<T> Assign(ObservableValue<T> t)
+		{
+			_value = t._value;
+			notifyObservers();
+			return this;
+		}
 
-        //! explicit inspector
-        public T value() { return value_; }
+		[Obsolete("Use Value property instead.")]
+		public T value()
+		{
+			return _value;
+		}
 
+		public T Value
+		{
+			get { return _value; }
+		}
 
-        // Subjects, i.e. observables, should define interface internally like follows.
-        public event Callback notifyObserversEvent;
-        // this method is required for calling from derived classes
-        protected void notifyObservers() {
-            Callback handler = notifyObserversEvent;
-            if (handler != null) {
-                handler();
-            }
-        }
-        public void registerWith(Callback handler) { notifyObserversEvent += handler; }
-        public void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
-    }
+		public static implicit operator T(ObservableValue<T> observableValue)
+		{
+			return observableValue._value;
+		}
+	}
 }

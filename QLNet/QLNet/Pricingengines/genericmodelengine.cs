@@ -19,46 +19,38 @@
 
 namespace QLNet
 {
+	public class GenericModelEngine<TModelType, TArgumentsType, TResultsType> : GenericEngine<TArgumentsType, TResultsType>
+		where TArgumentsType : IPricingEngineArguments, new()
+		where TResultsType : IPricingEngineResults, new()
+		where TModelType : class, IObservable
+	{
+		protected TModelType model_;
 
-    public class GenericModelEngine<ModelType,ArgumentsType, ResultsType>
-        :  GenericEngine<ArgumentsType, ResultsType>
-        where ArgumentsType : IPricingEngineArguments, new()
-        where ResultsType : IPricingEngineResults, new()
-        where ModelType : IObservable
-    {
-            public GenericModelEngine() {}
-            public GenericModelEngine(ModelType model)
-            {
-                model_=model;
-                model_.registerWith(update);
-            }
+		public GenericModelEngine()
+		{
+		}
+	
+		public GenericModelEngine(TModelType model)
+		{
+			model_ = model;
+			model_.registerWith(update);
+		}
 
-            public void setModel(ModelType model) {
-                if (model_ != null)
-                    model_.unregisterWith(update);
-                model_ = model;
-                if (model_ != null)
-                    model_.registerWith(update);
-                update();
-            }
-
-            protected ModelType model_;
-            
-        #region Observer & Observable
-            // observable interface
-            public event Callback notifyObserversEvent;
-            public void registerWith(Callback handler) { notifyObserversEvent += handler; }
-            public void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
-            protected void notifyObservers()
-            {
-                Callback handler = notifyObserversEvent;
-                if (handler != null)
-                {
-                    handler();
-                }
-            }
-            //Philippe 2010 to override in LatticeShortRateModelEngine
-            public virtual void update() { notifyObservers(); }
-            #endregion
-    }
-    }
+		public void setModel(TModelType model)
+		{
+			if (model_ != null)
+			{
+				model_.unregisterWith(update);
+			}
+		
+			model_ = model;
+			
+			if (model_ != null)
+			{
+				model_.registerWith(update);
+			}
+			
+			update();
+		}
+	}
+}

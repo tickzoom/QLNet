@@ -19,6 +19,7 @@
 */
 using System;
 using System.Collections.Generic;
+using QLNet.Patterns;
 
 namespace QLNet {
     // purely virtual base class for indexes
@@ -28,7 +29,7 @@ namespace QLNet {
 
     // dates passed as arguments must be the actual calendar date of the fixing
     // no settlement days must be used.
-	public abstract class Index : IObservable {
+	public abstract class Index : DefaultObservable {
 
 		//! Returns the name of the index.
         //! \warning This method is used for output and comparison between indexes.
@@ -89,18 +90,5 @@ namespace QLNet {
 
             IndexManager.instance().setHistory(name(), target);
         }
-
-
-        #region observable interface
-        public event Callback notifyObserversEvent;
-        public void registerWith(Callback handler) { notifyObserversEvent += handler; }
-        public void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
-        protected void notifyObservers() {
-            Callback handler = notifyObserversEvent;
-            if (handler != null) {
-                handler();
-            }
-        }
-        #endregion
-    }
+   }
 }

@@ -49,16 +49,13 @@ namespace QLNet
          : base(nominal, paymentDate, startDate, endDate, refPeriodStart, refPeriodEnd)
       {
          index_ = index;
-         dayCounter_ = dayCounter == null ? new DayCounter() : dayCounter ;
+		 dayCounter_ = dayCounter ?? index_.dayCounter() ?? new DayCounter();
          fixingDays_ = fixingDays == default(int) ? index.fixingDays() : fixingDays;
          gearing_ = gearing;
          spread_ = spread;
          isInArrears_ = isInArrears;
 
          if (gearing_ == 0) throw new ArgumentException("Null gearing not allowed");
-
-         if (dayCounter_ == null)
-            dayCounter_ = index_.dayCounter();
 
          // add as observer
          index_.registerWith(update);

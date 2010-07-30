@@ -16,35 +16,51 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
+
 using System;
-using System.Collections.Generic;
-using System.Text;
-using QLNet;
+using QLNet.Patterns;
 
 namespace QLNet
 {
-    //! purely virtual base class for market observables
-    public class Quote : IObservable
-    {
-        // recheck this abstract implementations of methods which otherwise should throw "notimplemented"
-        // such default implementation is needed for Handles
+	public interface IQuote : IObservable
+	{
+		/// <summary>
+		/// Returns true if the <see cref="Quote"/> holds a valid value, true by default
+		/// </summary>
+		/// <returns></returns>
+		bool IsValid { get; }
+	}
 
-        //! returns the current value, 0 by default
-        public virtual double value() { return 0; }
-        //! returns true if the Quote holds a valid value, true by default
-        public virtual bool isValid() { return true; }
+	/// <summary>
+	/// Base class for market observables.
+	/// </summary>
+	public class Quote : DefaultObservable, IQuote
+	{
+		[Obsolete("Use Value method instead.")]
+		public virtual double value()
+		{
+			return Value();
+		}
 
-        // observable interface
-        public event Callback notifyObserversEvent;
-        public void registerWith(Callback handler) { notifyObserversEvent += handler; }
-        public void unregisterWith(Callback handler) { notifyObserversEvent -= handler; }
-        protected void notifyObservers()
-        {
-            Callback handler = notifyObserversEvent;
-            if (handler != null)
-            {
-                handler();
-            }
-        }
-    }
+		[Obsolete("Use IsValid property instead.")]
+		public virtual bool isValid()
+		{
+			return true;
+		}
+
+		/// <summary>
+		/// Returns true if the <see cref="Quote"/> holds a valid value, true by default
+		/// </summary>
+		/// <returns></returns>
+		public bool IsValid { get { return true; } }
+
+		/// <summary>
+		/// Returns the current value, 0 by default
+		/// </summary>
+		/// <returns></returns>
+		public virtual double Value()
+		{
+			return 0;
+		}
+	}
 }
