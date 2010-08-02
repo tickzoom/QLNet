@@ -68,7 +68,7 @@ namespace QLNet
 		}
 
 		public CappedFlooredYoYInflationCoupon(YoYInflationCoupon underlying, double? cap, double? floor)
-			: this(underlying.date(), underlying.nominal(), underlying.accrualStartDate(), underlying.accrualEndDate(), underlying.fixingDays(), underlying.yoyIndex(), underlying.observationLag(), underlying.dayCounter(), underlying.gearing(), underlying.spread(), null, null, underlying.refPeriodStart, underlying.refPeriodEnd)
+			: this(underlying.Date, underlying.nominal(), underlying.accrualStartDate(), underlying.accrualEndDate(), underlying.fixingDays(), underlying.yoyIndex(), underlying.observationLag(), underlying.dayCounter(), underlying.gearing(), underlying.spread(), null, null, underlying.refPeriodStart, underlying.refPeriodEnd)
 		{
 			underlying_ = underlying;
 			setCommon(cap, floor);

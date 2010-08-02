@@ -16,94 +16,27 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace QLNet
 {
-   //! Predetermined cash flow
-   /*! This cash flow pays a predetermined amount at a given date. */
-   public abstract class Dividend : CashFlow
-   {
-      protected Date date_;
-      //! \name Event interface
-      public override Date date() { return date_; }
+	/// <summary>
+	/// Predetermined cash flow
+	/// This cash flow pays a predetermined amount at a given date.
+	/// </summary>
+	public abstract class Dividend : CashFlow
+	{
+		private readonly Date _date;
 
-      public Dividend(Date date)
-      {
-         date_ = date;
-      }
+		public override Date Date
+		{
+			get { return _date; }
+		}
 
-      public abstract double amount(double underlying);
-   }
+		protected Dividend(Date date)
+		{
+			_date = date;
+		}
 
-   //! Predetermined cash flow
-   /*! This cash flow pays a predetermined amount at a given date. */
-   public class FixedDividend : Dividend
-   {
-      protected double amount_;
-      public override double amount() { return amount_; }
-      public override double amount(double d) { return amount_; }
-
-      public FixedDividend(double amount, Date date)
-         : base(date)
-      {
-         amount_ = amount;
-      }
-   }
-
-   //! Predetermined cash flow
-   /*! This cash flow pays a predetermined amount at a given date. */
-   public class FractionalDividend : Dividend
-   {
-      protected double rate_;
-      public double rate() { return rate_; }
-
-      protected double? nominal_;
-      public double? nominal() { return nominal_; }
-
-      public FractionalDividend(double rate, Date date)
-         : base(date)
-      {
-         rate_ = rate;
-         nominal_ = null;
-      }
-
-      public FractionalDividend(double rate, double nominal, Date date)
-         : base(date)
-      {
-         rate_ = rate;
-         nominal_ = nominal;
-      }
-
-      //! \name Dividend interface
-      public override double amount()
-      {
-         if (nominal_ == null) throw new ApplicationException("no nominal given");
-         return rate_ * nominal_.GetValueOrDefault();
-      }
-
-      public override double amount(double underlying)
-      {
-         return rate_ * underlying;
-      }
-   }
-
-   public static partial class Utils
-   {
-      //! helper function building a sequence of fixed dividends
-      public static List<Dividend> DividendVector(List<Date> dividendDates, List<double> dividends)
-      {
-
-         if (dividendDates.Count != dividends.Count)
-            throw new ApplicationException("size mismatch between dividend dates and amounts");
-
-         List<Dividend> items = new List<Dividend>(dividendDates.Count);
-         for (int i = 0; i < dividendDates.Count; i++)
-            items.Add(new FixedDividend(dividends[i], dividendDates[i]));
-         return items;
-      }
-   }
+		public abstract double amount(double underlying);
+	}
 }

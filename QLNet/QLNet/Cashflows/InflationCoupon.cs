@@ -67,7 +67,7 @@ namespace QLNet
      //@{
      double price(Handle<YieldTermStructure> discountingCurve) 
      {
-        return amount() * discountingCurve.link.discount(date());
+        return amount() * discountingCurve.link.discount(Date);
      }
      public override DayCounter dayCounter() { return dayCounter_; }
      public override double accruedAmount(Date d) 

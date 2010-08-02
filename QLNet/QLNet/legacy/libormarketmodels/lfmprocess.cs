@@ -66,7 +66,7 @@ namespace QLNet
             {
                 IborCoupon coupon = (IborCoupon)flows[i];
 
-                if(!(coupon.date() == coupon.accrualEndDate()))
+                if(!(coupon.Date == coupon.accrualEndDate()))
                     throw new ArgumentException("irregular coupon types are not suppported");
 
                 initialValues_[i]=coupon.rate();

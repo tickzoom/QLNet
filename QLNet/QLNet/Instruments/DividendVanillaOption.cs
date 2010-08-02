@@ -93,8 +93,8 @@ namespace QLNet {
                 Date exerciseDate = exercise.lastDate();
 
                 for (int i = 0; i < cashFlow.Count; i++) {
-                    if (!(cashFlow[i].date() <= exerciseDate))
-                        throw new ApplicationException((i+1) + " dividend date (" + cashFlow[i].date()
+                    if (!(cashFlow[i].Date <= exerciseDate))
+                        throw new ApplicationException((i+1) + " dividend date (" + cashFlow[i].Date
                                + ") is later than the exercise date (" + exerciseDate + ")");
                 }
             }

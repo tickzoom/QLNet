@@ -86,7 +86,7 @@ namespace QLNet
                            bool isPutATMIncluded = false, 
                            double? putDigitalPayoff = null, 
                            DigitalReplication replication = null)
-         : base(underlying.nominal(), underlying.date(), underlying.accrualStartDate(), underlying.accrualEndDate(), underlying.fixingDays, underlying.index(), underlying.gearing(), underlying.spread(), underlying.refPeriodStart, underlying.refPeriodEnd, underlying.dayCounter(), underlying.isInArrears())
+         : base(underlying.nominal(), underlying.Date, underlying.accrualStartDate(), underlying.accrualEndDate(), underlying.fixingDays, underlying.index(), underlying.gearing(), underlying.spread(), underlying.refPeriodStart, underlying.refPeriodEnd, underlying.dayCounter(), underlying.isInArrears())
       {
          if (replication == null) replication = new DigitalReplication();
 

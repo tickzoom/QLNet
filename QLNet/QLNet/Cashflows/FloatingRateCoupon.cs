@@ -142,7 +142,7 @@ namespace QLNet
       // methods
       public double price(YieldTermStructure yts)
       {
-         return amount() * yts.discount(date());
+         return amount() * yts.discount(Date);
       }
 
       //! convexity adjustment for the given index fixing

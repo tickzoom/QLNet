@@ -17,62 +17,80 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace QLNet
 {
-   //! Cash flow dependent on an index ratio.
+	/// <summary>
+	/// Cash flow dependent on an index ratio.
+	/// 
+	/// This cash flow is not a coupon, i.e., there's no accrual.  The
+	/// amount is either i(T)/i(0) or i(T)/i(0) - 1, depending on the
+	/// growthOnly parameter.
+	/// 
+	/// We expect this to be used inside an instrument that does all the date
+	/// adjustment etc., so this takes just dates and does not change them.
+	/// growthOnly = false means i(T)/i(0), which is a bond-type setting.
+	/// growthOnly = true means i(T)/i(0) - 1, which is a swap-type setting.
+	/// </summary>
+	public class IndexedCashFlow : CashFlow
+	{
+		private readonly double _notional;
+		private readonly Index _index;
+		private readonly Date _baseDate;
+		private readonly Date _fixingDate;
+		private readonly Date _paymentDate;
+		private readonly bool _growthOnly;
 
-   /*! This cash flow is not a coupon, i.e., there's no accrual.  The
-       amount is either i(T)/i(0) or i(T)/i(0) - 1, depending on the
-       growthOnly parameter.
+		public IndexedCashFlow(double notional, Index index, Date baseDate, Date fixingDate, Date paymentDate)
+			: this(notional, index, baseDate, fixingDate, paymentDate, false)
+		{
+		}
 
-       We expect this to be used inside an instrument that does all the date
-       adjustment etc., so this takes just dates and does not change them.
-       growthOnly = false means i(T)/i(0), which is a bond-type setting.
-       growthOnly = true means i(T)/i(0) - 1, which is a swap-type setting.
-   */
-   public class IndexedCashFlow : CashFlow
-   {
-      public IndexedCashFlow(double notional,
-                             Index index,
-                             Date baseDate,
-                             Date fixingDate,
-                             Date paymentDate,
-                             bool growthOnly = false)
-      {
-         notional_ = notional;
-         index_=index;
-         baseDate_ = baseDate;
-         fixingDate_ = fixingDate;
-         paymentDate_= paymentDate;
-         growthOnly_ = growthOnly;
-      }
+		public IndexedCashFlow(double notional, Index index, Date baseDate, Date fixingDate, Date paymentDate, bool growthOnly)
+		{
+			_notional = notional;
+			_index = index;
+			_baseDate = baseDate;
+			_fixingDate = fixingDate;
+			_paymentDate = paymentDate;
+			_growthOnly = growthOnly;
+		}
 
-      public override Date date() { return paymentDate_; }
-      public virtual double notional()  { return notional_; }
-      public virtual Date baseDate()  { return baseDate_; }
-      public virtual Date fixingDate() { return fixingDate_; }
-      public virtual Index index() { return index_; }
-      public virtual bool growthOnly() { return growthOnly_; }
+		public override Date Date
+		{
+			get { return _paymentDate; }
+		}
 
-      public override double amount() 
-      {
-        double I0 = index_.fixing(baseDate_);
-        double I1 = index_.fixing(fixingDate_);
+		public virtual double notional()
+		{
+			return _notional;
+		}
 
-        if (growthOnly_)
-            return notional_ * (I1 / I0 - 1.0);
-        else
-            return notional_ * (I1 / I0);
-    
-      }
-      private double notional_;
-      private Index index_;
-      private Date baseDate_, fixingDate_, paymentDate_;
-      private bool growthOnly_;
-   }
+		public virtual Date baseDate()
+		{
+			return _baseDate;
+		}
+
+		public virtual Date fixingDate()
+		{
+			return _fixingDate;
+		}
+
+		public virtual Index index()
+		{
+			return _index;
+		}
+
+		public virtual bool growthOnly()
+		{
+			return _growthOnly;
+		}
+
+		public override double amount()
+		{
+			double I0 = _index.fixing(_baseDate);
+			double I1 = _index.fixing(_fixingDate);
+
+			return _growthOnly ? _notional * (I1 / I0 - 1.0) : _notional * (I1 / I0);
+		}
+	}
 }

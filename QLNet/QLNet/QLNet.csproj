@@ -64,6 +64,11 @@
   <ItemGroup>
     <Compile Include="Cashflow.cs" />
     <Compile Include="Cashflows\averagebmacoupon.cs" />
+    <Compile Include="Cashflows\AverageBMACouponPricer.cs" />
+    <Compile Include="Cashflows\AverageBMALeg.cs" />
+    <Compile Include="Cashflows\BachelierYoYInflationCouponPricer.cs" />
+    <Compile Include="Cashflows\BlackVanillaOptionPricer.cs" />
+    <Compile Include="Cashflows\BlackYoYInflationCouponPricer.cs" />
     <Compile Include="Cashflows\CappedFlooredCmsCoupon.cs" />
     <Compile Include="Cashflows\CappedFlooredCoupon.cs" />
     <Compile Include="Cashflows\CappedFlooredIborCoupon.cs" />
@@ -78,8 +83,10 @@
     <Compile Include="Cashflows\DigitalCoupon.cs" />
     <Compile Include="Cashflows\DigitalIborCoupon.cs" />
     <Compile Include="Cashflows\Dividend.cs" />
+    <Compile Include="Cashflows\FixedDividend.cs" />
     <Compile Include="Cashflows\FixedRateCoupon.cs" />
     <Compile Include="Cashflows\FloatingRateCoupon.cs" />
+    <Compile Include="Cashflows\FractionalDividend.cs" />
     <Compile Include="Cashflows\Iborcoupon.cs" />
     <Compile Include="Cashflows\IndexedCashFlow.cs" />
     <Compile Include="Cashflows\InflationCoupon.cs" />
@@ -91,7 +98,9 @@
     <Compile Include="Cashflows\RateLegBase.cs" />
     <Compile Include="Cashflows\Replication.cs" />
     <Compile Include="Cashflows\SimpleCashFlow.cs" />
+    <Compile Include="Cashflows\UnitDisplacedBlackYoYInflationCouponPricer.cs" />
     <Compile Include="Cashflows\YoYInflationCoupon.cs" />
+    <Compile Include="Cashflows\YoYInflationCouponPricer.cs" />
     <Compile Include="Cashflows\YoYInflationLeg.cs" />
     <Compile Include="Currencies\Africa.cs" />
     <Compile Include="Currencies\America.cs" />
@@ -105,7 +114,6 @@
     <Compile Include="Error.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="Exercise.cs" />
-    <Compile Include="grid.cs" />
     <Compile Include="Handle.cs" />
     <Compile Include="Index.cs" />
     <Compile Include="Indexes\bmaindex.cs" />
@@ -144,6 +152,7 @@
     <Compile Include="Indexes\swap\GbpLiborSwap.cs" />
     <Compile Include="Indexes\swap\JpyLiborSwap.cs" />
     <Compile Include="Indexes\swap\UsdLiborSwap.cs" />
+    <Compile Include="InitializedList.cs" />
     <Compile Include="Instruments\AsianOption.cs" />
     <Compile Include="Instruments\AverageType.cs" />
     <Compile Include="Instruments\BarrierOption.cs" />
@@ -196,8 +205,6 @@
     <Compile Include="legacy\libormarketmodels\lmlinexpcorrmodel.cs" />
     <Compile Include="legacy\libormarketmodels\lmlinexpvolmodel.cs" />
     <Compile Include="legacy\libormarketmodels\lmvolmodel.cs" />
-    <Compile Include="Math\beta.cs" />
-    <Compile Include="Math\Comparison.cs" />
     <Compile Include="Math\CostFunction.cs" />
     <Compile Include="Math\Distributions\binomialdistribution.cs" />
     <Compile Include="Math\Distributions\chisquaredistribution.cs" />
@@ -353,14 +360,12 @@
     <Compile Include="Pricingengines\asian\mc_discr_geom_av_price.cs" />
     <Compile Include="Pricingengines\barrier\AnalyticBarrierEngine.cs" />
     <Compile Include="Pricingengines\BlackCalculator.cs" />
-    <Compile Include="Pricingengines\blackformula.cs" />
     <Compile Include="Pricingengines\Blackscholescalculator.cs" />
     <Compile Include="Pricingengines\Bond\Discountingbondengine.cs" />
     <Compile Include="Pricingengines\CapFloor\analyticcapfloorengine.cs" />
     <Compile Include="Pricingengines\CapFloor\BlackCapFloorEngine.cs" />
     <Compile Include="Pricingengines\CapFloor\discretizedcapfloor.cs" />
     <Compile Include="Pricingengines\genericmodelengine.cs" />
-    <Compile Include="Pricingengines\Greeks.cs" />
     <Compile Include="Pricingengines\latticeshortratemodelengine.cs" />
     <Compile Include="Pricingengines\Loan\DiscountingLoanEngine.cs" />
     <Compile Include="Pricingengines\mclongstaffschwartzengine.cs" />
@@ -436,7 +441,6 @@
     <Compile Include="Termstructures\Volatility\FlatSmileSection.cs" />
     <Compile Include="Termstructures\Volatility\Optionlet\ConstantOptionletVolatility.cs" />
     <Compile Include="Termstructures\Volatility\Optionlet\OptionletVolatilityStructure.cs" />
-    <Compile Include="Termstructures\Volatility\Sabr.cs" />
     <Compile Include="Termstructures\Volatility\SmileSection.cs" />
     <Compile Include="Termstructures\Volatility\swaption\SwaptionVolatilityStructure.cs" />
     <Compile Include="Termstructures\YieldTermStructure.cs" />
@@ -454,6 +458,7 @@
     <Compile Include="Termstructures\Yield\ZeroCurve.cs" />
     <Compile Include="Termstructures\Yield\ZeroSpreadedTermStructure.cs" />
     <Compile Include="Termstructures\Yield\Zeroyieldstructure.cs" />
+    <Compile Include="Termstructures\YoYInflationTermStructure.cs" />
     <Compile Include="timegrid.cs" />
     <Compile Include="Time\Calendar.cs" />
     <Compile Include="Time\Calendars\argentina.cs" />

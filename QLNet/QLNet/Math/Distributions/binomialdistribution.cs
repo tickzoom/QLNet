@@ -87,33 +87,4 @@ namespace QLNet {
                 return 1.0 - Utils.incompleteBetaFunction(k+1, n_-k, p_);
         }
     }
-
-    public static partial class Utils {
-        /*! Given an odd integer n and a real number z it returns p such that:
-        1 - CumulativeBinomialDistribution((n-1)/2, n, p) =
-                               CumulativeNormalDistribution(z)
-
-        \pre n must be odd
-        */
-        public static double PeizerPrattMethod2Inversion(double z, int n) {
-
-            if (!(n%2==1)) throw new ApplicationException("n must be an odd number: " + n + " not allowed");
-
-            double result = (z/(n+1.0/3.0+0.1/(n+1.0)));
-            result *= result;
-            result = Math.Exp(-result*(n+1.0/6.0));
-            result = 0.5 + (z>0 ? 1 : -1) * Math.Sqrt((0.25 * (1.0-result)));
-            return result;
-        }
-
-        public static double binomialCoefficientLn(int n, int k) {
-            if (!(n>=k)) throw new ApplicationException("n<k not allowed");
-
-            return Factorial.ln(n)-Factorial.ln(k)-Factorial.ln(n-k);
-        }
-
-        public static double binomialCoefficient(int n, int k) {
-            return Math.Floor(0.5+Math.Exp(Utils.binomialCoefficientLn(n, k)));
-        }
-    }
 }

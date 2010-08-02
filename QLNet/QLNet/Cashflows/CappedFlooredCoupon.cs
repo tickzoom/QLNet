@@ -63,7 +63,7 @@ namespace QLNet
 		public CappedFlooredCoupon() { }
 
 		public CappedFlooredCoupon(FloatingRateCoupon underlying, double? cap = null, double? floor = null)
-			: base(underlying.nominal(), underlying.date(), underlying.accrualStartDate(), underlying.accrualEndDate(), underlying.fixingDays, underlying.index(), underlying.gearing(), underlying.spread(), underlying.refPeriodStart, underlying.refPeriodEnd, underlying.dayCounter(), underlying.isInArrears())
+			: base(underlying.nominal(), underlying.Date, underlying.accrualStartDate(), underlying.accrualEndDate(), underlying.fixingDays, underlying.index(), underlying.gearing(), underlying.spread(), underlying.refPeriodStart, underlying.refPeriodEnd, underlying.dayCounter(), underlying.isInArrears())
 		{
 			underlying_ = underlying;
 			isCapped_ = false;

@@ -111,32 +111,4 @@ namespace QLNet {
                 throw new ApplicationException("for EUR Libor dedicated EurLibor constructor must be used");
         }
     }
-
-    public static partial class Utils {
-        public static BusinessDayConvention liborConvention(Period p) {
-            switch (p.units()) {
-              case TimeUnit.Days:
-              case TimeUnit.Weeks:
-                  return BusinessDayConvention.Following;
-              case TimeUnit.Months:
-              case TimeUnit.Years:
-                  return BusinessDayConvention.ModifiedFollowing;
-                default:
-                    throw new ApplicationException("invalid time units");
-            }
-        }
-
-        public static bool liborEOM(Period p) {
-            switch (p.units()) {
-                case TimeUnit.Days:
-                case TimeUnit.Weeks:
-                    return false;
-                case TimeUnit.Months:
-                case TimeUnit.Years:
-                    return true;
-                default:
-                    throw new ApplicationException("invalid time units");
-            }
-        }
-    }
 }

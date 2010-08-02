@@ -119,7 +119,7 @@ namespace QLNet {
 				if (!cf[i].hasOccurred(settlement)) {
 					if (cf[i].hasOccurred(maturityDate_)) {
 						income += cf[i].amount() *
-								  incomeDiscountCurve.link.discount(cf[i].date()) ;
+								  incomeDiscountCurve.link.discount(cf[i].Date) ;
 					} else {
 						break;
 					}

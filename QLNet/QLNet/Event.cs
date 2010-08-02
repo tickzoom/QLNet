@@ -27,24 +27,44 @@ namespace QLNet
 	/// </summary>
 	public abstract class Event : DefaultObservable
 	{
-		//! Event interface
-		//! returns the date at which the event occurs
-		public abstract Date date();
+		/// <summary>
+		/// Returns the date at which the event occurs
+		/// </summary>
+		/// <value></value>
+		public abstract Date Date { get; }
 
-		//! returns true if an event has already occurred before a date
-		public virtual bool hasOccurred(Date d) { return date() <= d; }
-		public virtual bool hasOccurred(Date d, bool includeToday)
+		/// <summary>
+		/// Returns true if an event has already occurred before a date
+		/// </summary>
+		/// <param name="date"></param>
+		/// <returns></returns>
+		public virtual bool hasOccurred(Date date)
 		{
-			if (includeToday) return date() < d;
-			else return date() <= d;
+			return Date <= date;
+		}
+
+		/// <summary>
+		/// Returns true if an event has already occurred before a date
+		/// </summary>
+		/// <param name="date"></param>
+		/// <param name="includeToday"></param>
+		/// <returns></returns>
+		public virtual bool hasOccurred(Date date, bool includeToday)
+		{
+			if (includeToday) return Date < date;
+			return Date <= date;
 		}
 
 		public virtual void accept(IAcyclicVisitor v)
 		{
 			if (v != null)
+			{
 				v.visit(this);
+			}
 			else
+			{
 				throw new ApplicationException("not an event visitor");
+			}
 		}
 	}
 }

@@ -139,7 +139,7 @@ namespace QLNet
          {
             FixedRateCoupon coupon = (FixedRateCoupon)fixedCoupons[i];
 
-            arguments.fixedPayDates[i] = coupon.date();
+            arguments.fixedPayDates[i] = coupon.Date;
             arguments.fixedResetDates[i] = coupon.accrualStartDate();
             arguments.fixedCoupons[i] = coupon.amount();
          }
@@ -157,7 +157,7 @@ namespace QLNet
             IborCoupon coupon = (IborCoupon)floatingCoupons[i];
 
             arguments.floatingResetDates[i] = coupon.accrualStartDate();
-            arguments.floatingPayDates[i] = coupon.date();
+            arguments.floatingPayDates[i] = coupon.Date;
 
             arguments.floatingFixingDates[i] = coupon.fixingDate();
             arguments.floatingAccrualTimes[i] = coupon.accrualPeriod();

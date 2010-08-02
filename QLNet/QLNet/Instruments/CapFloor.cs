@@ -163,7 +163,7 @@ namespace QLNet
 
             arguments.startDates[i] = coupon.accrualStartDate();
             arguments.fixingDates[i] = coupon.fixingDate();
-            arguments.endDates[i] = coupon.date();
+            arguments.endDates[i] = coupon.Date;
 
             // this is passed explicitly for precision
             arguments.accrualTimes[i] = coupon.accrualPeriod();

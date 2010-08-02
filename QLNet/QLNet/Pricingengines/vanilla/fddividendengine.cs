@@ -52,8 +52,8 @@ namespace QLNet {
 
         protected double getDiscountedDividend(int i) {
             double dividend = getDividendAmount(i);
-            double discount = process_.riskFreeRate().link.discount(events_[i].date()) /
-                              process_.dividendYield().link.discount(events_[i].date());
+            double discount = process_.riskFreeRate().link.discount(events_[i].Date) /
+                              process_.dividendYield().link.discount(events_[i].Date);
             return dividend * discount;
         }
     }

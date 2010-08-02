@@ -26,15 +26,6 @@ using QLNet.Time;
 
 namespace QLNet {
 
-    public static partial class Utils {
-        public static double? toNullable(double val) {
-            if (val == double.MinValue)
-                return null;
-            else
-                return val;
-        }
-    }
-
     public static class CashFlowVectors {
         public static List<CashFlow> FloatingLeg<InterestRateIndexType, FloatingCouponType, CappedFlooredCouponType>(List<double> nominals,
                                                 Schedule schedule,
@@ -345,7 +336,7 @@ namespace QLNet {
 
                      // in this case you can set a pricer
                      // straight away because it only provides computation - not data
-                     YoYInflationCouponPricer pricer = new YoYInflationCouponPricer();
+                     YoYInflationCouponPricer pricer = new YoYInflationCouponPricer(null);
                      coup.setPricer(pricer);
                      leg.Add(coup);
                   }

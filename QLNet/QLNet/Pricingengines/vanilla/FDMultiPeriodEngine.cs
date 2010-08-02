@@ -59,7 +59,7 @@ namespace QLNet {
             int n = schedule.Count;
             stoppingTimes_ = new List<double>(n);
             for (int i = 0; i < n; ++i)
-                stoppingTimes_.Add(process_.time(events_[i].date()));
+                stoppingTimes_.Add(process_.time(events_[i].Date));
         }
 
         public override void setupArguments(IPricingEngineArguments a) {

@@ -23,84 +23,6 @@ using QLNet.Instruments;
 using QLNet.Time;
 
 namespace QLNet {
-    public partial class Utils {
-        public static double dirtyPriceFromYield(double faceAmount, List<CashFlow> cashflows, double yield, DayCounter dayCounter,
-                             Compounding compounding, Frequency frequency, Date settlement) {
-
-            if (frequency == Frequency.NoFrequency || frequency == Frequency.Once)
-                frequency = Frequency.Annual;
-
-            InterestRate y = new InterestRate(yield, dayCounter, compounding, frequency);
-
-            double price = 0.0;
-            double discount = 1.0;
-            Date lastDate = null;
-
-            for (int i = 0; i < cashflows.Count - 1; ++i) {
-                if (cashflows[i].hasOccurred(settlement))
-                    continue;
-
-                Date couponDate = cashflows[i].date();
-                double amount = cashflows[i].amount();
-                if (lastDate == null) {
-                    // first not-expired coupon
-                    if (i > 0) {
-                        lastDate = cashflows[i - 1].date();
-                    } else {
-                        if (cashflows[i].GetType().IsSubclassOf(typeof(Coupon)))
-                            lastDate = ((Coupon)cashflows[i]).accrualStartDate();
-                        else
-                            lastDate = couponDate - new Period(1, TimeUnit.Years);
-                    }
-                    discount *= y.discountFactor(settlement, couponDate, lastDate, couponDate);
-                } else {
-                    discount *= y.discountFactor(lastDate, couponDate);
-                }
-                lastDate = couponDate;
-
-                price += amount * discount;
-            }
-
-            CashFlow redemption = cashflows.Last();
-            if (!redemption.hasOccurred(settlement)) {
-                Date redemptionDate = redemption.date();
-                double amount = redemption.amount();
-                if (lastDate == null) {
-                    // no coupons
-                    lastDate = redemptionDate - new Period(1, TimeUnit.Years);
-                    discount *= y.discountFactor(settlement, redemptionDate, lastDate, redemptionDate);
-                } else {
-                    discount *= y.discountFactor(lastDate, redemptionDate);
-                }
-
-                price += amount * discount;
-            }
-
-            return price / faceAmount * 100.0;
-        }
-        
-        public static double dirtyPriceFromZSpreadFunction(double faceAmount, List<CashFlow> cashflows, double zSpread,
-                                                           DayCounter dc, Compounding comp, Frequency freq, Date settlement,
-                                                           Handle<YieldTermStructure> discountCurve) {
-
-            if (!(freq != Frequency.NoFrequency && freq != Frequency.Once))
-                throw new ApplicationException("invalid frequency:" + freq);
-
-            Quote zSpreadQuoteHandle = new SimpleQuote(zSpread);
-
-            var spreadedCurve = new ZeroSpreadedTermStructure(discountCurve, zSpreadQuoteHandle, comp, freq, dc);
-            
-            double price = 0.0;
-            foreach (CashFlow cf in cashflows.FindAll(x => !x.hasOccurred(settlement))) {
-                Date couponDate = cf.date();
-                double amount = cf.amount();
-                price += amount * spreadedCurve.discount(couponDate);
-            }
-            price /= spreadedCurve.discount(settlement);
-            return price/faceAmount*100.0;
-        }
-    }
-
 
 	//! Base bond class
     /*! Derived classes must fill the unitialized data members.
@@ -128,7 +50,7 @@ namespace QLNet {
         public List<double> notionals() { return notionals_; }
         public List<CashFlow> cashflows() { return cashflows_; }
         public List<CashFlow> redemptions() { return redemptions_; }
-        public Date maturityDate() { return (maturityDate_ != null) ? maturityDate_ : cashflows_.Last().date(); }
+        public Date maturityDate() { return (maturityDate_ != null) ? maturityDate_ : cashflows_.Last().Date; }
         public Date issueDate() { return issueDate_; }
         #endregion
 
@@ -149,7 +71,7 @@ namespace QLNet {
 
             if (coupons.Count != 0) {
                 cashflows_.Sort();
-                maturityDate_ = coupons.Last().date();
+                maturityDate_ = coupons.Last().Date;
                 addRedemptionsToCashflows();
             }
 
@@ -364,13 +286,13 @@ namespace QLNet {
             CashFlow cf = CashFlows.nextCashFlow(cashflows_,false, settlement);
             if (cf==cashflows_.Last()) return 0.0;
 
-            Date paymentDate = cf.date();
+            Date paymentDate = cf.Date;
             bool firstCouponFound = false;
             double nominal = 0;
             double accrualPeriod = 0;
             DayCounter dc = null;
             double result = 0.0;
-            foreach(CashFlow x in cashflows_.FindAll(x => x.date()==paymentDate && x.GetType().IsSubclassOf(typeof(Coupon)))) {
+            foreach(CashFlow x in cashflows_.FindAll(x => x.Date==paymentDate && x.GetType().IsSubclassOf(typeof(Coupon)))) {
                 Coupon cp = (Coupon)x;
                 if (firstCouponFound) {
                     if (!(nominal == cp.nominal() && accrualPeriod == cp.accrualPeriod() && dc == cp.dayCounter()))
@@ -508,7 +430,7 @@ namespace QLNet {
             notionalSchedule_.Add(new Date());
             notionals_.Add(notional);
 
-            notionalSchedule_.Add(redemption.date());
+            notionalSchedule_.Add(redemption.Date);
             notionals_.Add(0.0);
 
             cashflows_.Add(redemption);
@@ -531,7 +453,7 @@ namespace QLNet {
                 // we add the notional only if it is the first one...
                 if (notionals_.empty()) {
                     notionals_.Add(coupon.nominal());
-                    lastPaymentDate = coupon.date();
+                    lastPaymentDate = coupon.Date;
                 } else if (!Utils.close(notional, notionals_.Last())) {
                     // ...or if it has changed.
                     if (!(notional < notionals_.Last()))
@@ -541,11 +463,11 @@ namespace QLNet {
                     // the previous one...
                     notionalSchedule_.Add(lastPaymentDate);
                     // ...and store the candidate for this one.
-                    lastPaymentDate = coupon.date();
+                    lastPaymentDate = coupon.Date;
                 } else {
                     // otherwise, we just extend the valid range of dates
                     // for the current notional.
-                    lastPaymentDate = coupon.date();
+                    lastPaymentDate = coupon.Date;
                 }
             }
             if (notionals_.empty())
