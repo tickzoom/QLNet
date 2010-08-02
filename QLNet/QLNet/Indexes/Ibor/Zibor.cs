@@ -16,34 +16,29 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using QLNet.Currencies;
 using QLNet.Time.DayCounters;
 
-namespace QLNet {
-
-	//! %CHF %ZIBOR rate
-//    ! Zurich Interbank Offered Rate.
-//
-//        \warning This is the rate fixed in Zurich by BBA. Use CHFLibor if
-//                 you're interested in the London fixing by BBA.
-//
-//        \todo check settlement days, end-of-month adjustment,
-//              and day-count convention.
-//    
+namespace QLNet
+{
+	/// <summary>
+	/// CHF ZIBOR rate
+	/// Zurich Interbank Offered Rate.
+	/// </summary>
+	/// <remarks>
+	/// This is the rate fixed in Zurich by BBA. Use <see cref="CHFLibor "/> if
+	/// you're interested in the London fixing by BBA.
+	/// </remarks>
 	public class Zibor : IborIndex
 	{
-        public Zibor(Period tenor)
-            : base("Zibor", tenor, 2, new CHFCurrency(), new Switzerland(), BusinessDayConvention.ModifiedFollowing, false, new Actual360(), new Handle<YieldTermStructure>())
-        {
-        }
-        public Zibor(Period tenor, Handle<YieldTermStructure> h)
-            : base("Zibor", tenor, 2, new CHFCurrency(), new Switzerland(), BusinessDayConvention.ModifiedFollowing, false, new Actual360(), h)
+		public Zibor(Period tenor)
+			: this(tenor, new Handle<YieldTermStructure>())
+		{
+		}
+		public Zibor(Period tenor, Handle<YieldTermStructure> h)
+			: base("Zibor", tenor, 2, new CHFCurrency(), new Switzerland(), BusinessDayConvention.ModifiedFollowing, false, new Actual360(), h)
 		{
 		}
 	}
-
 }

@@ -16,30 +16,25 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using QLNet.Currencies;
 using QLNet.Time.DayCounters;
 
-namespace QLNet {
-
-	//! %JIBAR rate
-//    ! Johannesburg Interbank Agreed Rate
-//
-//        \todo check settlement days and day-count convention.
-//    
+namespace QLNet
+{
+	/// <summary>
+	/// JIBAR (Johannesburg Interbank Agreed Rate) rate
+	/// </summary>
 	public class Jibar : IborIndex
 	{
-        public Jibar(Period tenor)
-            : base("Jibar", tenor, 0, new ZARCurrency(), new SouthAfrica(), BusinessDayConvention.ModifiedFollowing, false, new Actual365Fixed(), new Handle<YieldTermStructure>())
-        {
-        }
-        public Jibar(Period tenor, Handle<YieldTermStructure> h)
-            : base("Jibar", tenor, 0, new ZARCurrency(), new SouthAfrica(), BusinessDayConvention.ModifiedFollowing, false, new Actual365Fixed(), h)
+		public Jibar(Period tenor)
+			: this(tenor, new Handle<YieldTermStructure>())
+		{
+		}
+
+		public Jibar(Period tenor, Handle<YieldTermStructure> h)
+			: base("Jibar", tenor, 0, new ZARCurrency(), new SouthAfrica(), BusinessDayConvention.ModifiedFollowing, false, new Actual365Fixed(), h)
 		{
 		}
 	}
-
 }

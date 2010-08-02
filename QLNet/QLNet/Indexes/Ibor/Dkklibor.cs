@@ -16,30 +16,27 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using QLNet.Currencies;
 using QLNet.Time.DayCounters;
 
-namespace QLNet {
-
-	//! %DKK %LIBOR rate
-//    ! Danish Krona LIBOR fixed by BBA.
-//
-//        See <http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1414>.
-//    
+namespace QLNet
+{
+	/// <summary>
+	/// Danish Krona LIBOR fixed by BBA.
+	/// </summary>
+	/// <remarks>
+	/// See <http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1414>.
+	/// </remarks>
 	public class DKKLibor : Libor
 	{
-        public DKKLibor(Period tenor)
-            : base("DKKLibor", tenor, 2, new DKKCurrency(), new Denmark(), new Actual360(), new Handle<YieldTermStructure>())
+		public DKKLibor(Period tenor)
+			: this(tenor, new Handle<YieldTermStructure>())
 		{
 		}
-        public DKKLibor(Period tenor, Handle<YieldTermStructure> h)
-            : base("DKKLibor", tenor, 2, new DKKCurrency(), new Denmark(), new Actual360(), h)
-        {
-        }
-    }
-
+		public DKKLibor(Period tenor, Handle<YieldTermStructure> h)
+			: base("DKKLibor", tenor, 2, new DKKCurrency(), new Denmark(), new Actual360(), h)
+		{
+		}
+	}
 }

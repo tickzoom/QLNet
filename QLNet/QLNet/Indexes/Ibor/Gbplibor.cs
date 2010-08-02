@@ -17,39 +17,30 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using QLNet.Currencies;
 using QLNet.Time.DayCounters;
 
-namespace QLNet {
+namespace QLNet
+{
+	/// <summary>
+	/// GBP LIBOR rate
+	/// 
+	/// Pound Sterling LIBOR fixed by BBA.
+	/// </summary>
+	/// <remarks>
+	/// See <http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1414>.
+	/// </remarks>
+	public class GBPLibor : Libor
+	{
+		public GBPLibor(Period tenor)
+			: this(tenor, new Handle<YieldTermStructure>())
+		{
+		}
 
-    //! %GBP %LIBOR rate
-    //    ! Pound Sterling LIBOR fixed by BBA.
-    //
-    //        See <http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1414>.
-    //    
-    public class GBPLibor : Libor {
-        public GBPLibor(Period tenor)
-            : base("GBPLibor", tenor, 0, new GBPCurrency(), new UnitedKingdom(UnitedKingdom.Market.Exchange), new Actual365Fixed(),
-            new Handle<YieldTermStructure>()) {
-        }
-        public GBPLibor(Period tenor, Handle<YieldTermStructure> h)
-            : base("GBPLibor", tenor, 0, new GBPCurrency(), new UnitedKingdom(UnitedKingdom.Market.Exchange), new Actual365Fixed(), h) {
-        }
-    }
-
-    //! base class for the one day deposit BBA %GBP %LIBOR indexes
-    public class DailyTenorGBPLibor : DailyTenorLibor {
-        public DailyTenorGBPLibor(int settlementDays, Handle<YieldTermStructure> h)
-            : base("GBPLibor", settlementDays, new GBPCurrency(), new UnitedKingdom(UnitedKingdom.Market.Exchange),
-                    new Actual365Fixed(), h) {}
-    }
-
-    //! Overnight %GBP %Libor index
-    public class GBPLiborON : DailyTenorGBPLibor {
-        public GBPLiborON(Handle<YieldTermStructure> h) : base(0, h) {}
-    }
+		public GBPLibor(Period tenor, Handle<YieldTermStructure> h)
+			: base("GBPLibor", tenor, 0, new GBPCurrency(), new UnitedKingdom(UnitedKingdom.Market.Exchange), new Actual365Fixed(), h)
+		{
+		}
+	}
 }

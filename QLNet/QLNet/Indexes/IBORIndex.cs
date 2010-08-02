@@ -18,93 +18,91 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using QLNet.Currencies;
 using QLNet.Time;
 
-namespace QLNet {
-    //! base class for Inter-Bank-Offered-Rate indexes (e.g. %Libor, etc.)
-    public class IborIndex : InterestRateIndex {
-        protected BusinessDayConvention convention_;
-        public BusinessDayConvention businessDayConvention() { return convention_; }
+namespace QLNet
+{
+	/// <summary>
+	/// base class for Inter-Bank-Offered-Rate indexes (e.g. Libor, etc.)
+	/// </summary>
+	public class IborIndex : InterestRateIndex
+	{
+		public bool EndOfMonth { get; private set; }
+		public BusinessDayConvention convention_ { get; protected set; }
+		public Handle<YieldTermStructure> termStructure_ { get; protected set; }
 
-        protected Handle<YieldTermStructure> termStructure_;
-        // InterestRateIndex interface
-        public Handle<YieldTermStructure> forwardingTermStructure() { return termStructure_; }
+		public IborIndex()
+		{
+		}
 
-        bool endOfMonth_;
-        public bool endOfMonth() { return endOfMonth_; }
+		public IborIndex(string familyName, Period tenor, int settlementDays, Currency currency, Calendar fixingCalendar, BusinessDayConvention convention, bool endOfMonth, DayCounter dayCounter)
+			: this(familyName, tenor, settlementDays, currency, fixingCalendar, convention, endOfMonth, dayCounter, new Handle<YieldTermStructure>())
+		{
+		}
 
-        // need by CashFlowVectors
-        public IborIndex() { }
+		public IborIndex(string familyName, Period tenor, int settlementDays, Currency currency, Calendar fixingCalendar, BusinessDayConvention convention, bool endOfMonth, DayCounter dayCounter, Handle<YieldTermStructure> h) :
+			base(familyName, tenor, settlementDays, currency, fixingCalendar, dayCounter)
+		{
+			convention_ = convention;
+			termStructure_ = h;
+			EndOfMonth = endOfMonth;
 
-        public IborIndex(string familyName, Period tenor, int settlementDays, Currency currency,
-                 Calendar fixingCalendar, BusinessDayConvention convention, bool endOfMonth,
-                 DayCounter dayCounter)
-            : this(familyName, tenor, settlementDays, currency,
-                   fixingCalendar, convention, endOfMonth,
-                   dayCounter, new Handle<YieldTermStructure>()) { }
+			// observer interface
+			if (termStructure_!= null && !termStructure_.IsEmpty)
+			{
+				termStructure_.registerWith(update);
+			}
+		}
 
-        public IborIndex(string familyName, Period tenor, int settlementDays, Currency currency,
-                     Calendar fixingCalendar, BusinessDayConvention convention, bool endOfMonth,
-                     DayCounter dayCounter, Handle<YieldTermStructure> h) :
-            base(familyName, tenor, settlementDays, currency, fixingCalendar, dayCounter) {
-            convention_ = convention;
-            termStructure_ = h;
-            endOfMonth_ = endOfMonth;
+		[Obsolete("Use convention_ property instead.")]
+		public BusinessDayConvention businessDayConvention()
+		{
+			return convention_;
+		}
 
-            // observer interface
-            if (!termStructure_.empty())
-                termStructure_.registerWith(update);
-        }
+		[Obsolete("Use termStructure_ property instead.")]
+		public Handle<YieldTermStructure> forwardingTermStructure()
+		{
+			return termStructure_;
+		}
 
-        //! Date calculations
-        public override Date maturityDate(Date valueDate) {
-            return fixingCalendar().advance(valueDate, tenor_, convention_, endOfMonth_);
-        }
+		[Obsolete("Use endOfMonth property instead.")]
+		public bool endOfMonth()
+		{
+			return EndOfMonth;
+		}
 
-        protected override double forecastFixing(Date fixingDate) {
-            if (termStructure_.empty())
-               throw new ArgumentException("null term structure set to this instance of " + name());
+		public override Date maturityDate(Date valueDate)
+		{
+			return fixingCalendar().advance(valueDate, tenor_, convention_, EndOfMonth);
+		}
 
-            Date fixingValueDate = valueDate(fixingDate);
-            Date endValueDate = maturityDate(fixingValueDate);
-            double fixingDiscount = termStructure_.link.discount(fixingValueDate);
-            double endDiscount = termStructure_.link.discount(endValueDate);
-            double fixingPeriod = dayCounter().yearFraction(fixingValueDate, endValueDate);
-            return (fixingDiscount / endDiscount - 1.0) / fixingPeriod;
-        }
+		protected override double forecastFixing(Date fixingDate)
+		{
+			if (termStructure_.IsEmpty)
+			{
+				throw new ArgumentException("null term structure set to this instance of " + name());
+			}
 
-        //! returns a copy of itself linked to a different forwarding curve
-        public IborIndex clone(Handle<YieldTermStructure> forwarding)
-        {
-            return new IborIndex(familyName(), tenor(), fixingDays(), currency(), fixingCalendar(),
-                                 businessDayConvention(), endOfMonth(), dayCounter(), forwarding);
-        }
-    }
-   
-   public class OvernightIndex : IborIndex 
-   {
-      public OvernightIndex(string familyName,
-                            int settlementDays,
-                            Currency currency,
-                            Calendar fixingCalendar,
-                            DayCounter dayCounter,
-                            Handle<YieldTermStructure> h) :
-      
-               base(familyName, new Period(1,TimeUnit.Days), settlementDays, 
-                    currency,fixingCalendar, BusinessDayConvention.Following, false, dayCounter, h) 
-      {}
-      
-      //! returns a copy of itself linked to a different forwarding curve
-      public new IborIndex clone(Handle<YieldTermStructure> h)
-      {
-         return new OvernightIndex(familyName(), fixingDays(), currency(), fixingCalendar(),
-                                   dayCounter(), h);
+			Date fixingValueDate = valueDate(fixingDate);
+			Date endValueDate = maturityDate(fixingValueDate);
+			double fixingDiscount = termStructure_.link.discount(fixingValueDate);
+			double endDiscount = termStructure_.link.discount(endValueDate);
+			double fixingPeriod = dayCounter().yearFraction(fixingValueDate, endValueDate);
+			return (fixingDiscount / endDiscount - 1.0) / fixingPeriod;
+		}
 
-      }
-    };
+		/// <summary>
+		/// Returns a copy of itself linked to a different forwarding curve.
+		/// </summary>
+		/// <param name="forwarding"></param>
+		/// <returns></returns>
+		public virtual IborIndex clone(Handle<YieldTermStructure> forwarding)
+		{
+			return new IborIndex(familyName(), tenor(), fixingDays(), currency(), fixingCalendar(), convention_, EndOfMonth, dayCounter(), forwarding);
+		}
+	}
 }

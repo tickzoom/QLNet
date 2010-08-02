@@ -17,21 +17,24 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using QLNet.Currencies;
 using QLNet.Time.DayCounters;
 
 namespace QLNet
 {
-   //! %Eonia (Euro Overnight Index Average) rate fixed by the ECB.
-   public class Eonia : OvernightIndex
-   {
-      public Eonia() : this(new Handle<YieldTermStructure>()) { }
+	/// <summary>
+	/// Eonia (Euro Overnight Index Average) rate fixed by the ECB.
+	/// </summary>
+	public class Eonia : OvernightIndex
+	{
+		public Eonia() 
+			: this(new Handle<YieldTermStructure>())
+		{
+		}
 
-      public Eonia(Handle<YieldTermStructure> h) 
-         : base("Eonia", 0, new EURCurrency(), new TARGET(), new Actual360(), h) {}
-   }
+		public Eonia(Handle<YieldTermStructure> h)
+			: base("Eonia", 0, new EURCurrency(), new TARGET(), new Actual360(), h)
+		{
+		}
+	}
 }

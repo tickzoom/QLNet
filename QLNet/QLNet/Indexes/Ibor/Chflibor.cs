@@ -24,29 +24,27 @@ using System.Text;
 using QLNet.Currencies;
 using QLNet.Time.DayCounters;
 
-namespace QLNet {
+namespace QLNet
+{
+	/// <summary>
+	/// Swiss Franc LIBOR fixed by BBA.
+	/// 
+	/// See <http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1414>.
+	/// </summary>
+	/// <remarks>
+	/// This is the rate fixed in London by BBA. Use ZIBOR if
+	/// you're interested in the Zurich fixing.
+	/// </remarks>
+	public class CHFLibor : Libor
+	{
+		public CHFLibor(Period tenor)
+			: this(tenor, new Handle<YieldTermStructure>())
+		{
+		}
 
-    //! %CHF %LIBOR rate
-    //    ! Swiss Franc LIBOR fixed by BBA.
-    //
-    //        See <http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1414>.
-    //
-    //        \warning This is the rate fixed in London by BBA. Use ZIBOR if
-    //                 you're interested in the Zurich fixing.
-    //    
-    public class CHFLibor : Libor {
-        public CHFLibor(Period tenor)
-            : base("CHFLibor", tenor, 2, new CHFCurrency(), new Switzerland(), new Actual360(), new Handle<YieldTermStructure>()) {
-        }
-
-        public CHFLibor(Period tenor, Handle<YieldTermStructure> h)
-            : base("CHFLibor", tenor, 2, new CHFCurrency(), new Switzerland(), new Actual360(), h) {
-        }
-    }
-
-    //! base class for the one day deposit BBA %CHF %LIBOR indexes
-    public class DailyTenorCHFLibor : DailyTenorLibor {
-        public DailyTenorCHFLibor(int settlementDays, Handle<YieldTermStructure> h)
-            : base("CHFLibor", settlementDays, new CHFCurrency(), new Switzerland(), new Actual360(), h) {}
-    };
+		public CHFLibor(Period tenor, Handle<YieldTermStructure> h)
+			: base("CHFLibor", tenor, 2, new CHFCurrency(), new Switzerland(), new Actual360(), h)
+		{
+		}
+	}
 }

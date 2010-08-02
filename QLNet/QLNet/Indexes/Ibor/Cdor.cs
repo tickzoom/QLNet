@@ -16,28 +16,23 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using QLNet.Currencies;
 using QLNet.Time.DayCounters;
 
 namespace QLNet {
 
-	//! %CDOR rate
-//    ! Canadian Dollar Offered Rate fixed by IDA.
-//
-//        \warning This is the rate fixed in Canada by IDA. Use CADLibor
-//                 if you're interested in the London fixing by BBA.
-//
-//        \todo check settlement days, end-of-month adjustment,
-//              and day-count convention.
-//    
+	/// <summary>
+	/// Canadian Dollar Offered Rate fixed by IDA.
+	/// </summary>
+	/// <remarks>
+	/// This is the rate fixed in Canada by IDA. Use CADLibor
+	/// if you're interested in the London fixing by BBA.
+	/// </remarks>
 	public class Cdor : IborIndex
 	{
         public Cdor(Period tenor)
-            : base("CDOR", tenor, 2, new CADCurrency(), new Canada(), BusinessDayConvention.ModifiedFollowing, false, new Actual360(), new Handle<YieldTermStructure>())
+            : this(tenor, new Handle<YieldTermStructure>())
         {
         }
 
