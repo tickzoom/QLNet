@@ -18,6 +18,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 using System;
+using QLNet.Currencies;
 using QLNet.Time;
 
 namespace QLNet {

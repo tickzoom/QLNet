@@ -23,6 +23,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QLNet;
+using QLNet.Currencies;
 using QLNet.Time;
 using QLNet.Time.DayCounters;
 

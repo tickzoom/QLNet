@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QLNet;
+using QLNet.Currencies;
 
 namespace TestSuite
 {
@@ -107,8 +108,8 @@ namespace TestSuite
 
          ExchangeRate eur_usd1 = new ExchangeRate(EUR, USD, 1.1983);
          ExchangeRate eur_usd2 = new ExchangeRate(USD, EUR, 1.0/1.2042);
-         rateManager.add(eur_usd1, new Date(4,Month.August,2004));
-         rateManager.add(eur_usd2, new Date(5,Month.August,2004));
+         rateManager.Add(eur_usd1, new Date(4,Month.August,2004));
+         rateManager.Add(eur_usd2, new Date(5,Month.August,2004));
 
          Money m1 = 50000.0 * EUR;
          Money m2 = 100000.0 * USD;
@@ -168,8 +169,8 @@ namespace TestSuite
 
          ExchangeRate eur_usd1 = new ExchangeRate(EUR, USD, 1.1983);
          ExchangeRate eur_usd2 = new ExchangeRate(EUR, USD, 1.2042);
-         rateManager.add(eur_usd1, new Date(4,Month.August,2004));
-         rateManager.add(eur_usd2, new Date(5,Month.August,2004));
+         rateManager.Add(eur_usd1, new Date(4,Month.August,2004));
+         rateManager.Add(eur_usd2, new Date(5,Month.August,2004));
 
          Money m1 = 50000000.0 * ITL;
          Money m2 = 100000.0 * USD;
@@ -230,28 +231,28 @@ namespace TestSuite
 
          ExchangeRate eur_usd1 = new ExchangeRate(EUR, USD, 1.1983);
          ExchangeRate eur_usd2 = new ExchangeRate(USD, EUR, 1.0/1.2042);
-         rateManager.add(eur_usd1, new Date(4,Month.August,2004));
-         rateManager.add(eur_usd2, new Date(5,Month.August,2004));
+         rateManager.Add(eur_usd1, new Date(4,Month.August,2004));
+         rateManager.Add(eur_usd2, new Date(5,Month.August,2004));
 
          ExchangeRate eur_gbp1 = new ExchangeRate(GBP, EUR, 1.0 / 0.6596);
          ExchangeRate eur_gbp2 = new ExchangeRate(EUR, GBP, 0.6612);
-         rateManager.add(eur_gbp1, new Date(4,Month.August,2004));
-         rateManager.add(eur_gbp2, new Date(5,Month.August,2004));
+         rateManager.Add(eur_gbp1, new Date(4,Month.August,2004));
+         rateManager.Add(eur_gbp2, new Date(5,Month.August,2004));
 
          ExchangeRate usd_chf1 = new ExchangeRate(USD, CHF, 1.2847);
          ExchangeRate usd_chf2 = new ExchangeRate(CHF, USD, 1.0 / 1.2774);
-         rateManager.add(usd_chf1, new Date(4,Month.August,2004));
-         rateManager.add(usd_chf2, new Date(5,Month.August,2004));
+         rateManager.Add(usd_chf1, new Date(4,Month.August,2004));
+         rateManager.Add(usd_chf2, new Date(5,Month.August,2004));
 
          ExchangeRate chf_sek1 = new ExchangeRate(SEK, CHF, 0.1674);
          ExchangeRate chf_sek2 = new ExchangeRate(CHF, SEK, 1.0 / 0.1677);
-         rateManager.add(chf_sek1, new Date(4,Month.August,2004));
-         rateManager.add(chf_sek2, new Date(5,Month.August,2004));
+         rateManager.Add(chf_sek1, new Date(4,Month.August,2004));
+         rateManager.Add(chf_sek2, new Date(5,Month.August,2004));
 
          ExchangeRate jpy_sek1 = new ExchangeRate(SEK, JPY, 14.5450);
          ExchangeRate jpy_sek2 = new ExchangeRate(JPY, SEK, 1.0 / 14.6110);
-         rateManager.add(jpy_sek1, new Date(4,Month.August,2004));
-         rateManager.add(jpy_sek2, new Date(5,Month.August,2004));
+         rateManager.Add(jpy_sek1, new Date(4,Month.August,2004));
+         rateManager.Add(jpy_sek2, new Date(5,Month.August,2004));
 
          Money m1 = 100000.0 * USD;
          Money m2 = 100000.0 * EUR;

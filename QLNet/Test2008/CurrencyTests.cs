@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QLNet;
+using QLNet.Currencies;
 
 namespace TestSuite
 {

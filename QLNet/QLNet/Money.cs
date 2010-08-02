@@ -19,6 +19,7 @@
 */
 
 using System;
+using QLNet.Currencies;
 
 namespace QLNet
 {

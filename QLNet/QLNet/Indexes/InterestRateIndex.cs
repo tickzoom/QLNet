@@ -19,6 +19,7 @@
 */
 using System;
 using System.Collections.Generic;
+using QLNet.Currencies;
 using QLNet.Time;
 
 namespace QLNet {

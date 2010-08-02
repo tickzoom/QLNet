@@ -19,6 +19,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QLNet;
+using QLNet.Currencies;
 
 namespace TestSuite
 {
@@ -58,8 +59,8 @@ namespace TestSuite
 			ExchangeRateManager.Instance.clear();
 			ExchangeRate eur_usd = new ExchangeRate(EUR, USD, 1.2042);
 			ExchangeRate eur_gbp = new ExchangeRate(EUR, GBP, 0.6612);
-			ExchangeRateManager.Instance.add(eur_usd);
-			ExchangeRateManager.Instance.add(eur_gbp);
+			ExchangeRateManager.Instance.Add(eur_usd);
+			ExchangeRateManager.Instance.Add(eur_gbp);
 
 			Money.conversionType = Money.ConversionType.BaseCurrencyConversion;
 			Money.BaseCurrency = EUR;
@@ -91,8 +92,8 @@ namespace TestSuite
 			ExchangeRateManager.Instance.clear();
 			ExchangeRate eur_usd = new ExchangeRate(EUR, USD, 1.2042);
 			ExchangeRate eur_gbp = new ExchangeRate(EUR, GBP, 0.6612);
-			ExchangeRateManager.Instance.add(eur_usd);
-			ExchangeRateManager.Instance.add(eur_gbp);
+			ExchangeRateManager.Instance.Add(eur_usd);
+			ExchangeRateManager.Instance.Add(eur_gbp);
 
 			Money.conversionType = Money.ConversionType.AutomatedConversion;
 
