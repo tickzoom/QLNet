@@ -203,7 +203,7 @@ namespace TestSuite {
                 Euribor3M euribor3m = new Euribor3M();
                 for (int i = 0; i < fras; i++) {
                     Handle<Quote> r = new Handle<Quote>(fraRates[i]);
-                    fraHelpers.Add(new FraRateHelper(r, fraData[i].n, fraData[i].n + 3,
+                    fraHelpers.Add(new FRARateHelper(r, fraData[i].n, fraData[i].n + 3,
                                       euribor3m.fixingDays(),
                                       euribor3m.fixingCalendar(),
                                       euribor3m.businessDayConvention(),

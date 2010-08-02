@@ -16,64 +16,42 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace QLNet {
-    //! helper class for one-asset implied-volatility calculation
-    /*! The passed engine must be linked to the passed quote (see,
-        e.g., VanillaOption to see how this can be achieved.) */
-    public static class ImpliedVolatilityHelper {
-        public static double calculate(Instrument instrument, IPricingEngine engine, SimpleQuote volQuote,
-                                       double targetValue, double accuracy, int maxEvaluations, double minVol, double maxVol) {
+namespace QLNet
+{
+	//! helper class for one-asset implied-volatility calculation
+	/*! The passed engine must be linked to the passed quote (see,
+		e.g., VanillaOption to see how this can be achieved.) */
+	public static class ImpliedVolatilityHelper
+	{
+		public static double calculate(Instrument instrument, IPricingEngine engine, SimpleQuote volQuote, double targetValue, double accuracy, int maxEvaluations, double minVol, double maxVol)
+		{
+			instrument.setupArguments(engine.getArguments());
+			engine.getArguments().validate();
 
-            instrument.setupArguments(engine.getArguments());
-            engine.getArguments().validate();
+			PriceError f = new PriceError(engine, volQuote, targetValue);
+			Brent solver = new Brent();
+			solver.setMaxEvaluations(maxEvaluations);
+			double guess = (minVol + maxVol) / 2.0;
+			double result = solver.solve(f, accuracy, guess, minVol, maxVol);
+			return result;
+		}
 
-            PriceError f = new PriceError(engine, volQuote, targetValue);
-            Brent solver = new Brent();
-            solver.setMaxEvaluations(maxEvaluations);
-            double guess = (minVol+maxVol)/2.0;
-            double result = solver.solve(f, accuracy, guess, minVol, maxVol);
-            return result;
-        }
+		public static GeneralizedBlackScholesProcess clone(GeneralizedBlackScholesProcess process, SimpleQuote volQuote)
+		{
+			Handle<Quote> stateVariable = process.stateVariable();
+			Handle<YieldTermStructure> dividendYield = process.dividendYield();
+			Handle<YieldTermStructure> riskFreeRate = process.riskFreeRate();
 
-        public static GeneralizedBlackScholesProcess clone(GeneralizedBlackScholesProcess process, SimpleQuote volQuote) {
-            Handle<Quote> stateVariable = process.stateVariable();
-            Handle<YieldTermStructure> dividendYield = process.dividendYield();
-            Handle<YieldTermStructure> riskFreeRate = process.riskFreeRate();
+			Handle<BlackVolTermStructure> blackVol = process.blackVolatility();
+			var volatility = new Handle<BlackVolTermStructure>(new BlackConstantVol(blackVol.link.referenceDate(),
+															   blackVol.link.calendar(), new Handle<Quote>(volQuote),
+															   blackVol.link.dayCounter()));
 
-            Handle<BlackVolTermStructure> blackVol = process.blackVolatility();
-            var volatility = new Handle<BlackVolTermStructure>(new BlackConstantVol(blackVol.link.referenceDate(),
-                                                               blackVol.link.calendar(), new Handle<Quote>(volQuote),
-                                                               blackVol.link.dayCounter()));
-
-            return new GeneralizedBlackScholesProcess(stateVariable, dividendYield, riskFreeRate, volatility);
-        }
-    }
-
-    public class PriceError : ISolver1d {
-        private IPricingEngine engine_;
-        private SimpleQuote vol_;
-        private double targetValue_;
-        private Instrument.Results results_;
-
-        public PriceError(IPricingEngine engine, SimpleQuote vol, double targetValue) {
-            engine_ = engine;
-            vol_ = vol;
-            targetValue_ = targetValue;
-            
-            results_ = engine_.getResults() as Instrument.Results;
-            if (results_ == null)
-                throw new ApplicationException("pricing engine does not supply needed results");
-        }
-
-        public override double value(double x) {
-            vol_.setValue(x);
-            engine_.calculate();
-            return results_.value.GetValueOrDefault() - targetValue_;
-        }
-    }
+			return new GeneralizedBlackScholesProcess(stateVariable, dividendYield, riskFreeRate, volatility);
+		}
+	}
 }

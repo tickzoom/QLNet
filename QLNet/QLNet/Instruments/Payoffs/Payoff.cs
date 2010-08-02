@@ -21,24 +21,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace QLNet {
-	//! Abstract base class for option payoffs
-	public class Payoff {
-        //! \name Payoff interface
-        //@{
-        /*! \warning This method is used for output and comparison between
-                payoffs. It is <b>not</b> meant to be used for writing
-                switch-on-type code.
-        */
-        public virtual string name() { throw new NotImplementedException(); }
-        public virtual string description() { throw new NotImplementedException(); }
-        public virtual double value(double price) { throw new NotImplementedException(); }
+namespace QLNet
+{
+	/// <summary>
+	/// Abstract base class for option payoffs
+	/// </summary>
+	public class Payoff
+	{
+		//! \name Payoff interface
+		//@{
+		/*! \warning This method is used for output and comparison between
+				payoffs. It is <b>not</b> meant to be used for writing
+				switch-on-type code.
+		*/
+		public virtual string name()
+		{
+			throw new NotImplementedException();
+		}
 
-        public virtual void accept(IAcyclicVisitor v) {
-            if (v != null)
-                v.visit(this);
-            else
-                throw new ApplicationException("not an event visitor");
-        }
+		public virtual string description()
+		{
+			throw new NotImplementedException();
+		}
+
+		public virtual double value(double price)
+		{
+			throw new NotImplementedException();
+		}
+
+		public virtual void accept(IAcyclicVisitor v)
+		{
+			if (v != null)
+				v.visit(this);
+			else
+				throw new ApplicationException("not an event visitor");
+		}
 	}
 }

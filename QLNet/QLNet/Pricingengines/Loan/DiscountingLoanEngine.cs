@@ -21,30 +21,40 @@ using System.Collections.Generic;
 
 namespace QLNet
 {
-   public class DiscountingLoanEngine : Loan.Engine
-   {
-      private Handle<YieldTermStructure> discountCurve_;
-      public Handle<YieldTermStructure> discountCurve() { return discountCurve_; }
+	public class DiscountingLoanLoanPricingEngine : LoanPricingEngine
+	{
+		private readonly Handle<YieldTermStructure> _discountCurve;
 
-      public DiscountingLoanEngine(Handle<YieldTermStructure> discountCurve)
-      {
-         discountCurve_ = discountCurve;
-         discountCurve_.registerWith(update);
-      }
+		public Handle<YieldTermStructure> discountCurve()
+		{
+			return _discountCurve;
+		}
 
-      public override void calculate()
-      {
-         if (discountCurve_.empty()) throw new ArgumentException("no discounting term structure set");
+		public DiscountingLoanLoanPricingEngine(Handle<YieldTermStructure> discountCurve)
+		{
+			_discountCurve = discountCurve;
+			_discountCurve.registerWith(update);
+		}
 
-         results_.value = results_.cash = 0;
-         results_.errorEstimate = null;
-         results_.legNPV = new InitializedList<double?>(arguments_.legs.Count);
-         for (int i = 0; i < arguments_.legs.Count; ++i)
-         {
-            results_.legNPV[i] = arguments_.payer[i] * CashFlows.npv(arguments_.legs[i], discountCurve_);
-            results_.value += results_.legNPV[i];
-            results_.cash += arguments_.payer[i] * CashFlows.cash(arguments_.legs[i]);
-         }
-      }
-   }
+		public override void calculate()
+		{
+			if (_discountCurve.IsEmpty)
+			{
+				throw new ArgumentException("no discounting term structure set");
+			}
+
+			results_.value = 0;
+			results_.cash = 0;
+			results_.errorEstimate = null;
+			results_.legNPV.Clear();
+			
+
+			for (int i = 0; i < arguments_.legs.Count; ++i)
+			{
+				results_.legNPV[i] = arguments_.payer[i] * CashFlows.npv(arguments_.legs[i], _discountCurve);
+				results_.value += results_.legNPV[i];
+				results_.cash += arguments_.payer[i] * CashFlows.cash(arguments_.legs[i]);
+			}
+		}
+	}
 }

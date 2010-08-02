@@ -17,79 +17,79 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using QLNet.Time;
 
-namespace QLNet {
-    //! fixed-coupon bond helper
-    /*! \warning This class assumes that the reference date
-                 does not change between calls of setTermStructure().
-    */
-    public class BondHelper : RelativeDateRateHelper {
-        protected Bond bond_;
-        public Bond bond() { return bond_; }
+namespace QLNet
+{
+	//! fixed-coupon bond helper
+	/*! \warning This class assumes that the reference date
+				 does not change between calls of setTermStructure().
+	*/
+	public abstract class AbstractBondHelper<T> : RelativeDateRateHelper
+		where T : Bond
+	{
+		private readonly T _bond;
 
-        // need to init this because it is used before the handle has any link, i.e. setTermStructure will be used after ctor
-        RelinkableHandle<YieldTermStructure> termStructureHandle_ = new RelinkableHandle<YieldTermStructure>();
-
-
-        /*! \warning Setting a pricing engine to the passed bond from
-                     external code will cause the bootstrap to fail or
-                     to give wrong results. It is advised to discard
-                     the bond after creating the helper, so that the
-                     helper has sole ownership of it.
-        */
-        public BondHelper(Handle<Quote> cleanPrice, Bond bond) : base(cleanPrice) {
-            bond_ = bond;
-
-            latestDate_ = bond_.maturityDate();
-            initializeDates();
-
-            IPricingEngine bondEngine = new DiscountingBondEngine(termStructureHandle_);
-            bond_.setPricingEngine(bondEngine);        
-        }
+		// need to init this because it is used before the handle has any link, i.e. setTermStructure will be used after ctor
+		private readonly RelinkableHandle<YieldTermStructure> _termStructureHandle;
 
 
-        //! \name BootstrapHelper interface
-        public override void setTermStructure(YieldTermStructure t) {
-            // do not set the relinkable handle as an observer - force recalculation when needed
-            termStructureHandle_.linkTo(t, false);
-            base.setTermStructure(t);
-        }
+		/*! \warning Setting a pricing engine to the passed bond from
+					 external code will cause the bootstrap to fail or
+					 to give wrong results. It is advised to discard
+					 the bond after creating the helper, so that the
+					 helper has sole ownership of it.
+		*/
 
-        public override double impliedQuote() {
-            if (termStructure_ == null)
-                throw new ApplicationException("term structure not set");
-            // we didn't register as observers - force calculation
-            bond_.recalculate();
-            return bond_.cleanPrice();
-        }
+		protected AbstractBondHelper(Handle<Quote> cleanPrice, T bond)
+			: base(cleanPrice)
+		{
+			_bond = bond;
 
-        protected override void initializeDates() {
-            earliestDate_ = bond_.nextCouponDate();
-        }
-    }
+			latestDate_ = _bond.maturityDate();
+			initializeDates();
 
+			_termStructureHandle = new RelinkableHandle<YieldTermStructure>();
+			IPricingEngine bondEngine = new DiscountingBondEngine(_termStructureHandle);
+			_bond.setPricingEngine(bondEngine);
+		}
 
-    public class FixedRateBondHelper : BondHelper {
-        protected FixedRateBond fixedRateBond_;
-        public FixedRateBond fixedRateBond() { return fixedRateBond_; }
+		public T bond()
+		{
+			return _bond;
+		}
 
-        //public FixedRateBondHelper(Quote cleanPrice, int settlementDays, double faceAmount, Schedule schedule,
-        //                   List<double> coupons, DayCounter dayCounter,
-        //                   BusinessDayConvention paymentConv = Following,
-        //                   double redemption = 100.0,
-        //                   Date issueDate = null);
-        public FixedRateBondHelper(Handle<Quote> cleanPrice, int settlementDays, double faceAmount, Schedule schedule,
-                                   List<double> coupons, DayCounter dayCounter, BusinessDayConvention paymentConvention,
-                                   double redemption, Date issueDate)
-            : base(cleanPrice, new FixedRateBond(settlementDays, faceAmount, schedule,
-                                                 coupons, dayCounter, paymentConvention,
-                                                 redemption, issueDate)) {
+		public override void setTermStructure(YieldTermStructure t)
+		{
+			// do not set the relinkable handle as an observer - force recalculation when needed
+			_termStructureHandle.linkTo(t, false);
+			base.setTermStructure(t);
+		}
 
-            fixedRateBond_ = bond_ as FixedRateBond;
-        }
-    }
+		public override double impliedQuote()
+		{
+			if (termStructure_ == null)
+			{
+				throw new ApplicationException("term structure not set");
+			}
+
+			// we didn't register as observers - force calculation
+			_bond.recalculate();
+			return _bond.cleanPrice();
+		}
+
+		protected override void initializeDates()
+		{
+			earliestDate_ = _bond.nextCouponDate();
+		}
+	}
+
+	public class BondHelper : AbstractBondHelper<Bond>
+	{
+		public BondHelper(Handle<Quote> cleanPrice, Bond bond) 
+			: base(cleanPrice, bond)
+		{
+		}
+	}
 }

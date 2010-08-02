@@ -339,7 +339,7 @@ namespace TestSuite
             double rate = 0.01 * fraData[i].rate;
             SimpleQuote simple = new SimpleQuote(rate);
             Handle<Quote> quote = new Handle<Quote>(simple);
-            RateHelper helper = new FraRateHelper(quote,
+            RateHelper helper = new FRARateHelper(quote,
                                              fraData[i].nExpiry,
                                              fraData[i].nMaturity,
                                              fraData[i].settlementDays,

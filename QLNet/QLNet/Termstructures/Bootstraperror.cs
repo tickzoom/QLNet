@@ -18,25 +18,29 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-namespace QLNet {
-    //! bootstrap error
-    public class BootstrapError : ISolver1d {
+namespace QLNet
+{
+	/// <summary>
+	/// Bootstrap error
+	/// </summary>
+	public class BootstrapError : ISolver1d
+	{
+		private readonly PiecewiseYieldCurve _curve;
+		private readonly RateHelper _helper;
+		private readonly int _segment;
 
-        private PiecewiseYieldCurve curve_;
-        private RateHelper helper_;
-        private int segment_;
+		public BootstrapError(PiecewiseYieldCurve curve, RateHelper helper, int segment)
+		{
+			_curve = curve;
+			_helper = helper;
+			_segment = segment;
+		}
 
-        public BootstrapError(PiecewiseYieldCurve curve, RateHelper helper, int segment)
-        {
-            curve_ = curve;
-            helper_ = helper;
-            segment_ = segment; 
-        }
-
-        public override double value(double guess) {
-            curve_.updateGuess(curve_.data(), guess, segment_);
-            curve_.interpolation_.update();
-            return helper_.quoteError();
-        }
-    }
+		public override double value(double guess)
+		{
+			_curve.updateGuess(_curve.data(), guess, _segment);
+			_curve.interpolation_.update();
+			return _helper.quoteError();
+		}
+	}
 }

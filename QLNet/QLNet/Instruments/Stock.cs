@@ -16,27 +16,17 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace QLNet {
-    //! Simple stock class
-    public class Stock : Instrument {
-        private Handle<Quote> quote_;
-
-        public Stock(Handle<Quote> quote) {
-            quote_ = quote;
-            quote_.registerWith(update);
-        }
-
-        public override bool isExpired() { return false; }
-
-        protected override void performCalculations() {
-            if (quote_.empty())
-                throw new ApplicationException("null quote set");
-            NPV_ = quote_.link.value();
-        }
-    }
+namespace QLNet
+{
+	/// <summary>
+	/// Simple stock class
+	/// </summary>
+	public class Stock : SimpleQuoteInstrument
+	{
+		public Stock(Handle<Quote> quote)
+			: base(quote)
+		{
+		}
+	}
 }

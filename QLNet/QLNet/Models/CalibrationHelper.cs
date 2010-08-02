@@ -23,22 +23,34 @@ using QLNet.Patterns;
 
 namespace QLNet
 {
-	//! liquid market instrument used during calibration
+	/// <summary>
+	/// Liquid market instrument used during calibration
+	/// </summary>
 	public abstract class CalibrationHelper : DefaultObservable, IObserver
 	{
 		protected double marketValue_;
-		public double marketValue() { return marketValue_; }
-
 		protected Handle<Quote> volatility_;
 		protected Handle<YieldTermStructure> termStructure_;
 		protected IPricingEngine engine_;
+		private readonly bool calibrateVolatility_;
 
-		private bool calibrateVolatility_;
+		protected CalibrationHelper(Handle<Quote> volatility, Handle<YieldTermStructure> termStructure)
+			: this(volatility, termStructure, false)
+		{	
+		}
 
-		//public CalibrationHelper(Handle<Quote> volatility, Handle<YieldTermStructure> termStructure,
-		//                  bool calibrateVolatility = false)
-		public CalibrationHelper(Handle<Quote> volatility, Handle<YieldTermStructure> termStructure, bool calibrateVolatility)
+		protected CalibrationHelper(Handle<Quote> volatility, Handle<YieldTermStructure> termStructure, bool calibrateVolatility)
 		{
+			if (volatility == null)
+			{
+				throw new ArgumentNullException("volatility");
+			}
+
+			if (termStructure == null)
+			{
+				throw new ArgumentNullException("termStructure");
+			}
+	
 			volatility_ = volatility;
 			termStructure_ = termStructure;
 			calibrateVolatility_ = calibrateVolatility;
@@ -47,10 +59,21 @@ namespace QLNet
 			termStructure_.registerWith(update);
 		}
 
-		//! returns the price of the instrument according to the model
+		public double marketValue()
+		{
+			return marketValue_;
+		}
+
+		/// <summary>
+		/// Returns the price of the instrument according to the model
+		/// </summary>
+		/// <returns></returns>
 		public abstract double modelValue();
 
-		//! returns the error resulting from the model valuation
+		/// <summary>
+		/// Returns the error resulting from the model valuation
+		/// </summary>
+		/// <returns></returns>
 		public virtual double calibrationError()
 		{
 			if (calibrateVolatility_)
@@ -70,25 +93,20 @@ namespace QLNet
 
 				return implied - volatility_.link.value();
 			}
-			else
-			{
-				return Math.Abs(marketValue() - modelValue()) / marketValue();
-			}
+			
+			return Math.Abs(marketValue() - modelValue()) / marketValue();
 		}
 
 		public abstract void addTimesTo(List<double> times);
 
-		//! Black volatility implied by the model
 		public double impliedVolatility(double targetValue, double accuracy, int maxEvaluations, double minVol, double maxVol)
 		{
-
-			ImpliedVolatilityHelper f = new ImpliedVolatilityHelper(this, targetValue);
+			CalibrationImpliedVolatilityHelper f = new CalibrationImpliedVolatilityHelper(this, targetValue);
 			Brent solver = new Brent();
 			solver.setMaxEvaluations(maxEvaluations);
 			return solver.solve(f, accuracy, volatility_.link.value(), minVol, maxVol);
 		}
 
-		//! Black price given a volatility
 		public abstract double blackPrice(double volatility);
 
 		public void setPricingEngine(IPricingEngine engine)
@@ -102,12 +120,12 @@ namespace QLNet
 			notifyObservers();
 		}
 
-		private class ImpliedVolatilityHelper : ISolver1d
+		private class CalibrationImpliedVolatilityHelper : ISolver1d
 		{
 			private readonly CalibrationHelper _helper;
 			private readonly double _value;
 
-			public ImpliedVolatilityHelper(CalibrationHelper helper, double value)
+			public CalibrationImpliedVolatilityHelper(CalibrationHelper helper, double value)
 			{
 				_helper = helper;
 				_value = value;
